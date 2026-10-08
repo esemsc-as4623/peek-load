@@ -1,0 +1,118 @@
+{
+  "national": {
+    "n": 2244,
+    "osm_polygon": 0.6756,
+    "osm_point": 0.0004,
+    "osm_use_tag": 0.0018,
+    "overture": 0.0031,
+    "facility": 0.0,
+    "any_informative": 0.0053
+  },
+  "deep_dives": [
+    {
+      "adm2_name": "Nyarugenge",
+      "adm3_name": "Nyamirambo",
+      "n": 35,
+      "osm_polygon": 0.8286,
+      "osm_point": 0.0,
+      "osm_use_tag": 0.0,
+      "overture": 0.0,
+      "facility": 0.0,
+      "any_informative": 0.0
+    }
+  ],
+  "by_footprint_source": [
+    {
+      "source": "google",
+      "n": 2188,
+      "osm_polygon": 0.692,
+      "osm_point": 0.0005,
+      "osm_use_tag": 0.0018,
+      "overture": 0.0032,
+      "facility": 0.0,
+      "any_informative": 0.0055
+    },
+    {
+      "source": "microsoft",
+      "n": 56,
+      "osm_polygon": 0.0357,
+      "osm_point": 0.0,
+      "osm_use_tag": 0.0,
+      "overture": 0.0,
+      "facility": 0.0,
+      "any_informative": 0.0
+    }
+  ],
+  "distance_quantiles_m": {
+    "dist_road_major_m": {
+      "p10": 40,
+      "p50": 154,
+      "p90": 347,
+      "p99": 429,
+      "max": 460
+    },
+    "dist_road_any_m": {
+      "p10": 4,
+      "p50": 20,
+      "p90": 49,
+      "p99": 117,
+      "max": 164
+    },
+    "dist_powerline_m": {
+      "p10": 636,
+      "p50": 907,
+      "p90": 1120,
+      "p99": 1222,
+      "max": 1260
+    }
+  },
+  "poi_count_share_gt0": {
+    "c50": 0.0187,
+    "c100": 0.0954,
+    "c250": 0.5624
+  },
+  "admin_missing": 0,
+  "top_overture": [
+    {
+      "overture_category": "bar_and_grill_restaurant",
+      "n": 1
+    },
+    {
+      "overture_category": "religious_organization",
+      "n": 1
+    },
+    {
+      "overture_category": "hotel",
+      "n": 1
+    },
+    {
+      "overture_category": "roman_catholic_place_of_worship",
+      "n": 1
+    },
+    {
+      "overture_category": "bed_and_breakfast",
+      "n": 1
+    },
+    {
+      "overture_category": "christian_place_of_worship",
+      "n": 1
+    },
+    {
+      "overture_category": "sport_league",
+      "n": 1
+    }
+  ],
+  "top_facility": [],
+  "by_district": [
+    {
+      "adm2_name": "Nyarugenge",
+      "n": 2244,
+      "osm_polygon": 0.6756,
+      "osm_point": 0.0004,
+      "osm_use_tag": 0.0018,
+      "overture": 0.0031,
+      "facility": 0.0,
+      "any_informative": 0.0053
+    }
+  ]
+}

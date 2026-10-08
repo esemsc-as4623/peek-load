@@ -44,67 +44,78 @@ sources:
   overture_places:
     owner: A2
     name: Overture Maps places theme (POIs with categories + confidence)
-    url: null  # s3://overturemaps-us-west-2/release/<latest>/theme=places/type=place/*  (read with DuckDB)
+    url: s3://overturemaps-us-west-2/release/{release}/theme=places/type=place/*  # bbox-filtered with DuckDB
+    release: 2026-09-23.1  # latest per https://stac.overturemaps.org/catalog.json on 2026-10-08
     docs: https://docs.overturemaps.org/
     access: open
     licence: CDLA-Permissive-2.0
     role: weak_label
-    status: to_verify
+    status: verified
 
   admin_boundaries:
     owner: A2
-    name: Rwanda admin boundaries (province, district, sector, cell, village)
-    url: null  # geoBoundaries ADM0-3 and/or OCHA COD-AB / NISR for cell+village
+    name: Rwanda admin boundaries (province, district, sector, cell, village), geoBoundaries gbOpen ADM0-5
+    # {level} = ADM0..ADM5. Counts 5/30/416/2148/14815 (official: 14,837 villages; 22 missing in source).
+    # ADM1 from Rwanda Geo Portal 2020, ADM2-4 Open Data Rwanda 2012, ADM5 World Bank 2012.
+    # OCHA COD-AB (cod-ab-rwa, CC BY-IGO) was rejected: its ADM4 has only 1,000 of 2,148 cells and no villages.
+    url: https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/RWA/{level}/geoBoundaries-RWA-{level}.geojson
+    docs: https://www.geoboundaries.org/api/current/gbOpen/RWA/ALL/
     access: open
-    licence: to_verify
+    licence: CC-BY-4.0  # per geoBoundaries API boundaryLicense (HDX mirror page says ODbL; API is authoritative)
     role: feature
-    status: to_verify
+    status: verified
 
   ghsl_built_c:
     owner: A2
-    name: GHSL GHS-BUILT-C R2023A settlement characteristics (RES/NRES, 10 m)
-    url: null
+    name: GHSL GHS-BUILT-C R2023A settlement characteristics, 2018 (MSZ classes + FUN RES/NRES, 10 m, ESRI:54009)
+    # 1000 km Mollweide tiles; {product} = MSZ (class legend) or FUN (0 non-built, 1 RES, 2 NRES).
+    # Rwanda falls in tiles R10_C21 and R10_C22 (computed in ingest/ghsl.py from aoi.yaml bbox).
+    url: https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_C_GLOBE_R2023A/GHS_BUILT_C_{product}_E2018_GLOBE_R2023A_54009_10/V1-0/tiles/GHS_BUILT_C_{product}_E2018_GLOBE_R2023A_54009_10_V1_0_{tile}.zip
     docs: https://human-settlement.emergency.copernicus.eu/ghs_buC2023.php
     access: open
-    licence: CC-BY-4.0
+    licence: CC-BY-4.0  # copyright.txt on the JRC FTP
     role: feature
-    status: to_verify
+    status: verified
 
   ghsl_built_h:
     owner: A2
     name: GHSL GHS-BUILT-H R2023A average net building height (100 m)
-    url: null
+    url: null  # tiles exist (ANBH ..._54009_100_V1_0_R10_C21/C22.zip, 19 MB); skipped: no contract column, A1 owns heights
     access: open
     licence: CC-BY-4.0
     role: feature
-    status: to_verify
+    status: skipped
 
   worldpop:
     owner: A2
-    name: WorldPop constrained population 100 m (Rwanda)
-    url: null
+    name: WorldPop Global2 R2025A constrained population count, 2023, 3 arc-second (~93 m) (Rwanda)
+    # R2025A (Aug 2025) supersedes the 2020 constrained product (Global_2000_2020_Constrained/maxar_v1).
+    # 2023 chosen to match the Google V3 footprint vintage; years 2015-2030 exist (human decision, see A2r.md).
+    url: https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2023/RWA/v1/100m/constrained/rwa_pop_2023_CN_100m_R2025A_v1.tif
+    docs: https://www.worldpop.org/
     access: open
     licence: CC-BY-4.0
     role: feature
-    status: to_verify
+    status: verified
 
   meta_hrsl:
     owner: A2
     name: Meta High Resolution Settlement Layer / population density (Rwanda, HDX)
-    url: null
+    url: https://data.humdata.org/dataset/0ee1affc-6a90-4ad3-b7eb-166645668fc3/resource/a9013c82-cee9-43aa-a741-75a7595ca4fb/download/rwa_general_2020_geotiff.zip
     access: open
     licence: CC-BY-4.0
     role: feature
-    status: to_verify
+    status: skipped  # optional cross-check only; not ingested this phase
 
   meta_rwi:
     owner: A2
-    name: Meta Relative Wealth Index (Rwanda, ~2.4 km)
-    url: null
+    name: Meta Relative Wealth Index (Rwanda, Bing quadkey level 14, ~2.4 km, April 2021)
+    url: https://data.humdata.org/dataset/76f2a2ea-ba50-40f5-b79c-db95d668b843/resource/254e5daf-1ab0-47db-b40d-4abc2476e4ab/download/rwa_relative_wealth_index.csv
+    docs: https://data.humdata.org/dataset/relative-wealth-index
     access: open
-    licence: CC-BY-NC-4.0  # non-commercial: flag in datasheet
+    licence: CC-BY-NC-4.0  # NON-COMMERCIAL (HDX license_other); outputs using `rwi` inherit NC. Cite Chi et al. 2022 PNAS
     role: feature
-    status: to_verify
+    status: verified
 
   viirs_ntl:
     owner: A2
@@ -113,34 +124,38 @@ sources:
     access: login  # EOG or NASA Earthdata; or Earth Engine
     licence: to_verify
     role: validation
-    status: to_verify
+    status: blocked  # needs a login; validation-only, skipped by A2r
 
   copernicus_dem:
-    owner: A2
-    name: Copernicus DEM GLO-30
-    url: null  # s3://copernicus-dem-30m/ (AWS open data)
+    owner: A3  # taken over from A2: A3 produces data/interim/dem_rwa_30m.tif, A2r samples it
+    name: Copernicus DEM GLO-30 Public (1 arcsec DSM, COG tiles, AWS open data)
+    # one 1x1 deg tile per SW corner; ingest/dem.py fills in the tile name
+    url: https://copernicus-dem-30m.s3.amazonaws.com/{tile}/{tile}.tif
+    docs: https://copernicus-dem-30m.s3.amazonaws.com/readme.html
     access: open
-    licence: Copernicus DEM licence (free, attribution)
+    # free for any use; attribution: "© DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018
+    # provided under COPERNICUS by the European Union and ESA; all rights reserved"
+    licence: Copernicus DEM GLO-30 Public licence (free incl. commercial, attribution required)
     role: feature
-    status: to_verify
+    status: verified
 
   gridfinder:
     owner: A2
-    name: Gridfinder predicted MV grid lines (Arderne et al. 2020)
-    url: null  # Zenodo 10.5281/zenodo.3628142
+    name: Gridfinder predicted MV grid lines (Arderne et al. 2020), global grid.gpkg v1.1.1
+    url: https://zenodo.org/api/records/3628142/files/grid.gpkg/content  # Zenodo 10.5281/zenodo.3628142 (725 MB)
     access: open
     licence: CC-BY-4.0
     role: feature
-    status: to_verify
+    status: verified
 
   health_facilities:
     owner: A2
-    name: Health facilities (healthsites.io / HDX)
-    url: null
+    name: Health facilities (healthsites.io export on HDX, dataset rwanda-healthsites; derived from OSM)
+    url: https://data.humdata.org/dataset/67ca8390-678a-4eb0-8c06-a12d86df1033/resource/64be7983-aaa2-4b9c-ae5c-3b4a7fff66aa/download/rwanda.geojson
     access: open
     licence: ODbL-1.0
     role: weak_label
-    status: to_verify
+    status: verified
 
   # ------------------------------------------------------------------ A3 climate
   era5_arco:
@@ -163,12 +178,25 @@ sources:
 
   nasa_power:
     owner: A3
-    name: NASA POWER hourly/daily meteorology and irradiance (API)
-    url: https://power.larc.nasa.gov/api/
+    name: NASA POWER hourly T2M (MERRA-2, cross-check at 4 towns) + daily GHI ALLSKY_SFC_SW_DWN (CERES SYN1deg, 1 deg)
+    url: https://power.larc.nasa.gov/api/temporal/
+    docs: https://power.larc.nasa.gov/docs/
     access: open
-    licence: NASA open data
+    licence: NASA open data (no restrictions; acknowledgement of the NASA LaRC POWER Project requested)
     role: feature
-    status: to_verify
+    status: verified
+
+  openmeteo:
+    owner: A3
+    name: ERA5-Land hourly 2 m temperature (0.1 deg) via Open-Meteo Historical Weather API (no downscaling)
+    url: https://archive-api.open-meteo.com/v1/archive
+    docs: https://open-meteo.com/en/docs/historical-weather-api
+    access: open  # free tier: non-commercial only; 600/5,000/10,000 weighted calls per minute/hour/day
+    # Open-Meteo output CC-BY-4.0; underlying ERA5-Land: Copernicus licence, attribution "Contains modified
+    # Copernicus Climate Change Service information"; cite Munoz Sabater (2019) doi:10.24381/cds.e2161bac
+    licence: CC-BY-4.0 (Open-Meteo) + Copernicus C3S licence (ERA5-Land)
+    role: feature
+    status: verified
 
   # ------------------------------------------------------------------ A4 evidence + validation anchors
   census_2022:
@@ -223,4 +251,14 @@ sources:
     access: open
     licence: to_verify
     role: validation
-    status: to_verify
+    status: verified  # PDFs in evidence_docs (qsel_*)
+
+  evidence_docs:
+    owner: A4
+    name: Evidence corpus of public reports (DHS, MTF, EICV7, RPHC5, REG/RURA, QSEL, Efficiency for Access)
+    url: null  # one url per document in config/evidence_docs.yaml; files -> data/raw/evidence_docs/<version>/<doc_id>.pdf
+    access: open
+    licence: per document (config/evidence_docs.yaml); several to_verify (human licence review)
+    role: evidence  # docs marked role: validation in evidence_docs.yaml feed validation anchors only
+    status: verified
+

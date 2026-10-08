@@ -1,0 +1,226 @@
+# A4 evidence corpus: public reports that RAMP archetype parameters may cite.
+# `pixi run fetch-evidence-docs` downloads each `status: verified` doc to
+# data/raw/evidence_docs/<version>/<doc_id>.pdf via rtl.manifest.fetch (recorded in data/manifest.json).
+#
+# Fields
+#   licence:  as stated by the publisher; "to_verify" = human licence review pending (a human gate)
+#   topics:   ownership | power | usage | consumption | tariff | access | households | productive_use
+#   status:   verified (url checked to return a PDF on 2026-10-08) | unavailable (kept for the record)
+#   role:     evidence, except validation-only docs (anchors; never used as features)
+
+documents:
+  # ------------------------------------------------------------------ surveys (Rwanda)
+  - doc_id: dhs_rw_2019_fr
+    title: Rwanda Demographic and Health Survey 2019-20 Final Report
+    publisher: NISR, MoH, ICF
+    year: 2021
+    url: https://www.dhsprogram.com/pubs/pdf/FR370/FR370.pdf
+    licence: DHS Program publication (free use with citation)
+    topics: [ownership, access, households]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: dhs_rw_2025_fr
+    title: Rwanda Demographic and Health Survey 2025 Final Report
+    publisher: NISR, MoH, ICF
+    year: 2026
+    url: https://www.dhsprogram.com/pubs/pdf/FR401/FR401.pdf
+    licence: DHS Program publication (free use with citation)
+    topics: [ownership, access, households]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: mtf_rwanda_2018
+    title: "Rwanda - Beyond Connections: Energy Access Diagnostic Report Based on the Multi-Tier Framework"
+    publisher: World Bank / ESMAP
+    year: 2018
+    url: https://documents1.worldbank.org/curated/en/406341533065364544/pdf/129101-ESM-P156666-PUBLIC-MTF-Energy-Access-Country-Diagnostic-Report-Rwanda-6-2018.pdf
+    licence: CC-BY-3.0-IGO
+    topics: [ownership, power, usage, consumption, access, productive_use]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: eicv7_main_indicators
+    title: EICV7 Main Indicators Report 2023/24
+    publisher: NISR
+    year: 2025
+    url: https://statistics.gov.rw/sites/default/files/documents/2025-07/EICV7_Main%20Indicator%20Report.pdf
+    licence: to_verify  # NISR publications: free with attribution (to confirm)
+    topics: [access, ownership, households]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: eicv7_utilities_amenities
+    title: "EICV7 Thematic Report: Utilities and Amenities 2023/24"
+    publisher: NISR
+    year: 2025
+    url: https://statistics.gov.rw/sites/default/files/documents/2025-05/EICV7_Thematic%20Report%20Amenities%20and%20Utilities%20%281%29.pdf
+    licence: to_verify
+    topics: [access, ownership]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: rphc5_main_indicators
+    title: Fifth Rwanda Population and Housing Census 2022 (RPHC5) Main Indicators Report
+    publisher: NISR
+    year: 2023
+    url: https://statistics.gov.rw/sites/default/files/documents/2025-02/RPHC5_MainIndicatorsReport_Final.pdf
+    licence: to_verify
+    topics: [households, access]
+    rwanda_specific: true
+    role: validation
+    status: verified
+  - doc_id: rphc5_housing_households
+    title: "RPHC5 Thematic Report: Characteristics of Households and Housing"
+    publisher: NISR
+    year: 2023
+    url: https://statistics.gov.rw/sites/default/files/documents/2025-02/RPHC5%20Thematic%20Report_Housing%20and%20Households%20Characteristics.pdf
+    licence: to_verify
+    topics: [households, access, ownership]
+    rwanda_specific: true
+    role: validation
+    status: verified
+  # ------------------------------------------------------------------ utility / regulator (Rwanda)
+  - doc_id: reg_tariffs_2025
+    title: Electricity end-user tariffs effective 1 October 2025 (RURA decision, published by REG)
+    publisher: REG / RURA
+    year: 2025
+    url: https://www.reg.rw/fileadmin/user_upload/New_Tariff_effective_from_1st_October_2025.pdf
+    licence: to_verify  # public notice
+    topics: [tariff]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: reg_annual_report_2022_23
+    title: REG Annual Report 2022-2023
+    publisher: Rwanda Energy Group
+    year: 2023
+    url: https://www.reg.rw/fileadmin/user_upload/REG_ANNUAL_REPORT_2022-2023.pdf
+    licence: to_verify
+    topics: [access, consumption]
+    rwanda_specific: true
+    role: validation
+    status: verified
+  - doc_id: reg_lcpdp_2024
+    title: Rwanda Least Cost Power Development Plan 2024 Review
+    publisher: Rwanda Energy Group
+    year: 2024
+    url: https://www.reg.rw/fileadmin/user_upload/Rwanda-LCPDP-2024_Review-web.pdf
+    licence: to_verify
+    topics: [consumption, access]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  # ------------------------------------------------------------------ research (Rwanda; Columbia QSEL)
+  - doc_id: qsel_consumption_trends_2024
+    title: "Rwanda's Path to Universal Electricity Access: Consumption Trends, Tariff Impact, and Challenges Ahead"
+    publisher: Columbia University QSEL
+    year: 2024
+    url: https://qsel.columbia.edu/assets/uploads/blog/2024/publications/Rwandas_path_to_universal_electricity_access_consumption_trends_tarriff_impact_and_challenges_ahead.pdf
+    licence: to_verify  # working paper, no licence stated
+    topics: [consumption, tariff]
+    rwanda_specific: true
+    role: validation
+    status: verified
+  - doc_id: qsel_grid_reliability_2025
+    title: "Electricity consumption: The role of grid reliability in appliance ownership and usage in Rwanda"
+    publisher: Columbia University QSEL
+    year: 2025
+    url: https://qsel.columbia.edu/assets/uploads/blog/2025/publications/Electricity-consumption-The-role-of-grid-reliability-in-appliance-ownership-and-usage-in-Rwanda.pdf
+    licence: to_verify
+    topics: [ownership, usage, consumption]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: qsel_rural_adoption_2025
+    title: Adoption of Electricity in Rural Rwanda 10 Years after Connection
+    publisher: Columbia University QSEL / RWI
+    year: 2025
+    url: https://qsel.columbia.edu/assets/uploads/blog/2025/publications/Adoption-of-electricity-in-rural-rwanda-10-years-after-connection.pdf
+    licence: to_verify
+    topics: [ownership, usage, consumption, access]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  - doc_id: qsel_household_demand_2024
+    title: Understanding Rwanda Household Electricity Demand
+    publisher: Columbia University QSEL
+    year: 2024
+    url: https://qsel.columbia.edu/assets/uploads/blog/2024/publications/Rwanda_Household_Electricity_Demand_Joel.pdf
+    licence: to_verify
+    topics: [consumption, ownership]
+    rwanda_specific: true
+    role: evidence
+    status: verified
+  # ------------------------------------------------------------------ appliance data (not Rwanda-specific)
+  - doc_id: efa_appliance_data_trends_2021
+    title: 2021 Appliance Data Trends (TVs, fans, refrigerators, solar water pumps)
+    publisher: Efficiency for Access / CLASP
+    year: 2021
+    url: https://www.clasp.ngo/wp-content/uploads/2021/01/2021-ApplianceDataTrends.pdf
+    licence: to_verify
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: verified
+  - doc_id: efa_brief_refrigerators_2021
+    title: "Solar Appliance Technology Brief: Refrigerators"
+    publisher: Efficiency for Access / CLASP
+    year: 2021
+    url: https://www.clasp.ngo/wp-content/uploads/2021/06/EforA_Solar_Appliance_Technology_Brief_Refrigerators_June2021.pdf
+    licence: to_verify
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: verified
+  - doc_id: efa_brief_fans_2021
+    title: "Solar Appliance Technology Brief: Fans"
+    publisher: Efficiency for Access / CLASP
+    year: 2021
+    url: https://www.clasp.ngo/wp-content/uploads/2021/06/EforA_Solar-Appliance-Technology-Brief_Fans_May-2021.pdf
+    licence: to_verify
+    topics: [power, usage]
+    rwanda_specific: false
+    role: evidence
+    status: verified
+  - doc_id: efa_brief_milling_2021
+    title: "Solar Appliance Technology Brief: Milling"
+    publisher: Efficiency for Access / CLASP
+    year: 2021
+    url: https://www.clasp.ngo/wp-content/uploads/2021/05/EforA_Solar_Appliance_Technology_Brief_Milling_July2021.pdf
+    licence: to_verify
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: verified
+  # ------------------------------------------------------------------ not retrievable on 2026-10-08
+  - doc_id: rura_tariff_board_decision
+    title: RURA Board Decision on Electricity End-User Tariffs in Rwanda
+    publisher: RURA
+    year: null
+    url: https://rura.rw/fileadmin/Documents/Energy/BoardDecisions/Board_Decision_on_Electricity_End_User_Tariffs_in_Rwanda.pdf
+    licence: to_verify
+    topics: [tariff]
+    rwanda_specific: true
+    role: evidence
+    status: unavailable  # HTTP 404; reg_tariffs_2025 covers current tariffs
+  - doc_id: nep_rwanda_2019
+    title: Design of the National Electrification Plan in Rwanda (2019)
+    publisher: REG / MININFRA
+    year: 2019
+    url: https://rise.esmap.org/data/files/library/rwanda/Electricity Access/Rwanda_Design of the National Electrification Plan_2019.pdf
+    licence: to_verify
+    topics: [consumption, access]
+    rwanda_specific: true
+    role: evidence
+    status: unavailable  # HTTP 403 to scripted clients; download manually + register-local if needed
+  - doc_id: power_africa_pue_catalog_rwanda_2020
+    title: Power Africa Productive Use of Energy Catalog 2020 - Rwanda
+    publisher: USAID Power Africa
+    year: 2020
+    url: https://uatweb.usaid.gov/sites/default/files/2022-05/Power-Africa-PUE-2020-Catalog-Rwanda.pdf
+    licence: public domain (US government work), to_verify
+    topics: [power, productive_use]
+    rwanda_specific: true
+    role: evidence
+    status: unavailable  # HTTP 403; USAID sites offline. Productive-use specs are a known corpus gap

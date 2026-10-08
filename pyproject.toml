@@ -69,8 +69,26 @@ fetch-vida = "python -m rtl.ingest.vida"
 fetch-osm = "python -m rtl.ingest.osm"
 fetch-dhs-api = "python -m rtl.ingest.dhs_api"
 register-local = "python -m rtl.ingest.local"
+fetch-rasters = "python -m rtl.ingest.ghsl && python -m rtl.ingest.worldpop && python -m rtl.ingest.rwi"
+# --- A4 evidence + anchors (evidence needs ANTHROPIC_API_KEY; `pixi run evidence --dry-run` does not)
+fetch-evidence-docs = "python -m rtl.ingest.evidence_docs"
+evidence = "python -m rtl.llm.evidence"
+llm-ledger = "python -m rtl.llm.cache"
+dhs-priors = "python -m rtl.ingest.dhs_api --priors"
+# --- A2v vector context (each ingest writes data/interim/layers/*.parquet; join needs buildings_base)
+fetch-admin = "python -m rtl.ingest.admin"
+fetch-overture = "python -m rtl.ingest.overture"
+fetch-gridfinder = { cmd = "python -m rtl.ingest.gridfinder", depends-on = ["fetch-admin"] }
+fetch-facilities = { cmd = "python -m rtl.ingest.facilities", depends-on = ["fetch-osm"] }
+context-vector = "python -m rtl.join.vector"  # after fetch-admin/-overture/-gridfinder/-facilities
+# --- A3 climate + DEM (fetch-openmeteo takes ~2 h: paced for the free-tier rate limit, resumable)
+fetch-dem = "python -m rtl.ingest.dem"
+fetch-openmeteo = "python -m rtl.ingest.openmeteo"
+fetch-power = "python -m rtl.ingest.power"
+climate-h3 = "python -m rtl.climate.build"
 # --- conform
 conform-buildings = { cmd = "python -m rtl.conform.buildings", depends-on = ["fetch-vida"] }
+context-raster = "python -m rtl.join.raster"  # needs fetch-rasters once (re-clipping GHSL takes minutes)
 make-fixture = { cmd = "python -m rtl.conform.fixture", depends-on = ["conform-buildings"] }
 assemble-context = "python -m rtl.join.assemble"
 # --- EDA (jupytext percent scripts; open as notebooks with `jupytext --to ipynb`)
