@@ -3,13 +3,16 @@
   "bbox": null,
   "rows_raw": 6434264,
   "exact_duplicates_dropped": 17,
+  "intersecting_pairs_same_source": 1424876,
+  "nested_same_source": 2186,
   "overlap_pairs_any": 0,
   "overlap_pairs_iou_gt_0_5": 0,
   "overlap_pairs_by_source": {},
   "rows_out": 6434247,
   "flag_counts": {
     "low_confidence": 808772,
+    "nested_same_source": 2186,
     "tiny": 34070
   },
-  "seconds": 76.8
+  "seconds": 74.1
 }

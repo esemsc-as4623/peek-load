@@ -27,6 +27,8 @@ SAMPLE_ROWS = 200_000
 TABLES: dict[str, tuple[Path, str | None]] = {
     "buildings_base": (INTERIM_DIR / "buildings_base.parquet", "bldg_id"),
     "building_height": (INTERIM_DIR / "building_height.parquet", "bldg_id"),
+    "context_vector": (INTERIM_DIR / "context_vector.parquet", "bldg_id"),
+    "context_raster": (INTERIM_DIR / "context_raster.parquet", "bldg_id"),
     "building_context": (INTERIM_DIR / "building_context.parquet", "bldg_id"),
     "climate_h3": (INTERIM_DIR / "climate_h3.parquet", "h3_r7"),
     "evidence": (PROCESSED_DIR / "evidence.parquet", "evidence_id"),

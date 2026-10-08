@@ -107,14 +107,23 @@ def build(con: duckdb.DuckDBPyConnection, raw_path: str, out: Path = OUT,
         con.sql("CREATE OR REPLACE TABLE b AS SELECT * FROM b QUALIFY row_number() OVER (PARTITION BY bldg_id) = 1")
     stats["exact_duplicates_dropped"] = dups
 
-    # 3. cross-source overlaps (each unordered pair once: source_a < source_b) -------------------
-    #    IoU is a ratio of areas, so computing it in degrees is fine at building scale.
+    # 3. overlaps: ONE spatial join over every intersecting pair (each unordered pair once), then derive
+    #    both flags from it. Note: putting `a.source = c.source` in the join condition makes DuckDB choose a
+    #    hash join on source (quadratic within Google's 5.8M footprints); an inequality keeps the R-tree
+    #    SPATIAL_JOIN. IoU and coverage are area ratios, so computing them in degrees is fine at this scale.
+    con.sql("""
+        CREATE OR REPLACE TABLE pairs AS
+        SELECT a.bldg_id AS id_a, c.bldg_id AS id_b, a.source AS src_a, c.source AS src_b,
+               ST_Area(a.geom) AS area_a, ST_Area(c.geom) AS area_b,
+               ST_Area(ST_Intersection(a.geom, c.geom)) AS inter
+        FROM b AS a JOIN b AS c
+          ON ST_Intersects(a.geom, c.geom) AND a.bldg_id < c.bldg_id
+    """)
     con.sql("""
         CREATE OR REPLACE TABLE xsrc_pairs AS
-        SELECT a.bldg_id AS id_a, c.bldg_id AS id_b, a.source AS src_a, c.source AS src_b,
-               ST_Area(ST_Intersection(a.geom, c.geom)) / ST_Area(ST_Union(a.geom, c.geom)) AS iou
-        FROM b AS a JOIN b AS c
-          ON ST_Intersects(a.geom, c.geom) AND a.source < c.source
+        SELECT id_a, id_b, least(src_a, src_b) AS src_a, greatest(src_a, src_b) AS src_b,
+               inter / (area_a + area_b - inter) AS iou
+        FROM pairs WHERE src_a <> src_b
     """)
     con.sql(f"""
         CREATE OR REPLACE TABLE overlap_ids AS
@@ -123,12 +132,12 @@ def build(con: duckdb.DuckDBPyConnection, raw_path: str, out: Path = OUT,
     """)
     con.sql(f"""
         CREATE OR REPLACE TABLE nested_ids AS
-        SELECT CASE WHEN ST_Area(a.geom) <= ST_Area(c.geom) THEN a.bldg_id ELSE c.bldg_id END AS id
-        FROM b AS a JOIN b AS c
-          ON ST_Intersects(a.geom, c.geom) AND a.source = c.source AND a.bldg_id < c.bldg_id
-        WHERE ST_Area(ST_Intersection(a.geom, c.geom)) / least(ST_Area(a.geom), ST_Area(c.geom)) > {NESTED_FRAC}
+        SELECT DISTINCT CASE WHEN area_a <= area_b THEN id_a ELSE id_b END AS id
+        FROM pairs
+        WHERE src_a = src_b AND inter / least(area_a, area_b) > {NESTED_FRAC}
     """)
-    stats["nested_same_source"] = con.sql("SELECT count(DISTINCT id) FROM nested_ids").fetchone()[0]
+    stats["intersecting_pairs_same_source"] = con.sql("SELECT count(*) FROM pairs WHERE src_a = src_b").fetchone()[0]
+    stats["nested_same_source"] = con.sql("SELECT count(*) FROM nested_ids").fetchone()[0]
     stats["overlap_pairs_any"] = con.sql("SELECT count(*) FROM xsrc_pairs").fetchone()[0]
     stats["overlap_pairs_iou_gt_0_5"] = con.sql(
         f"SELECT count(*) FROM xsrc_pairs WHERE iou > {OVERLAP_IOU}").fetchone()[0]
@@ -151,7 +160,7 @@ def build(con: duckdb.DuckDBPyConnection, raw_path: str, out: Path = OUT,
                        CASE WHEN area_m2 < {TINY_M2} THEN 'tiny' END) AS qa_flags,
                    geom AS geometry
             FROM b LEFT JOIN overlap_ids o ON b.bldg_id = o.id
-                   LEFT JOIN (SELECT DISTINCT id FROM nested_ids) n ON b.bldg_id = n.id
+                   LEFT JOIN nested_ids n ON b.bldg_id = n.id
             ORDER BY h3_r9
         ) TO '{out}' (FORMAT parquet, COMPRESSION zstd, ROW_GROUP_SIZE 100000)
     """)

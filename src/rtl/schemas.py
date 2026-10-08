@@ -118,6 +118,20 @@ building_context = pa.DataFrameSchema(
     name="building_context",
 )
 
+# Partial context tables: A2v (vector) and A2r (raster) each write one; the lead joins them on bldg_id
+# into building_context. Column definitions are shared, so the final table can't drift from its parts.
+CONTEXT_VECTOR_COLS = [
+    "bldg_id", "adm1_name", "adm2_name", "adm3_name", "adm4_name", "adm5_name",
+    "osm_building", "osm_amenity", "osm_shop", "osm_match", "overture_category", "overture_confidence",
+    "facility_type", "dist_road_major_m", "dist_road_any_m", "dist_powerline_m",
+    "poi_count_50m", "poi_count_100m", "poi_count_250m", "h3_r7",
+]
+CONTEXT_RASTER_COLS = ["bldg_id", "ghsl_nres_share", "ghsl_class", "pop_density_per_km2", "rwi", "elevation_m"]
+context_vector = pa.DataFrameSchema(
+    {c: building_context.columns[c] for c in CONTEXT_VECTOR_COLS}, strict=True, name="context_vector")
+context_raster = pa.DataFrameSchema(
+    {c: building_context.columns[c] for c in CONTEXT_RASTER_COLS}, strict=True, name="context_raster")
+
 # --------------------------------------------------------------------------- A3 climate
 _hourly = {f"t2m_h{h:02d}_c": pa.Column(float, pa.Check.in_range(-5, 45)) for h in range(24)}
 climate_h3 = pa.DataFrameSchema(
@@ -183,5 +197,6 @@ labels = pa.DataFrameSchema(
 
 SCHEMAS = {
     s.name: s
-    for s in [buildings_base, building_height, building_context, climate_h3, evidence, labels]
+    for s in [buildings_base, building_height, context_vector, context_raster, building_context, climate_h3,
+              evidence, labels]
 }
