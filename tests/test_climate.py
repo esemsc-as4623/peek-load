@@ -135,7 +135,7 @@ def test_table_matches_contract_and_is_internally_consistent(table):
     climate_h3.validate(table, lazy=True)
     hourly = table[[f"t2m_h{h:02d}_c" for h in range(24)]].to_numpy()
     # the typical day averages back to the annual mean (both are means over the same hours)
-    np.testing.assert_allclose(hourly.mean(axis=1), table.t2m_mean_c, atol=1e-6)
+    np.testing.assert_allclose(hourly.mean(axis=1), table.t2m_mean_c, atol=1e-4)  # float32 raw values
     # daytime peak in local time falls in the afternoon, minimum around dawn (wrong offset would move these)
     assert 12 <= np.median(hourly.argmax(axis=1)) <= 16
     assert 4 <= np.median(hourly.argmin(axis=1)) <= 7
