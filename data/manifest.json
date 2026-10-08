@@ -1,0 +1,40 @@
+{
+  "data/raw/dhs_api/2026-10-08/indicators_meta.json": {
+    "source_id": "dhs_api",
+    "url": "https://api.dhsprogram.com/rest/dhs/indicators",
+    "path": "data/raw/dhs_api/2026-10-08/indicators_meta.json",
+    "bytes": 7420,
+    "sha256": "c7e72500eb285b979e777e211f1cec8c0890a22acafcb1af42dcb84e9d568e7f",
+    "licence": "DHS Program terms (aggregate indicators, citation required)",
+    "retrieved_at": "2026-10-08T10:22:00+00:00"
+  },
+  "data/raw/dhs_api/2026-10-08/rw_household_energy_indicators.json": {
+    "source_id": "dhs_api",
+    "url": "https://api.dhsprogram.com/rest/dhs/data?countryIds=RW&surveyIds=RW2015DHS,RW2019DHS,RW2025DHS&breakdown=all",
+    "path": "data/raw/dhs_api/2026-10-08/rw_household_energy_indicators.json",
+    "bytes": 404955,
+    "sha256": "72955e1246f8824b6e2822aa0a3e6f7587cad1a4342e9c8c43d58e96a5444761",
+    "licence": "DHS Program terms (aggregate indicators, citation required)",
+    "retrieved_at": "2026-10-08T10:22:05+00:00"
+  },
+  "data/raw/osm_geofabrik/2026-10-07/rwanda-latest.osm.pbf": {
+    "source_id": "osm_geofabrik",
+    "url": "https://download.geofabrik.de/africa/rwanda-latest.osm.pbf",
+    "path": "data/raw/osm_geofabrik/2026-10-07/rwanda-latest.osm.pbf",
+    "bytes": 67845850,
+    "sha256": "11755ec67bc4846c6f6824338e660788d0d52c6092a58cd5fb52af17bed9890f",
+    "licence": "ODbL-1.0",
+    "retrieved_at": "2026-10-08T10:07:11+00:00",
+    "version": "2026-10-07"
+  },
+  "data/raw/vida_buildings/2024-08-27/RWA.parquet": {
+    "source_id": "vida_buildings",
+    "url": "https://data.source.coop/vida/google-microsoft-osm-open-buildings/geoparquet/by_country/country_iso=RWA/RWA.parquet",
+    "path": "data/raw/vida_buildings/2024-08-27/RWA.parquet",
+    "bytes": 815685017,
+    "sha256": "a5921f8bc842ef96893a1260478f29bd9f51e33c6909b9d2410b456ffd3dba40",
+    "licence": "ODbL-1.0 (Google Open Buildings CC-BY-4.0/ODbL, Microsoft ODbL, OSM ODbL)",
+    "retrieved_at": "2026-10-08T10:06:34+00:00",
+    "version": "2024-08-27"
+  }
+}

@@ -1,0 +1,30 @@
+# Areas of interest.
+# National: every base layer is ingested and joined for all of Rwanda.
+# Deep-dives: gold labels, Claude labelling pilot and EDA focus here (contrasting urban / secondary city / warm rural).
+# Fixture: a tiny committed sample (~2k buildings) every workstream develops and tests against.
+
+country:
+  iso3: RWA
+  bbox: [28.80, -2.85, 30.90, -1.04]  # [min_lon, min_lat, max_lon, max_lat], loose envelope
+  metric_crs: "EPSG:32735"            # WGS 84 / UTM 35S for areas, lengths, distances
+  storage_crs: "EPSG:4326"
+
+deep_dives:
+  kigali_urban:
+    description: Dense mixed-use urban sector with shop-houses and informal areas
+    district: Nyarugenge
+    sector: Nyamirambo
+  musanze_city:
+    description: Secondary city at ~1,850 m; cool, mixed commercial/residential core
+    district: Musanze
+    sector: Muhoza
+  eastern_rural:
+    description: Warm eastern lowland (~1,350 m), rural, solar irrigation scheme (productive use)
+    district: Kirehe
+    sector: Nasho
+    note: confirm sector name against admin boundaries (A2); fall back to the Kirehe sector with the lowest mean elevation
+
+fixture:
+  description: One small dense block in Nyamirambo, Kigali; committed to tests/fixtures for development
+  bbox: [30.0395, -1.9785, 30.0465, -1.9715]
+  target_buildings: 2000

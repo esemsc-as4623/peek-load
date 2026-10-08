@@ -1,0 +1,226 @@
+# Source catalog: the single place every dataset is declared.
+# Each ingest module reads its entry, downloads into data/raw/<id>/<version>/, and records
+# url, sha256, bytes, and retrieval time in data/manifest.json.
+#
+# Fields
+#   owner:    workstream responsible (A1 footprints, A2 context, A3 climate, A4 evidence)
+#   access:   open | login | restricted (no redistribution of raw data)
+#   licence:  licence of the raw data; outputs inherit the strictest share-alike term (ODbL)
+#   status:   verified (url checked) | to_verify (owner agent confirms url/licence before ingest)
+#   role:     feature | weak_label | validation | evidence   (validation sources are never used as features)
+
+sources:
+  # ------------------------------------------------------------------ A1 footprints
+  vida_buildings:
+    owner: A1
+    name: VIDA combined Google V3 + Microsoft + OSM building footprints (Rwanda partition)
+    url: https://data.source.coop/vida/google-microsoft-osm-open-buildings/geoparquet/by_country/country_iso=RWA/RWA.parquet
+    docs: https://source.coop/vida/google-microsoft-osm-open-buildings
+    access: open
+    licence: ODbL-1.0 (Google Open Buildings CC-BY-4.0/ODbL, Microsoft ODbL, OSM ODbL)
+    role: feature
+    status: verified
+
+  google_25d_temporal:
+    owner: A1
+    name: Google Open Buildings 2.5D Temporal (height, presence, fractional count; 2016-2023; 4 m)
+    url: null  # public GCS GeoTIFF tiles; A1 resolves the tile list for Rwanda
+    docs: https://sites.research.google/gr/open-buildings/temporal
+    access: open
+    licence: CC-BY-4.0 / ODbL-1.0
+    role: feature
+    status: to_verify
+
+  # ------------------------------------------------------------------ A2 context
+  osm_geofabrik:
+    owner: A2
+    name: OpenStreetMap Rwanda extract (Geofabrik)
+    url: https://download.geofabrik.de/africa/rwanda-latest.osm.pbf
+    access: open
+    licence: ODbL-1.0
+    role: feature  # tags on buildings are also used as weak labels (A5)
+    status: verified
+
+  overture_places:
+    owner: A2
+    name: Overture Maps places theme (POIs with categories + confidence)
+    url: null  # s3://overturemaps-us-west-2/release/<latest>/theme=places/type=place/*  (read with DuckDB)
+    docs: https://docs.overturemaps.org/
+    access: open
+    licence: CDLA-Permissive-2.0
+    role: weak_label
+    status: to_verify
+
+  admin_boundaries:
+    owner: A2
+    name: Rwanda admin boundaries (province, district, sector, cell, village)
+    url: null  # geoBoundaries ADM0-3 and/or OCHA COD-AB / NISR for cell+village
+    access: open
+    licence: to_verify
+    role: feature
+    status: to_verify
+
+  ghsl_built_c:
+    owner: A2
+    name: GHSL GHS-BUILT-C R2023A settlement characteristics (RES/NRES, 10 m)
+    url: null
+    docs: https://human-settlement.emergency.copernicus.eu/ghs_buC2023.php
+    access: open
+    licence: CC-BY-4.0
+    role: feature
+    status: to_verify
+
+  ghsl_built_h:
+    owner: A2
+    name: GHSL GHS-BUILT-H R2023A average net building height (100 m)
+    url: null
+    access: open
+    licence: CC-BY-4.0
+    role: feature
+    status: to_verify
+
+  worldpop:
+    owner: A2
+    name: WorldPop constrained population 100 m (Rwanda)
+    url: null
+    access: open
+    licence: CC-BY-4.0
+    role: feature
+    status: to_verify
+
+  meta_hrsl:
+    owner: A2
+    name: Meta High Resolution Settlement Layer / population density (Rwanda, HDX)
+    url: null
+    access: open
+    licence: CC-BY-4.0
+    role: feature
+    status: to_verify
+
+  meta_rwi:
+    owner: A2
+    name: Meta Relative Wealth Index (Rwanda, ~2.4 km)
+    url: null
+    access: open
+    licence: CC-BY-NC-4.0  # non-commercial: flag in datasheet
+    role: feature
+    status: to_verify
+
+  viirs_ntl:
+    owner: A2
+    name: VIIRS night-time lights (annual VNL v2 or Black Marble)
+    url: null
+    access: login  # EOG or NASA Earthdata; or Earth Engine
+    licence: to_verify
+    role: validation
+    status: to_verify
+
+  copernicus_dem:
+    owner: A2
+    name: Copernicus DEM GLO-30
+    url: null  # s3://copernicus-dem-30m/ (AWS open data)
+    access: open
+    licence: Copernicus DEM licence (free, attribution)
+    role: feature
+    status: to_verify
+
+  gridfinder:
+    owner: A2
+    name: Gridfinder predicted MV grid lines (Arderne et al. 2020)
+    url: null  # Zenodo 10.5281/zenodo.3628142
+    access: open
+    licence: CC-BY-4.0
+    role: feature
+    status: to_verify
+
+  health_facilities:
+    owner: A2
+    name: Health facilities (healthsites.io / HDX)
+    url: null
+    access: open
+    licence: ODbL-1.0
+    role: weak_label
+    status: to_verify
+
+  # ------------------------------------------------------------------ A3 climate
+  era5_arco:
+    owner: A3
+    name: ERA5 hourly 2 m temperature via ARCO-ERA5 public Zarr (0.25 deg)
+    url: gs://gcp-public-data-arco-era5/  # anonymous access; A3 pins the exact store
+    access: open
+    licence: to_verify  # Copernicus C3S licence
+    role: feature
+    status: to_verify
+
+  era5_land_cds:
+    owner: A3
+    name: ERA5-Land hourly 2 m temperature (0.1 deg) via Copernicus CDS
+    url: null
+    access: login  # ~/.cdsapirc
+    licence: to_verify
+    role: feature
+    status: to_verify
+
+  nasa_power:
+    owner: A3
+    name: NASA POWER hourly/daily meteorology and irradiance (API)
+    url: https://power.larc.nasa.gov/api/
+    access: open
+    licence: NASA open data
+    role: feature
+    status: to_verify
+
+  # ------------------------------------------------------------------ A4 evidence + validation anchors
+  census_2022:
+    owner: A4
+    name: Rwanda 5th Population and Housing Census 2022 (households by sector), NISR
+    url: null
+    access: open
+    licence: to_verify
+    role: validation
+    status: to_verify
+
+  dhs_api:
+    owner: A4
+    name: DHS Program public API indicators for Rwanda (household electricity + asset ownership, 2015/2019/2025)
+    url: https://api.dhsprogram.com/rest/dhs/
+    access: open
+    licence: DHS Program terms (aggregate indicators, citation required)
+    role: evidence
+    status: verified
+
+  dhs_2025:
+    owner: A4
+    name: Rwanda DHS 2025 (released 2026-08-05; microdata + GPS restricted)
+    url: null
+    access: restricted  # requires DHS Program approval; never redistribute microdata
+    licence: DHS terms of use
+    role: evidence
+    status: to_verify
+
+  dhs_2019:
+    owner: A4
+    name: Rwanda DHS 2019-20 (report public; microdata + GPS restricted)
+    url: null
+    access: restricted  # requires DHS Program approval; never redistribute microdata
+    licence: DHS terms of use
+    role: evidence
+    status: to_verify
+
+  mtf_rwanda:
+    owner: A4
+    name: World Bank Multi-Tier Framework energy access survey, Rwanda ("Beyond Connections")
+    url: null
+    access: login  # report open; microdata via World Bank Microdata Library
+    licence: CC-BY-3.0-IGO (report)
+    role: evidence
+    status: to_verify
+
+  qsel_rwanda:
+    owner: A4
+    name: Columbia QSEL / REG Rwanda electricity consumption analyses
+    url: https://qsel.columbia.edu/Rwandas-path-to-universal-electricity-access-consumption-trends-tariff-impact-and-challenges-ahead
+    access: open
+    licence: to_verify
+    role: validation
+    status: to_verify

@@ -1,0 +1,16 @@
+# Local PostGIS for serving / QGIS. DuckDB does the heavy lifting; this is the query/serve layer.
+# Start: docker compose -f infra/docker-compose.yml up -d
+services:
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: rtl-postgis
+    environment:
+      POSTGRES_DB: rtl
+      POSTGRES_USER: rtl
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rtl-local-only}
+    ports:
+      - "127.0.0.1:5432:5432"   # bind to localhost only
+    volumes:
+      - rtl_pgdata:/var/lib/postgresql/data
+volumes:
+  rtl_pgdata:

@@ -1,0 +1,28 @@
+# secrets — never commit
+.env
+*.pem
+*service-account*.json
+.cdsapirc
+.netrc
+
+# environments / caches
+.pixi/
+__pycache__/
+*.egg-info/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+
+# data: everything is reproducible from code except the manifest and human gold labels
+data/**
+!data/.gitkeep
+!data/manifest.json
+!data/gold/
+!data/gold/**
+
+# notebooks are stored as jupytext .py; rendered .ipynb are local only
+notebooks/*.ipynb
+
+
+# run logs
+reports/status/*.log

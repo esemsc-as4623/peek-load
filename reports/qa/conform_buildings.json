@@ -1,0 +1,15 @@
+{
+  "raw_path": "data/raw/vida_buildings/2024-08-27/RWA.parquet",
+  "bbox": null,
+  "rows_raw": 6434264,
+  "exact_duplicates_dropped": 17,
+  "overlap_pairs_any": 0,
+  "overlap_pairs_iou_gt_0_5": 0,
+  "overlap_pairs_by_source": {},
+  "rows_out": 6434247,
+  "flag_counts": {
+    "low_confidence": 808772,
+    "tiny": 34070
+  },
+  "seconds": 76.8
+}
