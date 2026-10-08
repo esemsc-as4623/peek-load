@@ -75,6 +75,8 @@ fetch-evidence-docs = "python -m rtl.ingest.evidence_docs"
 evidence = "python -m rtl.llm.evidence"
 llm-ledger = "python -m rtl.llm.cache"
 dhs-priors = "python -m rtl.ingest.dhs_api --priors"
+anchors = "python -m rtl.ingest.evidence_docs --anchors"
+archetype-smoke = "python -m rtl.archetypes"
 # --- A2v vector context (each ingest writes data/interim/layers/*.parquet; join needs buildings_base)
 fetch-admin = "python -m rtl.ingest.admin"
 fetch-overture = "python -m rtl.ingest.overture"

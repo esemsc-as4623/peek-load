@@ -19,6 +19,12 @@ data/**
 !data/manifest.json
 !data/gold/
 !data/gold/**
+# small, curated, human-reviewed tables (no restricted microdata)
+!data/processed/
+!data/processed/validation_anchors/
+!data/processed/validation_anchors/**
+!data/processed/archetypes/
+!data/processed/archetypes/**
 
 # notebooks are stored as jupytext .py; rendered .ipynb are local only
 notebooks/*.ipynb

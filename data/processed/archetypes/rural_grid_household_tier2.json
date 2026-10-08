@@ -1,0 +1,49 @@
+{
+  "archetype_id": "rural_grid_household_tier2",
+  "description": "Rural grid-connected household with lights, phone charging, radio and TV (MTF Tier 2-like). DRAFT: ownership from DHS 2025; power and usage are assumptions awaiting evidence extraction and human review.",
+  "population": "rural grid-connected households, Rwanda",
+  "year": 2025,
+  "status": "draft",
+  "appliances": [
+    {
+      "name": "led_bulb",
+      "ownership_share": {"value": 1.0, "assumption": "Grid-connected households use electricity as main lighting (EICV7 Table A.8 counts grid lighting as 'electricity distributors'); every archetype member owns bulbs."},
+      "number": {"value": 3, "assumption": "Three rooms lit (living room, bedroom, outside); to replace with MTF Rwanda 2018 lighting data."},
+      "power": {"value": 7, "assumption": "Typical retail LED bulb 5-9 W."},
+      "func_time": {"value": 240, "assumption": "4 h/day: evening plus early morning."},
+      "windows": {"value": [[1080, 1380], [300, 420]], "assumption": "18:00-23:00 and 05:00-07:00 (sunrise ~06:00, sunset ~18:00 all year at 2 deg S)."},
+      "func_cycle": {"value": 30, "assumption": "Lights stay on at least 30 min once switched on."},
+      "time_fraction_random_variability": {"value": 0.2, "assumption": "RAMP example-file value for indoor lights."},
+      "random_var_w": {"value": 0.2, "assumption": "RAMP example-file value."}
+    },
+    {
+      "name": "phone_charger",
+      "ownership_share": {"value": 0.796, "evidence_ids": ["dhs:RW2025DHS:mobile_phone_any:residence:Rural", "dhs:RW2025DHS:mobile_phone:residence:Rural"], "derivation": "Rural households with any type of mobile phone (FR401 Table 2.5). The API indicator HC_HEFF_H_MPH (0.735) counts ordinary phones only. Unconditional share: households without electricity also own phones (charged elsewhere), so this may overstate charging at home slightly."},
+      "number": {"value": 1, "assumption": "One phone charged per household per day."},
+      "power": {"value": 5, "assumption": "USB charger, 5 W."},
+      "func_time": {"value": 120, "assumption": "2 h/day charging."},
+      "windows": {"value": [[1080, 1440], [0, 360]], "assumption": "Charged in the evening and overnight."},
+      "func_cycle": {"value": 60, "assumption": "One charge lasts at least an hour."}
+    },
+    {
+      "name": "radio",
+      "ownership_share": {"value": 0.39, "evidence_ids": ["dhs:RW2025DHS:radio:residence:Rural"], "derivation": "Unconditional rural ownership. Many radios are battery-powered, so ownership among grid households can't be derived from this share; used as-is."},
+      "number": {"value": 1, "assumption": "One radio per owning household."},
+      "power": {"value": 5, "assumption": "Small mains radio 3-10 W."},
+      "func_time": {"value": 180, "assumption": "3 h/day."},
+      "windows": {"value": [[360, 540], [1080, 1320]], "assumption": "Morning news 06:00-09:00 and evening 18:00-22:00."},
+      "func_cycle": {"value": 30, "assumption": "Listening sessions of 30 min or more."}
+    },
+    {
+      "name": "tv",
+      "ownership_share": {"value": 0.172, "evidence_ids": ["dhs:RW2025DHS:tv:residence:Rural", "dhs:RW2025DHS:electricity:residence:Rural"], "derivation": "P(TV | electricity) ~ P(TV) / P(electricity) = 0.072 / 0.418, assuming TVs are only in electrified rural households (an upper bound: some run on solar home systems)."},
+      "number": {"value": 1, "assumption": "One TV per owning household."},
+      "power": {"value": 40, "assumption": "32-inch LED TV 30-50 W. Check: 40 W x 4.3 h x 30 d = 5.2 kWh/month, the TV consumption estimated in qsel_grid_reliability_2025 p13 (validation_anchors/residential_kwh_qsel.csv)."},
+      "func_time": {"value": 180, "assumption": "3 h/day."},
+      "windows": {"value": [[1080, 1410]], "assumption": "Evening viewing 18:00-23:30."},
+      "func_cycle": {"value": 60, "assumption": "Viewing sessions of 1 h or more."},
+      "time_fraction_random_variability": {"value": 0.1, "assumption": "RAMP example-file value for TVs."},
+      "random_var_w": {"value": 0.1, "assumption": "RAMP example-file value."}
+    }
+  ]
+}

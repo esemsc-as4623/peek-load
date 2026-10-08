@@ -1,0 +1,7 @@
+parameter,value,unit,population,geography,doc_id,page,table,quote,quote_verified,role
+tariff_rwf_per_kwh.residential.block_0_20,89,RWF/kWh (excl. VAT and regulatory fee),"residential, 0-20 kWh/month",Rwanda,reg_tariffs_2025,1,A. Tariffs for all customer categories,[ 0-20] 89,True,validation
+tariff_rwf_per_kwh.residential.block_20_50,310,RWF/kWh (excl. VAT and regulatory fee),"residential, >20-50 kWh/month",Rwanda,reg_tariffs_2025,1,A. Tariffs for all customer categories,[>20 - 50] 310,True,validation
+tariff_rwf_per_kwh.residential.block_over_50,369,RWF/kWh (excl. VAT and regulatory fee),"residential, >50 kWh/month",Rwanda,reg_tariffs_2025,1,A. Tariffs for all customer categories,>50 369,True,validation
+tariff_rwf_per_kwh.non_residential.block_0_100,355,RWF/kWh (excl. VAT and regulatory fee),"non-residential, 0-100 kWh/month",Rwanda,reg_tariffs_2025,1,A. Tariffs for all customer categories,[0-100] 355,True,validation
+tariff_rwf_per_kwh.non_residential.block_over_100,376,RWF/kWh (excl. VAT and regulatory fee),"non-residential, >100 kWh/month",Rwanda,reg_tariffs_2025,1,A. Tariffs for all customer categories,>100 376,True,validation
+tariff_rwf_per_kwh.small_industry,175,RWF/kWh (excl. VAT and regulatory fee),"manufacturing plants 5,000-100,000 kWh/year",Rwanda,reg_tariffs_2025,1,A. Tariffs for all customer categories,"consumption between 5,000 and 100,000 kWh All consumed kWh 175",True,validation

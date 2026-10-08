@@ -1,0 +1,14 @@
+parameter,value,unit,population,geography,doc_id,page,table,quote,quote_verified,role
+monthly_kwh.mean,45.0,kWh/month,"REG residential customers, Jan 2013",Rwanda,qsel_consumption_trends_2024,5,text,"In January 2013, the average residential customer consumed about 45 kWh",True,validation
+monthly_kwh.mean,22.0,kWh/month,"REG residential customers, Dec 2019",Rwanda,qsel_consumption_trends_2024,5,text,"By December 2019, the average residential customer's consumption had decreased by more than half to about 22 kWh",True,validation
+monthly_kwh.mean,170.0,kWh/month,"REG non-residential customers, Jan 2013",Rwanda,qsel_consumption_trends_2024,5,text,the average non-residential customer consumed about 170 kWh,True,validation
+annual_kwh.mean,71.0,kWh/year,REG residential customers outside Kigali,Rwanda,qsel_consumption_trends_2024,5,text,a residential customer outside Kigali consumes 71 kWh annually,True,validation
+annual_kwh.mean,297.0,kWh/year,REG residential customers in Kigali,Rwanda,qsel_consumption_trends_2024,5,text,compared to the 297 kWh consumed by an average residential customer in Kigali,True,validation
+monthly_kwh.median_plateau,10.0,kWh/month,"REG residential customers connected in 2013 (median, plateau)",Rwanda,qsel_consumption_trends_2024,5,text,the median residential Rwandan customer electrified in the same year plateaued at around 10 kWh/month,True,validation
+monthly_kwh.median_upper_bound,5.0,kWh/month,lowest-tier residential customers,Rwanda,qsel_consumption_trends_2024,9,text,consistently below 5 kWh per month,True,validation
+monthly_kwh.median,6.3,kWh/month,grid-connected survey households,Rwanda,qsel_grid_reliability_2025,15,text,the median household consumes approximately 6.3 kWh per month,True,validation
+monthly_kwh.mean,15.61,kWh/month,grid-connected survey households,Rwanda,qsel_grid_reliability_2025,15,text,consumption 15.61 kWh for the average household,True,validation
+monthly_kwh.tv,5.2,kWh/month,households using a television,Rwanda,qsel_grid_reliability_2025,13,text,households consume an average of 5.2 kWh per month from television use,True,validation
+monthly_kwh.fridge,19.58,kWh/month,households with a fridge,Rwanda,qsel_grid_reliability_2025,13,text,19.58 kWh on fridges,True,validation
+monthly_kwh.mean,8.1,kWh/month,"rural connected households, up to 10 years after electrification",Rwanda,qsel_rural_adoption_2025,2,text,"the average connected household consumes 8.1 kWh per month, and the median is 4 kWh",True,validation
+monthly_kwh.median,4.0,kWh/month,"rural connected households, up to 10 years after electrification",Rwanda,qsel_rural_adoption_2025,2,text,and the median is 4 kWh,True,validation

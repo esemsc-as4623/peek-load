@@ -30,7 +30,7 @@ PRIOR_ITEMS = {"electricity": "HC_ELEC_H_ELC", "radio": "HC_HEFF_H_RDO", "tv": "
                "fridge": "HC_HEFF_H_FRG", "computer": "HC_HEFF_H_CMP", "mobile_phone": "HC_HEFF_H_MPH"}
 DIMENSIONS = {"Total": "total", "Residence": "residence", "Region": "province", "Wealth quintile": "wealth_quintile"}
 # Known problems become flags on the rows, not silent drops (see data/processed/validation_anchors/README.md).
-FLAGS = {("RW2025DHS", "HC_HEFF_H_MPH"): "definition_suspect_excludes_smartphones"}
+FLAGS = {("RW2025DHS", "HC_HEFF_H_MPH"): "ordinary_phone_only_use_mobile_phone_any"}  # FR401 Table 2.5
 
 
 def get(path: str, **params) -> dict:
@@ -82,7 +82,7 @@ def build_priors(df: pd.DataFrame) -> pd.DataFrame:
     out = pd.DataFrame({
         "survey_id": d.SurveyId, "survey_year": d.SurveyId.str[2:6].astype(int), "item": d.IndicatorId.map(item),
         "indicator_id": d.IndicatorId, "dimension": d.CharacteristicCategory.map(DIMENSIONS),
-        "group": d.CharacteristicLabel.str.strip(), "share": d.Value / 100, "ci_low": d.CILow / 100,
+        "group": d.CharacteristicLabel.str.strip(), "share": (d.Value / 100).round(4), "ci_low": d.CILow / 100,
         "ci_high": d.CIHigh / 100, "n_households_weighted": d.DenominatorWeighted,
         "n_households_unweighted": d.get("DenominatorUnweighted"),
         "flag": [FLAGS.get((s, i), "") for s, i in zip(d.SurveyId, d.IndicatorId, strict=True)],
@@ -90,10 +90,36 @@ def build_priors(df: pd.DataFrame) -> pd.DataFrame:
     return out.sort_values(["item", "survey_id", "dimension", "group"]).reset_index(drop=True)
 
 
+# RW2025 household phone ownership as published in the final report (FR401, Table 2.5, PDF page 58). The API's
+# HC_HEFF_H_MPH for RW2025 equals the report's "Ordinary mobile phone" row (non-smartphones only), so these
+# report rows are the correct "any phone" prior. Values transcribed by hand; see validation_anchors/README.md.
+REPORT_ROWS = [  # (item, group, share)
+    ("mobile_phone_any", "Total", 0.837), ("mobile_phone_any", "Urban", 0.933), ("mobile_phone_any", "Rural", 0.796),
+    ("smartphone", "Total", 0.379), ("smartphone", "Urban", 0.644), ("smartphone", "Rural", 0.266),
+]
+
+
+def report_rows() -> pd.DataFrame:
+    return pd.DataFrame([{
+        "survey_id": "RW2025DHS", "survey_year": 2025, "item": item, "indicator_id": "",
+        "dimension": "total" if g == "Total" else "residence", "group": g, "share": v, "ci_low": None,
+        "ci_high": None, "n_households_weighted": None, "n_households_unweighted": None, "flag": "",
+        "source": "dhs_rw_2025_fr p58 Table 2.5 (hand-transcribed)", "role": "evidence"} for item, g, v in REPORT_ROWS])
+
+
+def with_prior_ids(df: pd.DataFrame) -> pd.DataFrame:
+    """Stable ids that archetype JSON files cite as evidence_ids, e.g. dhs:RW2025DHS:tv:residence:Rural."""
+    ids = "dhs:" + df.survey_id + ":" + df["item"] + ":" + df.dimension + ":" + df.group.str.replace(" ", "_")
+    out = df.assign(prior_id=ids)
+    assert out.prior_id.is_unique
+    return out[["prior_id", *df.columns]]
+
+
 def write_priors() -> None:
     out = PROCESSED_DIR / "validation_anchors" / "dhs_ownership_priors.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
     pri = build_priors(pd.read_parquet(INTERIM_DIR / "dhs_indicators.parquet"))
+    pri = with_prior_ids(pd.concat([pri, report_rows()], ignore_index=True))
     pri.to_csv(out, index=False)
     print(f"{len(pri)} rows -> {out.relative_to(out.parents[3])}")
 

@@ -1,0 +1,181 @@
+{
+ "$defs": {
+  "Appliance": {
+   "additionalProperties": false,
+   "properties": {
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "ownership_share": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "number": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "power": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "func_time": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "windows": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "func_cycle": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "time_fraction_random_variability": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "random_var_w": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "occasional_use": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "thermal_p_var": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "wd_we_type": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "pref_index": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "fixed_cycle": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "continuous_duty_cycle": {
+     "$ref": "#/$defs/Sourced"
+    },
+    "fixed": {
+     "default": "no",
+     "title": "Fixed",
+     "type": "string"
+    },
+    "flat": {
+     "default": "no",
+     "title": "Flat",
+     "type": "string"
+    }
+   },
+   "required": [
+    "name",
+    "ownership_share",
+    "number",
+    "power",
+    "func_time",
+    "windows"
+   ],
+   "title": "Appliance",
+   "type": "object"
+  },
+  "Sourced": {
+   "additionalProperties": false,
+   "properties": {
+    "value": {
+     "anyOf": [
+      {
+       "type": "number"
+      },
+      {
+       "items": {
+        "items": {
+         "type": "integer"
+        },
+        "type": "array"
+       },
+       "type": "array"
+      }
+     ],
+     "title": "Value"
+    },
+    "evidence_ids": {
+     "items": {
+      "type": "string"
+     },
+     "title": "Evidence Ids",
+     "type": "array"
+    },
+    "assumption": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Assumption"
+    },
+    "derivation": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Derivation"
+    },
+    "human_reviewed": {
+     "default": false,
+     "title": "Human Reviewed",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "value"
+   ],
+   "title": "Sourced",
+   "type": "object"
+  }
+ },
+ "additionalProperties": false,
+ "properties": {
+  "archetype_id": {
+   "title": "Archetype Id",
+   "type": "string"
+  },
+  "description": {
+   "title": "Description",
+   "type": "string"
+  },
+  "population": {
+   "title": "Population",
+   "type": "string"
+  },
+  "year": {
+   "title": "Year",
+   "type": "integer"
+  },
+  "user_preference": {
+   "$ref": "#/$defs/Sourced"
+  },
+  "appliances": {
+   "items": {
+    "$ref": "#/$defs/Appliance"
+   },
+   "title": "Appliances",
+   "type": "array"
+  },
+  "status": {
+   "default": "draft",
+   "title": "Status",
+   "type": "string"
+  }
+ },
+ "required": [
+  "archetype_id",
+  "description",
+  "population",
+  "year",
+  "appliances"
+ ],
+ "title": "Archetype",
+ "type": "object"
+}

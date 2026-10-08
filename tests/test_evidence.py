@@ -135,3 +135,52 @@ def test_dry_run_estimate_is_positive_and_cheaper_in_batch(pdf):
     assert e["pages"] == 3 and e["pages_sent"] == 2 and e["requests"] == 2
     assert e["input_tokens"] > 2 * ev.IMAGE_TOKENS_PER_PAGE
     assert b["est_usd"] == pytest.approx(e["est_usd"] / 2, abs=0.002)
+
+
+# ------------------------------------------------------------------ RAMP archetype template
+def _arch(**over):
+    from rtl.archetypes import Archetype
+    a = {"name": "bulb", "ownership_share": {"value": 0.5, "evidence_ids": ["dhs:x"]},
+         "number": {"value": 2, "assumption": "a"}, "power": {"value": 10, "assumption": "a"},
+         "func_time": {"value": 120, "assumption": "a"}, "windows": {"value": [[1080, 1200]], "assumption": "a"},
+         "func_cycle": {"value": 60, "assumption": "a"}, "fixed": "yes", "flat": "yes", **over}
+    return Archetype.model_validate({"archetype_id": "t", "description": "d", "population": "p", "year": 2025,
+                                     "appliances": [a]})
+
+
+def test_unsourced_number_is_rejected():
+    from pydantic import ValidationError
+    with pytest.raises(ValidationError, match="evidence_ids or an assumption"):
+        _arch(power={"value": 10})
+    with pytest.raises(ValidationError, match="windows shorter"):
+        _arch(func_time={"value": 500, "assumption": "a"})
+
+
+def test_ramp_one_day_matches_hand_computed_energy():
+    """flat appliances have no randomness: 50 of 100 households x 2 bulbs x 10 W x 2 h = 2.0 kWh, 18:00-20:00."""
+    from rtl.archetypes import smoke_run
+    arch = _arch()
+    assert arch.expected_daily_kwh(100) == pytest.approx(2.0)
+    profile = smoke_run(arch, n_households=100)
+    assert len(profile) == 1440
+    assert profile.sum() / 60 / 1000 == pytest.approx(2.0, rel=0.02)
+    assert profile[:1080].sum() == 0 and profile[1200:].sum() == 0
+
+
+# ------------------------------------------------------------------ DHS priors transform
+def test_priors_convert_percent_flag_and_ids():
+    import pandas as pd
+
+    from rtl.ingest.dhs_api import build_priors, with_prior_ids
+    raw = pd.DataFrame({"SurveyId": ["RW2025DHS", "RW2025DHS", "RW2025DHS"],
+                        "IndicatorId": ["HC_HEFF_H_TLV", "HC_HEFF_H_MPH", "HC_HEFF_H_NPH"],
+                        "CharacteristicCategory": ["Residence", "Region", "Total"],
+                        "CharacteristicLabel": ["Rural", "Kigali", "Total"], "Value": [7.2, 72.2, 0.4],
+                        "DenominatorWeighted": [10112, 1, 1], "DenominatorUnweighted": [9354, 1, 1],
+                        "CILow": [None, None, None], "CIHigh": [None, None, None]})
+    p = with_prior_ids(build_priors(raw))
+    assert len(p) == 2  # landline (NPH) is not a prior item
+    tv = p.set_index("item").loc["tv"]
+    assert tv.share == pytest.approx(0.072) and tv.dimension == "residence"
+    assert tv.prior_id == "dhs:RW2025DHS:tv:residence:Rural"
+    assert p.set_index("item").loc["mobile_phone"].flag.startswith("ordinary_phone_only")
