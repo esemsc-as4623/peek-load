@@ -92,6 +92,9 @@ climate-h3 = "python -m rtl.climate.build"
 conform-buildings = { cmd = "python -m rtl.conform.buildings", depends-on = ["fetch-vida"] }
 context-raster = "python -m rtl.join.raster"  # needs fetch-rasters once (re-clipping GHSL takes minutes)
 make-fixture = { cmd = "python -m rtl.conform.fixture", depends-on = ["conform-buildings"] }
+fetch-25d = "python -m rtl.ingest.open_buildings_25d"
+conform-height = "python -m rtl.conform.height"
+report-height = "python -m rtl.conform.height_report"
 assemble-context = "python -m rtl.join.assemble"
 # --- EDA (jupytext percent scripts; open as notebooks with `jupytext --to ipynb`)
 eda-01 = "python notebooks/01_footprints.py"

@@ -1,7 +1,7 @@
-# QA: context_raster
+# QA: building_height
 **PASS**
 
-- file: `context_raster.parquet`
+- file: `building_height.parquet`
 - checked: 2026-10-08 20:52 UTC
 - rows: 6,434,247
 - duplicate `bldg_id`: 0
@@ -10,8 +10,8 @@
 | column | null share |
 |---|---|
 | bldg_id | 0.0% |
-| ghsl_nres_share | 1.5% |
-| ghsl_class | 0.0% |
-| pop_density_per_km2 | 0.0% |
-| rwi | 0.1% |
-| elevation_m | 0.0% |
+| height_m | 28.4% |
+| height_source | 28.4% |
+| first_seen_year | 66.8% |
+| est_floors | 28.4% |
+| gfa_m2 | 28.4% |

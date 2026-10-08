@@ -23,13 +23,19 @@ sources:
 
   google_25d_temporal:
     owner: A1
-    name: Google Open Buildings 2.5D Temporal (height, presence, fractional count; 2016-2023; 4 m)
-    url: null  # public GCS GeoTIFF tiles; A1 resolves the tile list for Rwanda
+    name: Google Open Buildings 2.5D Temporal (height, presence, fractional count; 2016-2023; 4 m effective)
+    url: https://storage.googleapis.com/open-buildings-temporal-data/v1/geotiffs/  # <s2cell>_<year>_06_30/tile_<id>.tif
+    index_url: https://data.humdata.org/dataset/acab847f-5c1a-462e-9c0e-ddd508525dcb/resource/1a7e9ba0-3fca-4c95-9f5a-a0a1f3bd393d/download/google-open-buildings-temporal.zip  # urls/RWA_<year>.txt, 260 tiles/year
     docs: https://sites.research.google/gr/open-buildings/temporal
     access: open
-    licence: CC-BY-4.0 / ODbL-1.0
+    licence: CC-BY-4.0 / ODbL-1.0  # Google: "CC BY-4.0 and ODbL v1.0"; HDX lists CC BY
     role: feature
-    status: to_verify
+    status: verified
+    # remote = range-read only the needed band at reduced resolution from internal overviews (~3 GB transfer,
+    # nothing in data/raw except the URL index); full = download whole tiles via manifest.fetch (~41 GB/year).
+    mode: remote
+    height_res_m: 2.0    # 2023 height grid; effective resolution is ~4 m, so 2 m sampling loses ~nothing
+    presence_res_m: 4.0  # 2016-2023 presence grid for first_seen_year (= effective res; 8 m measured too lossy, see reports/status/A1.md)
 
   # ------------------------------------------------------------------ A2 context
   osm_geofabrik:

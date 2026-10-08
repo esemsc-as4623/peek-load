@@ -1,0 +1,119 @@
+{
+  "osm_validation": {
+    "osm_tagged_polygons": 12088,
+    "matched": 10405,
+    "matched_with_25d_height": 9848,
+    "floors_vs_osm_levels": {
+      "n": 9846,
+      "bias": 0.52,
+      "mae": 0.69,
+      "median_abs_err": 1.0,
+      "pearson_r": 0.45
+    },
+    "floors_exact_share": 0.426,
+    "floors_within_1_share": 0.931,
+    "height_vs_osm_height_tag": {
+      "n": 34,
+      "bias": -5.79,
+      "mae": 8.0,
+      "median_abs_err": 2.52,
+      "pearson_r": 0.068
+    },
+    "height_vs_osm_levels_x_storey": {
+      "n": 9846,
+      "bias": 1.47,
+      "mae": 2.16,
+      "median_abs_err": 1.78,
+      "pearson_r": 0.468
+    },
+    "implied_storey_m_median": 4.56,
+    "osm_levels_distribution": {
+      "1": 9594,
+      "2": 370,
+      "3": 191,
+      "4": 124,
+      "5": 42,
+      "6": 25,
+      "7": 10,
+      "8": 17,
+      "9": 3,
+      "10": 11,
+      "11": 4,
+      "12": 3,
+      "13": 2,
+      "15": 3,
+      "18": 2,
+      "20": 2
+    }
+  },
+  "regions": {
+    "kigali_city": {
+      "bbox": [
+        29.98,
+        -2.06,
+        30.26,
+        -1.88
+      ],
+      "n": 752255,
+      "height_coverage": 0.806,
+      "height_q10_q50_q90_q99": [
+        1.9,
+        3.8,
+        5.7,
+        8.3
+      ],
+      "share_multistorey": 0.312,
+      "share_first_seen_after_2016": 0.623,
+      "share_no_first_seen": 0.551
+    },
+    "musanze_town": {
+      "bbox": [
+        29.58,
+        -1.53,
+        29.66,
+        -1.47
+      ],
+      "n": 72835,
+      "height_coverage": 0.81,
+      "height_q10_q50_q90_q99": [
+        1.9,
+        3.9,
+        5.7,
+        7.5
+      ],
+      "share_multistorey": 0.341,
+      "share_first_seen_after_2016": 0.707,
+      "share_no_first_seen": 0.533
+    },
+    "kirehe_district": {
+      "bbox": [
+        30.4,
+        -2.45,
+        30.9,
+        -2.05
+      ],
+      "n": 399847,
+      "height_coverage": 0.71,
+      "height_q10_q50_q90_q99": [
+        1.6,
+        3.2,
+        4.8,
+        6.3
+      ],
+      "share_multistorey": 0.152,
+      "share_first_seen_after_2016": 0.736,
+      "share_no_first_seen": 0.647
+    }
+  },
+  "growth_thr_0.5": {
+    "2016": 663974,
+    "2017": 105050,
+    "2018": 87449,
+    "2019": 303756,
+    "2020": 147321,
+    "2021": 250686,
+    "2022": 214598,
+    "2023": 365989,
+    "<NA>": 4295424
+  }
+}
