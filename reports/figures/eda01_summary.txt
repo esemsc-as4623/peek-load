@@ -1,0 +1,11 @@
+   source       n  med_area  mean_conf
+   google 5814224 40.951528   0.787821
+microsoft  491967 37.656782        NaN
+      osm  128056 23.109474        NaN
+
+              flag      n  share
+    low_confidence 808772 12.57%
+              tiny  34070  0.53%
+nested_same_source   2186  0.03%
+
+unflagged: 5,609,007 of 6,434,247 (87.2%)

@@ -72,6 +72,9 @@ register-local = "python -m rtl.ingest.local"
 # --- conform
 conform-buildings = { cmd = "python -m rtl.conform.buildings", depends-on = ["fetch-vida"] }
 make-fixture = { cmd = "python -m rtl.conform.fixture", depends-on = ["conform-buildings"] }
+assemble-context = "python -m rtl.join.assemble"
+# --- EDA (jupytext percent scripts; open as notebooks with `jupytext --to ipynb`)
+eda-01 = "python notebooks/01_footprints.py"
 # --- quality gates
 qa = "python -m rtl.qa"
 test = "pytest -q"
