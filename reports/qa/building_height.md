@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `building_height.parquet`
-- checked: 2026-10-09 12:59 UTC
+- checked: 2026-10-09 22:39 UTC
 - rows: 6,434,247
 - duplicate `bldg_id`: 0
 - schema: PASS (random sample of 200,000)

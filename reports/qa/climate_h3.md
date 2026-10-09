@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `climate_h3.parquet`
-- checked: 2026-10-09 12:58 UTC
+- checked: 2026-10-09 22:40 UTC
 - rows: 4,034
 - duplicate `h3_r7`: 0
 - schema: PASS (all rows)
@@ -14,6 +14,7 @@
 | t2m_mean_c | 0.0% |
 | tmax_p95_c | 0.0% |
 | cdd18_per_year | 0.0% |
+| cdd22_per_year | 0.0% |
 | cdd24_per_year | 0.0% |
 | ghi_kwh_m2_day | 0.0% |
 | years | 0.0% |

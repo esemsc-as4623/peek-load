@@ -90,6 +90,7 @@ context-vector = "python -m rtl.join.vector"  # after fetch-admin/-overture/-gri
 fetch-dem = "python -m rtl.ingest.dem"
 fetch-openmeteo = "python -m rtl.ingest.openmeteo"
 fetch-power = "python -m rtl.ingest.power"
+fetch-era5-cds = "python -m rtl.ingest.era5_land_cds"  # needs ~/.cdsapirc (see module docstring)
 climate-h3 = "python -m rtl.climate.build"
 # --- conform
 conform-buildings = { cmd = "python -m rtl.conform.buildings", depends-on = ["fetch-vida"] }
@@ -108,6 +109,7 @@ productive-use = "python -m rtl.llm.productive_use"
 derive = "python -m rtl.derive"  # re-tunable columns from config/params.yaml (no raster re-sampling unless --presence)
 # --- EDA (jupytext percent scripts; open as notebooks with `jupytext --to ipynb`)
 eda-01 = "python notebooks/01_footprints.py"
+cooling-check = "python notebooks/03_cooling_check.py"
 # --- quality gates
 qa = "python -m rtl.qa"
 test = "pytest -q"

@@ -142,6 +142,7 @@ def build(buildings: Path, out: Path) -> dict:
         "t2m_mean_c": daily_mean.mean(axis=1),
         "tmax_p95_c": np.percentile(daily_max, 95, axis=1),
         "cdd18_per_year": degree_days_per_year(daily_mean, days, 18.0),
+        "cdd22_per_year": degree_days_per_year(daily_mean, days, 22.0),
         "cdd24_per_year": degree_days_per_year(daily_mean, days, 24.0),
         "ghi_kwh_m2_day": interpolate(ghi_grid.ravel(), gidx, gw),
         "years": YEARS,
@@ -181,7 +182,8 @@ def town_checks(df: pd.DataFrame, cells: pd.DataFrame, g: dict, t_days: np.ndarr
         if len(row) == 1:
             r = row.iloc[0]
             res |= {k: round(float(r[k]), 2) for k in
-                    ["elevation_m", "t2m_mean_c", "tmax_p95_c", "cdd18_per_year", "cdd24_per_year", "ghi_kwh_m2_day"]}
+                    ["elevation_m", "t2m_mean_c", "tmax_p95_c", "cdd18_per_year", "cdd22_per_year", "cdd24_per_year",
+                     "ghi_kwh_m2_day"]}
         # cross-check on raw series (both in UTC hours, point-interpolated, no elevation correction)
         idx, w = bilinear_weights(np.array([lat]), np.array([lon]), g["lat"], g["lon"])
         era = interpolate(g["t"], idx, w)[0]

@@ -2,6 +2,7 @@
 # (`pixi run derive`) updates derived columns without re-sampling rasters or calling any API.
 
 height:
+  floors_method: thresholds  # 'thresholds' = fitted height cut-points 1|2 and 2|3 (held-out OSM check); 'storey' = height/storey_m
   storey_m: auto           # 'auto' = calibrate on OSM building:levels (reports/qa/derive.json); or a number in metres
   presence_threshold: 0.5  # first_seen_year = first year presence >= threshold and stays there (experimental column)
 

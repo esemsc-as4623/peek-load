@@ -1,0 +1,79 @@
+{
+  "sites": [
+    {
+      "site": "Kigali",
+      "elev_cell_m": 1487.73,
+      "elev_power_m": 1614.43,
+      "power_t2m_mean_c": 20.43,
+      "power_tmax_p95_c": 29.41,
+      "power_cdd22_per_year": 25.78,
+      "power_hours_ge26_per_year": 831.5,
+      "power_hours_ge28_per_year": 202.0,
+      "era5l_tmax_p95_c": 27.88,
+      "era5l_cdd22_per_year": 28.47,
+      "cooling_class": "medium"
+    },
+    {
+      "site": "Musanze (cool ref.)",
+      "elev_cell_m": 1870.46,
+      "elev_power_m": 2024.93,
+      "power_t2m_mean_c": 18.4,
+      "power_tmax_p95_c": 25.24,
+      "power_cdd22_per_year": 0.0,
+      "power_hours_ge26_per_year": 17.67,
+      "power_hours_ge28_per_year": 0.0,
+      "era5l_tmax_p95_c": 24.82,
+      "era5l_cdd22_per_year": 0.0,
+      "cooling_class": "low"
+    },
+    {
+      "site": "Kirehe/Nasho (east)",
+      "elev_cell_m": 1587.22,
+      "elev_power_m": 1453.5,
+      "power_t2m_mean_c": 19.67,
+      "power_tmax_p95_c": 28.44,
+      "power_cdd22_per_year": 4.96,
+      "power_hours_ge26_per_year": 512.0,
+      "power_hours_ge28_per_year": 94.83,
+      "era5l_tmax_p95_c": 28.24,
+      "era5l_cdd22_per_year": 37.15,
+      "cooling_class": "medium"
+    },
+    {
+      "site": "Rusizi",
+      "elev_cell_m": 1605.53,
+      "elev_power_m": 1871.63,
+      "power_t2m_mean_c": 20.03,
+      "power_tmax_p95_c": 27.36,
+      "power_cdd22_per_year": 5.56,
+      "power_hours_ge26_per_year": 288.17,
+      "power_hours_ge28_per_year": 26.0,
+      "era5l_tmax_p95_c": 26.91,
+      "era5l_cdd22_per_year": 12.72,
+      "cooling_class": "medium"
+    },
+    {
+      "site": "Hottest cell (Bugarama valley)",
+      "elev_cell_m": 960.02,
+      "elev_power_m": 1871.63,
+      "power_t2m_mean_c": 23.93,
+      "power_tmax_p95_c": 31.27,
+      "power_cdd22_per_year": 713.99,
+      "power_hours_ge26_per_year": 2506.0,
+      "power_hours_ge28_per_year": 1231.67,
+      "era5l_tmax_p95_c": 31.43,
+      "era5l_cdd22_per_year": 713.09,
+      "cooling_class": "high"
+    }
+  ],
+  "hottest_cell": {
+    "h3_r7": "876ade68effffff",
+    "lat": -2.6880374020232085,
+    "lon": 29.01711381506597
+  },
+  "buildings_by_cooling_class": {
+    "medium": 3376672,
+    "high": 760260,
+    "low": 2297315
+  }
+}

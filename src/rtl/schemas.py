@@ -144,6 +144,7 @@ climate_h3 = pa.DataFrameSchema(
         "t2m_mean_c": pa.Column(float, pa.Check.in_range(0, 40)),
         "tmax_p95_c": pa.Column(float, pa.Check.in_range(0, 45)),
         "cdd18_per_year": pa.Column(float, pa.Check.ge(0)),
+        "cdd22_per_year": pa.Column(float, pa.Check.ge(0)),
         "cdd24_per_year": pa.Column(float, pa.Check.ge(0)),
         "ghi_kwh_m2_day": pa.Column(float, pa.Check.in_range(0, 10), nullable=True),
         "cooling_class": pa.Column(str, pa.Check.isin(["low", "medium", "high"])),  # rule in config/params.yaml

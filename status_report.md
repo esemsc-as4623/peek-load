@@ -17,9 +17,9 @@ preprocessing. Modelling follows in phase 2.
 | Table | What it holds | Notes |
 |---|---|---|
 | `buildings_base` | footprints (Google V3 + Microsoft + OSM via VIDA), area, shape, orientation, H3 index | quality problems are **flagged, not dropped**: 12.6% low detector confidence, 0.5% tiny slivers, 2,186 nested duplicates; 87.2% unflagged |
-| `building_height` | height, estimated floors, floor area, first year seen, yearly presence 2016–2023 | heights for 71.6% of buildings (median 3.3 m); storey height calibrated on OSM floor counts (3.4 m); floors within ±0.4 for 1-storey and ±0.6 for 2-storey buildings, but the source under-estimates 3+ storeys |
+| `building_height` | height, estimated floors, floor area, first year seen, yearly presence 2016–2023 | heights for 71.6% of buildings (median 3.3 m). Floors come from **height cut-points fitted on OSM floor counts and tested on a held-out half**: 1 floor below 6.0 m, 2 floors below 8.5 m, then +1 per 3 m. That gives 83% exact for 1-storey buildings (MAE 0.20 floors, against 0.41 with a single 3.4 m storey height); the source under-estimates 3+ storeys. First-seen year uses presence ≥ 0.5 (33% of buildings get a year; 0.3 would give 52%) and is marked experimental |
 | `building_context` | admin area down to village, OSM/Overture/registry tags, distance to roads and power lines, nearby-place counts, settlement type (GHSL), population density, relative wealth, elevation | direct use tags are rare: only ~14k of 6.4M buildings have an informative tag |
-| `climate_h3` | ERA5-Land hourly temperature downscaled with elevation, cooling degree-days, typical day, solar irradiance, cooling class | 4,034 areas; fitted lapse rate −6.05 K/km; Kigali 20.5 °C. **Rwanda has almost no cooling demand**: only 4.7% of buildings see ≥10 cooling degree-days a year above 24 °C, so the cooling class is a relative "fans plausible" proxy |
+| `climate_h3` | ERA5-Land hourly temperature downscaled with elevation, cooling degree-days (18/22/24 °C), typical day, solar irradiance, cooling class | 4,034 areas; fitted lapse rate −6.05 K/km; Kigali 20.5 °C. Cooling class from the 95th-percentile daily maximum: low < 26 °C, medium 26–29, high ≥ 29 (2.30M / 3.38M / 0.76M buildings). **Checked against NASA POWER** (below) |
 
 ### Evidence for appliance profiles
 - 18 public reports (2,406 pages: DHS 2019 and 2025, World Bank MTF, NISR census and EICV7, tariffs, Columbia/REG
@@ -38,7 +38,7 @@ preprocessing. Modelling follows in phase 2.
   industrial/warehouse, ancillary, unknown.
 - Stratified sample of 5,878 buildings: the 3 deep-dive sectors (Nyamirambo in Kigali, Muhoza in Musanze,
   Nasho in Kirehe) plus a national sample. 400 of them form the gold set.
-- **Gold labels by a human (160 so far)**, 87% made with satellite imagery or Street View.
+- **Gold labels by a human (173 so far)**, most made with satellite imagery or Street View.
 - Claude labels each building from a *context card* built only from open vector data. Three card versions:
   - **v1**: basic attributes;
   - **v2**: adds land use, road frontage, shape, relative size and distance to markets;
@@ -46,9 +46,13 @@ preprocessing. Modelling follows in phase 2.
     and the tags and labels of neighbouring buildings.
 
   The six v1 configurations (Haiku, Sonnet or Opus × text or map) were compared on the 400 gold buildings.
-- **Findings so far:**
-  - **v2 raises agreement with the human labels** (Haiku 28% → 37%, Sonnet 35% → 42%) and **makes Claude cite more
-    context** (3.8 → 5.4 distinct cues per answer).
+- **Findings** (173 gold labels):
+  - **v2 is the best version.** Agreement with the human labels: Haiku 29% → 39%, Sonnet 38% → 43%, Opus 39% → 42%.
+    Claude **cites more context** (3.8 → 5.4 distinct cues per answer).
+  - **v3 did not improve on v2** (Haiku 38%, Sonnet 42%). The neighbourhood features mostly reinforce "like its
+    neighbours", which is residential: a useful negative result.
+  - **Haiku v2 is the recommended configuration** (cheapest within 0.03 macro-F1 of the best), and it is what
+    labelled the deep-dive coverage.
   - Overall agreement stays modest because open vector data rarely carries the use signal a human sees in imagery.
     That is itself a useful result for the energy-access community.
   - The card map image adds almost nothing over the text.
@@ -66,17 +70,41 @@ preprocessing. Modelling follows in phase 2.
 - Total API spend: **~$157** of a $170 cap (labelling ~$110, evidence ~$33, web research ~$10). All responses are
   cached locally, so re-running costs nothing.
 
-## 3. In progress
-- v3 cards on the gold set (Haiku and Sonnet), to measure whether neighbourhood regularity, out-of-distribution
-  scores and neighbour labels improve labels.
-- More gold labels: 160 of 400, plus 50 repeats to measure the labeller's own consistency.
+### Cooling demand: independent check (NASA POWER, hourly 2019–2024)
+| Site | CDD22 per year, POWER / ERA5-Land | 95th-pct. daily max, POWER / ERA5-Land | Hours ≥ 26 °C per year | Hours ≥ 28 °C per year |
+|---|---|---|---|---|
+| Kigali | 26 / 28 | 29.4 / 27.9 °C | 832 | 202 |
+| Kirehe/Nasho (east) | 5 / 37 | 28.4 / 28.2 °C | 512 | 95 |
+| Musanze (cool reference) | 0 / 0 | 25.2 / 24.8 °C | 18 | 0 |
+| **Bugarama valley (hottest, ~960 m)** | **714 / 713** | **31.3 / 31.4 °C** | **2,506** | **1,232** |
 
-## 4. To do
+- **Kigali has marginal cooling demand.** Sustained heat is small (about 26 CDD22 a year), but there are about
+  800 hot hours a year, concentrated at 11:00–15:00 in the dry seasons (Feb–Mar, Aug–Oct). That points to
+  afternoon fan use, not air conditioning.
+- **The Rusizi/Bugarama valley** (south-west) has real, year-round cooling need.
+- Caveat: POWER's ~0.5° grid is coarse, so it is shifted to each cell's elevation. Bugarama's agreement is partly
+  built in by that shift (the POWER cell's mean elevation is 1,872 m); Kigali's (only a 127 m shift) is a genuinely
+  independent check.
+- This measures the **climate driver**. Attributing *measured* electricity demand to cooling needs metered load
+  by season and hour, which we don't have yet (see the questions below).
+- Figure: `reports/figures/A3_cooling_check.png`; notebook `notebooks/03_cooling_check.py`.
+
+## 3. In progress
+- More gold labels: 173 of 400, plus 50 repeats to measure the labeller's own consistency.
+- ERA5-Land re-download straight from Copernicus CDS (licence clarity; script ready, waiting for a CDS token on
+  the server).
+
+## 4. Mid-point readiness (Oct 15–16)
+**Substantively ready.** All six building tables pass QA, the evidence base, the labelling pilot and coverage, and the
+cooling check are done, and every step is reproducible and documented. Remaining polish (no API cost):
+the datasheet, 2–3 more EDA figures, and the labelling confusion-matrix figure.
+
+## 5. To do
 
 ### Before the mid-point review (Oct 15–16)
-1. Final labelling evaluation (v1, v2 and v3 against gold; variety and use of context), the confusion matrix, and
-   a decision on the labelling configuration.
-2. Exploration notebooks:
+1. ~~Final labelling evaluation and configuration decision~~ (done: Haiku v2). Still to do: the confusion-matrix
+   figure for the review.
+2. Exploration notebooks (01 footprints and 03 cooling done):
    - footprint completeness against census households;
    - growth 2016–2023;
    - height and floor distributions;
@@ -96,8 +124,10 @@ preprocessing. Modelling follows in phase 2.
 8. Validation against REG/Columbia consumption distributions and district electrification rates.
 9. Deliverable: an energy-classified building GeoParquet / PostGIS table plus a map viewer.
 
-## 5. Questions for the organisers
+## 6. Questions for the organisers
 - Is there a preferred AOI, or validation data (metered consumption, MicroPowerManager exports) we could use?
+  Seasonal or hourly feeder loads for Kigali and the Rusizi valley would let us test whether hot-afternoon load is
+  really cooling.
 - Is LLM-assisted labelling acceptable if it's disclosed and measured against human labels as above?
 - Any guidance on imagery? Our pipeline deliberately uses only openly licensed vector data. Human gold labellers
   consulted commercial imagery for interpretation only; nothing was traced from it.

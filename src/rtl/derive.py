@@ -59,6 +59,41 @@ def calibrate_storey(m: pd.DataFrame, grid: np.ndarray = STOREY_GRID) -> dict:
             "n_test_by_levels": {str(int(k)): int(v) for k, v in test.grp.value_counts().sort_index().items()}}
 
 
+UPPER_STOREY_M = 3.0  # above the 2|3 threshold each extra floor adds this much height
+
+
+def floors_from_thresholds(height_m: pd.Series, t12: float, t23: float) -> pd.Series:
+    """height -> floors with fitted cut-points: 1 below t12, 2 below t23, then +1 per UPPER_STOREY_M."""
+    h = height_m.astype(float)
+    f = np.where(h < t12, 1, np.where(h < t23, 2, 3 + np.floor((h - t23) / UPPER_STOREY_M)))
+    return pd.Series(f, index=height_m.index).where(h.notna()).clip(upper=30).astype("Int64")
+
+
+def calibrate_thresholds(m: pd.DataFrame, grid: np.ndarray | None = None) -> dict:
+    """Fit the 1|2 and 2|3 cut-points on even OSM ids (balanced accuracy over the two neighbouring groups),
+    report per-group error on odd ids (held out). Balanced accuracy keeps the 90% single-storey majority from
+    swallowing the 2-storey class."""
+    grid = np.arange(2.0, 12.01, 0.1) if grid is None else grid
+    m = m.dropna(subset=["osm_levels", "height_m"]).assign(grp=lambda d: d.osm_levels.clip(upper=3).round())
+    fit, test = m[m.oid % 2 == 0], m[m.oid % 2 == 1]
+
+    def bal(df, lo, hi, t):  # mean recall of group lo (h < t) and group hi (h >= t)
+        a, b = df[df.grp == lo], df[df.grp >= hi]
+        return ((a.height_m < t).mean() + (b.height_m >= t).mean()) / 2 if len(a) and len(b) else 0.0
+
+    t12 = float(max(grid, key=lambda t: bal(fit, 1, 2, t)))
+    t23 = float(max(grid[grid > t12], key=lambda t: bal(fit[fit.grp >= 2], 2, 3, t)))
+    f = floors_from_thresholds(test.height_m, t12, t23).astype(float)
+    e = (f - test.osm_levels).abs()
+    return {"t12_m": round(t12, 2), "t23_m": round(t23, 2), "upper_storey_m": UPPER_STOREY_M,
+            "n_fit": len(fit), "n_test": len(test),
+            "test_group_mae": round(float(e.groupby(test.grp).mean().mean()), 3),
+            "test_mae_by_levels": {str(int(k)): round(float(v), 3) for k, v in e.groupby(test.grp).mean().items()},
+            "test_exact_by_levels": {str(int(k)): round(float(v), 3)
+                                     for k, v in (f == test.osm_levels).groupby(test.grp).mean().items()},
+            "test_exact_share": round(float((f == test.osm_levels).mean()), 3)}
+
+
 def sample_presence() -> pd.DataFrame:
     """Centroid presence for every year from the already-downloaded local tiles (no network)."""
     import duckdb
@@ -100,16 +135,23 @@ def main() -> None:
         if args.presence or "presence_2023" not in h.columns:
             h = h.drop(columns=[c for c in h.columns if c.startswith("presence_")]).merge(
                 sample_presence(), on="bldg_id", how="left", validate="1:1")
-        storey = params()["height"]["storey_m"]
-        if storey == "auto":
+        hp = params()["height"]
+        method, storey = hp.get("floors_method", "storey"), hp["storey_m"]
+        if method == "thresholds" or storey == "auto":
             con = duckdb.connect()
             con.sql("LOAD spatial;")
             _, m = osm_validation(con)
-            report["storey_calibration"] = calibrate_storey(m)
-            storey = report["storey_calibration"]["storey_m"]
+            report["storey_calibration"] = calibrate_storey(m)  # always reported, for comparison
+            report["threshold_calibration"] = calibrate_thresholds(m)
+            if storey == "auto":
+                storey = report["storey_calibration"]["storey_m"]
         area = duckdb.sql(f"SELECT bldg_id, area_m2 FROM read_parquet('{BASE}')").df()
         h = h.drop(columns=["area_m2"], errors="ignore").merge(area, on="bldg_id", how="left", validate="1:1")
-        h["est_floors"] = est_floors(h["height_m"], storey)
+        if method == "thresholds":
+            tc = report["threshold_calibration"]
+            h["est_floors"] = floors_from_thresholds(h["height_m"], tc["t12_m"], tc["t23_m"])
+        else:
+            h["est_floors"] = est_floors(h["height_m"], float(storey))
         h["gfa_m2"] = gfa_m2(h["area_m2"], h["est_floors"])
         thr = float(params()["height"]["presence_threshold"])
         h["first_seen_year"] = first_seen_year(h[[f"presence_{y}" for y in PRESENCE_YEARS]].to_numpy(),
@@ -118,7 +160,11 @@ def main() -> None:
         pres = [f"presence_{y}" for y in PRESENCE_YEARS]
         h[pres] = h[pres].astype("float64")  # contract dtype; tiles are float32
         h.to_parquet(HEIGHT, index=False)
-    report.update({"storey_m_used": storey, "presence_threshold": thr,
+    report.update({"floors_method": method, "storey_m_used": storey, "presence_threshold": thr,
+                   "first_seen_nonnull_share_by_threshold": {
+                       str(t): round(float(first_seen_year(h[[f"presence_{y}" for y in PRESENCE_YEARS]].to_numpy(),
+                                                           PRESENCE_YEARS, t).notna().mean()), 4)
+                       for t in (0.3, 0.4, 0.5)},
                    "floors_counts": {str(k): int(v)
                                      for k, v in h.est_floors.value_counts().sort_index().head(6).items()},
                    "first_seen_nonnull_share": round(float(h.first_seen_year.notna().mean()), 4)})

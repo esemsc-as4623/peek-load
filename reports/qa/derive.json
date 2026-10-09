@@ -23,15 +23,40 @@
       "3": 207
     }
   },
+  "threshold_calibration": {
+    "t12_m": 6.0,
+    "t23_m": 8.5,
+    "upper_storey_m": 3.0,
+    "n_fit": 4919,
+    "n_test": 4927,
+    "test_group_mae": 1.089,
+    "test_mae_by_levels": {
+      "1": 0.2,
+      "2": 0.728,
+      "3": 2.338
+    },
+    "test_exact_by_levels": {
+      "1": 0.829,
+      "2": 0.329,
+      "3": 0.097
+    },
+    "test_exact_share": 0.781
+  },
+  "floors_method": "thresholds",
   "storey_m_used": 3.4,
   "presence_threshold": 0.5,
+  "first_seen_nonnull_share_by_threshold": {
+    "0.3": 0.516,
+    "0.4": 0.4254,
+    "0.5": 0.3324
+  },
   "floors_counts": {
-    "1": 4143141,
-    "2": 449391,
-    "3": 9320,
-    "4": 1296,
-    "5": 442,
-    "6": 174
+    "1": 4454785,
+    "2": 137747,
+    "3": 9005,
+    "4": 1413,
+    "5": 527,
+    "6": 216
   },
   "first_seen_nonnull_share": 0.3324
 }

@@ -451,6 +451,15 @@
     "licence": "NASA open data",
     "retrieved_at": "2026-10-08T14:23:55+00:00"
   },
+  "data/raw/nasa_power/2026-10-08/t2m_hourly_hottest_cell.json": {
+    "source_id": "nasa_power",
+    "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=T2M&community=RE&latitude=-2.6880374020232085&longitude=29.01711381506597&start=20190101&end=20241231&format=JSON",
+    "path": "data/raw/nasa_power/2026-10-08/t2m_hourly_hottest_cell.json",
+    "bytes": 994692,
+    "sha256": "9b581cab4d2827fa2807ed113172ffc2341d210db34f01967b1a4eba346f0184",
+    "licence": "NASA open data (no restrictions; acknowledgement of the NASA LaRC POWER Project requested)",
+    "retrieved_at": "2026-10-09T22:41:01+00:00"
+  },
   "data/raw/nasa_power/2026-10-08/t2m_hourly_kigali.json": {
     "source_id": "nasa_power",
     "url": "https://power.larc.nasa.gov/api/temporal/hourly/point?parameters=T2M&community=RE&latitude=-1.95&longitude=30.06&start=20190101&end=20241231&format=JSON&time-standard=UTC",
