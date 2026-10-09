@@ -1,12 +1,13 @@
 """Gold labelling page: one building at a time, blind to every model label.
 
-    pixi run label-app            # then open http://127.0.0.1:8765
+    pixi run label-app                     # http://127.0.0.1:8765 (this machine only)
+    pixi run label-app --host tailscale    # http://<tailscale-ip>:8765, reachable only over your tailnet
 
 Shows exactly the card Claude sees (text + map) for the 400 gold buildings in data/gold/sample_ids.csv, in a fixed
 shuffled order. Every click is appended to data/gold/gold_labels.csv (committed), so you can stop and resume
 at any time.
 A further 50 already-labelled buildings come back at the end for a second pass, to measure your own
-consistency (the "repeat" column). Stdlib only, bound to localhost.
+consistency (the "repeat" column). Stdlib only; never listens on all interfaces.
 """
 
 from __future__ import annotations
@@ -119,10 +120,29 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
+def tailscale_ip() -> str:
+    """This machine's Tailscale IPv4 (100.64.0.0/10), so the page is reachable only over the tailnet."""
+    import subprocess
+
+    ip = subprocess.run(["tailscale", "ip", "-4"], capture_output=True, text=True, check=True).stdout.split()[0]
+    if not ip.startswith("100."):
+        raise SystemExit(f"unexpected Tailscale address {ip!r}")
+    return ip
+
+
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--host", default="127.0.0.1", help="'tailscale' or an address (never 0.0.0.0)")
+    ap.add_argument("--port", type=int, default=8765)
+    args = ap.parse_args()
+    host = tailscale_ip() if args.host == "tailscale" else args.host
+    if host in ("0.0.0.0", "::"):
+        raise SystemExit("refusing to listen on all interfaces; use --host tailscale")
     GOLD_DIR.mkdir(parents=True, exist_ok=True)
-    print(json.dumps({"url": "http://127.0.0.1:8765", "gold_file": str(GOLD)}))
-    ThreadingHTTPServer(("127.0.0.1", 8765), Handler).serve_forever()
+    print(json.dumps({"url": f"http://{host}:{args.port}", "gold_file": str(GOLD)}), flush=True)
+    ThreadingHTTPServer((host, args.port), Handler).serve_forever()
 
 
 if __name__ == "__main__":
