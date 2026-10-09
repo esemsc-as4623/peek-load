@@ -1,7 +1,7 @@
 # Rooftops → Load Curves
 
 **Open building footprints → building-level energy-demand data for Rwanda.**
-Built for the [OSEAS26 building-footprint energy-demand challenge](https://github.com/EnAccess/oseas26-building-footprint-energy-demand).
+Challenge brief: [`docs/challenge.md`](docs/challenge.md). Built for the [OSEAS26 building-footprint energy-demand challenge](https://github.com/EnAccess/oseas26-building-footprint-energy-demand).
 
 Planning electrification needs to know *who* needs *how much* power *where*. Rwanda has 6.4 million
 mapped building footprints but no label saying what each one is or what it consumes. This project builds the
