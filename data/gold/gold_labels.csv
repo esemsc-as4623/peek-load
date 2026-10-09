@@ -1,0 +1,7 @@
+bldg_id,label,confidence,note,labeler,repeat,labeled_at,imagery
+RWA-e3be70a845c73fba,residential,medium,,owner,False,2026-10-09T13:17:11+00:00,no
+RWA-50f103e3c193bc6b,mixed_shop_house,medium,,owner,False,2026-10-09T13:21:29+00:00,no
+RWA-39ca4e1959c16753,residential,medium,,owner,False,2026-10-09T13:23:11+00:00,no
+RWA-eb83d70f145f3105,residential,medium,,owner,False,2026-10-09T13:23:28+00:00,no
+RWA-36e37bfd98be6cfe,commercial,medium,,owner,False,2026-10-09T13:24:04+00:00,no
+RWA-1f6a2388b6f68e0b,commercial,medium,,owner,False,2026-10-09T13:28:16+00:00,no

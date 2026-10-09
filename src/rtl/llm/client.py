@@ -35,6 +35,7 @@ PRICES: dict[str, dict[str, float]] = {
 }
 CACHE_WRITE_MULT = {"5m": 1.25, "1h": 2.0}
 BATCH_DISCOUNT = 0.5  # the Batch API bills all token usage at 50%
+STREAM_ABOVE_TOKENS = 16_000  # SDK requires streaming for requests that could run > 10 min
 
 
 class RefusalError(RuntimeError):
@@ -161,6 +162,15 @@ class LLMClient:
         return LLMResult(entry.key, entry.model, entry.prompt_version, entry.response, entry.usage,
                          entry.cost_usd, entry.stop_reason, from_cache, entry.batch, entry.tag)
 
+    def _create(self, request: dict, api: Any = None) -> Any:
+        """One Messages call. Large max_tokens must stream (the SDK refuses long non-streaming requests); the
+        final message is identical either way."""
+        api = api or self._api()
+        if request.get("max_tokens", 0) > STREAM_ABOVE_TOKENS:
+            with api.messages.stream(**request) as stream:
+                return stream.get_final_message()
+        return api.messages.create(**request)
+
     def get_or_call(self, request: dict, prompt_version: str, tag: str | None = None,
                     refresh: bool = False) -> LLMResult:
         """Return the cached response for this exact request, or call the API once and cache it."""
@@ -168,7 +178,7 @@ class LLMClient:
         key = cache_key(model, prompt_version, request)
         if not refresh and (hit := self.cache.get(key)) is not None:
             return self._result(hit, from_cache=True)
-        resp = _to_dict(self._api().messages.create(**request))
+        resp = _to_dict(self._create(request))
         usage = resp.get("usage") or {}
         entry = CacheEntry(key, model, prompt_version, tag, resp, usage, cost_usd(model, usage),
                            resp.get("stop_reason"), batch=False)
@@ -193,7 +203,7 @@ class LLMClient:
                 todo[rid] = (key, req)
         api = self._api().with_options(max_retries=6)
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
-            futures = {pool.submit(api.messages.create, **req): rid for rid, (_, req) in todo.items()}
+            futures = {pool.submit(self._create, req, api): rid for rid, (_, req) in todo.items()}
             for fut in as_completed(futures):
                 rid = futures[fut]
                 key, req = todo[rid]

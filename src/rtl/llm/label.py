@@ -21,7 +21,7 @@ import pandas as pd
 
 from rtl.llm import budget
 from rtl.llm.cards import CARD_DIR, IMG_DIR
-from rtl.llm.client import LLMClient, LLMResult, build_request
+from rtl.llm.client import BATCH_DISCOUNT, LLMClient, LLMResult, build_request
 from rtl.schemas import LABEL_CLASSES, labels
 from rtl.settings import GOLD_DIR, PROCESSED_DIR, REPO_ROOT
 
@@ -64,9 +64,13 @@ def request(card_text: str, bldg_id: str, config: str) -> dict:
 def cards(which: str) -> pd.DataFrame:
     path = CARD_DIR / ("cards_deep_dives.parquet" if which == "deep-dives" else "cards.parquet")
     c = pd.read_parquet(path)
+    gold = set(pd.read_csv(GOLD_DIR / "sample_ids.csv").query("in_gold").bldg_id)
     if which in ("gold", "calibrate"):
-        ids = pd.read_csv(GOLD_DIR / "sample_ids.csv").query("in_gold").bldg_id
-        c = c[c.bldg_id.isin(set(ids))]
+        c = c[c.bldg_id.isin(gold)]
+    elif which == "pilot":  # gold buildings already carry live labels from every config
+        c = c[~c.bldg_id.isin(gold)]
+    elif which == "deep-dives":  # pilot buildings are labelled in the pilot stage
+        c = c[~c.bldg_id.isin(set(pd.read_csv(GOLD_DIR / "sample_ids.csv").bldg_id))]
     return c.sort_values("bldg_id").reset_index(drop=True)
 
 
@@ -86,7 +90,7 @@ def run(which: str, configs: list[str], batch: bool, limit: int | None, max_usd:
         c = c.head(limit)
     for config in configs:
         reqs = requests_for(c, config)
-        per = calibrated_cost(config, client)
+        per = calibrated_cost(config, client) * (BATCH_DISCOUNT if batch else 1.0)
         n_fit = budget.check(len(reqs), per, client.cache).affordable_n
         if max_usd is not None:
             n_fit = min(n_fit, int(max_usd // (per * budget.MARGIN)))
@@ -96,14 +100,20 @@ def run(which: str, configs: list[str], batch: bool, limit: int | None, max_usd:
         budget.require(len(reqs), per, f"{which} {config}", client.cache)
         tag = f"label:{which}:{config}"
         if batch:
-            for i in range(0, len(reqs), 1000):  # keep each batch well under the 256 MB payload limit
+            # submit every chunk first (each well under the 256 MB payload limit), then wait for all of them,
+            # so chunks are processed in parallel on the API side
+            bids = []
+            for i in range(0, len(reqs), 1000):
                 chunk = dict(list(reqs.items())[i:i + 1000])
                 bid = client.submit_batch({k.replace("|", "__").replace(":", "-"): v for k, v in chunk.items()},
                                           PROMPT_VERSION, tag=tag)
                 if bid:
-                    print(f"{config}: batch {bid} ({len(chunk)} requests) submitted")
-                    client.poll_batch(bid, every_s=30)
-                    client.collect_batch(bid)
+                    bids.append(bid)
+                    print(f"{config}: batch {bid} ({len(chunk)} requests) submitted", flush=True)
+            for bid in bids:
+                client.poll_batch(bid, every_s=30)
+                client.collect_batch(bid)
+                print(f"{config}: batch {bid} collected; spent ${budget.spent(client.cache):.2f}", flush=True)
         else:
             res = client.run_concurrent(reqs, PROMPT_VERSION, tag=tag, max_workers=8)
             errs = [r for r in res.values() if isinstance(r, Exception)]

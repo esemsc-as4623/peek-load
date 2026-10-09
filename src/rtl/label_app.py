@@ -27,7 +27,7 @@ from rtl.schemas import LABEL_CLASSES
 from rtl.settings import GOLD_DIR, REPO_ROOT
 
 GOLD = GOLD_DIR / "gold_labels.csv"
-FIELDS = ["bldg_id", "label", "confidence", "note", "labeler", "repeat", "labeled_at"]
+FIELDS = ["bldg_id", "label", "confidence", "note", "labeler", "repeat", "labeled_at", "imagery"]
 N_REPEAT = 50
 LABELER = "owner"
 
@@ -47,6 +47,45 @@ def done() -> set[tuple[str, bool]]:
 
 
 CARDS = None
+COORDS: dict[str, tuple[float, float]] | None = None
+
+
+def coords(bid: str) -> tuple[float, float]:
+    """Centroid (lat, lon) of a gold building, for the imagery links."""
+    global COORDS
+    if COORDS is None:
+        import duckdb
+
+        from rtl.conform.buildings import OUT as BASE
+        con = duckdb.connect()
+        con.register("ids", pd.read_csv(GOLD_DIR / "sample_ids.csv").query("in_gold")[["bldg_id"]])
+        COORDS = {b: (la, lo) for b, la, lo in con.sql(
+            f"SELECT b.bldg_id, b.lat, b.lon FROM ids JOIN read_parquet('{BASE}') b USING (bldg_id)").fetchall()}
+    return COORDS[bid]
+
+
+def imagery_links(lat: float, lon: float) -> str:
+    """Links that open on the building (pin at the footprint centroid). Imagery is for human interpretation only:
+    nothing is traced or copied from it, and labels made with it are flagged imagery=yes."""
+    links = {
+        "Google satellite": f"https://www.google.com/maps/place/{lat},{lon}/@{lat},{lon},80m/data=!3m1!1e3",
+        "Bing aerial": f"https://www.bing.com/maps?cp={lat}~{lon}&lvl=20&style=a&sp=point.{lat}_{lon}",
+        "OpenStreetMap": f"https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=19/{lat}/{lon}",
+    }
+    return " · ".join(f'<a href="{u}" target="_blank" rel="noopener" onclick="seen()">{k}</a>'
+                      for k, u in links.items())
+
+
+def migrate_gold_file() -> None:
+    """Older gold files lack the `imagery` column: rewrite them once, marking those labels imagery=no."""
+    if not GOLD.exists():
+        return
+    rows = list(csv.DictReader(open(GOLD)))
+    if rows and "imagery" not in rows[0]:
+        with open(GOLD, "w", newline="") as f:
+            w = csv.DictWriter(f, FIELDS)
+            w.writeheader()
+            w.writerows({**r, "imagery": "no"} for r in rows)
 
 
 def card(bid: str) -> str:
@@ -58,6 +97,8 @@ def card(bid: str) -> str:
 
 def page(bid: str, repeat: bool, n_done: int, n_total: int) -> str:
     codebook = html.escape((REPO_ROOT / "docs/codebook.md").read_text())
+    lat, lon = coords(bid)
+    links = imagery_links(lat, lon)
     buttons = "".join(f'<button name="label" value="{c}">{c.replace("_", " ")}</button>' for c in LABEL_CLASSES)
     return f"""<!doctype html><meta charset="utf-8"><title>Gold labels {n_done}/{n_total}</title>
 <style>
@@ -68,16 +109,21 @@ def page(bid: str, repeat: bool, n_done: int, n_total: int) -> str:
  details{{margin-top:16px}} details pre{{font-size:12px}}
 </style>
 <p class="bar">{n_done} of {n_total} done{" · <b>second pass</b>" if repeat else ""} · {bid}</p>
+<p><b>What is the main use of the <span style="color:#e34948">red</span> building?</b>
+ Location {lat:.6f}, {lon:.6f} · {links}</p>
 <div class="row"><img src="/img/{bid}.png" alt="map"><pre>{html.escape(card(bid))}</pre></div>
 <form method="post" action="/label">
  <input type="hidden" name="bldg_id" value="{bid}"><input type="hidden" name="repeat" value="{repeat}">
  <p>Confidence: <label><input type="radio" name="confidence" value="high">high</label>
   <label><input type="radio" name="confidence" value="medium" checked>medium</label>
   <label><input type="radio" name="confidence" value="low">low</label>
-  &nbsp; Note: <input name="note" size="50" placeholder="optional: which cues decided it"></p>
+  &nbsp; <label><input type="checkbox" name="imagery" value="yes" id="imagery">
+   I looked at imagery / Street View</label>
+  &nbsp; Note: <input name="note" size="40" placeholder="optional: which cues decided it"></p>
  <p>{buttons}</p>
 </form>
-<details><summary>Codebook v1</summary><pre>{codebook}</pre></details>"""
+<details><summary>Codebook v1</summary><pre>{codebook}</pre></details>
+<script>function seen(){{document.getElementById("imagery").checked = true;}}</script>"""
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -111,7 +157,8 @@ class Handler(BaseHTTPRequestHandler):
                 w.writerow({"bldg_id": form["bldg_id"], "label": form["label"],
                             "confidence": form.get("confidence", "medium"), "note": form.get("note", ""),
                             "labeler": LABELER, "repeat": form.get("repeat", "False"),
-                            "labeled_at": datetime.now(UTC).isoformat(timespec="seconds")})
+                            "labeled_at": datetime.now(UTC).isoformat(timespec="seconds"),
+                            "imagery": form.get("imagery", "no")})
         self.send_response(303)
         self.send_header("Location", "/")
         self.end_headers()
@@ -141,6 +188,7 @@ def main() -> None:
     if host in ("0.0.0.0", "::"):
         raise SystemExit("refusing to listen on all interfaces; use --host tailscale")
     GOLD_DIR.mkdir(parents=True, exist_ok=True)
+    migrate_gold_file()
     print(json.dumps({"url": f"http://{host}:{args.port}", "gold_file": str(GOLD)}), flush=True)
     ThreadingHTTPServer((host, args.port), Handler).serve_forever()
 

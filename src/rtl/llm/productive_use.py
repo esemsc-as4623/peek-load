@@ -71,7 +71,27 @@ def claims_and_sources(result: LLMResult) -> tuple[list[Claim], dict[int, tuple[
     return claims, src
 
 
-def rows(topic: str, norm: LLMResult, claims: list[Claim], src: dict) -> list[dict]:
+URL_RE = re.compile(r"https?://[^\s)\]]+|\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:org|com|net|int|edu|gov|rw|ke|tz|ug|de|uk)\b",
+                    re.IGNORECASE)
+
+
+def claims_from_summary(result: LLMResult) -> tuple[list[Claim], dict[int, tuple[str, str]]]:
+    """Fallback when the answer carries no structured citations (web search with dynamic filtering writes a
+    summary that names its sources inline). One Claim per bullet; the 'quote' is Claude's own sentence, so rows
+    built from it are marked quote_verified=False and must be checked against the named source by a human."""
+    claims, src = [], {}
+    for line in result.text.splitlines():
+        line = line.strip()
+        if not line.startswith(("- ", "* ")) or not any(ch.isdigit() for ch in line):
+            continue
+        i = len(claims)
+        claims.append(Claim(i, line[2:].strip(), "", None))
+        found = URL_RE.findall(line)
+        src[i] = (found[0] if found else "unnamed", "")
+    return claims, src
+
+
+def rows(topic: str, norm: LLMResult, claims: list[Claim], src: dict, verbatim: bool = True) -> list[dict]:
     by = {c.claim_index: c for c in claims}
     out = []
     for r in norm.json()["rows"]:
@@ -79,14 +99,17 @@ def rows(topic: str, norm: LLMResult, claims: list[Claim], src: dict) -> list[di
         if c is None:
             continue
         url, title = src[c.claim_index]
-        out.append({"evidence_id": evidence_id(url, r, c.quote, None), "parameter": r["parameter"],
+        quote = c.quote if verbatim else c.text
+        out.append({"evidence_id": evidence_id(url, r, quote, None), "parameter": r["parameter"],
                     "value": r["value"], "value_low": r["value_low"], "value_high": r["value_high"],
                     "unit": r["unit"], "population": r["population"], "geography": r["geography"], "year": r["year"],
-                    "doc_id": url, "page": None, "quote": c.quote,
-                    # the cited span is returned by the API from the fetched page itself
-                    "quote_verified": bool(c.quote.strip()),
+                    "doc_id": url, "page": None, "quote": quote,
+                    # a cited span comes from the fetched page itself; a summary sentence does not
+                    "quote_verified": bool(verbatim and c.quote.strip()),
                     "model": norm.model, "prompt_version": PROMPT_VERSION, "human_verified": False,
-                    "notes": "; ".join(x for x in [f"topic={topic}", title, r.get("notes")] if x)})
+                    "notes": "; ".join(x for x in [f"topic={topic}", title,
+                                                   None if verbatim else "Claude summary sentence, verify at source",
+                                                   r.get("notes")] if x)})
     return out
 
 
@@ -117,16 +140,19 @@ def main() -> None:
     for t in topics:
         res = research(client, t, args.model)
         claims, src = claims_and_sources(res)
+        verbatim = bool(claims)
+        if not verbatim:
+            claims, src = claims_from_summary(res)
         if not claims:
-            print(f"{t}: no cited statements (stop_reason={res.stop_reason})")
+            print(f"{t}: no usable statements (stop_reason={res.stop_reason})")
             continue
         doc = {"title": f"web research: {TOPICS[t]}", "publisher": "various web sources", "year": "",
                "doc_id": f"web:{t}"}
         norm = client.get_or_call(normalise_request(doc, claims, args.model), PROMPT_VERSION,
                                   tag=f"productive_use_norm:{t}")
-        r = rows(t, norm, claims, src)
+        r = rows(t, norm, claims, src, verbatim)
         all_rows += r
-        print(f"{t}: {len(claims)} cited statements -> {len(r)} rows from "
+        print(f"{t}: {len(claims)} {'cited' if verbatim else 'summary'} statements -> {len(r)} rows from "
               f"{len({re.sub(r'#.*', '', s[0]) for s in src.values()})} sources")
     df = to_frame(all_rows)
     OUT.parent.mkdir(parents=True, exist_ok=True)

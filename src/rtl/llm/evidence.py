@@ -254,7 +254,12 @@ def run_requests(client: LLMClient, items: dict[str, dict], tag: str, batch: boo
         print(f"submitted batch {bid} ({len(items)} requests); polling…")
         client.poll_batch(bid)
         client.collect_batch(bid)
-    return {cid: client.get_or_call(req, PROMPT_VERSION, tag=tag) for cid, req in items.items()}
+    # live: run uncached requests concurrently (results are written to the cache on this thread)
+    res = client.run_concurrent(items, PROMPT_VERSION, tag=tag, max_workers=6)
+    errors = {cid: r for cid, r in res.items() if isinstance(r, Exception)}
+    if errors:
+        print(f"{len(errors)} of {len(items)} requests failed; first: {next(iter(errors.values()))!r}"[:400])
+    return {cid: r for cid, r in res.items() if not isinstance(r, Exception)}
 
 
 def extract_docs(doc_ids: list[str], client: LLMClient, model: str = DEFAULT_MODEL,
@@ -277,7 +282,9 @@ def extract_docs(doc_ids: list[str], client: LLMClient, model: str = DEFAULT_MOD
     for doc_id, (_texts, chunks) in plans.items():
         claims[doc_id] = []
         for i, pages in enumerate(chunks):
-            r = res_a[f"{doc_id}--{i}"]
+            r = res_a.get(f"{doc_id}--{i}")
+            if r is None:  # request failed (reported above); rerun later, cached chunks are free
+                continue
             if r.refused:
                 print(f"[{doc_id} chunk {i}] refused; skipped")
                 continue
