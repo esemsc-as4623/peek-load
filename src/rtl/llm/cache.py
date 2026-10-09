@@ -109,6 +109,14 @@ class Cache:
         return CacheEntry(row[0], row[1], row[2], row[3], json.loads(row[4]), json.loads(row[5]), row[6], row[7],
                           row[8], row[9])
 
+    def cached_keys(self, keys: list[str]) -> set[str]:
+        """Which of these keys are already cached, in ONE query (per-key lookups are slow at 50k+ requests)."""
+        if not keys:
+            return set()
+        with self._connect() as con:
+            con.register("want", pd.DataFrame({"key": list(keys)}))
+            return {r[0] for r in con.execute("SELECT r.key FROM responses r JOIN want USING (key)").fetchall()}
+
     def put(self, entry: CacheEntry, request: dict) -> None:
         """Store a fresh API response and append its cost to the ledger (one transaction)."""
         now = datetime.now(UTC)

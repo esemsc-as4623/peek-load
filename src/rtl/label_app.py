@@ -91,7 +91,9 @@ def migrate_gold_file() -> None:
 def card(bid: str) -> str:
     global CARDS
     if CARDS is None:
-        CARDS = pd.read_parquet(CARD_DIR / "cards.parquet").set_index("bldg_id").text
+        # show the richest card version that exists, so the labeller sees at least everything Claude sees
+        newest = next(p for p in (CARD_DIR / f"cards{s}.parquet" for s in ("_v3", "_v2", "")) if p.exists())
+        CARDS = pd.read_parquet(newest).set_index("bldg_id").text
     return CARDS[bid]
 
 

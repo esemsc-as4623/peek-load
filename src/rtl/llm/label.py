@@ -25,10 +25,18 @@ from rtl.llm.client import BATCH_DISCOUNT, LLMClient, LLMResult, build_request
 from rtl.schemas import LABEL_CLASSES, labels
 from rtl.settings import GOLD_DIR, PROCESSED_DIR, REPO_ROOT
 
-PROMPT_VERSION = "label_v1"
+PROMPT_VERSION = "label_v1"  # switched by --prompt; v2 = richer cards + less residential-biased prompt
+CARD_SUFFIX = ""
+
+
+def set_version(v: str) -> None:
+    global PROMPT_VERSION, CARD_SUFFIX
+    PROMPT_VERSION = f"label_{v}"
+    CARD_SUFFIX = "" if v == "v1" else f"_{v}"
 MODELS = {"haiku": "claude-haiku-4-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5"}
 CONFIGS = [f"{m}:{v}" for m in MODELS for v in ("text", "image")]
 OUT = PROCESSED_DIR / "labels.parquet"
+SECTOR_PRIORITY = {"Nyamirambo": 0, "Nasho": 1, "Muhoza": 2}  # coverage order for the deep-dive stage
 
 SCHEMA = {
     "type": "object", "additionalProperties": False,
@@ -45,7 +53,7 @@ SCHEMA = {
 
 
 def system_prompt() -> str:
-    head = (REPO_ROOT / "src/rtl/llm/prompts/label_v1.md").read_text()
+    head = (REPO_ROOT / f"src/rtl/llm/prompts/{PROMPT_VERSION}.md").read_text()
     return head + "\n" + (REPO_ROOT / "docs/codebook.md").read_text()
 
 
@@ -62,7 +70,8 @@ def request(card_text: str, bldg_id: str, config: str) -> dict:
 
 
 def cards(which: str) -> pd.DataFrame:
-    path = CARD_DIR / ("cards_deep_dives.parquet" if which == "deep-dives" else "cards.parquet")
+    path = CARD_DIR / (f"cards_deep_dives{CARD_SUFFIX}.parquet" if which == "deep-dives"
+                       else f"cards{CARD_SUFFIX}.parquet")
     c = pd.read_parquet(path)
     gold = set(pd.read_csv(GOLD_DIR / "sample_ids.csv").query("in_gold").bldg_id)
     if which in ("gold", "calibrate"):
@@ -71,6 +80,10 @@ def cards(which: str) -> pd.DataFrame:
         c = c[~c.bldg_id.isin(gold)]
     elif which == "deep-dives":  # pilot buildings are labelled in the pilot stage
         c = c[~c.bldg_id.isin(set(pd.read_csv(GOLD_DIR / "sample_ids.csv").bldg_id))]
+        # finish whole sectors first, so a budget cut leaves complete sectors rather than a thin scatter
+        sector = c.text.str.extract(r"cell, (\w+) sector")[0]
+        c = c.assign(_p=sector.map(SECTOR_PRIORITY).fillna(99)).sort_values(["_p", "bldg_id"]).drop(columns="_p")
+        return c.reset_index(drop=True)
     return c.sort_values("bldg_id").reset_index(drop=True)
 
 
@@ -98,7 +111,7 @@ def run(which: str, configs: list[str], batch: bool, limit: int | None, max_usd:
             print(f"[budget] {config}: trimming {len(reqs)} -> {n_fit} requests")
             reqs = dict(list(reqs.items())[:n_fit])
         budget.require(len(reqs), per, f"{which} {config}", client.cache)
-        tag = f"label:{which}:{config}"
+        tag = f"label:{PROMPT_VERSION}:{which}:{config}" if PROMPT_VERSION != "label_v1" else f"label:{which}:{config}"
         if batch:
             # submit every chunk first (each well under the 256 MB payload limit), then wait for all of them,
             # so chunks are processed in parallel on the API side
@@ -136,20 +149,17 @@ def export(client: LLMClient) -> pd.DataFrame:
     """Rebuild data/processed/labels.parquet from every cached label_v1 response."""
     import duckdb
 
+    # one query: the cache lock is shared with any labelling job that is still running
     with client.cache._connect() as con:
-        rows = con.execute("SELECT key, model, tag, response_json, stop_reason, created_at FROM responses "
-                           "WHERE prompt_version = ?", [PROMPT_VERSION]).fetchall()
-    req_ids = {}
-    with client.cache._connect() as con:  # custom ids of batch items carry the building id
-        for key, cid in con.execute("SELECT key, custom_id FROM batches").fetchall():
-            req_ids[key] = cid
+        rows = con.execute("SELECT key, model, tag, response_json, stop_reason, created_at, prompt_version, "
+                           "request_json FROM responses WHERE prompt_version LIKE 'label_v%'").fetchall()
     out = []
-    for key, model, tag, resp_json, stop, created in rows:
+    for _key, model, tag, resp_json, stop, created, pv, req_json in rows:
         resp = json.loads(resp_json)
-        bldg = _bldg_from_request(client, key, req_ids.get(key))
+        bldg = _bldg_from_request(json.loads(req_json))
         variant = (tag or "::").split(":")[-1]
-        rec = {"bldg_id": bldg, "label_source": "claude", "model": model, "prompt_version": PROMPT_VERSION,
-               "labeler": f"{model}|{variant}|{PROMPT_VERSION}", "labeled_at": pd.Timestamp(created).tz_convert("UTC")}
+        rec = {"bldg_id": bldg, "label_source": "claude", "model": model, "prompt_version": pv,
+               "labeler": f"{model}|{variant}|{pv}", "labeled_at": pd.Timestamp(created).tz_convert("UTC")}
         if stop == "refusal":
             out.append({**rec, "label": "unknown", "confidence": None, "probs_json": None, "abstain": True})
             continue
@@ -176,14 +186,12 @@ def export(client: LLMClient) -> pd.DataFrame:
     return df
 
 
-def _bldg_from_request(client: LLMClient, key: str, custom_id: str | None) -> str:
+def _bldg_from_request(req: dict) -> str:
     """The building id is in the card text of the stored request (first line: 'Building RWA-…:')."""
-    with client.cache._connect() as con:
-        req = json.loads(con.execute("SELECT request_json FROM responses WHERE key = ?", [key]).fetchone()[0])
     for block in req["messages"][0]["content"]:
         if block.get("type") == "text" and block["text"].startswith("Building RWA-"):
             return block["text"].split(":", 1)[0].removeprefix("Building ")
-    raise ValueError(f"no building id in cached request {key}")
+    raise ValueError("no building id in cached request")
 
 
 def main() -> None:
@@ -193,7 +201,9 @@ def main() -> None:
     ap.add_argument("--batch", action="store_true")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--max-usd", type=float, help="cap for this stage on top of the global budget")
+    ap.add_argument("--prompt", default="v1", choices=["v1", "v2", "v3"])
     args = ap.parse_args()
+    set_version(args.prompt)
     client = LLMClient()
     if args.stage == "export":
         export(client)

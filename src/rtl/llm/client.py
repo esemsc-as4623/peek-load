@@ -166,7 +166,7 @@ class LLMClient:
         """One Messages call. Large max_tokens must stream (the SDK refuses long non-streaming requests); the
         final message is identical either way."""
         api = api or self._api()
-        if request.get("max_tokens", 0) > STREAM_ABOVE_TOKENS:
+        if request.get("max_tokens", 0) > STREAM_ABOVE_TOKENS and hasattr(api.messages, "stream"):
             with api.messages.stream(**request) as stream:
                 return stream.get_final_message()
         return api.messages.create(**request)
@@ -195,13 +195,15 @@ class LLMClient:
         """
         out: dict[str, LLMResult | Exception] = {}
         todo: dict[str, tuple[str, dict]] = {}
-        for rid, req in requests.items():
-            key = cache_key(req["model"], prompt_version, req)
-            if (hit := self.cache.get(key)) is not None:
+        keyed = {rid: (cache_key(req["model"], prompt_version, req), req) for rid, req in requests.items()}
+        have = self.cache.cached_keys([k for k, _ in keyed.values()])
+        for rid, (key, req) in keyed.items():
+            if key in have and (hit := self.cache.get(key)) is not None:
                 out[rid] = self._result(hit, from_cache=True)
             else:
                 todo[rid] = (key, req)
-        api = self._api().with_options(max_retries=6)
+        api = self._api()
+        api = api.with_options(max_retries=6) if hasattr(api, "with_options") else api  # fakes in tests lack it
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
             futures = {pool.submit(self._create, req, api): rid for rid, (_, req) in todo.items()}
             for fut in as_completed(futures):
@@ -225,11 +227,9 @@ class LLMClient:
 
         The custom_id -> cache key mapping is stored in the cache DB, so `collect_batch` works from a new process.
         """
-        todo = {}
-        for cid, req in items.items():
-            key = cache_key(req["model"], prompt_version, req)
-            if self.cache.get(key) is None:
-                todo[cid] = (key, req)
+        keyed = {cid: (cache_key(req["model"], prompt_version, req), req) for cid, req in items.items()}
+        have = self.cache.cached_keys([k for k, _ in keyed.values()])
+        todo = {cid: kr for cid, kr in keyed.items() if kr[0] not in have}
         if not todo:
             return None
         batch = self._api().messages.batches.create(

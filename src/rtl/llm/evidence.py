@@ -41,6 +41,7 @@ PROMPT_VERSION = "evidence_v1"  # bump together with new prompt files (tests che
 MAX_PAGES_PER_REQUEST = 40
 MAX_PAGES_PER_DOC = 120
 MIN_KEYWORD_HITS = 2
+NORMALISE_CHUNK = 60  # statements per normalisation request when a document overflows one response
 
 # A page is "relevant" if it mentions at least MIN_KEYWORD_HITS distinct terms from this list.
 KEYWORDS = [
@@ -296,12 +297,27 @@ def extract_docs(doc_ids: list[str], client: LLMClient, model: str = DEFAULT_MOD
         INTERIM_DIR / "evidence_claims.parquet", index=False)
 
     res_b = run_requests(client, step_b, "evidence_normalise", batch)
-    rows = []
+    # A document with very many statements can overflow one normalisation response. Only those documents are
+    # re-normalised in chunks of statements, so documents that already succeeded stay cache hits.
+    redo = {}
     for doc_id, r in res_b.items():
-        if r.refused:
-            print(f"[{doc_id}] normalisation refused; skipped")
+        if r.stop_reason == "max_tokens":
+            cs = claims[doc_id]
+            for j in range(0, len(cs), NORMALISE_CHUNK):
+                redo[f"{doc_id}--n{j // NORMALISE_CHUNK}"] = (doc_id, cs[j:j + NORMALISE_CHUNK])
+    res_c = run_requests(client, {k: normalise_request(docs[d], cs, model) for k, (d, cs) in redo.items()},
+                         "evidence_normalise_chunk", batch) if redo else {}
+    if redo:
+        print(f"re-normalised {len({d for d, _ in redo.values()})} truncated documents in {len(redo)} chunks")
+
+    rows = []
+    results = [(d, r, claims[d]) for d, r in res_b.items() if r.stop_reason != "max_tokens"]
+    results += [(redo[k][0], r, redo[k][1]) for k, r in res_c.items()]
+    for doc_id, r, cs in results:
+        if r.refused or r.stop_reason == "max_tokens":
+            print(f"[{doc_id}] normalisation {'refused' if r.refused else 'truncated'}; skipped")
             continue
-        rows += rows_from(doc_id, r, claims[doc_id], plans[doc_id][0])
+        rows += rows_from(doc_id, r, cs, plans[doc_id][0])
     return to_frame(rows)
 
 

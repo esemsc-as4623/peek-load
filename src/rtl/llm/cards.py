@@ -64,8 +64,12 @@ def neighbours(att: pd.DataFrame) -> pd.DataFrame:
     con.register("t", att[["h3_r9"]].drop_duplicates())
     return con.sql(f"""
         WITH cells AS (SELECT DISTINCT unnest(h3_grid_disk(h3_r9, 1)) AS h FROM t)
-        SELECT b.bldg_id, b.lon, b.lat, b.area_m2, ST_AsWKB(b.geometry) AS wkb
+        SELECT b.bldg_id, b.lon, b.lat, b.area_m2, ST_AsWKB(b.geometry) AS wkb, h.height_m,
+               coalesce(c.facility_type, c.osm_amenity, c.osm_shop, c.overture_category,
+                        nullif(c.osm_building, 'yes')) AS tag
         FROM read_parquet('{BASE}') b JOIN cells ON b.h3_r9 = cells.h
+        LEFT JOIN read_parquet('{INTERIM_DIR / "building_height.parquet"}') h USING (bldg_id)
+        LEFT JOIN read_parquet('{INTERIM_DIR / "building_context.parquet"}') c USING (bldg_id)
     """).df()
 
 
@@ -140,6 +144,168 @@ def card_text(r: pd.Series, nb: pd.DataFrame, pts: pd.DataFrame) -> str:
     ])
 
 
+# --------------------------------------------------------------------------- v2 cues
+M_PER_DEG = 111_000.0  # near the equator a degree is ~111 km in both directions (cos 2deg = 0.999)
+MARKET_WORDS = ("market", "marketplace")
+
+
+def _s(v) -> str:
+    """Text value or '' for None/NaN (OSM names are often missing)."""
+    return "" if v is None or (not isinstance(v, str) and pd.isna(v)) else str(v)
+
+
+def v2_cues(att: pd.DataFrame, nb: pd.DataFrame, nb_by_t: pd.Series, pts: pd.DataFrame) -> list[str]:
+    """Extra lines for card v2: cues the open vector data holds but v1 didn't show.
+
+    land-use zone (smallest OSM landuse polygon containing the centroid), nearest road class and whether the
+    building fronts it, footprint elongation, size relative to neighbours, distance to the nearest tagged
+    place and to the nearest market. All distances are approximate metres (local degree scaling).
+    """
+    pt = shapely.points(att.lon, att.lat)
+    con = duckdb.connect()
+    con.sql("LOAD spatial;")
+    lu = con.sql("SELECT landuse, name, ST_AsWKB(geometry) AS wkb "
+                 f"FROM read_parquet('{LAYERS / 'osm_landuse.parquet'}')").df()
+    lu_g = shapely.from_wkb(lu.wkb.map(bytes))
+    li, lj = shapely.STRtree(lu_g).query(pt, predicate="within")
+    lu_area = shapely.area(lu_g)
+    best_lu = pd.DataFrame({"i": li, "j": lj, "a": lu_area[lj]}).sort_values("a").drop_duplicates("i").set_index("i").j
+    roads = con.sql("SELECT highway, name, ST_AsWKB(geometry) AS wkb "
+                    f"FROM read_parquet('{LAYERS / 'osm_roads.parquet'}')").df()
+    r_g = shapely.from_wkb(roads.wkb.map(bytes))
+    (ri, rj), rd = shapely.STRtree(r_g).query_nearest(pt, return_distance=True, all_matches=False)
+    road_of = pd.Series(rj, index=ri)
+    road_d = pd.Series(rd, index=ri) * M_PER_DEG
+    p_g = shapely.points(pts.lon, pts.lat)
+    (pi, pj), pdist = shapely.STRtree(p_g).query_nearest(pt, return_distance=True, all_matches=False)
+    poi_of, poi_d = pd.Series(pj, index=pi), pd.Series(pdist, index=pi) * M_PER_DEG
+    mk = pts.kind.str.lower().str.contains("|".join(MARKET_WORDS), na=False) | \
+        pts["name"].fillna("").str.lower().str.contains("market")
+    mk_g = p_g[mk.to_numpy()]
+    if len(mk_g):
+        (mi, _mj), md = shapely.STRtree(mk_g).query_nearest(pt, return_distance=True, all_matches=False)
+        mkt_d = pd.Series(md, index=mi) * M_PER_DEG
+    else:
+        mkt_d = pd.Series(dtype=float)
+
+    lines = []
+    for i, r in enumerate(att.itertuples(index=False)):
+        kx = m_per_deg_lon(r.lat)
+        sub = nb.iloc[nb_by_t.get(i, np.array([], int))]
+        own = sub[sub.bldg_id == r.bldg_id]
+        if len(own):
+            g = shapely.from_wkb(bytes(own.wkb.iloc[0]))
+            gm = shapely.transform(g, lambda c, kx=kx, r=r: np.column_stack([(c[:, 0] - r.lon) * kx,
+                                                                              (c[:, 1] - r.lat) * M_PER_DEG_LAT]))
+            env = shapely.get_coordinates(shapely.oriented_envelope(gm))
+            sides = sorted(np.hypot(*np.diff(env[:3], axis=0).T))
+            shape = f"{sides[1]:.0f} x {sides[0]:.0f} m (elongation {sides[1] / max(sides[0], 0.1):.1f})"
+        else:
+            shape = "unknown"
+        d = np.hypot((sub.lon - r.lon) * kx, (sub.lat - r.lat) * M_PER_DEG_LAT)
+        ring = sub[(d <= 50) & (sub.bldg_id != r.bldg_id)]
+        if len(ring):
+            rel = (f"{r.area_m2 / ring.area_m2.median():.1f}x the median neighbour within 50 m; "
+                   f"larger than {(ring.area_m2 < r.area_m2).mean():.0%} of them")
+        else:
+            rel = "no neighbours within 50 m"
+        j = best_lu.get(i)
+        landuse = (f"{lu.landuse.iloc[j]}" + (f' ("{_s(lu.name.iloc[j])}")' if _s(lu.name.iloc[j]) else "")
+                   if j is not None else "none mapped")
+        rd_i = road_d.get(i, np.nan)
+        road = roads.iloc[road_of[i]] if i in road_of.index else None
+        fronts = pd.notna(r.dist_road_any_m) and r.dist_road_any_m <= 5  # footprint edge within 5 m of a road
+        road_line = (f"{road.highway}{' (' + _s(road['name']) + ')' if _s(road['name']) else ''}, "
+                     f"{rd_i:.0f} m from the building centre{'; the building fronts the road' if fronts else ''}"
+                     if road is not None else "none")
+        poi = pts.iloc[poi_of[i]] if i in poi_of.index else None
+        poi_line = (f'{poi_d[i]:.0f} m ({poi.kind}{", " + _s(poi["name"]) if _s(poi["name"]) else ""})'
+                    if poi is not None else "none")
+        mkt = f"{mkt_d[i]:.0f} m" if i in mkt_d.index else "none mapped"
+        lines.append("\n".join([
+            f"Shape: footprint {shape}; size {rel}",
+            f"OSM land-use zone: {landuse}",
+            f"Nearest road: {road_line}",
+            f"Nearest tagged place anywhere: {poi_line}; nearest market: {mkt}",
+        ]))
+    return lines
+
+
+# --------------------------------------------------------------------------- v3 cues
+def _orientation(geoms_m: np.ndarray) -> np.ndarray:
+    """Long-axis bearing (0-180 deg) of each footprint's minimum rotated rectangle."""
+    env = shapely.oriented_envelope(geoms_m)
+    out = np.full(len(geoms_m), np.nan)
+    for k, e in enumerate(env):
+        c = shapely.get_coordinates(e)
+        if len(c) >= 4:
+            a, b = c[1] - c[0], c[2] - c[1]
+            v = a if np.hypot(*a) >= np.hypot(*b) else b
+            out[k] = np.degrees(np.arctan2(v[0], v[1])) % 180
+    return out
+
+
+def _robust_z(x: float, ref: np.ndarray) -> float:
+    ref = ref[np.isfinite(ref)]
+    if len(ref) < 5 or not np.isfinite(x):
+        return np.nan
+    mad = np.median(np.abs(ref - np.median(ref))) * 1.4826
+    return float((x - np.median(ref)) / mad) if mad > 0 else np.nan
+
+
+def neighbour_labels() -> pd.Series:
+    """Most recent Claude label per building (any model, prompt v2+), if labels exist yet."""
+    from rtl.settings import PROCESSED_DIR
+
+    path = PROCESSED_DIR / "labels.parquet"
+    if not path.exists():
+        return pd.Series(dtype=str)
+    lab = pd.read_parquet(path, columns=["bldg_id", "label", "prompt_version", "labeled_at"])
+    lab = lab[lab.prompt_version >= "label_v2"].sort_values("labeled_at")
+    return lab.drop_duplicates("bldg_id", keep="last").set_index("bldg_id").label
+
+
+def v3_cues(att: pd.DataFrame, nb: pd.DataFrame, nb_by_t: pd.Series) -> list[str]:
+    """Card v3 lines: regularity of the surroundings, how unusual the building is for its neighbourhood, and the
+    labels/tags of nearby buildings. Neighbourhood = other footprints with centroids within 100 m."""
+    claude = neighbour_labels()
+    lines = []
+    for i, r in enumerate(att.itertuples(index=False)):
+        kx = m_per_deg_lon(r.lat)
+        sub = nb.iloc[nb_by_t.get(i, np.array([], int))]
+        d = np.hypot((sub.lon - r.lon) * kx, (sub.lat - r.lat) * M_PER_DEG_LAT)
+        ring = sub[(d <= 100) & (sub.bldg_id != r.bldg_id)]
+        if len(ring) < 5:
+            lines.append(f"Neighbourhood (100 m): only {len(ring)} other buildings; too few to judge regularity")
+            continue
+        g = shapely.transform(shapely.from_wkb(np.array([bytes(w) for w in sub.wkb])),
+                              lambda c, kx=kx, r=r: np.column_stack([(c[:, 0] - r.lon) * kx,
+                                                                      (c[:, 1] - r.lat) * M_PER_DEG_LAT]))
+        ori = pd.Series(_orientation(g), index=sub.bldg_id.to_numpy())
+        own_o = ori.get(r.bldg_id, np.nan)
+        diff = np.abs(((ori.loc[ring.bldg_id] - own_o + 45) % 90) - 45)  # grid alignment ignores 90 deg turns
+        aligned = float((diff <= 15).mean()) if np.isfinite(own_o) else np.nan
+        cv = float(ring.area_m2.std() / ring.area_m2.mean())
+        z_area = _robust_z(np.log(r.area_m2), np.log(ring.area_m2.to_numpy()))
+        z_h = _robust_z(r.height_m if pd.notna(r.height_m) else np.nan, ring.height_m.to_numpy(dtype=float))
+        pct = float((ring.area_m2 < r.area_m2).mean())
+        unusual = (abs(z_area) >= 2) or (np.isfinite(z_h) and abs(z_h) >= 2)
+        tags = ring.tag.dropna().value_counts().head(5)
+        cl = claude.reindex(ring.bldg_id).dropna().value_counts()
+        lines.append("\n".join([
+            f"Neighbourhood regularity (100 m): {len(ring)} buildings; sizes "
+            f"{'uniform' if cv < 0.5 else 'mixed' if cv < 1.0 else 'very mixed'} (CV {cv:.2f}); "
+            + (f"{aligned:.0%} share this building's alignment" if np.isfinite(aligned) else "alignment unknown"),
+            f"How unusual this building is here: area z = {z_area:+.1f} (larger than {pct:.0%} of neighbours)"
+            + (f", height z = {z_h:+.1f}" if np.isfinite(z_h) else "")
+            + (" -> OUT OF DISTRIBUTION for this neighbourhood" if unusual else " -> typical for this neighbourhood"),
+            "Tags on nearby buildings (100 m): " + (", ".join(f"{k} x{v}" for k, v in tags.items()) or "none")
+            + ("; Claude labels of nearby buildings: " + ", ".join(f"{k} x{v}" for k, v in cl.items())
+               if len(cl) else ""),
+        ]))
+    return lines
+
+
 # --------------------------------------------------------------------------- map image
 def render_map(args: tuple) -> str:
     """150 x 150 m map around one building from open vector data only. Runs in a worker process."""
@@ -189,6 +355,8 @@ def main() -> None:
     ap.add_argument("--deep-dives", action="store_true", help="text cards for all deep-dive buildings, no images")
     ap.add_argument("--workers", type=int, default=3)
     ap.add_argument("--limit", type=int, help="only the first N buildings (for a quick look)")
+    ap.add_argument("--version", type=int, default=1, choices=[1, 2, 3],
+                    help="2 = v1 text + extra vector cues; 3 = v2 + neighbourhood regularity / unusualness / labels")
     args = ap.parse_args()
 
     if args.deep_dives:
@@ -202,6 +370,8 @@ def main() -> None:
         images = True
     if args.limit:
         ids = ids.head(args.limit)
+    if args.version >= 2:
+        images = False  # v2+ are text-only (the map added little in the v1 ablation)
 
     att = attributes(ids)
     nb = neighbours(att)
@@ -221,9 +391,14 @@ def main() -> None:
         sub_nb = nb.iloc[nb_by_cell.get(i, np.array([], int))]
         sub_pts = pts.iloc[pts_by_t.get(i, np.array([], int))]
         texts.append(card_text(r, sub_nb, sub_pts))
+    if args.version >= 2:
+        texts = [t + "\n" + extra for t, extra in zip(texts, v2_cues(att, nb, nb_by_cell, pts), strict=True)]
+    if args.version >= 3:
+        texts = [t + "\n" + extra for t, extra in zip(texts, v3_cues(att, nb, nb_by_cell), strict=True)]
     CARD_DIR.mkdir(parents=True, exist_ok=True)
     cards = pd.DataFrame({"bldg_id": att.bldg_id, "text": texts})
-    path = CARD_DIR / ("cards_deep_dives.parquet" if args.deep_dives else "cards.parquet")
+    suffix = f"_v{args.version}" if args.version >= 2 else ""
+    path = CARD_DIR / (f"cards_deep_dives{suffix}.parquet" if args.deep_dives else f"cards{suffix}.parquet")
     cards.to_parquet(path, index=False)
     print(f"{len(cards):,} text cards -> {path}; median length {cards.text.str.len().median():.0f} chars")
 

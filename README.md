@@ -15,6 +15,8 @@ data layer for that:
 Peak load should end up as a **distribution, not a number**.
 
 ## Status: data phase (v0.1 target: Oct 14, 2026, mid-point review)
+
+Full progress report for the organisers: [`status_report.md`](status_report.md).
 | | |
 |---|---|
 | Building footprints (VIDA: Google + Microsoft + OSM) | ✅ 6,434,247 conformed, QA-flagged |
