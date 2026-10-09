@@ -151,6 +151,8 @@ def build(buildings: Path, out: Path) -> dict:
                    "GHI: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES SYN1deg 1deg), bilinear"),
         **{c: typical[:, h] for h, c in enumerate(HOURLY)},
     })
+    from rtl.derive import cooling_class  # thresholds live in config/params.yaml
+    df["cooling_class"] = cooling_class(df["tmax_p95_c"])
     climate_h3.validate(df, lazy=True)
     out.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(out, index=False)

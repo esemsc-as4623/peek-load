@@ -159,3 +159,21 @@ def test_batch_skips_cached_and_collects_with_discount(client):
     assert out["a"].cost_usd == pytest.approx((1000 * 4 + 500 * 20) / 1e6 / 2)
     hit = client.get_or_call(items["a"], "v1")  # collected result now served from cache
     assert hit.from_cache and hit.text == "batched"
+
+
+def test_haiku_request_has_no_thinking_or_effort():
+    from rtl.llm.client import build_request
+    r = build_request("hi", model="claude-haiku-4-5", json_schema={"type": "object"})
+    assert "thinking" not in r and "effort" not in r.get("output_config", {})
+    assert r["output_config"]["format"]["type"] == "json_schema"
+    o = build_request("hi", model="claude-opus-5-5", effort="low")
+    assert o["thinking"] == {"type": "adaptive"} and o["output_config"]["effort"] == "low"
+
+
+def test_budget_refuses_over_cap(tmp_path):
+    from rtl.llm.budget import check
+    from rtl.llm.cache import Cache
+    c = Cache(tmp_path / "c.duckdb")
+    assert check(100, 0.01, cache=c, cap=5.0).ok
+    b = check(1000, 0.01, cache=c, cap=5.0)
+    assert not b.ok and b.affordable_n == int(5.0 // (0.01 * 1.15))

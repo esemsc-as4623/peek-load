@@ -96,6 +96,7 @@ fetch-25d = "python -m rtl.ingest.open_buildings_25d"
 conform-height = "python -m rtl.conform.height"
 report-height = "python -m rtl.conform.height_report"
 assemble-context = "python -m rtl.join.assemble"
+derive = "python -m rtl.derive"  # re-tunable columns from config/params.yaml (no raster re-sampling unless --presence)
 # --- EDA (jupytext percent scripts; open as notebooks with `jupytext --to ipynb`)
 eda-01 = "python notebooks/01_footprints.py"
 # --- quality gates

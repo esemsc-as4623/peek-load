@@ -54,3 +54,7 @@ def sources() -> dict[str, dict[str, Any]]:
 
 def aoi() -> dict[str, Any]:
     return load_yaml("aoi.yaml")
+
+
+def params() -> dict[str, Any]:
+    return load_yaml("params.yaml")

@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `climate_h3.parquet`
-- checked: 2026-10-08 20:52 UTC
+- checked: 2026-10-09 12:58 UTC
 - rows: 4,034
 - duplicate `h3_r7`: 0
 - schema: PASS (all rows)
@@ -42,3 +42,4 @@
 | t2m_h21_c | 0.0% |
 | t2m_h22_c | 0.0% |
 | t2m_h23_c | 0.0% |
+| cooling_class | 0.0% |

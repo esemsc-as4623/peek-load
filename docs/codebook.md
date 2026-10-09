@@ -1,7 +1,8 @@
-# Building-use codebook (DRAFT v0, needs human approval before any labelling)
+# Building-use codebook (v1, approved 2026-10-09)
 
-Status: **draft, not approved**. The gold set and the Claude labelling prompt are both built from this
-document, so changes after labelling starts invalidate labels. Approve or edit, then bump the version.
+Status: **v1, approved by the repo owner on 2026-10-09.** The gold set and the Claude labelling prompt
+(`src/rtl/llm/prompts/label_v1.md`) are built from this version. Any change means a new version, and labels made with v1 stay
+tagged v1.
 
 ## Unit and question
 One footprint polygon. Question: *what is the main use of this structure, as it relates to electricity demand?*
@@ -14,7 +15,8 @@ Label what the evidence supports. When the evidence can't separate two classes, 
 | `residential` | Dwelling; people sleep here | Small-to-medium footprint in a cluster of similar buildings; no POI/tag; residential street pattern | A dwelling with a street-facing shop → `mixed_shop_house` |
 | `mixed_shop_house` | Dwelling with a shop, kiosk, salon or small service in part of the building | Street-facing, on a main road or market street, a shop/POI matched to the footprint, elongated frontage | Stand-alone shop without a dwelling → `commercial` |
 | `commercial` | Shops, markets, restaurants, bars, hotels, offices, banks, pharmacies, mobile-money and phone-charging kiosks | OSM `shop=*`/`amenity=restaurant/bank…`, Overture place, market cluster, large footprint on a main road | Workshops making or processing goods → `productive_use` |
-| `institutional` | Schools, health facilities, government offices, churches, mosques, community halls | OSM/registry facility match, large rectangular blocks in a compound, regular multi-block layout | |
+| `institutional` | Schools, health facilities, government offices, community halls | OSM/registry facility match, large rectangular blocks in a compound, regular multi-block layout | Places of worship → `religious` |
+| `religious` | Churches, mosques, temples, other places of worship | OSM `amenity=place_of_worship` / `religion=*`, Overture category, large single hall, often a cross-shaped or long rectangular plan | A school or clinic run by a church → `institutional` |
 | `productive_use` | Small-scale production with motors or heat: grain mills, welding, carpentry, tailoring, agro-processing, cold storage, irrigation pump houses, water kiosks with pumps | OSM `craft=*`, `industrial=*`, Overture category, location near fields/irrigation or a trading centre | Retail without processing → `commercial` |
 | `industrial_warehouse` | Factories, large warehouses, industrial-zone buildings | Very large footprint, industrial zone, `landuse=industrial` | |
 | `ancillary` | Structures with negligible electricity demand: latrines, detached kitchens, animal sheds, small stores | Very small (often < 10 m²) next to a larger building in the same plot | A tiny kiosk on a road → `commercial` |
@@ -32,7 +34,7 @@ Label what the evidence supports. When the evidence can't separate two classes, 
 - `medium`: several consistent indirect cues
 - `low`: a single weak cue (labels with low confidence are kept but reported separately)
 
-## Open questions for approval
-- Is `mixed_shop_house` worth separating from `residential` for demand purposes? (Recommendation: yes.
-  Shop-houses are common in Rwandan trading centres and add lighting/fridge/TV load.)
-- Should religious buildings be separate from `institutional`? Their load profile is weekly, not daily.
+## Decisions (v1)
+- `mixed_shop_house` is separate from `residential`: shop-houses are common in Rwandan trading centres and
+  add lighting, fridge and TV load.
+- `religious` is separate from `institutional`, because its load profile is weekly rather than daily.

@@ -1,0 +1,37 @@
+{
+  "cooling_class_cells": {
+    "medium": 1672,
+    "low": 1484,
+    "high": 878
+  },
+  "storey_calibration": {
+    "storey_m": 3.4,
+    "objective": "mean of per-group MAE, OSM levels 1/2/3+",
+    "n_fit": 4919,
+    "n_test": 4927,
+    "test_group_mae": 1.036,
+    "test_group_mae_at_3m": 1.067,
+    "test_mae_by_levels": {
+      "1": 0.408,
+      "2": 0.584,
+      "3": 2.116
+    },
+    "test_exact_share": 0.593,
+    "n_test_by_levels": {
+      "1": 4547,
+      "2": 173,
+      "3": 207
+    }
+  },
+  "storey_m_used": 3.4,
+  "presence_threshold": 0.5,
+  "floors_counts": {
+    "1": 4143141,
+    "2": 449391,
+    "3": 9320,
+    "4": 1296,
+    "5": 442,
+    "6": 174
+  },
+  "first_seen_nonnull_share": 0.3324
+}

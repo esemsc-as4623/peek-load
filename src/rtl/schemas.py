@@ -25,6 +25,7 @@ LABEL_CLASSES = [
     "mixed_shop_house",
     "commercial",
     "institutional",
+    "religious",
     "productive_use",
     "industrial_warehouse",
     "ancillary",
@@ -76,6 +77,8 @@ building_height = pa.DataFrameSchema(
         "first_seen_year": pa.Column("Int64", pa.Check.in_range(2016, 2023), nullable=True),
         "est_floors": pa.Column("Int64", pa.Check.in_range(1, 30), nullable=True),
         "gfa_m2": pa.Column(float, pa.Check.gt(0), nullable=True),
+        # raw annual presence at the centroid (0-1), kept so first_seen_year can be re-derived at any threshold
+        **{f"presence_{y}": pa.Column(float, pa.Check.in_range(0, 1), nullable=True) for y in range(2016, 2024)},
     },
     strict=True,
     name="building_height",
@@ -143,6 +146,7 @@ climate_h3 = pa.DataFrameSchema(
         "cdd18_per_year": pa.Column(float, pa.Check.ge(0)),
         "cdd24_per_year": pa.Column(float, pa.Check.ge(0)),
         "ghi_kwh_m2_day": pa.Column(float, pa.Check.in_range(0, 10), nullable=True),
+        "cooling_class": pa.Column(str, pa.Check.isin(["low", "medium", "high"])),  # rule in config/params.yaml
         "years": pa.Column(str),
         "source": pa.Column(str),
         **_hourly,

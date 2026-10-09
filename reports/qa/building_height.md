@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `building_height.parquet`
-- checked: 2026-10-08 20:52 UTC
+- checked: 2026-10-09 12:59 UTC
 - rows: 6,434,247
 - duplicate `bldg_id`: 0
 - schema: PASS (random sample of 200,000)
@@ -15,3 +15,11 @@
 | first_seen_year | 66.8% |
 | est_floors | 28.4% |
 | gfa_m2 | 28.4% |
+| presence_2016 | 9.5% |
+| presence_2017 | 9.5% |
+| presence_2018 | 9.5% |
+| presence_2019 | 9.5% |
+| presence_2020 | 9.5% |
+| presence_2021 | 9.5% |
+| presence_2022 | 9.5% |
+| presence_2023 | 9.5% |

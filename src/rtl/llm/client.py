@@ -17,6 +17,7 @@ from __future__ import annotations
 import base64
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -116,15 +117,21 @@ def document_block(pdf: bytes | Path, title: str | None = None, citations: bool 
 
 def build_request(user_content: str | list, *, system: str | None = None, model: str = DEFAULT_MODEL,
                   max_tokens: int = 16000, effort: str = "medium", json_schema: dict | None = None) -> dict:
-    """Messages API params with the project defaults. `json_schema` turns on structured outputs."""
-    req: dict[str, Any] = {"model": model, "max_tokens": max_tokens,
-                           "thinking": {"type": "adaptive"},
-                           "output_config": {"effort": effort},
+    """Messages API params with the project defaults. `json_schema` turns on structured outputs.
+
+    Haiku 4.5 rejects adaptive thinking and `effort`, so it gets neither (it answers without thinking).
+    """
+    req: dict[str, Any] = {"model": model, "max_tokens": max_tokens, "output_config": {},
                            "messages": [{"role": "user", "content": user_content}]}
+    if not model.startswith("claude-haiku-4-5"):
+        req["thinking"] = {"type": "adaptive"}
+        req["output_config"]["effort"] = effort
     if system:
         req["system"] = system
     if json_schema:
         req["output_config"]["format"] = {"type": "json_schema", "schema": json_schema}
+    if not req["output_config"]:
+        del req["output_config"]
     return req
 
 
@@ -167,6 +174,40 @@ class LLMClient:
                            resp.get("stop_reason"), batch=False)
         self.cache.put(entry, request)
         return self._result(entry, from_cache=False)
+
+    def run_concurrent(self, requests: dict[str, dict], prompt_version: str, tag: str | None = None,
+                       max_workers: int = 8) -> dict[str, LLMResult | Exception]:
+        """Run {id: request} live with a thread pool; cached ones return immediately at $0.
+
+        Only the network call runs in threads. Results are written to the cache on the calling thread, so
+        the DuckDB cache never sees concurrent writers. Errors are returned per id, not raised, so one
+        failure doesn't lose a stage. The SDK's own retries handle 429/5xx (max_retries set below).
+        """
+        out: dict[str, LLMResult | Exception] = {}
+        todo: dict[str, tuple[str, dict]] = {}
+        for rid, req in requests.items():
+            key = cache_key(req["model"], prompt_version, req)
+            if (hit := self.cache.get(key)) is not None:
+                out[rid] = self._result(hit, from_cache=True)
+            else:
+                todo[rid] = (key, req)
+        api = self._api().with_options(max_retries=6)
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futures = {pool.submit(api.messages.create, **req): rid for rid, (_, req) in todo.items()}
+            for fut in as_completed(futures):
+                rid = futures[fut]
+                key, req = todo[rid]
+                try:
+                    resp = _to_dict(fut.result())
+                except Exception as err:  # noqa: BLE001 - recorded per request
+                    out[rid] = err
+                    continue
+                usage = resp.get("usage") or {}
+                entry = CacheEntry(key, req["model"], prompt_version, tag, resp, usage,
+                                   cost_usd(req["model"], usage), resp.get("stop_reason"), batch=False)
+                self.cache.put(entry, req)
+                out[rid] = self._result(entry, from_cache=False)
+        return out
 
     # ------------------------------------------------------------------ Batch API (50% off, async)
     def submit_batch(self, items: dict[str, dict], prompt_version: str, tag: str | None = None) -> str | None:

@@ -1,0 +1,16 @@
+# Re-tunable parameters. Changing a value here and re-running the cheap derive step
+# (`pixi run derive`) updates derived columns without re-sampling rasters or calling any API.
+
+height:
+  storey_m: auto           # 'auto' = calibrate on OSM building:levels (reports/qa/derive.json); or a number in metres
+  presence_threshold: 0.5  # first_seen_year = first year presence >= threshold and stays there (experimental column)
+
+cooling:
+  # Relative proxy: Rwanda has almost no true cooling demand (see A3). Based on each H3 cell's
+  # 95th-percentile daily maximum temperature: "would fans plausibly be used on the hottest days".
+  basis: tmax_p95_c
+  low_below_c: 26.0
+  high_from_c: 29.0
+
+llm:
+  budget_usd: 170.0        # hard cap on all Claude API spend in this repo's cache ledger (credit $180, $10 buffer)
