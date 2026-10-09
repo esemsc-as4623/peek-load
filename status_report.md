@@ -52,8 +52,10 @@ preprocessing. Modelling follows in phase 2.
   - Overall agreement stays modest because open vector data rarely carries the use signal a human sees in imagery.
     That is itself a useful result for the energy-access community.
   - The card map image adds almost nothing over the text.
-- Coverage run: **44,156 deep-dive buildings** (all of Nyamirambo and Nasho, part of Muhoza) submitted for Claude
-  labelling with v2 through the Batch API.
+- Coverage run done: **44,156 deep-dive buildings labelled** (all of Nyamirambo and Nasho, 8.7k in Muhoza) with
+  Claude Haiku on the v2 cards through the Batch API. The mix is about 69% residential, 28% ancillary
+  (kitchens, latrines, stores), 1–2% commercial, institutional and shop-house, and rural Nasho has almost no
+  commercial buildings. Every label carries class probabilities and a one-line justification naming its cues.
 
 ### Engineering
 - Reproducible pixi environment.
@@ -61,12 +63,12 @@ preprocessing. Modelling follows in phase 2.
 - Table contracts with automated QA gates, and 80+ tests.
 - Every LLM call cached, so it is reproducible and re-runs cost nothing.
 - Hard spending cap; AI use disclosed in `docs/ai_use.md`.
-- API spend so far: ~$73, plus ≤ $85 for the coverage batch.
+- Total API spend: **~$157** of a $170 cap (labelling ~$110, evidence ~$33, web research ~$10). All responses are
+  cached locally, so re-running costs nothing.
 
 ## 3. In progress
 - v3 cards on the gold set (Haiku and Sonnet), to measure whether neighbourhood regularity, out-of-distribution
   scores and neighbour labels improve labels.
-- Collecting the deep-dive coverage batch.
 - More gold labels: 160 of 400, plus 50 repeats to measure the labeller's own consistency.
 
 ## 4. To do
