@@ -1,0 +1,132 @@
+"""Score every Claude labelling config against the human gold labels.
+
+    pixi run label export && pixi run label-eval
+
+Truth = the labeller's first pass in data/gold/gold_labels.csv; the second pass on 50 repeats gives the human's own
+consistency, the ceiling no model can be fairly expected to beat. Per config: accuracy, macro-F1 (over classes
+present in gold), abstain rate, calibration error, live $ per 1,000 buildings, with breakdowns by sample group and
+tagged/untagged. Recommendation: the cheapest config whose macro-F1 is within TOLERANCE of the best.
+
+Outputs: reports/labels/eval.md, reports/labels/recommendation.json, reports/figures/labels_confusion.png
+"""
+
+from __future__ import annotations
+
+import json
+
+import numpy as np
+import pandas as pd
+
+from rtl.llm.cache import Cache
+from rtl.llm.label import OUT as LABELS
+from rtl.schemas import LABEL_CLASSES
+from rtl.settings import GOLD_DIR, REPORTS_DIR
+
+TOLERANCE = 0.03
+OUT_DIR = REPORTS_DIR / "labels"
+
+
+def macro_f1(y: pd.Series, p: pd.Series) -> float:
+    f1s = []
+    for c in sorted(set(y)):
+        tp = ((p == c) & (y == c)).sum()
+        prec = tp / max(1, (p == c).sum())
+        rec = tp / max(1, (y == c).sum())
+        f1s.append(0.0 if tp == 0 else 2 * prec * rec / (prec + rec))
+    return float(np.mean(f1s)) if f1s else float("nan")
+
+
+def ece(conf: pd.Series, correct: pd.Series, bins: int = 10) -> float:
+    """Expected calibration error: |accuracy - confidence| averaged over confidence bins, weighted by count."""
+    d = pd.DataFrame({"c": conf, "ok": correct.astype(float)}).dropna()
+    if d.empty:
+        return float("nan")
+    d["b"] = np.minimum((d.c * bins).astype(int), bins - 1)
+    g = d.groupby("b").agg(n=("ok", "size"), acc=("ok", "mean"), conf=("c", "mean"))
+    return float((g.n * (g.acc - g.conf).abs()).sum() / g.n.sum())
+
+
+def cost_per_1k(labeler: str) -> float:
+    model, variant, _ = labeler.split("|")
+    led = Cache().ledger()
+    rows = led[(led.model == model) & led.tag.fillna("").str.endswith(variant)]
+    if rows.empty:
+        return float("nan")
+    live = rows[~rows.batch]
+    return float((live if len(live) else rows).cost_usd.mean() * 1000)
+
+
+def main() -> None:
+    gold_all = pd.read_csv(GOLD_DIR / "gold_labels.csv")
+    first = gold_all[~gold_all.repeat].drop_duplicates("bldg_id", keep="last").set_index("bldg_id")
+    second = gold_all[gold_all.repeat].drop_duplicates("bldg_id", keep="last").set_index("bldg_id")
+    rep = first.join(second, rsuffix="_2", how="inner")
+    human_agree = float((rep.label == rep.label_2).mean()) if len(rep) else float("nan")
+
+    meta = pd.read_csv(GOLD_DIR / "sample_ids.csv").set_index("bldg_id")
+    claude = pd.read_parquet(LABELS)
+    m = claude.merge(first[["label"]].rename(columns={"label": "gold"}), left_on="bldg_id", right_index=True)
+    m = m.join(meta[["group", "tagged"]], on="bldg_id")
+    m["correct"] = m.label == m.gold
+
+    rows, by_group = [], []
+    for lab, g in m.groupby("labeler"):
+        rows.append({"labeler": lab, "n": len(g), "accuracy": g.correct.mean(), "macro_f1": macro_f1(g.gold, g.label),
+                     "abstain": g.abstain.mean(), "ece": ece(g.confidence, g.correct), "usd_per_1k": cost_per_1k(lab)})
+        for (grp, tag), gg in g.groupby(["group", "tagged"]):
+            by_group.append({"labeler": lab, "group": grp, "tagged": tag, "n": len(gg),
+                             "accuracy": gg.correct.mean(), "macro_f1": macro_f1(gg.gold, gg.label)})
+    res = pd.DataFrame(rows).sort_values("macro_f1", ascending=False)
+    best = res.macro_f1.max()
+    ok = res[res.macro_f1 >= best - TOLERANCE].sort_values("usd_per_1k")
+    rec = ok.iloc[0].to_dict() if len(ok) else {}
+
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    (OUT_DIR / "recommendation.json").write_text(json.dumps(
+        {"recommended": rec.get("labeler"), "macro_f1": rec.get("macro_f1"), "usd_per_1k": rec.get("usd_per_1k"),
+         "best_macro_f1": best, "tolerance": TOLERANCE, "n_gold": len(first),
+         "human_self_agreement": human_agree, "n_repeats": len(rep)}, indent=2, default=float) + "\n")
+    gold_dist = first.label.value_counts().reindex(LABEL_CLASSES, fill_value=0)
+    md = ["# Building-use labelling: Claude vs human gold", "",
+          f"- gold buildings labelled: {len(first)} (first pass); repeats: {len(rep)}; "
+          f"human self-agreement: {human_agree:.1%}",
+          f"- recommended config (cheapest within {TOLERANCE} macro-F1 of best): **{rec.get('labeler')}**", "",
+          "## Per config", "", res.round(3).to_string(index=False), "",
+          "## By group and tagged", "", pd.DataFrame(by_group).round(3).to_string(index=False), "",
+          "## Gold class distribution", "", gold_dist.to_string()]
+    (OUT_DIR / "eval.md").write_text("\n".join(md) + "\n")
+    print("\n".join(md[:6]))
+    print(res.round(3).to_string(index=False))
+
+    if rec:
+        plot_confusion(m[m.labeler == rec["labeler"]], rec["labeler"])
+
+
+def plot_confusion(g: pd.DataFrame, labeler: str) -> None:
+    import matplotlib.pyplot as plt
+
+    from rtl import viz
+
+    viz.use()
+    cls = [c for c in LABEL_CLASSES if c in set(g.gold) | set(g.label)]
+    cm = pd.crosstab(g.gold, g.label).reindex(index=cls, columns=cls, fill_value=0)
+    share = cm.div(cm.sum(axis=1).replace(0, 1), axis=0)
+    fig, ax = plt.subplots(figsize=(7, 6))
+    ax.imshow(share, cmap=viz.SEQ_BLUE, vmin=0, vmax=1)
+    for i in range(len(cls)):
+        for j in range(len(cls)):
+            if cm.iat[i, j]:
+                ax.text(j, i, cm.iat[i, j], ha="center", va="center", fontsize=8,
+                        color="white" if share.iat[i, j] > 0.55 else viz.INK)
+    ax.set_xticks(range(len(cls)), [c.replace("_", " ") for c in cls], rotation=40, ha="right")
+    ax.set_yticks(range(len(cls)), [c.replace("_", " ") for c in cls])
+    ax.set_xlabel("Claude label")
+    ax.set_ylabel("human gold label")
+    ax.grid(False)
+    ax.set_title(f"Confusion: {labeler}")
+    viz.caption(fig, "Cell colour = share of the gold row; numbers = buildings.")
+    fig.savefig(REPORTS_DIR / "figures" / "labels_confusion.png")
+
+
+if __name__ == "__main__":
+    main()
