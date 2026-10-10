@@ -1,12 +1,10 @@
-# Building-use codebook (v1, approved 2026-10-09)
+# Building-use codebook
 
-Status: **v1, approved by the repo owner on 2026-10-09.** The gold set and the Claude labelling prompt
-(`src/rtl/llm/prompts/label_v1.md`) are built from this version. Any change means a new version, and labels made with v1 stay
-tagged v1.
+Status: Last edit on **2026-10-09**
 
 ## Unit and question
 One footprint polygon. Question: *what is the main use of this structure, as it relates to electricity demand?*
-Label what the evidence supports. When the evidence can't separate two classes, choose `unknown`; don't guess.
+Label what the evidence supports. When the evidence can't separate two classes, choose `unknown`.
 
 ## Classes (keep in sync with `LABEL_CLASSES` in `src/rtl/schemas.py`)
 
@@ -24,17 +22,16 @@ Label what the evidence supports. When the evidence can't separate two classes, 
 
 ## Decision rules
 1. Use a direct, matched tag or registry record when one exists, and note it as evidence.
-2. Without a tag, use footprint size, shape, height, neighbourhood and road context. Write down which cues you used.
+2. Without a tag, use footprint size, shape, height, neighbourhood and road context.
 3. Size alone never decides between `commercial` and `institutional`.
 4. Under 10 m² with a larger building within 10 m → lean `ancillary`.
 5. If two classes fit about equally, choose `unknown` and say which two.
 
-## Confidence (gold labellers and Claude both report it)
+## Confidence
 - `high`: a direct tag or registry match, or unambiguous context
 - `medium`: several consistent indirect cues
 - `low`: a single weak cue (labels with low confidence are kept but reported separately)
 
-## Decisions (v1)
-- `mixed_shop_house` is separate from `residential`: shop-houses are common in Rwandan trading centres and
-  add lighting, fridge and TV load.
+## Decisions
+- `mixed_shop_house` is separate from `residential`: shop-houses are common in Rwandan trading centres and add lighting, fridge and TV load.
 - `religious` is separate from `institutional`, because its load profile is weekly rather than daily.
