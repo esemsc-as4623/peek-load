@@ -122,6 +122,15 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
 3. ~~Datasheet~~ (done: `docs/datasheet.md`).
 4. Human review of the appliance-profile parameters and the productive-use specs; licence check on the documents.
 
+### Phase-2 groundwork (done 2026-10-10)
+- **Evidence review sheet:** `reports/review/evidence_review.csv` holds 1,067 RAMP-relevant values with
+  approve/correct/reject columns. `coverage.md` shows only 8 of 151 appliances have both a rated power and a
+  usage time.
+- **Building → profile mapping:** `config/profile_mapping.yaml` uses class probabilities × context, giving 397k
+  weights for 44.6k buildings.
+- **RAMP library runner:** a per-building preview (`pixi run profile-library --buildings`). The single draft
+  profile gives 2.4 kWh/month against REG/QSEL rural medians of 4–8 kWh/month.
+
 ### After the mid-point (modelling phase)
 5. Appliance profiles per building class and context (urban/rural, grid/off-grid, wealth), with ownership from
    the DHS 2025 microdata and parameters from the evidence table.
@@ -139,7 +148,7 @@ and page for every value, and human review), not through the Claude API.
 |---|---|---|---|
 | 1 | **World Bank MTF Rwanda microdata** | appliance **usage hours** by tier: the biggest gap in the RAMP profiles (today mostly assumptions) | repo owner (registered; licensed download) |
 | 1 | **REG data**: customers and consumption by tariff category and village; hourly feeder/transformer loads (Kigali, Rusizi); MV/LV network GIS | demand validation; cooling attribution; better grid distances than Gridfinder | request via the organisers / REG |
-| 1 | **Productive-use sources** replacing the unavailable Power Africa catalogue: NREL/USAID *Productive Use of Energy in African Micro-Grids* (2018), ESMAP *Mini Grids for Half a Billion People* (2022), AMDA benchmarking reports, GIZ *Photovoltaics for Productive Use Applications*, more Efficiency for Access briefs (pumps, cold rooms, sewing) | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | public PDFs: fetched and curated in the coding session |
+| 1 | **Productive-use sources**: ~~NREL/USAID PUE in African Micro-Grids (2018)~~, ~~GIZ PV for Productive Use catalogue (2016)~~, ~~ESMAP Mini Grids (2022, text)~~ (obtained; 26 values curated with verified quotes); **Power Africa PUE 2020 Rwanda catalogue** (blocked by a bot check, so a browser download is needed); AMDA benchmarking, more Efficiency for Access briefs | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | repo owner: download the Power Africa PDF in a browser, copy it to the server, then `pixi run register-local evidence_docs <path>`; the rest in the coding session |
 | 2 | **Published RAMP input sets** (RAMP repo examples; open-access RAMP studies in sub-Saharan Africa) | ready-made, peer-reviewed user-type parameters to compare with ours | public: fetched in the coding session |
 | 2 | **EnAccess MicroPowerManager** anonymised meter data | real mini-grid customer load curves for validation | ask the organisers (hackathon partner) |
 | 2 | **Official facility registries**: MINEDUC schools, MoH health facilities (with coordinates) | better institutional labels than OSM/healthsites | ask the organisers / ministries; Giga school map |

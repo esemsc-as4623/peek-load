@@ -111,6 +111,7 @@ derive = "python -m rtl.derive"  # re-tunable columns from config/params.yaml (n
 eda-01 = "python notebooks/01_footprints.py"
 cooling-check = "python notebooks/03_cooling_check.py"
 report-figures = "python notebooks/02_report_figures.py"
+curate-evidence = "python -m rtl.ingest.curate_evidence"
 evidence-review = "python -m rtl.demand.review"
 profile-mapping = "python -m rtl.demand.mapping"
 profile-library = "python -m rtl.demand.runner"

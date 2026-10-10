@@ -935,6 +935,26 @@
       "10m_v_component_of_wind"
     ]
   },
+  "data/raw/evidence_docs/2016-06-20/giz_pv_productive_use_catalogue_2016.pdf": {
+    "source_id": "evidence_docs",
+    "url": "https://epflicht.ulb.uni-bonn.de/download/pdf/280663",
+    "path": "data/raw/evidence_docs/2016-06-20/giz_pv_productive_use_catalogue_2016.pdf",
+    "bytes": 4602564,
+    "sha256": "e8305c0971bc5e031a3c04dad92145cd44d9e83a146459153e958629b8aa0c59",
+    "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
+    "retrieved_at": "2026-10-10T21:09:41+00:00",
+    "version": "2016-06-20"
+  },
+  "data/raw/evidence_docs/2018-08-15/nrel_pue_microgrids_2018.pdf": {
+    "source_id": "evidence_docs",
+    "url": "https://www.osti.gov/servlets/purl/1465661",
+    "path": "data/raw/evidence_docs/2018-08-15/nrel_pue_microgrids_2018.pdf",
+    "bytes": 3060457,
+    "sha256": "975ea831a782182e95441aedea269bd44ad526489136badbe3a7534361142520",
+    "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
+    "retrieved_at": "2026-10-10T21:10:37+00:00",
+    "version": "2018-08-15"
+  },
   "data/raw/evidence_docs/2023-11-30/reg_annual_report_2022_23.pdf": {
     "source_id": "evidence_docs",
     "url": "https://www.reg.rw/fileadmin/user_upload/REG_ANNUAL_REPORT_2022-2023.pdf",
@@ -1114,6 +1134,17 @@
     "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
     "retrieved_at": "2026-10-08T14:28:42+00:00",
     "version": "2026-10-08"
+  },
+  "data/raw/evidence_docs/2026-10-10/esmap_minigrids_half_billion_2022.txt": {
+    "source_id": "evidence_docs",
+    "url": "https://openknowledge.worldbank.org/bitstreams/dc000258-8524-594f-a2ee-e1ee7a256f6b/download",
+    "path": "data/raw/evidence_docs/2026-10-10/esmap_minigrids_half_billion_2022.txt",
+    "bytes": 2014431,
+    "sha256": "27448028dc55fcffe4ba9363e0eb634c26c5ad3560668ae4bc84b2ef217f7be8",
+    "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
+    "retrieved_at": "2026-10-10T21:10:28+00:00",
+    "version": "2026-10-10",
+    "note": "full text (OKR text bitstream), no page numbers"
   },
   "data/raw/ghsl_built_c/2025-01-27/GHS_BUILT_C_FUN_E2018_GLOBE_R2023A_54009_10_V1_0_R10_C21.zip": {
     "source_id": "ghsl_built_c",

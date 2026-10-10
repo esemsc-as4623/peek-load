@@ -129,6 +129,7 @@ kWh % kWh % kWh %
 IPPs Power Plants 493,755,909.12 52% 642,902,300.20 60% 767,689,384.45 64.01%
 GaR Power Plants 348,826,411.31 36% 330,142,988.16 31% 318,478,666.80 26.55%
 Import + Shared 1120716",True,ev-61b2030b9425
+,,,hours_per_day,egg_incubator,100_eggs,24.0,,,h/day,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,41,Operational hours 24 hours/day,True,ev-ff323adcdd13
 ,,,hours_per_day,evening_supply_minimum,electrified_households,3.0,,,h/day,most electrified households,Rwanda,2016,report,mtf_rwanda_2018,48,"So most electrified households have at least 8 hours of supply a day, including at least 3 
 hours in the evening, with enough capacity to power medium-load appliances, such as a refrigerator, 
 food processor, or water pump (see table 1 for the load levels associated with various appliances). 
@@ -140,11 +141,15 @@ of use in hot seasons.
 ,,,hours_per_day,grain_mill,fao_income_example,6.0,,,h/day,grain mills (FAO income example),Africa,,web research,unnamed,,"Across Africa, FAO's income example assumes a mill runs 6 hours a day for 250 days a year, which is roughly 5 days a week.",False,ev-5feeb5be5ad7
 ,,,hours_per_day,grain_mill,nrel_33pct_load,2.6,,,h/day,electric mill (NREL 33% loading),Tanzania,,web research,unnamed,,"In Tanzania, the NREL study models a mill loaded 33% of an 8-hour window (2.6 h/day) or 50% (4 h/day).",False,ev-aaec34ff4e44
 ,,,hours_per_day,grain_mill,nrel_50pct_load,4.0,,,h/day,electric mill (NREL 50% loading),Tanzania,,web research,unnamed,,"In Tanzania, the NREL study models a mill loaded 33% of an 8-hour window (2.6 h/day) or 50% (4 h/day).",False,ev-182cf1c309f7
+,,,hours_per_day,grain_mill,microgrid_mill,2.6,2.6,4.0,h/day,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,6,at 33% loading (2.6 hours per day) or 50% loading (4 hours per day),True,ev-5159a2922b8f
+,,,hours_per_day,grain_mill,observed_e4i,2.0,,,h/day,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,46,E4I data indicate that mills operate for approximately 2 hours per day,True,ev-d82a1b0eed8b
 ,,,hours_per_day,grain_mill,solar_mill_case_study,,2.0,3.0,h/day,solar milling business (case study),,,report,efa_brief_milling_2021,8,"The mill is in operation for two to three 
 hours, 250 to 260 days per year. ",True,ev-ace82b7a2f09
 ,,,hours_per_day,grain_mill_10kw,nrel_base_case,8.0,,,h/day,10 kW electric mill (NREL base case),Tanzania,,web research,unnamed,,"In Tanzania, the NREL study's base case runs a 10 kW mill on weekdays, all year, 8 hours a day, between 9:00 AM and 5:00 PM.",False,ev-a1b1dda58ded
 ,,,hours_per_day,grain_mill_diesel,typical,2.0,,,h/day,typical diesel mill,Tanzania,,web research,unnamed,,"In Tanzania, the same study models a typical diesel mill running an average of 2 hours a day at 120 kg/h.",False,ev-85515694c355
 ,,,hours_per_day,hammer_mill,minigrid_offpeak_season,3.0,,,h/day,"hammer mills at Chitandika solar mini-grid, off-peak periods",Zambia (uncertain; reported in Uganda's Daily Monitor),,web research,unnamed,,"At the Chitandika solar mini-grid (described in Uganda's Daily Monitor; I believe the site is in Zambia), hammer mills run from sunrise to sunset in peak periods. In off-peak periods they average about 3 hours a day.",False,ev-89c1a6f88976
+,,,hours_per_day,ice_freezer,compressor,2.0,,,h/day,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,35,compressor cycle period is two hours,True,ev-7644038ff531
+,,,hours_per_day,ice_freezer,operation,8.0,,,h/day,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,35,Freezer operates for eight hours,True,ev-3f8d00ed0f02
 ,,,hours_per_day,metal_workshop_machines,metal_workshops,6.0,,,h/day,metal workshops,Tanzania,,web research,unnamed,,"In the Tanzanian mini-grid, metal-workshop machines were used an average of 6 hours per day. Owners reported this in interviews; it was not metered. [2]",False,ev-7ae91741e901
 ,,,hours_per_day,peak_demand,national_grid,3.0,,,h/day,national grid,Rwanda,,report,reg_lcpdp_2024,23,"Despite its high growth rate relative 
 to developed countries, annual addition of the generating capacity required to 
@@ -157,6 +162,7 @@ in Bangladesh, 81% believed that their lives had improved
 because of access to fans.27 Households responded that their 
 fans extended their productive time by an average of 2 hours 
 and 20 minutes a day.28 The COVID-19 pandemic has amp",True,ev-8ebc8b11b56c
+,,,hours_per_day,sewing_machine,dc,8.0,,,h/day,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,147,Working time 8 h,True,ev-941bd795f095
 ,,,hours_per_day,solar_pump,kenya_vendor,7.0,,,h/day,solar water pumps (vendor claim),Kenya,,web research,https://grekkon.com/water-pumps-in-kenya/,,**Kenya (vendor):** Grekkon says solar pumps use direct sunlight for about 7 hours per day. ([Grekkon](https://grekkon.com/water-pumps-in-kenya/)),False,ev-5849383a26bc
 ,,,hours_per_day,supply_minimum,electrified_households,8.0,,,h/day,most electrified households,Rwanda,2016,report,mtf_rwanda_2018,48,"So most electrified households have at least 8 hours of supply a day, including at least 3 
 hours in the evening, with enough capacity to power medium-load appliances, such as a refrigerator, 
@@ -254,6 +260,7 @@ air conditioner, space heater,
 vacuum cleaner, or electric 
 cooker (see table 1)—as needed 
 during that time. ",True,ev-e533046aac2c
+,,,hours_per_day,tv,dc,6.0,,,h/day,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,193,Working hours per day 6 h,True,ev-0ebe3016bf75
 ,,,hours_per_day,tv,household,5.0,,,h/day,off-grid TV users,,,report,efa_appliance_data_trends_2021,17,"Here, a solar energy 
 system’s capacity is estimated assuming an average of five 
 hours of active TV viewing time in the evening. 
@@ -261,6 +268,7 @@ hours of active TV viewing time in the evening.
 ,,,hours_per_day,water_pumping,nyabiheke_camp,24.0,,,h/day,refugee camp water pumping (measured),"Rwanda, Nyabiheke refugee camp",,web research,https://arxiv.org/pdf/2101.07040,,"**Rwanda, Nyabiheke camp (measured):** The water pumping is continuous, so demand is fairly flat across all 24 hours. ([arXiv 2101.07040](https://arxiv.org/pdf/2101.07040))",False,ev-05329b272121
 ,,,hours_per_day,workshop_appliances,wood_workshop,8.0,,,h/day,one wood workshop on hydropower mini-grid,Tanzania,,web research,unnamed,,The Tanzanian workshop owner reported using the appliances about 8 hours per day [A].,False,ev-78e669ea2877
 ,,,monthly_kwh,carpentry_tools,carpentry_business,18.0,,,kWh/month,illustrative carpentry business case on village micro-grids,Kenya and Tanzania,,web research,unnamed,,"In Kenya and Tanzania micro-grids, the illustrative ""carpentry tools"" business case uses 18 kWh per month [B].",False,ev-4f4b565e75b3
+,,,monthly_kwh,carpentry_tools,lathe_workshop,18.0,,,kWh/month,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,40,Energy consumption 18 kWh/month,True,ev-66fe820e203d
 ,,,monthly_kwh,class_threshold,low_consumers,,,15.0,kWh/month,low consumers,Rwanda,,report,qsel_consumption_trends_2024,4,"c =
 
 
@@ -8450,6 +8458,8 @@ Welder
 ,,,rated_power_w,direct_solar_pump_peak,400wp_array,322.0,,,W,"direct solar pump, 400 Wp array (field study)","Indonesia, East Nusa Tenggara",,web research,unnamed,,"**Indonesia (same study):** Peak pump draw was 322 W, 554 W and 620 W for the 400, 600 and 800 Wp arrays.",False,ev-6a9c86931165
 ,,,rated_power_w,direct_solar_pump_peak,600wp_array,554.0,,,W,"direct solar pump, 600 Wp array (field study)","Indonesia, East Nusa Tenggara",,web research,unnamed,,"**Indonesia (same study):** Peak pump draw was 322 W, 554 W and 620 W for the 400, 600 and 800 Wp arrays.",False,ev-75e6fe09b165
 ,,,rated_power_w,direct_solar_pump_peak,800wp_array,620.0,,,W,"direct solar pump, 800 Wp array (field study)","Indonesia, East Nusa Tenggara",,web research,unnamed,,"**Indonesia (same study):** Peak pump draw was 322 W, 554 W and 620 W for the 400, 600 and 800 Wp arrays.",False,ev-645d1dc9d97b
+,,,rated_power_w,egg_incubator,100_eggs,100.0,,,W,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,41,Power rating of incubator 100 W,True,ev-5965604e71f6
+,,,rated_power_w,egg_incubator,dc,80.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,36,Egg incubator Load 80 W,True,ev-04be949491ff
 ,,,rated_power_w,electric_pressure_cooker,all,845.0,,,W,Global LEAP EPC entries,,2020,report,efa_appliance_data_trends_2021,6,"EPCs also had high power ratings (845 W on 
 average) compared to other appliances analysed in this report, but DC 
 EPCs showed lower power ratings (271 W on average).
@@ -8474,7 +8484,9 @@ for DC and AC/DC compatible EPCs was 271 W (61 W/L) and
 365 W (104 W/L), respectively. ",True,ev-5721e6d888f6
 ,,,rated_power_w,fan,barbershop,80.0,,,W,barbershops,Nigeria,,web research,unnamed,,"*Same Nigerian vendor source:* a sterilizer cabinet draws about 200 W, each fan about 80 W, LED lighting about 50 W in total, a TV and decoder about 150 W, and a sound system about 100 W. [3]",False,ev-2881467ff553
 ,,,rated_power_w,flat_iron,vendor_listing,80.0,,,W,appliance vendors,Uganda,,web research,unnamed,,"Ugandan appliance vendors listed a hand dryer at 1,800 W and flat irons at 80 W. [1]",False,ev-86eb30533413
+,,,rated_power_w,freezer,dc,40.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,96,Nominal power 40 W,True,ev-8a715d26ac09
 ,,,rated_power_w,grain_mill,minigrid_mill_15kw,15000.0,,,W,mini-grid connected mills,Tanzania,,web research,unnamed,,"At Tanzanian mini-grid sites, the 5–50 kWp solar mini-grids typically can't handle the start-up current surge of a 15 kW mill (same source).",False,ev-b9d9f419967d
+,,,rated_power_w,grain_mill,microgrid_mill,10000.0,,,W,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,39,Size of equivalent electric motor 10 kW,True,ev-9b2f2444da56
 ,,,rated_power_w,grain_mill,diesel_mill,,7500.0,17500.0,W,diesel grain mills,,,report,efa_brief_milling_2021,3,"Typical Power 
 Ratings (kW)
 7.5 - 17.5 7.5 - 15 
@@ -8513,6 +8525,8 @@ kW. ",True,ev-6689bde8d89a
 ,,,rated_power_w,grain_mill_electric,good_flour_quality_threshold,7500.0,,,W,electric mills,northern Tanzania,,web research,e4sv.org,,"In northern Tanzania, a field test found that electric mills from 7.5 kW upward have a good reputation for flour quality, while very small DC and single-phase mills have sometimes had a bad one (SVRG pilot of a 2.2 kW Agsol mill, e4sv.org).",False,ev-b1b138fdd3cc
 ,,,rated_power_w,hair_clipper,barbershop,15.0,,,W,barbershops,Nigeria,,web research,unnamed,,"*Nigeria, used because I found no East African figure (and it's an inverter seller's blog, not a study):* a barbershop clipper draws about 15 W. [3]",False,ev-5a63e322a24e
 ,,,rated_power_w,hair_dryer,salon,1100.0,500.0,3000.0,W,hair salons,Uganda,,web research,unnamed,,"Hair dryers in Ugandan salons are rated from 500 W to 3,000 W, and 1,100 W is the most common rating. [1]",False,ev-536aa7d20bd6
+,,,rated_power_w,hair_dryer,dc,400.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,227,Hair dryer Load 400 W,True,ev-d4bd40d5b745
+,,,rated_power_w,hair_dryer,dc,180.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,228,Hair dryer Load 180 W,True,ev-7510f67e91b8
 ,,,rated_power_w,hair_dryer_large,salon,3000.0,,,W,hair salons,Uganda,,web research,unnamed,,"In that Uganda survey, small hair dryers are 500 W, medium ones 1,100 W and large ones 3,000 W. [1]",False,ev-209c2ddcd53c
 ,,,rated_power_w,hair_dryer_medium,salon,1100.0,,,W,hair salons,Uganda,,web research,unnamed,,"In that Uganda survey, small hair dryers are 500 W, medium ones 1,100 W and large ones 3,000 W. [1]",False,ev-9cca48d610db
 ,,,rated_power_w,hair_dryer_small,salon,500.0,,,W,hair salons,Uganda,,web research,unnamed,,"In that Uganda survey, small hair dryers are 500 W, medium ones 1,100 W and large ones 3,000 W. [1]",False,ev-5b67076b3a64
@@ -8527,7 +8541,9 @@ Very low load
 Low load
 (50–199 W)
 Multipoint general lighting,",True,ev-127af8543821
+,,,rated_power_w,ice_freezer,90_l,180.0,,,W,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,35,Power rating of freezer 180 W,True,ev-f1aa55397d5d
 ,,,rated_power_w,jigsaw,carpentry_workshop,,400.0,900.0,W,carpentry workshops on village micro-grids,Kenya and Tanzania,,web research,unnamed,,"In Kenya and Tanzania micro-grids, a jigsaw is rated 400–900 W on single-phase power, with start-up draw of 800–1,200 W [B].",False,ev-b5672b8ce3dd
+,,,rated_power_w,led_bulb,household,7.5,5.0,10.0,W,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,32,several 5–10 W LED light bulbs,True,ev-db6067019d2b
 ,,,rated_power_w,led_lighting,barbershop,50.0,,,W,barbershops,Nigeria,,web research,unnamed,,"*Same Nigerian vendor source:* a sterilizer cabinet draws about 200 W, each fan about 80 W, LED lighting about 50 W in total, a TV and decoder about 150 W, and a sound system about 100 W. [3]",False,ev-e92c9b4910de
 ,,,rated_power_w,low_load,household,,50.0,199.0,W,,,,report,mtf_rwanda_2018,38,"TABLE 1 • Load levels, indicative electric appliances, and associated Capacity tiers
 Load level Indicative electric appliances Capacity tier typically 
@@ -8556,11 +8572,13 @@ m³/min. ",True,ev-6fb61c921afb
 34 W, using 16% to 68% more energy than the average 
 pedestal fan tested by Efficiency for Access. 
 ",True,ev-1345df999203
+,,,rated_power_w,phone_charger,household,8.0,,,W,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,32,an 8 W cell phone charger,True,ev-87179d89e08d
 ,,,rated_power_w,plate_mill_motor,small_millers,,500.0,12000.0,W,motor-driven plate mills,Africa,,web research,unnamed,,"Across Africa, hammer mills need between 2 and 50 kW, and motor-driven plate mills need 0.5–12 kW (FAO working document ""Small mills in Africa"").",False,ev-f515f5e8dd47
 ,,,rated_power_w,pv_array,burkina_faso_village_pump,620.0,,,W,"village water pump, Grundfos SQFlex 5A-7",Burkina Faso,,web research,https://pmc.ncbi.nlm.nih.gov/articles/PMC11564931,,"**Outside East Africa, Burkina Faso village:** A Grundfos SQFlex 5A-7 pump runs on a 620 Wp PV array. ([PMC11564931](https://pmc.ncbi.nlm.nih.gov/articles/PMC11564931))",False,ev-571d6d8d3bc9
 ,,,rated_power_w,pv_array,uganda_community_pump,3600.0,,,W,rural community water pumping (design simulation),Uganda,,web research,https://www.journals.miu.ac.ug/uploads/manuscripts/manuscript_691eee2fbb00e5.87408936.pdf,,"**Uganda, rural community (design simulation):** A 3.6 kW PV array with 10 kWh of battery storage is sized to supply 5,000 L/day at a 25 m head. ([MIU journal](https://www.journals.miu.ac.ug/uploads/manuscripts/manuscript_691eee2fbb00e5.87408936.pdf))",False,ev-1304cb4ab3d8
 ,,,rated_power_w,pv_panel,kenya_small_surface_pump,,200.0,280.0,W,small surface solar pumps (vendor),Kenya,,web research,https://grekkon.com/water-pumps-in-kenya/,,"**Kenya (vendor page):** Grekkon says its small surface solar pumps run off a single panel of ""200-280 kw."" This is almost certainly a typo for W, so treat it with caution. ([Grekkon](https://grekkon.com/water-pumps-in-kenya/))",False,ev-9e30dd746527
 ,,,rated_power_w,pv_panel,mibirizi_design,240.0,,,W,village water supply pumps (design study),"Rwanda, Mibirizi village",,web research,unnamed,,"**Rwanda, Mibirizi village (design study):** Each 1,160 W pump is sized with six 240 W PV panels. (same source)",False,ev-d0305fe97d64
+,,,rated_power_w,refrigerator,dc,45.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,109,Nominal power 45 W,True,ev-33f124913bc6
 ,,,rated_power_w,refrigerator,large,,50.0,130.0,W,typical large refrigerator,,,report,efa_appliance_data_trends_2021,49,"The average power 
 rating for an EPC was 845 W, with a minimum of 84 W and a 
 maximum of 1,400 W. In comparison, the input power rating of 
@@ -8568,6 +8586,9 @@ a typical large refrigerator ranges from 50 W to 130 W. Due to
 their high wattage, EPCs may require a higher-capacity solar 
 energy system than is typical",True,ev-00a17644e2dd
 ,,,rated_power_w,sewing_machine,mini_handheld,3.6,,,W,mini handheld sewing machine (toy-class),Kenya,,web research,flexpay.co.ke,,"**Power rating, Kenya (very small machines only):** A mini handheld sewing machine sold in Kenya (flexpay.co.ke) runs on 4 AA batteries or a 6 V, 600 mA adapter. That works out to about 3.6 W, but these are toy-class machines, not what tailors use.",False,ev-4cd36506d715
+,,,rated_power_w,sewing_machine,dc,40.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,144,Sewing machine Load 40 W,True,ev-d065449bb68a
+,,,rated_power_w,sewing_machine,dc,30.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,146,Sewing machine Load 30 W,True,ev-7aa5d46ef496
+,,,rated_power_w,sewing_machine,dc,60.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,147,Sewing machine Load 60 W,True,ev-7f7527cecf79
 ,,,rated_power_w,sewing_machine,electric_assumed,75.0,,,W,electric sewing machine,,,web research,unnamed,,"**Power rating, no location (weak source):** A Quora answer uses 75 W as an *assumed* example for an electric sewing machine. This is not a spec sheet and doesn't meet your sourcing standard.",False,ev-4a43beddf08c
 ,,,rated_power_w,solar_irrigation_pump,kenya_50ha_farm,3700.0,,,W,"50 ha farm, 5 HP DC surface pump (vendor case study)",Kenya,,web research,https://africasolarhub.com/case-studies/solar-water-pump-irrigation-kenya/,,"**Kenya, 50 ha farm (vendor case study):** A 5 HP DC surface pump (about 3.7 kW) runs on 30 × 500 W panels and delivers 80,000–120,000 L/day. ([Africa Solar Hub](https://africasolarhub.com/case-studies/solar-water-pump-irrigation-kenya/))",False,ev-4bc7ce108b0e
 ,,,rated_power_w,solar_irrigation_pump,opec_fund_project,,400.0,12000.0,W,small-scale solar irrigation pumps (OPEC Fund-backed government programme),Rwanda,,web research,https://opecfund.org/operations/list/solar-irrigation-in-rwanda,,**Rwanda (government solar irrigation project):** Pumps in the OPEC Fund-backed small-scale solar irrigation programme were rated from 400 W to 12 kW. ([OPEC Fund](https://opecfund.org/operations/list/solar-irrigation-in-rwanda)),False,ev-2d685cff8944
@@ -8587,6 +8608,8 @@ energy system than is typical",True,ev-00a17644e2dd
 electricity for less than 4 hours per day (or less than 1 hour per evening) or that have a primary 
 energy source with capacity of less than 3 W (see box 1 for minimum requirements by tier of electricity 
 access). ",True,ev-eece89114a47
+,,,rated_power_w,tv,dc,5.5,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,187,TV Load 5.5 W,True,ev-8a971d65c62f
+,,,rated_power_w,tv,dc,20.0,,,W,"off-grid micro-enterprise, DC solar product",global (product catalogue),2016,curated,giz_pv_productive_use_catalogue_2016,192,TV Load 20 W,True,ev-983f384b9855
 ,,,rated_power_w,tv_32_inch,african_market_samples,,20.0,40.0,W,similar-sized TVs sampled from African markets,Africa,,report,efa_appliance_data_trends_2021,13,"Many similar-sized TVs sampled from African 
 markets consume 20 to 40 W, which is 2.5 to 5 times more 
 power than the most efficient model. ",True,ev-523e73a32a75
@@ -8621,6 +8644,7 @@ Multipoint general lighting,",True,ev-38cc3db38222
 ,,,rated_power_w,workshop_appliance_range,wood_workshop,,2200.0,18500.0,W,one wood workshop on hydropower mini-grid,Tanzania,,web research,unnamed,,"In that Tanzanian workshop, the appliances ranged from 2,200 W to 18,500 W [A].",False,ev-6b12798731e6
 ,,,usage_window,closing_time,salon_shared_solar,21.0,,,hour of day,Ugandan salon owner on shared solar,Uganda,,web research,unnamed,,"The closest example is a Ugandan salon owner on a shared solar system who stays open until 9 p.m. and charges phones on the side (Columbia SharedSolar blog). His hours are for the salon, not the phone charging.",False,ev-1d432c8782dd
 ,,,usage_window,grain_mill,nrel_model,,9.0,17.0,hour of day,electric mill (NREL model),Tanzania,,web research,unnamed,,"In Tanzania, the NREL study's modelled operating window is 9:00 AM to 5:00 PM on weekdays.",False,ev-e2424ef63c73
+,,,usage_window,grain_mill,weekdays,,9.0,17.0,hour of day,micro-grid productive-use customer,Tanzania (PowerGen micro-grids),2018,curated,nrel_pue_microgrids_2018,6,on weekdays between 9:00 AM and 5:00 PM,True,ev-3be5d8ed104e
 ,,,usage_window,grain_mill_10kw,nrel_base_case,,9.0,17.0,hour of day,10 kW electric mill (NREL base case),Tanzania,,web research,unnamed,,"In Tanzania, the NREL study's base case runs a 10 kW mill on weekdays, all year, 8 hours a day, between 9:00 AM and 5:00 PM.",False,ev-a4b920d53e38
 ,,,usage_window,opening_hours,mens_salon,,10.0,21.5,hour of day,single upscale men's salon,"Dar es Salaam, Tanzania",,web research,unnamed,,"One upscale men's salon in Dar es Salaam, Tanzania, advertises opening hours of 10:00 to 21:30, Monday to Sunday. This is a single shop's website, not a survey. [4]",False,ev-eebcf834e4ed
 ,,,usage_window,opening_hours,metal_workshops,,10.5,18.0,hour of day,metal workshops,Tanzania,,web research,unnamed,,"In the Tanzanian mini-grid, metal workshops were open on average from 10:30 to 18:00. [2]",False,ev-ff98650a32e5

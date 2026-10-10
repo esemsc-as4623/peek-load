@@ -223,4 +223,38 @@ documents:
     topics: [power, productive_use]
     rwanda_specific: true
     role: evidence
-    status: unavailable  # HTTP 403; USAID sites offline. Productive-use specs are a known corpus gap
+    status: unavailable  # USAID server answers scripted requests with an HTML bot check (2026-10-10); a browser
+                         # download by the repo owner + `pixi run register-local` would add it
+
+  # ------------------------------------------------------------------ productive use (added 2026-10-10; curated in
+  # the coding session by rtl.ingest.curate_evidence, not by the Claude API)
+  - doc_id: nrel_pue_microgrids_2018
+    title: "Productive Use of Energy in African Micro-Grids: Technical and Business Considerations"
+    publisher: NREL / Energy 4 Impact (USAID Power Africa)
+    year: 2018
+    url: https://www.osti.gov/servlets/purl/1465661  # nrel.gov does not resolve from the server; OSTI mirror
+    licence: US government work (public domain), to_verify
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: verified
+  - doc_id: giz_pv_productive_use_catalogue_2016
+    title: "Photovoltaics for Productive Use Applications: A catalogue of DC-appliances"
+    publisher: GIZ
+    year: 2016
+    url: https://epflicht.ulb.uni-bonn.de/download/pdf/280663  # University of Bonn repository copy
+    licence: GIZ publication, to_verify
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: verified
+  - doc_id: esmap_minigrids_half_billion_2022
+    title: "Mini Grids for Half a Billion People: Market Outlook and Handbook for Decision Makers"
+    publisher: ESMAP / World Bank
+    year: 2022
+    url: https://openknowledge.worldbank.org/bitstreams/dc000258-8524-594f-a2ee-e1ee7a256f6b/download  # full text (.txt)
+    licence: CC-BY-3.0-IGO
+    topics: [consumption, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: verified  # stored as text (no page numbers); not yet curated

@@ -21,7 +21,8 @@ OUT = REPORTS_DIR / "review"
 def load() -> pd.DataFrame:
     rep = pd.read_parquet(PROCESSED_DIR / "evidence.parquet").assign(origin="report")
     web = pd.read_parquet(PROCESSED_DIR / "evidence_productive_use.parquet").assign(origin="web research")
-    e = pd.concat([rep, web], ignore_index=True)
+    cur = pd.read_parquet(PROCESSED_DIR / "evidence_curated.parquet").assign(origin="curated")
+    e = pd.concat([rep, web, cur], ignore_index=True)
     parts = e.parameter.str.split(".", n=2, expand=True)
     e["family"], e["appliance"], e["population_key"] = parts[0], parts[1], parts[2]
     return e[e.family.isin(FAMILIES)]
@@ -43,7 +44,8 @@ def main() -> None:
     lines = ["# Evidence coverage for RAMP parameters", "",
              f"{len(sheet):,} rows to review in `evidence_review.csv` "
              f"({(sheet.origin == 'report').sum():,} from reports, {(sheet.origin == 'web research').sum():,} from web "
-             "research). Fill `decision` with `approve`, `correct` (and `corrected_value`) or `reject`.", "",
+             f"research, {(sheet.origin == 'curated').sum():,} curated from productive-use reports). "
+             "Fill `decision` with `approve`, `correct` (and `corrected_value`) or `reject`.", "",
              f"Appliances with both a rated power and a usage time: {len(usable)} of {len(cov)}. "
              "Everything else needs more sources or an explicit, reviewed assumption.", "",
              "| appliance | " + " | ".join(FAMILIES) + " |", "|---|" + "---|" * len(FAMILIES)]
