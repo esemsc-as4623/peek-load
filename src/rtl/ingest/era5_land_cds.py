@@ -30,6 +30,7 @@ Credentials live on THIS machine (no local download + transfer): ~/.cdsapirc, ch
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import UTC, datetime
 
 from rtl.manifest import record
@@ -49,44 +50,63 @@ def area() -> list[float]:
     return [y1 + MARGIN_DEG, x0 - MARGIN_DEG, y0 - MARGIN_DEG, x1 + MARGIN_DEG]  # N, W, S, E
 
 
-def fetch(client, dataset: str, request: dict, target, source_id: str, extra: dict) -> None:
+def fetch(dataset: str, request: dict, target, source_id: str, extra: dict) -> None:
+    """One CDS request -> one file. Each call gets its own client, so requests can run in parallel threads."""
+    import cdsapi
+
     if target.exists() and target.stat().st_size > 0:
         return
-    client.retrieve(dataset, request, str(target))
+    tmp = target.with_suffix(".part")
+    cdsapi.Client(quiet=True).retrieve(dataset, request, str(tmp))
+    tmp.rename(target)  # a half-written file never looks complete to a resumed run
     record(source_id, target, f"cds:{dataset}", extra)
     print(f"{target.name}: {target.stat().st_size / 1e6:.1f} MB", flush=True)
 
 
-def hourly(client, out_dir) -> None:
+def hourly(out_dir) -> list[tuple]:
+    jobs = []
     for year in HOURLY_YEARS:
         for month in range(1, 13):
             req = {"variable": HOURLY_VARIABLES, "year": str(year), "month": f"{month:02d}",
                    "day": [f"{d:02d}" for d in range(1, 32)], "time": [f"{h:02d}:00" for h in range(24)],
                    "area": area(), "data_format": "netcdf", "download_format": "unarchived"}
-            fetch(client, "reanalysis-era5-land", req, out_dir / f"era5land_hourly_{year}{month:02d}.nc",
-                  "era5_land_cds", {"year": year, "month": month, "variables": HOURLY_VARIABLES})
+            jobs.append(("reanalysis-era5-land", req, out_dir / f"era5land_hourly_{year}{month:02d}.nc",
+                         "era5_land_cds", {"year": year, "month": month, "variables": HOURLY_VARIABLES}))
+    return jobs
 
 
-def baseline(client, out_dir) -> None:
+def baseline(out_dir) -> list[tuple]:
+    jobs = []
     for year in BASELINE_YEARS:
         for stat in ("daily_mean", "daily_maximum"):
             req = {"variable": ["2m_temperature"], "year": str(year), "month": [f"{m:02d}" for m in range(1, 13)],
                    "day": [f"{d:02d}" for d in range(1, 32)], "daily_statistic": stat,
                    "time_zone": "utc+02:00", "frequency": "1_hourly", "area": area()}
-            fetch(client, "derived-era5-land-daily-statistics", req, out_dir / f"era5land_{stat}_{year}.nc",
-                  "era5_land_cds", {"year": year, "statistic": stat})
+            jobs.append(("derived-era5-land-daily-statistics", req, out_dir / f"era5land_{stat}_{year}.nc",
+                         "era5_land_cds", {"year": year, "statistic": stat}))
+    return jobs
 
 
 def main() -> None:
-    import cdsapi
-
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--baseline", action="store_true", help="daily statistics 1991-2020 instead of hourly")
+    ap.add_argument("--workers", type=int, default=6, help="CDS requests in flight at once (CDS queues each)")
+    ap.add_argument("--out", help="existing download folder to resume into (default: newest, else today)")
     args = ap.parse_args()
-    out_dir = RAW_DIR / "era5_land_cds" / datetime.now(UTC).strftime("%Y-%m-%d")
+    root = RAW_DIR / "era5_land_cds"
+    existing = sorted(p for p in root.glob("*") if p.is_dir()) if root.exists() else []
+    out_dir = root / args.out if args.out else (existing[-1] if existing else
+                                                 root / datetime.now(UTC).strftime("%Y-%m-%d"))
     out_dir.mkdir(parents=True, exist_ok=True)
-    client = cdsapi.Client()
-    (baseline if args.baseline else hourly)(client, out_dir)
+    jobs = [j for j in (baseline if args.baseline else hourly)(out_dir) if not (j[2].exists() and j[2].stat().st_size)]
+    print(f"{len(jobs)} requests to go -> {out_dir}", flush=True)
+    with ThreadPoolExecutor(args.workers) as pool:
+        futures = {pool.submit(fetch, *j): j[2].name for j in jobs}
+        for fut in as_completed(futures):
+            try:
+                fut.result()
+            except Exception as err:  # noqa: BLE001 - keep the other requests going; rerun to retry
+                print(f"{futures[fut]} FAILED: {err!r}"[:300], flush=True)
 
 
 if __name__ == "__main__":
