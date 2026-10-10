@@ -1,8 +1,6 @@
 # AI-use disclosure
 
-The OSEAS contribution guide asks contributors to disclose meaningful AI involvement, and says:
-*"AI is your assistant, not your author. If you cannot explain it, do not submit."* This file is that
-disclosure. It is updated whenever AI involvement changes (last update: 2026-10-10).
+Status: Last update on **2026-10-10**
 
 ## 1. AI as a coding assistant (Claude Code)
 - **Who did what:**
@@ -22,8 +20,6 @@ disclosure. It is updated whenever AI involvement changes (last update: 2026-10-
   - a UTC/local-time shift in NASA POWER data;
   - storey-height over-counting, replaced by fitted height cut-points.
 
-The repo owner reviews every module before submission and must be able to explain it.
-
 ## 2. AI as a research method (Claude API inside the pipeline)
 These are methods with measured error rates, not hidden helpers. Every call is cached with model, prompt version,
 tokens and cost (`data/llm_cache/`), so every result is reproducible and re-running costs nothing.
@@ -38,7 +34,7 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
 
 ## 3. Not done by AI (human decisions and gates)
 - **Building use:**
-  - approved the codebook v1, including the separate `mixed_shop_house` and `religious` classes;
+  - approved the codebook, including the separate `mixed_shop_house` and `religious` classes;
   - made all gold labels.
 - **Data and modelling choices:**
   - choice of AOIs and data sources;
