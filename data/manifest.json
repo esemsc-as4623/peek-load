@@ -137,6 +137,766 @@
     "licence": "DHS Program terms (aggregate indicators, citation required)",
     "retrieved_at": "2026-10-08T14:35:54+00:00"
   },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201901.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201901.nc",
+    "bytes": 4087956,
+    "sha256": "df885e749fbc06704b5ff08f686033b2a0e0e6dec534b018f2345c9fb8fe5808",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T10:38:30+00:00",
+    "year": 2019,
+    "month": 1,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201902.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201902.nc",
+    "bytes": 3645665,
+    "sha256": "8d08409a2fd3b8430ea5559cf4c9d5856f9f6eccccffa531240683343cdf056b",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:16:15+00:00",
+    "year": 2019,
+    "month": 2,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201903.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201903.nc",
+    "bytes": 4036475,
+    "sha256": "74c9bf9bfebdb605c7e468f3c1684306e864653a338af8549c619736de31c231",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:16:23+00:00",
+    "year": 2019,
+    "month": 3,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201904.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201904.nc",
+    "bytes": 3965104,
+    "sha256": "3d4f61721bc11aa62a1b214ffbca064c0e96596e95e1816eb267a7011ea5c109",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:22:12+00:00",
+    "year": 2019,
+    "month": 4,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201905.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201905.nc",
+    "bytes": 4227435,
+    "sha256": "0fbd558ab12e6801e065564f8f53b9549fa08aa3c9d25e9b50b9ea8b8ec0f4bf",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:16:25+00:00",
+    "year": 2019,
+    "month": 5,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201906.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201906.nc",
+    "bytes": 3859481,
+    "sha256": "2f2acd6fa0bef161ca790d5d874e933822876ff0150214b98cf1c0680fb85b1a",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:16:19+00:00",
+    "year": 2019,
+    "month": 6,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201907.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201907.nc",
+    "bytes": 3871657,
+    "sha256": "51ef3d6de32f96f2d8d18d3fb68df72cfa505da5c21fa727da6677a0c121862c",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:22:26+00:00",
+    "year": 2019,
+    "month": 7,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201908.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201908.nc",
+    "bytes": 3921526,
+    "sha256": "651eb1abb8aeb9033f1323828a4516ef97548d378e7826ef39e3f57c95ddc549",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:30:39+00:00",
+    "year": 2019,
+    "month": 8,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201909.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201909.nc",
+    "bytes": 3879247,
+    "sha256": "0e29495184eaf310f26568962bd606be75c1e015074cc7a6cfb1249ae2462230",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:40:48+00:00",
+    "year": 2019,
+    "month": 9,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201910.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201910.nc",
+    "bytes": 4213064,
+    "sha256": "c733a6665cc4f8a76180cef758c51dc2db1e00d4ffc9094b82bdac83537429c8",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T11:53:05+00:00",
+    "year": 2019,
+    "month": 10,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201911.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201911.nc",
+    "bytes": 4028522,
+    "sha256": "923815e59ca018c1c8e65c2379a5f91fbfd79b9fec9ee90ee14906b81d0d17f8",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:02:56+00:00",
+    "year": 2019,
+    "month": 11,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201912.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201912.nc",
+    "bytes": 4276043,
+    "sha256": "ed1eb0f58f1c70a5c8f367a8909d94adf0073112622e6794aa353adde3f523a6",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:10:52+00:00",
+    "year": 2019,
+    "month": 12,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202001.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202001.nc",
+    "bytes": 4158036,
+    "sha256": "baf03a1b9e27d4ac6a0f3e9465737ef45329338bc976ff9db4d80c01e8bfbecf",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:19:03+00:00",
+    "year": 2020,
+    "month": 1,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202002.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202002.nc",
+    "bytes": 3894705,
+    "sha256": "e6aa3cd36420fb33384be6c32ec0e58a1f861eabdfb9698bea3e12544f2209b2",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:27:26+00:00",
+    "year": 2020,
+    "month": 2,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202003.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202003.nc",
+    "bytes": 4210999,
+    "sha256": "d8768467b11ba3bd2707726ec66d59e6dec9b538246e95c1b389c651dddc9665",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:37:33+00:00",
+    "year": 2020,
+    "month": 3,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202004.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202004.nc",
+    "bytes": 4062453,
+    "sha256": "37dd93f33bcadf007469699039f3f790965f4d2320bf63bf6b47faba0d565c46",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:43:43+00:00",
+    "year": 2020,
+    "month": 4,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202005.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202005.nc",
+    "bytes": 3985966,
+    "sha256": "3de594f361567f3261261b362ec1a7504cbd678f386e412b81959deed912aa6a",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T12:57:43+00:00",
+    "year": 2020,
+    "month": 5,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202006.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202006.nc",
+    "bytes": 3736659,
+    "sha256": "dc37a922f2de3b6c74f9c9493cf5b2af811a8ec0822675a2cd953ca9c1469b5e",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T13:05:29+00:00",
+    "year": 2020,
+    "month": 6,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202007.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202007.nc",
+    "bytes": 3873963,
+    "sha256": "663fc145703988399a9071e162f37ad94ebaf2c1e9315431e4276c153b30f056",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T13:09:42+00:00",
+    "year": 2020,
+    "month": 7,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202008.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202008.nc",
+    "bytes": 3940357,
+    "sha256": "02ae2692a7f661c9aa66e273951abd15289efa0966795c89caf68f4c0d654711",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T13:44:32+00:00",
+    "year": 2020,
+    "month": 8,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202009.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202009.nc",
+    "bytes": 3906768,
+    "sha256": "b559b67346ed13e2893fcfceb49241ecd8411a670d3f4d5485afcba1227a389a",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T13:22:14+00:00",
+    "year": 2020,
+    "month": 9,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202010.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202010.nc",
+    "bytes": 4151691,
+    "sha256": "be38732caa9bf299172595d9a9b26d7afaac09274c56e711c28450314cd16fd7",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T13:30:30+00:00",
+    "year": 2020,
+    "month": 10,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202011.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202011.nc",
+    "bytes": 4066772,
+    "sha256": "ea3336b101d61e7feaab33cdbc2393ed2b1df0fc2ced81628d6d2a9b71dc1c5e",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T13:36:16+00:00",
+    "year": 2020,
+    "month": 11,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202012.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202012.nc",
+    "bytes": 4157200,
+    "sha256": "2f94cc07f19b6c0c42238009e30344459ab9d261f46a0f1bf6283da6705f5d4f",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T14:22:11+00:00",
+    "year": 2020,
+    "month": 12,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202101.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202101.nc",
+    "bytes": 4162000,
+    "sha256": "b6515c92b47da5ba3e405fa9db24ffe0646130a82afdc7fa5702a7f3de66ccba",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T14:04:25+00:00",
+    "year": 2021,
+    "month": 1,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202102.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202102.nc",
+    "bytes": 3733860,
+    "sha256": "5f6e2ec7aeea2ee7fe7f48582587831483156712c403c664f239bb96a89022ca",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T14:46:55+00:00",
+    "year": 2021,
+    "month": 2,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202103.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202103.nc",
+    "bytes": 4111483,
+    "sha256": "f4ce1ea80b04c7149feecc7c5c57c49a396f0a2a9ff6d16fdc7db69a3409b31b",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T15:03:21+00:00",
+    "year": 2021,
+    "month": 3,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202104.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202104.nc",
+    "bytes": 4072209,
+    "sha256": "307e2689a450f8a763f79697fbafaaa17273f30355f69d97cb9fca2c4371b68a",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T15:25:11+00:00",
+    "year": 2021,
+    "month": 4,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202105.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202105.nc",
+    "bytes": 4076157,
+    "sha256": "1ab1bdd040d87a894b18bac5236c633441c5aa28e10723dbef643677551d8032",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T15:39:22+00:00",
+    "year": 2021,
+    "month": 5,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202106.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202106.nc",
+    "bytes": 3659851,
+    "sha256": "79c481116d7150687943cd1462f799e4083a044ddad57accb93df7b86d703bb6",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T15:59:20+00:00",
+    "year": 2021,
+    "month": 6,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202107.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202107.nc",
+    "bytes": 3763156,
+    "sha256": "5bc7e31ba684738992e7b41f8fc3e530d1d695bd185a972ef413a5ef4c183718",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T16:27:12+00:00",
+    "year": 2021,
+    "month": 7,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202108.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202108.nc",
+    "bytes": 3965519,
+    "sha256": "244da89810660ee73170f70dcb22f9dd2e48a437dee3e377c794657e1b05fa82",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T16:51:43+00:00",
+    "year": 2021,
+    "month": 8,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202109.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202109.nc",
+    "bytes": 3944100,
+    "sha256": "d3887b0062ce3b54b7da128500b0aad6d1f2b45a0085c30ad15366763282bfa2",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T17:40:23+00:00",
+    "year": 2021,
+    "month": 9,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202110.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202110.nc",
+    "bytes": 4103878,
+    "sha256": "e73e4e82c4c0a647249b20488ed7a67b56f40432c6f7cd429133d8b7868e91c3",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T17:48:19+00:00",
+    "year": 2021,
+    "month": 10,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202111.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202111.nc",
+    "bytes": 3933573,
+    "sha256": "e816f2b63cd9ea815aa173bf2d51c707a17d8f7dd991fed4b8f232823b6e985c",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T18:02:25+00:00",
+    "year": 2021,
+    "month": 11,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202112.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202112.nc",
+    "bytes": 4121867,
+    "sha256": "028eaff817c17185d4c2ad0a15af72ef508830bcc8dbeabcb22dda3324d46d20",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T18:12:17+00:00",
+    "year": 2021,
+    "month": 12,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202201.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202201.nc",
+    "bytes": 4042421,
+    "sha256": "eac8c73018b95120a139fc33d11fb86a539c48a1433ba2d2e96485a98d3726fc",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T18:36:16+00:00",
+    "year": 2022,
+    "month": 1,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202202.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202202.nc",
+    "bytes": 3772376,
+    "sha256": "78a7362405e08494789e388fcc16a0dee59727f432c5c13e4f23e4d3048ef327",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T19:04:43+00:00",
+    "year": 2022,
+    "month": 2,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202203.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202203.nc",
+    "bytes": 4067206,
+    "sha256": "d3c3718864a8361e84c64feead7a07b004189804bb86fa6091d514c17dff6053",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T19:41:21+00:00",
+    "year": 2022,
+    "month": 3,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202204.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202204.nc",
+    "bytes": 4056314,
+    "sha256": "59903415f3dbd0251a389e9a2d87c2e9f06c1aed2ca65c16cbfca4f7caa53ea5",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T20:03:15+00:00",
+    "year": 2022,
+    "month": 4,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
   "data/raw/evidence_docs/2023-11-30/reg_annual_report_2022_23.pdf": {
     "source_id": "evidence_docs",
     "url": "https://www.reg.rw/fileadmin/user_upload/REG_ANNUAL_REPORT_2022-2023.pdf",

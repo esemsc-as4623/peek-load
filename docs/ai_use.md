@@ -2,29 +2,51 @@
 
 The OSEAS contribution guide asks contributors to disclose meaningful AI involvement, and says:
 *"AI is your assistant, not your author. If you cannot explain it, do not submit."* This file is that
-disclosure. It is updated whenever AI involvement changes.
+disclosure. It is updated whenever AI involvement changes (last update: 2026-10-10).
 
 ## 1. AI as a coding assistant (Claude Code)
-| Area | What the assistant did | Human review |
-|---|---|---|
-| Repo scaffold, pixi env, config files | drafted | reviewed by repo owner |
-| `rtl/manifest.py`, `rtl/settings.py`, `rtl/schemas.py` | drafted | reviewed |
-| `rtl/conform/buildings.py` (DuckDB footprint conformance) | drafted; verified against an independent pyproj/shapely recomputation and a planted overlap case | reviewed |
-| `rtl/ingest/*`, `rtl/qa/*`, tests | drafted | reviewed |
+- **Who did what:**
+  - The repo owner set the goals, scope and every human decision listed in section 3.
+  - Claude Code drafted most of the code, configuration and documentation under the owner's direction.
+- **How it ran:** several parallel Claude Code agents built the data workstreams
+  (footprints/heights, vector context, raster context, climate, evidence); `docs/workstreams.md` lists who owned
+  what.
+- **How it was checked:**
+  - Each transform has tests that would fail if it were wrong: independent recomputation, planted cases, and row
+    reconciliation (82 tests).
+  - Every table must pass the QA gate (`pixi run qa`) against its contract in `src/rtl/schemas.py`.
+- **Notable corrections made during review:**
+  - a quadratic spatial join;
+  - a UTM-zone bug that dropped tiles east of 30°E;
+  - a biased exactextract median;
+  - a UTC/local-time shift in NASA POWER data;
+  - storey-height over-counting, replaced by fitted height cut-points.
 
-The repo owner reviews every module before it goes into a submission, and must be able to explain it.
+The repo owner reviews every module before submission and must be able to explain it.
 
 ## 2. AI as a research method (Claude API inside the pipeline)
-These are methods with measured error rates, not hidden helpers:
-- **Building-use labelling pilot.** Claude labels context cards built only from open vector data. Its accuracy
-  is measured against human gold labels (macro-F1, confusion matrix, calibration) and reported in
-  `reports/labels/`. LLM labels are never presented as ground truth.
-- **Evidence extraction for RAMP archetypes.** Claude extracts appliance and usage parameters from
-  survey reports, with verbatim quotes. Quotes are checked automatically against the source text, and every
-  parameter is reviewed by a human before use.
+These are methods with measured error rates, not hidden helpers. Every call is cached with model, prompt version,
+tokens and cost (`data/llm_cache/`), so every result is reproducible and re-running costs nothing.
 
-Every API call is cached with its model id, prompt version, tokens and cost, so results are reproducible.
+| Use | Models | Scale | How it's checked |
+|---|---|---|---|
+| Building-use labels from vector-only context cards | Haiku 4.5, Sonnet 5.5, Opus 5.5; prompts v1–v3 | 400 gold buildings × 11 configurations; 44,156 deep-dive buildings (Haiku, v2) | agreement with human gold labels, class variety, cues cited (`reports/labels/eval.md`); labels are never presented as ground truth |
+| Evidence extraction from 18 reports | Opus 5.5 with source citations | 3,076 parameters | quotes verified verbatim on the cited page (81%); human review before any value enters an appliance profile |
+| Productive-use appliance web research | Opus 5.5 with web search/fetch | 163 parameters | marked *summary statement, verify at source*; human review required |
 
-## 3. Not done by AI
-Codebook approval, gold labels, archetype parameter sign-off, licence review, and the final
-submission text.
+API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
+
+## 3. Not done by AI (human decisions and gates)
+- **Building use:**
+  - approved the codebook v1, including the separate `mixed_shop_house` and `religious` classes;
+  - made all gold labels.
+- **Data and modelling choices:**
+  - choice of AOIs and data sources;
+  - floor-mapping method;
+  - first-seen threshold;
+  - cooling-class approach;
+  - climate source (Copernicus CDS).
+- **Still to come:**
+  - review and sign-off of every appliance-profile parameter;
+  - licence review before publishing;
+  - the final submission text.

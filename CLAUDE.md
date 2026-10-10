@@ -2,12 +2,18 @@
 
 Rooftops → Load Curves turns open building footprints for Rwanda into a curated, provenance-tracked
 building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS26 hackathon).
-**Current phase: data gathering, curation, EDA, preprocessing. No model training, no full RAMP runs.**
+**Phase 1 (data) is done for the mid-point review; phase 2 is demand modelling with RAMP (see `docs/workstreams.md`).**
 
 ## Environment
 - `pixi install`, then `pixi run <task>` (tasks in `pyproject.toml`). Python 3.12, DuckDB + spatial + h3.
 - Heavy table work goes in DuckDB SQL (6.4M buildings; 15 GB RAM machine). GeoPandas only for small data.
 - Store EPSG:4326; compute metrics in EPSG:32735 (`aoi.yaml: country.metric_crs`).
+
+## Re-tunable choices
+- `config/params.yaml` holds the floors method, first-seen threshold, cooling-class thresholds and the LLM budget cap.
+  Change it and run `pixi run derive` (minutes, no re-sampling, no API).
+- Long downloads (e.g. `pixi run fetch-era5-cds`) are resumable. Run them detached (`setsid nohup …`), because tool
+  background jobs stop after 2 h.
 
 ## Contracts and ownership
 - `src/rtl/schemas.py` is the interface between workstreams. Every table must validate against it.
@@ -35,7 +41,10 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 ## Claude API use (labelling, evidence extraction)
 - Key comes from `.env` via `rtl.settings`; never hard-code or print it.
 - Every call goes through the cache in `rtl.llm` (key = sha256(model, prompt_version, input)) and logs
-  tokens, cost and stop_reason. Use the Batch API for bulk work.
+  tokens, cost and stop_reason. Use the Batch API for bulk work, and download batch results to disk
+  (`python -m rtl.llm.download_batches`), then bulk-ingest them. Per-row cache writes are too slow at 40k+.
+- The spend cap is enforced by `rtl.llm.budget` (cap in `config/params.yaml`). Card versions v1–v3 and prompts
+  `label_v1..v3` live side by side. The current choice is Haiku 4.5 + v2 (see `reports/labels/eval.md`).
 - Prompts are versioned files; changing a prompt bumps `prompt_version`.
 - LLM outputs are data with measured accuracy against human gold labels, not ground truth.
 

@@ -1,6 +1,6 @@
 # Rooftops → Load Curves: status report
 
-*OSEAS26 challenge: building footprints → energy demand · repo `esemsc-as4623/peek-load` · updated 2026-10-09*
+*OSEAS26 challenge: building footprints → energy demand · repo `esemsc-as4623/peek-load` · updated 2026-10-10*
 
 ## 1. Plan in one paragraph
 We turn Rwanda's 6.4 million open building footprints into a **curated, provenance-tracked building
@@ -90,14 +90,17 @@ preprocessing. Modelling follows in phase 2.
 - Figure: `reports/figures/A3_cooling_check.png`; notebook `notebooks/03_cooling_check.py`.
 
 ## 3. In progress
-- More gold labels: 173 of 400, plus 50 repeats to measure the labeller's own consistency.
-- ERA5-Land re-download straight from Copernicus CDS (licence clarity; script ready, waiting for a CDS token on
-  the server).
+- **Climate from Copernicus CDS**: ERA5-Land hourly 2019–2025 (temperature, dewpoint, solar radiation,
+  precipitation, wind) plus a 1991–2020 daily baseline, downloading on the server (resumable). Then the climate
+  table is rebuilt: Copernicus licence, humidity and heat index, hourly 0.1° sunlight, rainfall seasonality, and
+  cooling classes on a 30-year normal.
+- More gold labels: 174 of 400, plus 50 repeats to measure the labeller's own consistency.
 
 ## 4. Mid-point readiness (Oct 15–16)
 **Substantively ready.** All six building tables pass QA, the evidence base, the labelling pilot and coverage, and the
-cooling check are done, and every step is reproducible and documented. Remaining polish (no API cost):
-the datasheet, 2–3 more EDA figures, and the labelling confusion-matrix figure.
+cooling check are done, and every step is reproducible and documented: [`docs/datasheet.md`](docs/datasheet.md),
+[`docs/data_sources.md`](docs/data_sources.md), [`docs/ai_use.md`](docs/ai_use.md). Remaining polish (no API cost):
+2–3 more EDA figures and the labelling confusion-matrix figure.
 
 ## 5. To do
 
@@ -111,8 +114,7 @@ the datasheet, 2–3 more EDA figures, and the labelling confusion-matrix figure
    - where tags exist (a bias audit);
    - climate and cooling;
    - grid distance against wealth.
-3. Datasheet for the dataset, covering sources, licences, known limits (height compression for tall buildings,
-   the experimental first-seen year, the vector-only labelling limit), and the AI-use disclosure.
+3. ~~Datasheet~~ (done: `docs/datasheet.md`).
 4. Human review of the appliance-profile parameters and the productive-use specs; licence check on the documents.
 
 ### After the mid-point (modelling phase)
@@ -124,7 +126,23 @@ the datasheet, 2–3 more EDA figures, and the labelling confusion-matrix figure
 8. Validation against REG/Columbia consumption distributions and district electrification rates.
 9. Deliverable: an energy-classified building GeoParquet / PostGIS table plus a map viewer.
 
-## 6. Questions for the organisers
+## 6. Data still to acquire (for phase 2)
+The API credit has expired, so new documents are read and curated directly in the coding session (with a quote
+and page for every value, and human review), not through the Claude API.
+
+| Priority | What | Why | How |
+|---|---|---|---|
+| 1 | **World Bank MTF Rwanda microdata** | appliance **usage hours** by tier: the biggest gap in the RAMP profiles (today mostly assumptions) | repo owner (registered; licensed download) |
+| 1 | **REG data**: customers and consumption by tariff category and village; hourly feeder/transformer loads (Kigali, Rusizi); MV/LV network GIS | demand validation; cooling attribution; better grid distances than Gridfinder | request via the organisers / REG |
+| 1 | **Productive-use sources** replacing the unavailable Power Africa catalogue: NREL/USAID *Productive Use of Energy in African Micro-Grids* (2018), ESMAP *Mini Grids for Half a Billion People* (2022), AMDA benchmarking reports, GIZ *Photovoltaics for Productive Use Applications*, more Efficiency for Access briefs (pumps, cold rooms, sewing) | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | public PDFs: fetched and curated in the coding session |
+| 2 | **Published RAMP input sets** (RAMP repo examples; open-access RAMP studies in sub-Saharan Africa) | ready-made, peer-reviewed user-type parameters to compare with ours | public: fetched in the coding session |
+| 2 | **EnAccess MicroPowerManager** anonymised meter data | real mini-grid customer load curves for validation | ask the organisers (hackathon partner) |
+| 2 | **Official facility registries**: MINEDUC schools, MoH health facilities (with coordinates) | better institutional labels than OSM/healthsites | ask the organisers / ministries; Giga school map |
+| 3 | **Kigali Master Plan zoning GIS** | commercial/industrial zones improve Kigali building-use labels | City of Kigali / RLMUA geoportal |
+| 3 | **NISR**: sector-level 2022 census households; EICV7 microdata | sector-level completeness checks; energy-use detail | NISR (open tables; microdata needs registration) |
+| 3 | NASA Earthdata login (VIIRS Black Marble night lights) | optional check of electrification / activity | repo owner (free account) |
+
+## 7. Questions for the organisers
 - Is there a preferred AOI, or validation data (metered consumption, MicroPowerManager exports) we could use?
   Seasonal or hourly feeder loads for Kigali and the Rusizi valley would let us test whether hot-afternoon load is
   really cooling.

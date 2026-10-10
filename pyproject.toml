@@ -110,6 +110,7 @@ derive = "python -m rtl.derive"  # re-tunable columns from config/params.yaml (n
 # --- EDA (jupytext percent scripts; open as notebooks with `jupytext --to ipynb`)
 eda-01 = "python notebooks/01_footprints.py"
 cooling-check = "python notebooks/03_cooling_check.py"
+docs-sources = "python -m rtl.docs_sources"
 # --- quality gates
 qa = "python -m rtl.qa"
 test = "pytest -q"
