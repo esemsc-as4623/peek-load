@@ -143,8 +143,14 @@ def plot_confusion(g: pd.DataFrame, labeler: str) -> None:
     cls = [c for c in LABEL_CLASSES if c in set(g.gold) | set(g.label)]
     cm = pd.crosstab(g.gold, g.label).reindex(index=cls, columns=cls, fill_value=0)
     share = cm.div(cm.sum(axis=1).replace(0, 1), axis=0)
-    fig, ax = plt.subplots(figsize=(7, 6))
-    ax.imshow(share, cmap=viz.SEQ_BLUE, vmin=0, vmax=1)
+    fig, ax = plt.subplots(figsize=(8, 7))
+    cmap = viz.SEQ_BLUE.copy()
+    cmap.set_bad(viz.SURFACE)  # empty cells stay blank instead of looking like small counts
+    im = ax.imshow(np.ma.masked_where(cm.to_numpy() == 0, share.to_numpy()), cmap=cmap, vmin=0, vmax=1)
+    cb = fig.colorbar(im, ax=ax, shrink=0.6, pad=0.02, ticks=[0, 0.5, 1])
+    cb.ax.set_yticklabels(["0%", "50%", "100%"])
+    cb.set_label("share of the human label's row", color=viz.INK_2)
+    cb.outline.set_visible(False)
     for i in range(len(cls)):
         for j in range(len(cls)):
             if cm.iat[i, j]:
@@ -155,9 +161,13 @@ def plot_confusion(g: pd.DataFrame, labeler: str) -> None:
     ax.set_xlabel("Claude label")
     ax.set_ylabel("human gold label")
     ax.grid(False)
-    ax.set_title(f"Confusion: {labeler}")
-    viz.caption(fig, "Cell colour = share of the gold row; numbers = buildings.")
-    fig.savefig(REPORTS_DIR / "figures" / "labels_confusion.png")
+    acc = float((g.gold == g.label).mean())
+    ax.set_title(f"Claude vs human gold labels ({labeler.split('|')[0]}, card {labeler.split('|')[2]}): "
+                 f"n={len(g)}, agreement {acc:.0%}", fontsize=10)
+    fig.subplots_adjust(bottom=0.27)
+    fig.text(0.01, 0.01, "Cell colour = share of the human label's row (0–100%); numbers = buildings. Human labels "
+             "mostly used imagery; Claude saw only open vector data.", fontsize=8, color=viz.INK_2)
+    fig.savefig(REPORTS_DIR / "figures" / "labels_confusion.png", bbox_inches=None)
 
 
 if __name__ == "__main__":

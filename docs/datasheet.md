@@ -50,7 +50,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 2. `first_seen_year` has artefacts (jumps in 2019 and 2023). Treat it as experimental.
 3. Direct building-use tags are rare (~14k informative tags among 6.4M buildings), and open vector data rarely shows use. Building-use labels are therefore uncertain, and residential and ancillary dominate.
 4. Microsoft footprints omit structures under ~15 m², so small ancillary buildings are under-counted where Microsoft is the source.
-5. Cooling demand is marginal almost everywhere. The cooling class is a relative proxy, except in the Rusizi/Bugarama valley.
+5. Cooling demand is marginal in most of the country, including Kigali. Sustained heat is in the eastern lowlands (11.6% of buildings in areas above 100 CDD22 a year; provisional, as NASA POWER shows less there) and the Rusizi/Bugarama valley (confirmed). The cooling class is a relative proxy.
 6. Labels cover the three deep-dive sectors (Nyamirambo fully, Nasho fully, Muhoza partly) and a national sample, not the whole country.
 
 ## Uses

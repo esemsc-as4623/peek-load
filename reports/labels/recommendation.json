@@ -1,0 +1,10 @@
+{
+  "recommended": "claude-haiku-4-5|text|label_v2",
+  "macro_f1": 0.1875884584835194,
+  "usd_per_1k": 3.5655600000000005,
+  "best_macro_f1": 0.1875884584835194,
+  "tolerance": 0.03,
+  "n_gold": 173,
+  "human_self_agreement": NaN,
+  "n_repeats": 0
+}

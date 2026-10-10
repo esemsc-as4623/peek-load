@@ -39,3 +39,23 @@ def use() -> None:
 def caption(fig: plt.Figure, text: str) -> None:
     """Source / method note under a figure, in secondary ink."""
     fig.text(0.0, -0.02, text, ha="left", va="top", fontsize=8, color=INK_2, wrap=True)
+
+
+# second sequential context (heat): one orange hue, light -> dark
+SEQ_ORANGE = LinearSegmentedColormap.from_list(
+    "seq_orange", ["#fde8dc", "#f9c3a3", "#f39a6b", "#eb6834", "#c94f1f", "#9a3a14", "#6b270c"])
+
+
+def hex_map(ax: plt.Axes, gdf, column: str, *, cmap, vmin: float, vmax: float, label: str,
+            extend: str = "neither", ticks=None) -> None:
+    """H3-cell choropleth with explicit colour limits (values outside are clamped and flagged by `extend`)."""
+    import matplotlib.colors as mcolors
+
+    norm = mcolors.Normalize(vmin=vmin, vmax=vmax, clip=True)
+    gdf.plot(column=column, cmap=cmap, norm=norm, linewidth=0, ax=ax)
+    sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+    cb = ax.figure.colorbar(sm, ax=ax, shrink=0.72, extend=extend, ticks=ticks, pad=0.02)
+    cb.set_label(label, color=INK_2)
+    cb.outline.set_visible(False)
+    ax.set_aspect("equal")
+    ax.set_axis_off()

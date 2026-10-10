@@ -82,12 +82,17 @@ preprocessing. Modelling follows in phase 2.
   800 hot hours a year, concentrated at 11:00–15:00 in the dry seasons (Feb–Mar, Aug–Oct). That points to
   afternoon fan use, not air conditioning.
 - **The Rusizi/Bugarama valley** (south-west) has real, year-round cooling need.
+- **The eastern lowlands also carry sustained heat in the ERA5-Land table.** Ngoma, Kirehe and Bugesera have
+  district medians of 100–116 CDD22 a year. Nationally, 11.6% of buildings are in areas above 100 CDD22 a year
+  and 2.2% above 200. NASA POWER at Nasho (east) shows much less (5 against 37 CDD22), so the eastern values stay
+  **provisional** until the Copernicus rebuild and, ideally, station data confirm them.
 - Caveat: POWER's ~0.5° grid is coarse, so it is shifted to each cell's elevation. Bugarama's agreement is partly
   built in by that shift (the POWER cell's mean elevation is 1,872 m); Kigali's (only a 127 m shift) is a genuinely
   independent check.
 - This measures the **climate driver**. Attributing *measured* electricity demand to cooling needs metered load
   by season and hour, which we don't have yet (see the questions below).
-- Figure: `reports/figures/A3_cooling_check.png`; notebook `notebooks/03_cooling_check.py`.
+- Figures: `reports/figures/A3_cooling_check.png` (time of day and month), `A3_cdd22_per_year.png`,
+  `A3_cooling_class.png`, `A3_t2m_mean_c.png`; notebooks `03_cooling_check.py`, `02_report_figures.py`.
 
 ## 3. In progress
 - **Climate from Copernicus CDS**: ERA5-Land hourly 2019–2025 (temperature, dewpoint, solar radiation,

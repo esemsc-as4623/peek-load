@@ -222,28 +222,6 @@ def building_weighted(df: pd.DataFrame, n: np.ndarray) -> dict:
     }
 
 
-def quicklook(gdf: gpd.GeoDataFrame, df: pd.DataFrame, prefix: str = "A3") -> list[Path]:
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    gdf = gdf[["h3_r7", "geometry"]].merge(df, on="h3_r7")
-    paths = []
-    for col, label, cmap in [("t2m_mean_c", "Mean 2 m temperature 2019-2024 (°C)", "Oranges"),
-                             ("cdd24_per_year", "Cooling degree-days, base 24 °C (K·day/yr)", "Reds")]:
-        fig, ax = plt.subplots(figsize=(7, 6.5))
-        gdf.plot(column=col, cmap=cmap, linewidth=0, ax=ax, legend=True,
-                 legend_kwds={"label": label, "shrink": 0.7})
-        ax.set_title(f"{label}\nH3 res-7 cells with buildings (n={len(gdf):,})", fontsize=10)
-        ax.set_axis_off()
-        path = FIG_DIR / f"{prefix}_{col}.png"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        fig.savefig(path, dpi=130, bbox_inches="tight")
-        plt.close(fig)
-        paths.append(path)
-    return paths
-
-
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--buildings", type=Path, default=BUILDINGS)
@@ -255,9 +233,10 @@ def main() -> None:
             diag = build(args.buildings, args.out)
     else:
         diag = build(args.buildings, args.out)
-    df, gdf = diag.pop("_df"), diag.pop("_gdf")
+    df = diag.pop("_df")
+    diag.pop("_gdf")  # cell polygons; maps are drawn by notebooks/02_report_figures.py
     if national:
-        diag["figures"] = [str(p.relative_to(REPO_ROOT)) for p in quicklook(gdf, df)]
+        diag["figures"] = "see notebooks/02_report_figures.py (pixi run report-figures)"
         DIAG.write_text(json.dumps(diag, indent=2) + "\n")
     print(json.dumps(diag, indent=2))
     print(df.describe().T[["mean", "min", "max"]].round(2).to_string())

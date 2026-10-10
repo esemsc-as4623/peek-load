@@ -50,6 +50,7 @@ for s in ["google", "microsoft", "osm"]:
     share = h / h.sum()
     ax.step(edges[:-1], share.values, where="post", color=viz.SOURCE_COLOURS[s], label=s)
 ax.set_xscale("log")
+ax.set_xlim(1, 3000)
 ax.set_xlabel("footprint area (m², log scale)")
 ax.set_ylabel("share of footprints")
 ax.axvline(6, color=viz.INK_2, lw=1, ls=":")
@@ -76,6 +77,7 @@ conf = con.sql(f"""
 fig, ax = plt.subplots(figsize=(7, 3.2))
 colors = [viz.CAT[1] if c < 0.70 else viz.CAT[0] for c in conf.c]
 ax.bar(conf.c, conf.n / 1e3, width=0.0085, color=colors)
+ax.set_xlim(0.64, 0.98)
 ax.set_xlabel("Google detection confidence")
 ax.set_ylabel("footprints (thousands)")
 ax.set_title("12.6% of footprints fall below the 0.70 confidence flag")
@@ -93,9 +95,14 @@ dens = con.sql(f"""
     FROM (SELECT h3_cell_to_parent(h3_r9, 7) AS h7, count(*) AS n FROM {B} GROUP BY 1)""").df()
 area_km2 = 5.16  # average H3 r7 cell area
 fig, ax = plt.subplots(figsize=(7, 5.0))
-sc = ax.scatter(dens.lon, dens.lat, c=np.log10(dens.n / area_km2), s=4, marker="h",
-                cmap=viz.SEQ_BLUE, linewidths=0)
-cb = fig.colorbar(sc, ax=ax, shrink=0.7, label="footprints per km² (log10)")
+from matplotlib.colors import LogNorm  # noqa: E402
+
+per_km2 = dens.n / area_km2
+sc = ax.scatter(dens.lon, dens.lat, c=per_km2, s=4, marker="h", cmap=viz.SEQ_BLUE, linewidths=0,
+                norm=LogNorm(vmin=1, vmax=float(np.ceil(per_km2.quantile(0.99) / 100) * 100)))
+cb = fig.colorbar(sc, ax=ax, shrink=0.7, extend="both", label="footprints per km² (log scale)")
+cb.set_ticks([1, 10, 100, 1000], labels=["1", "10", "100", "1,000"])
+cb.outline.set_visible(False)
 ax.set_aspect("equal")
 ax.set_xlabel("longitude")
 ax.set_ylabel("latitude")
