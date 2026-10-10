@@ -2,7 +2,7 @@
 
 Two products (accept each one's licence on its CDS page first, under the Download tab, "Terms of use"):
 
-1. "ERA5-Land hourly data from 1950 to present" (reanalysis-era5-land), REQUIRED, 2019-2024:
+1. "ERA5-Land hourly data from 1950 to present" (reanalysis-era5-land), REQUIRED, 2019-2025:
    the same 0.1 deg hourly grid we use now via Open-Meteo. Hourly because RAMP needs time-of-day (typical day,
    hot hours, fan windows); gridded because every H3 cell is interpolated + elevation-corrected.
    Variables and why:
@@ -23,7 +23,7 @@ Credentials live on THIS machine (no local download + transfer): ~/.cdsapirc, ch
     url: https://cds.climate.copernicus.eu/api
     key: <PERSONAL-ACCESS-TOKEN>
 
-    pixi run fetch-era5-cds              # hourly, 72 monthly requests (resumable; CDS queues them)
+    pixi run fetch-era5-cds              # hourly, 84 monthly requests (resumable; CDS queues them)
     pixi run fetch-era5-cds --baseline   # daily statistics 1991-2020 (one request per year and statistic)
 """
 
@@ -35,7 +35,7 @@ from datetime import UTC, datetime
 from rtl.manifest import record
 from rtl.settings import RAW_DIR, aoi
 
-HOURLY_YEARS = range(2019, 2025)
+HOURLY_YEARS = range(2019, 2026)  # 2025 is complete in ERA5-Land; 2026 is not
 BASELINE_YEARS = range(1991, 2021)
 MARGIN_DEG = 0.1  # one ERA5-Land cell around the country, for interpolation at the border
 HOURLY_VARIABLES = [

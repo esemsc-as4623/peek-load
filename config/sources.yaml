@@ -175,7 +175,7 @@ sources:
 
   era5_land_cds:
     owner: A3
-    name: ERA5-Land from Copernicus CDS - hourly 2019-2024 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020
+    name: ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020
     url: cds:reanalysis-era5-land ; cds:derived-era5-land-daily-statistics
     access: login  # ~/.cdsapirc with a CDS personal access token; accept each dataset's licence on its CDS page
     licence: Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)
