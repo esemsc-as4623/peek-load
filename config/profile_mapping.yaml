@@ -1,0 +1,42 @@
+# B2: building -> RAMP profile mapping (human-reviewable; `pixi run profile-mapping` applies it).
+#
+# Each building has Claude class probabilities (labels table). For each class, the rules below choose one or more
+# profiles from the building's context. A building's weight on a profile = sum over classes of
+# P(class) x units. `units` is additive: a shop-house is one household plus one shop, so its weights can sum above 1.
+# Profiles are archetype ids in data/processed/archetypes/<id>.json (B1); any without a JSON yet is listed as
+# missing by the runner.
+
+context:
+  urban:  # a building counts as urban if any of these hold
+    pop_density_per_km2_min: 2500
+    ghsl_classes: [res_3_6m, res_6_15m, res_15_30m, res_gt30m, nres_le3m, nres_3_6m, nres_6_15m, nres_15_30m]
+  wealth_split: within_setting  # higher tier = Meta RWI above the median of its own setting (urban or rural);
+                                # a national median would put almost every urban home in the top tier
+
+classes:
+  residential:
+    - {when: {urban: true, rich: true}, profiles: {household_urban_t3: 1}}
+    - {when: {urban: true, rich: false}, profiles: {household_urban_t2: 1}}
+    - {when: {urban: false, rich: true}, profiles: {rural_grid_household_tier2: 1}}
+    - {when: {urban: false, rich: false}, profiles: {household_rural_t1: 1}}
+  mixed_shop_house:  # the household rule for its context, plus a small shop
+    - {when: {}, profiles: {"@residential": 1, kiosk_shop: 1}}
+  commercial:
+    - {when: {overture_any: [restaurant, bar, cafe, coffee_shop, bar_and_grill_restaurant]}, profiles: {bar_restaurant: 1}}
+    - {when: {overture_any: [hotel, lodging, bed_and_breakfast]}, profiles: {guesthouse: 1}}
+    - {when: {overture_any: [beauty_salon, hair_salon, barber]}, profiles: {salon: 1}}
+    - {when: {}, profiles: {kiosk_shop: 1}}
+  institutional:
+    - {when: {facility_prefix: "education"}, profiles: {school: 1}}
+    - {when: {facility_prefix: "health"}, profiles: {health_post: 1}}
+    - {when: {}, profiles: {office: 1}}
+  religious:
+    - {when: {}, profiles: {church: 1}}
+  productive_use:  # without a tag saying which trade, spread over the common rural trades
+    - {when: {}, profiles: {grain_mill: 0.25, welding_workshop: 0.25, tailoring: 0.25, carpentry: 0.25}}
+  industrial_warehouse:
+    - {when: {}, profiles: {warehouse_light: 1}}
+  ancillary:
+    - {when: {}, profiles: {}}  # kitchens, latrines, stores: negligible electricity
+  unknown:
+    - {when: {}, profiles: {"@residential": 1}}  # most unlabelled structures are homes; flagged via low confidence
