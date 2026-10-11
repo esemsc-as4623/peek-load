@@ -1,0 +1,559 @@
+{
+ "archetype_id": "office",
+ "description": "Small office (administration, NGO, bank agency) on the grid. ASSUMPTIONS: no survey covers offices.",
+ "population": "grid-connected small offices",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "lights",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "All offices lit.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 6,
+    "evidence_ids": [],
+    "assumption": "Three rooms.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 180,
+    "evidence_ids": [],
+    "assumption": "Dark rooms and late afternoon.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-17:00 office hours.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Weekday offices.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "computers",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Offices use computers.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 4,
+    "evidence_ids": [],
+    "assumption": "Four staff.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 50.0,
+    "evidence_ids": [],
+    "assumption": "Laptop 30-65 W, desktop 80-150 W; households mostly have laptops.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 420,
+    "evidence_ids": [],
+    "assumption": "Working day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-17:00 office hours.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Weekday offices.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "printer",
+   "ownership_share": {
+    "value": 0.8,
+    "evidence_ids": [],
+    "assumption": "Most offices print.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One printer.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 50.0,
+    "evidence_ids": [],
+    "assumption": "Average draw of an office printer over its working hours (mostly idle).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 480,
+    "evidence_ids": [],
+    "assumption": "On through the day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-17:00 office hours.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Weekday offices.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "router",
+   "ownership_share": {
+    "value": 0.8,
+    "evidence_ids": [],
+    "assumption": "Most offices are online.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One router.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Home / small-office modem-router 6-15 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 540,
+    "evidence_ids": [],
+    "assumption": "Office hours.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-17:00 office hours.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Weekday offices.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "phone_charging",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Staff phones.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 4,
+    "evidence_ids": [],
+    "assumption": "One per staff.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 6.5,
+    "evidence_ids": [
+     "ev-9bb1546605fe",
+     "ev-87179d89e08d"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^phone_charger$|^usb_port$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 60,
+    "evidence_ids": [],
+    "assumption": "Top-ups.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-17:00 office hours.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Weekday offices.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}

@@ -1,0 +1,362 @@
+# B1 recipes: how each RAMP archetype (profile) is built. `pixi run build-archetypes` turns them into
+# data/processed/archetypes/<id>.json, where every number cites its source ids or carries the `why` below.
+#
+# Value specs (anywhere a number is needed):
+#   {value: 15, why: "..."}                       assumption with its rationale; `cite: <regex>` adds evidence
+#                                                 ids that bound it (e.g. MTF load classes)
+#   {evidence: "<regex on appliance>"}            median of approved, unflagged evidence values (power: W;
+#                                                 hours: h/day); `factor` + `why` scale it (e.g. a duty fraction)
+#   {enterprise: <column>}                        MTF 2022 household-enterprise aggregate (row: `enterprise_row`)
+#   {facility: <item>, stat: <statistic>}         MTF 2022 school / health-facility aggregate (`facility_kind`)
+# Household archetypes take ownership, appliances per owner and hours of use from MTF 2022 directly
+# (validation_anchors/mtf_appliance_usage.csv) for their group; `hours` below is used only when MTF has none.
+# Windows are [[start_min, end_min], ...] in local time (minutes after midnight; sunrise/sunset ~06:00/18:00).
+
+power_w:  # rated power per appliance kind
+  led:           {evidence: "^led_bulb$"}
+  cfl:           {value: 15, why: "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus."}
+  incandescent:  {value: 60, why: "The most common incandescent rating (40-100 W)."}
+  tube:          {value: 36, why: "Standard 1.2 m T8 fluorescent tube."}
+  phone_charger: {evidence: "^phone_charger$|^usb_port$"}
+  radio:         {value: 10, why: "Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).",
+                  cite: "^very_low_load$"}
+  tv:            {qsel_kwh_month: "monthly_kwh.tv", mtf_hours: [flat_color_tv, typical_color_tv, black_and_white_tv],
+                  why: "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households)."}
+  fridge:        {evidence: "^refrigerator$"}
+  freezer:       {evidence: "^freezer$|^ice_freezer$"}
+  iron:          {value: 1000, why: "Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons.",
+                  cite: "^high_load$"}
+  kettle:        {value: 1500, why: "Electric kettles / hot-water pots 1,000-2,200 W."}
+  computer:      {value: 50, why: "Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."}
+  laptop:        {value: 30, why: "Education laptops (e.g. the Positivo models used in Rwandan schools) draw ~30 W charging."}
+  printer:       {value: 50, why: "Average draw of an office printer over its working hours (mostly idle)."}
+  projector:     {value: 200, why: "LCD classroom projectors 150-300 W."}
+  router:        {value: 10, why: "Home / small-office modem-router 6-15 W."}
+  dvd:           {value: 15, why: "DVD / VCD player 10-25 W."}
+  blender:       {value: 350, why: "Blender / food processor 300-500 W."}
+  microwave:     {value: 1000, why: "Microwave ovens 800-1,200 W (high-load class).", cite: "^high_load$"}
+  water_heater:  {value: 2000, why: "Electric water heater 1.5-3 kW (very-high-load class).", cite: "^very_high_load$"}
+  fan:           {evidence: "^(?:pedestal_)?fan$"}
+  rice_cooker:   {value: 500, why: "Rice cooker 400-700 W (medium-load class).", cite: "^medium_load$"}
+  hair_dryer:    {evidence: "^hair_dryer"}
+  hair_clipper:  {evidence: "^hair_clipper$"}
+  sewing_machine: {evidence: "^sewing_machine$"}
+  sound_system:  {evidence: "^sound_system$"}
+  grain_mill:    {evidence: "^grain_mill$|^grain_mill_electric$|^maize_mill_electric$|^plate_mill_motor$"}
+  welder:        {evidence: "^welding_equipment$"}
+  angle_grinder: {value: 900, why: "Hand angle grinders 700-1,200 W."}
+  table_saw:     {evidence: "^table_saw$"}
+  jigsaw:        {evidence: "^jigsaw$"}
+  wood_lathe:    {evidence: "^woodworking_lathe$"}
+  sterilizer:    {value: 1500, why: "Electric autoclave / dry-heat sterilizer in a health centre 1-3 kW (the 200 W evidence row is a salon UV cabinet)."}
+  vaccine_fridge: {value: 100, why: "Ice-lined vaccine refrigerator compressor 60-150 W."}
+  microscope:    {value: 20, why: "Lab microscope with LED/halogen lamp 10-30 W."}
+  centrifuge:    {value: 150, why: "Bench centrifuge 100-250 W."}
+
+energy_wh_day:  # appliances whose daily energy is measured: RAMP on-time = energy / power
+  fridge: {qsel_kwh_month: "monthly_kwh.fridge", why: "Measured fridge energy of grid households (QSEL 2025)."}
+
+windows:
+  lights:     {value: [[1080, 1410], [300, 420]], why: "18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S)."}
+  night:      {value: [[1080, 1440], [0, 420]], why: "Dusk to dawn (long-burning and security lights)."}
+  charging:   {value: [[1080, 1440], [0, 420]], why: "Phones charged in the evening and overnight."}
+  radio:      {value: [[360, 540], [720, 840], [1080, 1320]], why: "Morning, lunchtime and evening listening."}
+  tv:         {value: [[720, 840], [1080, 1410]], why: "Lunchtime news and evening viewing."}
+  chores:     {value: [[360, 480], [1080, 1260]], why: "Ironing and chores before work and in the evening."}
+  meals:      {value: [[330, 480], [690, 780], [1080, 1260]], why: "Breakfast, lunch and dinner."}
+  allday:     {value: [[0, 1440]], why: "Plugged in all day (cycling appliance)."}
+  awake:      {value: [[360, 1380]], why: "Waking hours."}
+  day_evening: {value: [[480, 1020], [1080, 1380]], why: "Work/study during the day and evening."}
+  shop_day:   {value: [[420, 1260]], why: "07:00-21:00, around MTF's median 12 h shop day."}
+  shop_lights: {value: [[1080, 1290], [360, 420]], why: "Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning."}
+  work_day:   {value: [[480, 1080]], why: "08:00-18:00 workshop day."}
+  mill_day:   {value: [[540, 1020]], why: "Mills run on weekdays 09:00-17:00 (NREL 2018, evidence usage window).",
+               cite: "^grain_mill$"}
+  school_day: {value: [[420, 1020]], why: "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."}
+  office_day: {value: [[480, 1020]], why: "08:00-17:00 office hours."}
+  bar_day:    {value: [[600, 1410]], why: "10:00-23:30, busiest in the evening."}
+  bar_night:  {value: [[1080, 1410]], why: "Evening trade 18:00-23:30."}
+  sunday:     {value: [[480, 780]], why: "Sunday services 08:00-13:00."}
+  evening_prayer: {value: [[1080, 1260]], why: "Weekday evening prayers / choir practice 18:00-21:00."}
+  morning:    {value: [[330, 480]], why: "Morning routine."}
+
+ramp_presets:  # RAMP behaviour parameters (values from the RAMP example files unless stated)
+  light:    {func_cycle: 30, time_fraction_random_variability: 0.2, random_var_w: 0.2,
+             why: "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights."}
+  media:    {func_cycle: 60, time_fraction_random_variability: 0.1, random_var_w: 0.1,
+             why: "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs."}
+  charger:  {func_cycle: 60, why: "One charge lasts about an hour."}
+  cycling:  {func_cycle: 30, why: "Compressor cycles of ~30 min spread over the day."}
+  short:    {func_cycle: 5, why: "Short bursts (kettle, blender, microwave, hair dryer)."}
+  chore:    {func_cycle: 15, why: "Ironing / heating sessions of 15 min or more."}
+  machine:  {func_cycle: 10, time_fraction_random_variability: 0.2, why: "Machine jobs of ~10 min; work varies day to day."}
+  continuous: {func_cycle: 60, why: "Long continuous use."}
+
+household:
+  min_ownership: 0.01   # MTF appliances owned by fewer households are left out
+  calibration:  # Lighting on-time is the least certain household input: MTF asks hours of use per bulb TYPE, and a
+                # household's 4-7 bulbs aren't all on for that long. Uncalibrated, lighting is 50-90% of household
+                # energy and the archetypes come out 1.3-1.9x above what the same MTF households spend on electricity.
+                # So one factor per archetype scales lighting on-time until its expected energy equals the MTF 2022
+                # spending-derived mean of its group, fitted on RAMP's simulated energy (RAMP itself switches on only
+                # part of a household's bulbs at once). QSEL meter data, EICV5 and the MTF tiers stay independent checks.
+    target: kwh_month_mean   # column of validation_anchors/mtf_household_consumption.csv
+    scale_preset: light
+    bounds: [0.2, 1.5]       # outside this, the archetype is reported as inconsistent rather than forced
+  appliances:  # MTF appliance name -> power kind, windows, RAMP preset; `hours` only where MTF asked no hours
+    cfl_bulb:                 {power: cfl, windows: lights, preset: light}
+    incandescent_light_bulb:  {power: incandescent, windows: lights, preset: light}
+    led_light_bulb:           {power: led, windows: lights, preset: light}
+    fluorescent_tube:         {power: tube, windows: night, preset: light}
+    typical_mobile_phone_charger: {power: phone_charger, windows: charging, preset: charger,
+                                   hours: {value: 2, why: "A 1,000-2,000 mAh feature-phone battery charges in 1-2 h."}}
+    smartphone_or_internet_phone_and_charger: {power: phone_charger, windows: charging, preset: charger,
+                                   hours: {value: 2, why: "A smartphone charges fully in about 2 h."}}
+    radio:                    {power: radio, windows: radio, preset: media}
+    flat_color_tv:            {power: tv, windows: tv, preset: media}
+    typical_color_tv:         {power: tv, windows: tv, preset: media}
+    black_and_white_tv:       {power: tv, windows: tv, preset: media}
+    vcd_and_dvd:              {power: dvd, windows: tv, preset: media,
+                               hours: {value: 1, why: "Used alongside the TV, for part of viewing time."}}
+    electric_iron:            {power: iron, windows: chores, preset: chore,
+                               hours: {value: 0.25, why: "About 30 min of ironing every other day; thermostat cycling halves the draw on time."}}
+    refrigerator:             {power: fridge, windows: allday, preset: cycling, energy: fridge}
+    freezer:                  {power: freezer, windows: allday, preset: cycling,
+                               hours: {value: 8, why: "Compressor runs about a third of the time."}}
+    computer:                 {power: computer, windows: day_evening, preset: continuous,
+                               hours: {value: 3, why: "Household computers used/charged a few hours a day."}}
+    internet_modem_or_router: {power: router, windows: allday, preset: continuous,
+                               hours: {value: 20, why: "Left on most of the day."}}
+    electric_hot_water_pot_or_kettle: {power: kettle, windows: meals, preset: short,
+                               hours: {value: 0.2, why: "Three or four boils of 3-4 min a day."}}
+    electric_food_processor_or_blender: {power: blender, windows: meals, preset: short,
+                               hours: {value: 0.1, why: "A few minutes a day."}}
+    microwave_oven:           {power: microwave, windows: meals, preset: short,
+                               hours: {value: 0.2, why: "Reheating, about 10-15 min a day."}}
+    electric_water_heater:    {power: water_heater, windows: morning, preset: chore,
+                               hours: {value: 1, why: "Thermostat-controlled heating for morning showers."}}
+    fan:                      {power: fan, windows: awake, preset: continuous}
+    rice_cooker:              {power: rice_cooker, windows: meals, preset: chore,
+                               hours: {value: 0.5, why: "One meal cooked a day."}}
+    hair_dryer:               {power: hair_dryer, windows: morning, preset: short,
+                               hours: {value: 0.1, why: "A few minutes a day."}}
+  skip: [torch_or_flashlight_or_lantern, bicycle_for_home_use_only, other_electric_device]  # not mains / unknown
+  archetypes:
+    household_rural_t1:
+      group: grid_rural_lower
+      description: "Rural grid-connected household, Ubudehe categories 1-2 (lower half). Appliances from MTF Rwanda 2022."
+      population: "rural grid-connected households, Ubudehe 1-2 (mapping: rural buildings with RWI below the rural median)"
+    rural_grid_household_tier2:
+      group: grid_rural_upper
+      description: "Rural grid-connected household, Ubudehe categories 3-4 (upper half). Appliances from MTF Rwanda 2022."
+      population: "rural grid-connected households, Ubudehe 3-4 (mapping: rural buildings with RWI above the rural median)"
+    household_urban_t2:
+      group: grid_urban_lower
+      description: "Urban grid-connected household, Ubudehe categories 1-2 (lower half). Appliances from MTF Rwanda 2022."
+      population: "urban grid-connected households, Ubudehe 1-2 (mapping: urban buildings with RWI below the urban median)"
+    household_urban_t3:
+      group: grid_urban_upper
+      description: "Urban grid-connected household, Ubudehe categories 3-4 (upper half). Appliances from MTF Rwanda 2022."
+      population: "urban grid-connected households, Ubudehe 3-4 (mapping: urban buildings with RWI above the urban median)"
+
+# Non-household archetypes: one unit = one establishment. Each appliance: power kind, ownership (share of
+# establishments using it), number, hours (h/day), windows, preset; optional wd_we_type (0 weekdays, 1 weekends, 2 all).
+establishments:
+  kiosk_shop:
+    description: "Small shop / kiosk on the grid (MTF 2022 household enterprises: shops/trading, grid-connected)."
+    population: "grid-connected shops and kiosks (MTF 2022 enterprise sample, n=147)"
+    enterprise_row: "Shops/trading|grid"
+    appliances:
+      - {name: lights, power: cfl, ownership: {enterprise: uses_light}, number: {value: 2, why: "One bulb inside, one at the front."},
+         hours: {enterprise: hours_6pm_6am_median}, windows: shop_lights, preset: light}
+      - {name: radio, power: radio, ownership: {enterprise: uses_radio}, number: {value: 1, why: "One radio."},
+         hours: {value: 6, why: "On for about half of the 12 h trading day."}, windows: shop_day, preset: media}
+      - {name: tv, power: tv, ownership: {enterprise: uses_tv}, number: {value: 1, why: "One TV."},
+         hours: {value: 6, why: "On for about half of the trading day (news, football)."}, windows: shop_day, preset: media}
+      - {name: fridge, power: fridge, ownership: {enterprise: uses_refrigerator}, number: {value: 1, why: "One drinks fridge."},
+         energy: fridge, energy_factor: {value: 1.5, why: "Shop fridges are opened far more often than household fridges."},
+         windows: allday, preset: cycling}
+      - {name: phone_charging, power: phone_charger, ownership: {enterprise: uses_mobile_phone},
+         number: {value: 2, why: "The owner's phone plus customers' phones."}, hours: {value: 3, why: "Charged in turns during the day."},
+         windows: shop_day, preset: charger}
+  salon:
+    description: "Barber / hair salon on the grid. Shares of lights, radio and TV from MTF 2022 grid service enterprises."
+    population: "grid-connected barbers and salons"
+    enterprise_row: "Service (mobile phone recharge or repair/ tailoring/barber/eatery)|grid"
+    appliances:
+      - {name: hair_clipper, power: hair_clipper, ownership: {value: 1, why: "Defines a barber."}, number: {value: 2, why: "Two chairs."},
+         hours: {value: 4, why: "About 20 haircuts of ~12 min per chair-day."}, windows: shop_day, preset: machine}
+      - {name: hair_dryer, power: hair_dryer, ownership: {value: 0.5, why: "Women's salons use dryers; barbers mostly don't."},
+         number: {value: 1, why: "One dryer."}, hours: {value: 1.5, why: "Several clients a day."}, windows: shop_day, preset: short}
+      - {name: lights, power: cfl, ownership: {enterprise: uses_light}, number: {value: 3, why: "Salons need good light."},
+         hours: {enterprise: hours_6pm_6am_median}, windows: shop_lights, preset: light}
+      - {name: radio, power: radio, ownership: {enterprise: uses_radio}, number: {value: 1, why: "One radio."},
+         hours: {value: 8, why: "Music most of the day."}, windows: shop_day, preset: media}
+      - {name: tv, power: tv, ownership: {enterprise: uses_tv}, number: {value: 1, why: "One TV."},
+         hours: {value: 6, why: "On for about half the day."}, windows: shop_day, preset: media}
+  bar_restaurant:
+    description: "Bar / small restaurant on the grid. ASSUMPTIONS: no survey covers bars; powers from evidence."
+    population: "grid-connected bars and small restaurants"
+    appliances:
+      - {name: lights, power: cfl, ownership: {value: 1, why: "All bars are lit."}, number: {value: 6, why: "Inside and terrace."},
+         hours: {value: 5, why: "Evening trade."}, windows: bar_night, preset: light}
+      - {name: fridge, power: fridge, ownership: {value: 1, why: "Cold drinks are the core trade."}, number: {value: 2, why: "Two drinks fridges."},
+         energy: fridge, energy_factor: {value: 1.5, why: "Opened far more often than household fridges."}, windows: allday, preset: cycling}
+      - {name: tv, power: tv, ownership: {value: 0.8, why: "Most bars show football and news."}, number: {value: 1, why: "One TV."},
+         hours: {value: 6, why: "Afternoon and evening."}, windows: bar_day, preset: media}
+      - {name: sound_system, power: sound_system, ownership: {value: 0.6, why: "Music in most bars."}, number: {value: 1, why: "One system."},
+         hours: {value: 5, why: "Evening trade."}, windows: bar_night, preset: media}
+  guesthouse:
+    description: "Small guesthouse on the grid. ASSUMPTIONS: no survey covers lodging."
+    population: "grid-connected guesthouses (about 8 rooms)"
+    appliances:
+      - {name: lights, power: cfl, ownership: {value: 1, why: "All rooms lit."}, number: {value: 12, why: "8 rooms plus corridors and reception."},
+         hours: {value: 4, why: "Evening and early morning occupancy."}, windows: lights, preset: light}
+      - {name: tv, power: tv, ownership: {value: 1, why: "TV in the lounge and some rooms."}, number: {value: 3, why: "Lounge plus two rooms."},
+         hours: {value: 4, why: "Evening viewing."}, windows: tv, preset: media}
+      - {name: fridge, power: fridge, ownership: {value: 1, why: "Drinks for guests."}, number: {value: 1, why: "One fridge."},
+         energy: fridge, windows: allday, preset: cycling}
+      - {name: water_heater, power: water_heater, ownership: {value: 0.5, why: "Hot showers in better guesthouses."},
+         number: {value: 1, why: "One heater."}, hours: {value: 2, why: "Morning and evening showers."}, windows: lights, preset: chore}
+      - {name: phone_charging, power: phone_charger, ownership: {value: 1, why: "Guests charge phones."}, number: {value: 6, why: "Most guests."},
+         hours: {value: 2, why: "One charge each."}, windows: charging, preset: charger}
+  tailoring:
+    description: "Tailor's workshop on the grid. Sewing-machine power and hours from evidence."
+    population: "grid-connected tailors"
+    appliances:
+      - {name: sewing_machine, power: sewing_machine, ownership: {value: 1, why: "Defines a tailor."},
+         number: {value: 2, why: "A tailor and an apprentice."}, hours: {evidence: "^sewing_machine$", factor: 0.5,
+         why: "Motor runs about half the 8 h working day (stitching vs cutting, fitting)."}, windows: work_day, preset: machine}
+      - {name: iron, power: iron, ownership: {value: 0.7, why: "Most tailors press finished garments electrically."}, number: {value: 1, why: "One iron."},
+         hours: {value: 1, why: "Pressing finished garments; thermostat cycling."}, windows: work_day, preset: chore}
+      - {name: lights, power: cfl, ownership: {value: 1, why: "Needlework needs light."}, number: {value: 2, why: "Two bulbs."},
+         hours: {value: 3, why: "Evening work."}, windows: shop_lights, preset: light}
+      - {name: radio, power: radio, ownership: {value: 0.5, why: "As in MTF service enterprises (38% radio)."}, number: {value: 1, why: "One radio."},
+         hours: {value: 6, why: "Background music."}, windows: work_day, preset: media}
+  grain_mill:
+    description: "Electric grain mill (maize / cassava / sorghum) on the grid. Power, hours and window from evidence."
+    population: "grid-connected grain mills"
+    appliances:
+      - {name: grain_mill, power: grain_mill, ownership: {value: 1, why: "Defines a mill."}, number: {value: 1, why: "One mill motor."},
+         hours: {evidence: "^grain_mill$"}, windows: mill_day, preset: machine}
+      - {name: lights, power: cfl, ownership: {value: 1, why: "Mill houses are lit."}, number: {value: 2, why: "Two bulbs."},
+         hours: {value: 2, why: "Dusk and early-morning work."}, windows: shop_lights, preset: light}
+  carpentry:
+    description: "Carpentry workshop on the grid. Machine powers from evidence; on-time sized so the machines use the NREL 2018 lathe-workshop energy."
+    population: "grid-connected carpentry workshops"
+    appliances:
+      - {name: table_saw, power: table_saw, ownership: {value: 1, why: "Standard workshop machine."}, number: {value: 1, why: "One saw."},
+         hours: {value: 0.17, why: "Machines share the NREL 2018 lathe workshop's 18 kWh/month (0.6 kWh/day over 3.45 kW of machines = ~10 min each).",
+         cite: "^carpentry_tools$"}, windows: work_day, preset: machine}
+      - {name: jigsaw, power: jigsaw, ownership: {value: 0.7, why: "Common hand machine."}, number: {value: 1, why: "One jigsaw."},
+         hours: {value: 0.17, why: "As the table saw.", cite: "^carpentry_tools$"}, windows: work_day, preset: machine}
+      - {name: wood_lathe, power: wood_lathe, ownership: {value: 0.5, why: "Lathes in about half of workshops."}, number: {value: 1, why: "One lathe."},
+         hours: {value: 0.17, why: "As the table saw.", cite: "^carpentry_tools$"}, windows: work_day, preset: machine}
+      - {name: lights, power: cfl, ownership: {value: 1, why: "Workshop lit."}, number: {value: 2, why: "Two bulbs."},
+         hours: {value: 2, why: "Dusk work."}, windows: shop_lights, preset: light}
+  welding_workshop:
+    description: "Welding / metal workshop on the grid. Welder power and working hours from evidence."
+    population: "grid-connected welding workshops"
+    appliances:
+      - {name: welder, power: welder, ownership: {value: 1, why: "Defines a welder."}, number: {value: 1, why: "One welding set."},
+         hours: {evidence: "^metal_workshop_machines$", factor: 0.25, why: "Arc-on time is about a quarter of working time (positioning, grinding, fitting)."},
+         windows: work_day, preset: machine}
+      - {name: angle_grinder, power: angle_grinder, ownership: {value: 1, why: "Every metal shop grinds."}, number: {value: 1, why: "One grinder."},
+         hours: {value: 1, why: "Cutting and finishing."}, windows: work_day, preset: machine}
+      - {name: lights, power: cfl, ownership: {value: 1, why: "Workshop lit."}, number: {value: 2, why: "Two bulbs."},
+         hours: {value: 2, why: "Dusk work."}, windows: shop_lights, preset: light}
+  school:
+    description: "School on the grid (MTF 2022 school survey: appliances owned and in use, opening hours)."
+    population: "grid-connected primary and secondary schools (MTF 2022, n=162)"
+    facility_kind: school
+    wd_we_type: {value: 0, why: "Schools run on weekdays (term-time; holidays are not modelled)."}
+    appliances:
+      - {name: incandescent_bulbs, power: incandescent, ownership: {facility: incandescent_light_bulb, stat: ownership_share},
+         number: {facility: incandescent_light_bulb, stat: number_used_median}, hours: {value: 2, why: "Classrooms are day-lit; lights in dark rooms, offices and early morning."},
+         windows: school_day, preset: light}
+      - {name: fluorescent_tubes, power: tube, ownership: {facility: fluorescent_tube, stat: ownership_share},
+         number: {facility: fluorescent_tube, stat: number_used_median}, hours: {value: 2, why: "As incandescent bulbs."}, windows: school_day, preset: light}
+      - {name: cfl_bulbs, power: cfl, ownership: {facility: compact_fluorescent_light_cfl_bulb, stat: ownership_share},
+         number: {facility: compact_fluorescent_light_cfl_bulb, stat: number_used_median}, hours: {value: 2, why: "As incandescent bulbs."}, windows: school_day, preset: light}
+      - {name: led_bulbs, power: led, ownership: {facility: led_light_bulb, stat: ownership_share},
+         number: {facility: led_light_bulb, stat: number_used_median}, hours: {value: 2, why: "As incandescent bulbs."}, windows: school_day, preset: light}
+      - {name: laptops, power: laptop, ownership: {facility: computer, stat: ownership_share},
+         number: {facility: computer, stat: number_used_median}, hours: {value: 1, why: "Class sets are recharged ~1 h a day (lessons rotate between classes)."},
+         windows: school_day, preset: charger}
+      - {name: printer, power: printer, ownership: {facility: printer, stat: ownership_share},
+         number: {facility: printer, stat: number_used_median}, hours: {value: 4, why: "Office hours."}, windows: school_day, preset: continuous}
+      - {name: router, power: router, ownership: {facility: internet_modem_router, stat: ownership_share},
+         number: {facility: internet_modem_router, stat: number_used_median}, hours: {value: 10, why: "On during the school day."}, windows: school_day, preset: continuous}
+      - {name: projector, power: projector, ownership: {facility: projector, stat: ownership_share},
+         number: {facility: projector, stat: number_used_median}, hours: {value: 2, why: "A couple of lessons a day."}, windows: school_day, preset: media}
+      - {name: tv, power: tv, ownership: {facility: television, stat: ownership_share},
+         number: {facility: television, stat: number_used_median}, hours: {value: 2, why: "Staff room / lessons."}, windows: school_day, preset: media}
+      - {name: phone_charging, power: phone_charger, ownership: {facility: mobile_phone_charger, stat: ownership_share},
+         number: {facility: mobile_phone_charger, stat: number_used_median}, hours: {value: 2, why: "Staff phones."}, windows: school_day, preset: charger}
+  health_post:
+    description: "Health facility on the grid, built from MTF 2022 health CENTRES (148 of 153 surveyed): an upper bound for health posts."
+    population: "grid-connected health centres (MTF 2022, n=150); smaller health posts use less"
+    facility_kind: health_facility
+    appliances:
+      - {name: fluorescent_tubes, power: tube, ownership: {facility: fluorescent_tube, stat: ownership_share},
+         number: {facility: fluorescent_tube, stat: number_used_median}, hours: {value: 8, why: "Wards and corridors lit at night (98% open 24 h)."},
+         windows: night, preset: light}
+      - {name: incandescent_bulbs, power: incandescent, ownership: {facility: incandescent_light_bulb, stat: ownership_share},
+         number: {facility: incandescent_light_bulb, stat: number_used_median}, hours: {value: 6, why: "Night lighting, not all at once."}, windows: night, preset: light}
+      - {name: led_bulbs, power: led, ownership: {facility: led_light_bulb, stat: ownership_share},
+         number: {facility: led_light_bulb, stat: number_used_median}, hours: {value: 8, why: "Night lighting."}, windows: night, preset: light}
+      - {name: computers, power: computer, ownership: {facility: computer, stat: ownership_share},
+         number: {facility: computer, stat: number_used_median}, hours: {value: 8, why: "Records and reporting during the working day."}, windows: day_evening, preset: continuous}
+      - {name: printers, power: printer, ownership: {facility: printer, stat: ownership_share},
+         number: {facility: printer, stat: number_used_median}, hours: {value: 8, why: "Working day."}, windows: day_evening, preset: continuous}
+      - {name: routers, power: router, ownership: {facility: internet_modem_router, stat: ownership_share},
+         number: {facility: internet_modem_router, stat: number_used_median}, hours: {value: 20, why: "Always on."}, windows: allday, preset: continuous}
+      - {name: fridges, power: fridge, ownership: {facility: refrigeration, stat: ownership_share},
+         number: {facility: refrigeration, stat: number_used_median}, energy: fridge, windows: allday, preset: cycling}
+      - {name: vaccine_fridges, power: vaccine_fridge, ownership: {facility: refrigerator_for_vaccination, stat: ownership_share},
+         number: {facility: refrigerator_for_vaccination, stat: number_used_median}, hours: {value: 10, why: "Compressor duty ~40% in a warm room."},
+         windows: allday, preset: cycling}
+      - {name: sterilizer, power: sterilizer, ownership: {facility: sterilizer, stat: ownership_share},
+         number: {facility: sterilizer, stat: number_used_median}, hours: {value: 2, why: "Two cycles a day."}, windows: day_evening, preset: chore}
+      - {name: microscopes, power: microscope, ownership: {facility: microscope, stat: ownership_share},
+         number: {facility: microscope, stat: number_used_median}, hours: {value: 4, why: "Lab hours."}, windows: day_evening, preset: continuous}
+      - {name: centrifuge, power: centrifuge, ownership: {facility: centrifuge, stat: ownership_share},
+         number: {facility: centrifuge, stat: number_used_median}, hours: {value: 1, why: "Batches of samples."}, windows: day_evening, preset: machine}
+      - {name: tv, power: tv, ownership: {facility: television, stat: ownership_share},
+         number: {facility: television, stat: number_used_median}, hours: {value: 6, why: "Waiting-room TV."}, windows: day_evening, preset: media}
+      - {name: phone_charging, power: phone_charger, ownership: {facility: mobile_phone_charging_kiosks, stat: ownership_share},
+         number: {facility: mobile_phone_charging_kiosks, stat: number_used_median}, hours: {value: 2, why: "Patients and staff charge phones."},
+         windows: day_evening, preset: charger}
+  office:
+    description: "Small office (administration, NGO, bank agency) on the grid. ASSUMPTIONS: no survey covers offices."
+    population: "grid-connected small offices"
+    wd_we_type: {value: 0, why: "Weekday offices."}
+    appliances:
+      - {name: lights, power: cfl, ownership: {value: 1, why: "All offices lit."}, number: {value: 6, why: "Three rooms."},
+         hours: {value: 3, why: "Dark rooms and late afternoon."}, windows: office_day, preset: light}
+      - {name: computers, power: computer, ownership: {value: 1, why: "Offices use computers."}, number: {value: 4, why: "Four staff."},
+         hours: {value: 7, why: "Working day."}, windows: office_day, preset: continuous}
+      - {name: printer, power: printer, ownership: {value: 0.8, why: "Most offices print."}, number: {value: 1, why: "One printer."},
+         hours: {value: 8, why: "On through the day."}, windows: office_day, preset: continuous}
+      - {name: router, power: router, ownership: {value: 0.8, why: "Most offices are online."}, number: {value: 1, why: "One router."},
+         hours: {value: 9, why: "Office hours."}, windows: office_day, preset: continuous}
+      - {name: phone_charging, power: phone_charger, ownership: {value: 1, why: "Staff phones."}, number: {value: 4, why: "One per staff."},
+         hours: {value: 1, why: "Top-ups."}, windows: office_day, preset: charger}
+  church:
+    description: "Church / mosque on the grid: Sunday services and weekday evening prayers. ASSUMPTIONS except the sound-system power."
+    population: "grid-connected places of worship"
+    appliances:
+      - {name: lights_sunday, power: cfl, ownership: {value: 1, why: "Lit during services."}, number: {value: 10, why: "A hall of a few hundred people."},
+         hours: {value: 3, why: "Long services, partly in dim halls."}, windows: sunday, preset: light, wd_we_type: {value: 1, why: "Weekend services."}}
+      - {name: sound_sunday, power: sound_system, ownership: {value: 0.8, why: "Amplified services in most churches."}, number: {value: 1, why: "One system."},
+         hours: {value: 4, why: "Services and choir."}, windows: sunday, preset: media, wd_we_type: {value: 1, why: "Weekend services."}}
+      - {name: lights_evening, power: cfl, ownership: {value: 0.6, why: "Many hold weekday evening prayers or choir practice."}, number: {value: 4, why: "Part of the hall."},
+         hours: {value: 2, why: "Evening prayers."}, windows: evening_prayer, preset: light, wd_we_type: {value: 0, why: "Weekdays."}}
+  warehouse_light:
+    description: "Store / warehouse on the grid: lighting only. ASSUMPTIONS."
+    population: "grid-connected stores and warehouses"
+    appliances:
+      - {name: lights, power: tube, ownership: {value: 1, why: "Lit for loading."}, number: {value: 4, why: "A store of ~200 m2."},
+         hours: {value: 2, why: "Loading and stock-taking."}, windows: day_evening, preset: light}
+      - {name: security_light, power: cfl, ownership: {value: 0.7, why: "Most stores keep an outside light on."}, number: {value: 1, why: "One."},
+         hours: {value: 11, why: "Dusk to dawn."}, windows: night, preset: light}

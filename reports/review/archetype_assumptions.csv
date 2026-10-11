@@ -1,0 +1,282 @@
+decision,archetype,appliance,parameter,value,why
+,household_rural_t1,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_rural_t1,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_t1,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_rural_t1,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_t1,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_t1,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_rural_t1,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_rural_t1,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_rural_t1,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_rural_t1,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_t1,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_t1,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_t1,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_rural_t1,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_rural_t1,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_rural_t1,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,rural_grid_household_tier2,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,rural_grid_household_tier2,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,rural_grid_household_tier2,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,rural_grid_household_tier2,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,rural_grid_household_tier2,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,rural_grid_household_tier2,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,rural_grid_household_tier2,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,rural_grid_household_tier2,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,rural_grid_household_tier2,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,rural_grid_household_tier2,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,rural_grid_household_tier2,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,rural_grid_household_tier2,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,rural_grid_household_tier2,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,rural_grid_household_tier2,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,rural_grid_household_tier2,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
+,rural_grid_household_tier2,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,rural_grid_household_tier2,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,rural_grid_household_tier2,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,rural_grid_household_tier2,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,rural_grid_household_tier2,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,rural_grid_household_tier2,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,rural_grid_household_tier2,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t2,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_urban_t2,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_t2,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_urban_t2,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_t2,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_t2,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,household_urban_t2,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,household_urban_t2,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_t2,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_t2,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_urban_t2,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_urban_t2,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t2,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t2,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t2,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
+,household_urban_t2,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t2,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_urban_t2,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_urban_t2,refrigerator,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_t2,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,household_urban_t2,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,household_urban_t2,internet_modem_or_router,power,10.0,Home / small-office modem-router 6-15 W.
+,household_urban_t2,internet_modem_or_router,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_t2,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_urban_t2,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t2,electric_food_processor_or_blender,power,350.0,Blender / food processor 300-500 W.
+,household_urban_t2,electric_food_processor_or_blender,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t3,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_urban_t3,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_t3,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_urban_t3,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_t3,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_t3,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,household_urban_t3,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,household_urban_t3,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_t3,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_t3,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_urban_t3,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_urban_t3,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t3,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t3,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t3,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
+,household_urban_t3,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_t3,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_urban_t3,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_urban_t3,refrigerator,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_t3,freezer,number,1.0,one per owning household (too few owners to estimate)
+,household_urban_t3,freezer,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_t3,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,household_urban_t3,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,household_urban_t3,internet_modem_or_router,power,10.0,Home / small-office modem-router 6-15 W.
+,household_urban_t3,internet_modem_or_router,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_t3,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_urban_t3,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t3,electric_food_processor_or_blender,power,350.0,Blender / food processor 300-500 W.
+,household_urban_t3,electric_food_processor_or_blender,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t3,microwave_oven,power,1000.0,"Microwave ovens 800-1,200 W (high-load class)."
+,household_urban_t3,microwave_oven,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t3,electric_water_heater,power,2000.0,Electric water heater 1.5-3 kW (very-high-load class).
+,household_urban_t3,electric_water_heater,windows,"[[330, 480]]",Morning routine.
+,household_urban_t3,fan,windows,"[[360, 1380]]",Waking hours.
+,household_urban_t3,rice_cooker,power,500.0,Rice cooker 400-700 W (medium-load class).
+,household_urban_t3,rice_cooker,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_t3,hair_dryer,windows,"[[330, 480]]",Morning routine.
+,kiosk_shop,lights,number,2,"One bulb inside, one at the front."
+,kiosk_shop,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,kiosk_shop,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.
+,kiosk_shop,radio,number,1,One radio.
+,kiosk_shop,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,kiosk_shop,radio,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,kiosk_shop,tv,number,1,One TV.
+,kiosk_shop,tv,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,kiosk_shop,fridge,number,1,One drinks fridge.
+,kiosk_shop,fridge,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,kiosk_shop,phone_charging,number,2,The owner's phone plus customers' phones.
+,kiosk_shop,phone_charging,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,salon,hair_clipper,ownership_share,1.0,Defines a barber.
+,salon,hair_clipper,number,2,Two chairs.
+,salon,hair_clipper,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,salon,hair_dryer,ownership_share,0.5,Women's salons use dryers; barbers mostly don't.
+,salon,hair_dryer,number,1,One dryer.
+,salon,hair_dryer,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,salon,lights,number,3,Salons need good light.
+,salon,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,salon,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.
+,salon,radio,number,1,One radio.
+,salon,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,salon,radio,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,salon,tv,number,1,One TV.
+,salon,tv,windows,"[[420, 1260]]","07:00-21:00, around MTF's median 12 h shop day."
+,bar_restaurant,lights,ownership_share,1.0,All bars are lit.
+,bar_restaurant,lights,number,6,Inside and terrace.
+,bar_restaurant,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,bar_restaurant,lights,windows,"[[1080, 1410]]",Evening trade 18:00-23:30.
+,bar_restaurant,fridge,ownership_share,1.0,Cold drinks are the core trade.
+,bar_restaurant,fridge,number,2,Two drinks fridges.
+,bar_restaurant,fridge,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,bar_restaurant,tv,ownership_share,0.8,Most bars show football and news.
+,bar_restaurant,tv,number,1,One TV.
+,bar_restaurant,tv,windows,"[[600, 1410]]","10:00-23:30, busiest in the evening."
+,bar_restaurant,sound_system,ownership_share,0.6,Music in most bars.
+,bar_restaurant,sound_system,number,1,One system.
+,bar_restaurant,sound_system,windows,"[[1080, 1410]]",Evening trade 18:00-23:30.
+,guesthouse,lights,ownership_share,1.0,All rooms lit.
+,guesthouse,lights,number,12,8 rooms plus corridors and reception.
+,guesthouse,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,guesthouse,lights,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,guesthouse,tv,ownership_share,1.0,TV in the lounge and some rooms.
+,guesthouse,tv,number,3,Lounge plus two rooms.
+,guesthouse,tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,guesthouse,fridge,ownership_share,1.0,Drinks for guests.
+,guesthouse,fridge,number,1,One fridge.
+,guesthouse,fridge,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,guesthouse,water_heater,ownership_share,0.5,Hot showers in better guesthouses.
+,guesthouse,water_heater,number,1,One heater.
+,guesthouse,water_heater,power,2000.0,Electric water heater 1.5-3 kW (very-high-load class).
+,guesthouse,water_heater,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,guesthouse,phone_charging,ownership_share,1.0,Guests charge phones.
+,guesthouse,phone_charging,number,6,Most guests.
+,guesthouse,phone_charging,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,tailoring,sewing_machine,ownership_share,1.0,Defines a tailor.
+,tailoring,sewing_machine,number,2,A tailor and an apprentice.
+,tailoring,sewing_machine,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,tailoring,iron,ownership_share,0.7,Most tailors press finished garments electrically.
+,tailoring,iron,number,1,One iron.
+,tailoring,iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,tailoring,iron,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,tailoring,lights,ownership_share,1.0,Needlework needs light.
+,tailoring,lights,number,2,Two bulbs.
+,tailoring,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,tailoring,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.
+,tailoring,radio,ownership_share,0.5,As in MTF service enterprises (38% radio).
+,tailoring,radio,number,1,One radio.
+,tailoring,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,tailoring,radio,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,grain_mill,grain_mill,ownership_share,1.0,Defines a mill.
+,grain_mill,grain_mill,number,1,One mill motor.
+,grain_mill,grain_mill,windows,"[[540, 1020]]","Mills run on weekdays 09:00-17:00 (NREL 2018, evidence usage window)."
+,grain_mill,lights,ownership_share,1.0,Mill houses are lit.
+,grain_mill,lights,number,2,Two bulbs.
+,grain_mill,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,grain_mill,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.
+,carpentry,table_saw,ownership_share,1.0,Standard workshop machine.
+,carpentry,table_saw,number,1,One saw.
+,carpentry,table_saw,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,carpentry,jigsaw,ownership_share,0.7,Common hand machine.
+,carpentry,jigsaw,number,1,One jigsaw.
+,carpentry,jigsaw,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,carpentry,wood_lathe,ownership_share,0.5,Lathes in about half of workshops.
+,carpentry,wood_lathe,number,1,One lathe.
+,carpentry,wood_lathe,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,carpentry,lights,ownership_share,1.0,Workshop lit.
+,carpentry,lights,number,2,Two bulbs.
+,carpentry,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,carpentry,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.
+,welding_workshop,welder,ownership_share,1.0,Defines a welder.
+,welding_workshop,welder,number,1,One welding set.
+,welding_workshop,welder,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,welding_workshop,angle_grinder,ownership_share,1.0,Every metal shop grinds.
+,welding_workshop,angle_grinder,number,1,One grinder.
+,welding_workshop,angle_grinder,power,900.0,"Hand angle grinders 700-1,200 W."
+,welding_workshop,angle_grinder,windows,"[[480, 1080]]",08:00-18:00 workshop day.
+,welding_workshop,lights,ownership_share,1.0,Workshop lit.
+,welding_workshop,lights,number,2,Two bulbs.
+,welding_workshop,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,welding_workshop,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.
+,school,incandescent_bulbs,power,60.0,The most common incandescent rating (40-100 W).
+,school,incandescent_bulbs,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,fluorescent_tubes,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,school,fluorescent_tubes,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,cfl_bulbs,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,school,cfl_bulbs,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,led_bulbs,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,laptops,power,30.0,Education laptops (e.g. the Positivo models used in Rwandan schools) draw ~30 W charging.
+,school,laptops,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,printer,power,50.0,Average draw of an office printer over its working hours (mostly idle).
+,school,printer,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,router,power,10.0,Home / small-office modem-router 6-15 W.
+,school,router,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,projector,power,200.0,LCD classroom projectors 150-300 W.
+,school,projector,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,tv,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,school,phone_charging,windows,"[[420, 1020]]","07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day)."
+,health_post,fluorescent_tubes,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,health_post,fluorescent_tubes,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,health_post,incandescent_bulbs,power,60.0,The most common incandescent rating (40-100 W).
+,health_post,incandescent_bulbs,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,health_post,led_bulbs,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,health_post,computers,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,health_post,computers,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,health_post,printers,power,50.0,Average draw of an office printer over its working hours (mostly idle).
+,health_post,printers,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,health_post,routers,power,10.0,Home / small-office modem-router 6-15 W.
+,health_post,routers,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,health_post,fridges,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,health_post,vaccine_fridges,power,100.0,Ice-lined vaccine refrigerator compressor 60-150 W.
+,health_post,vaccine_fridges,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,health_post,sterilizer,power,1500.0,Electric autoclave / dry-heat sterilizer in a health centre 1-3 kW (the 200 W evidence row is a salon UV cabinet).
+,health_post,sterilizer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,health_post,microscopes,power,20.0,Lab microscope with LED/halogen lamp 10-30 W.
+,health_post,microscopes,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,health_post,centrifuge,power,150.0,Bench centrifuge 100-250 W.
+,health_post,centrifuge,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,health_post,tv,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,health_post,phone_charging,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,office,lights,ownership_share,1.0,All offices lit.
+,office,lights,number,6,Three rooms.
+,office,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,office,lights,windows,"[[480, 1020]]",08:00-17:00 office hours.
+,office,computers,ownership_share,1.0,Offices use computers.
+,office,computers,number,4,Four staff.
+,office,computers,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,office,computers,windows,"[[480, 1020]]",08:00-17:00 office hours.
+,office,printer,ownership_share,0.8,Most offices print.
+,office,printer,number,1,One printer.
+,office,printer,power,50.0,Average draw of an office printer over its working hours (mostly idle).
+,office,printer,windows,"[[480, 1020]]",08:00-17:00 office hours.
+,office,router,ownership_share,0.8,Most offices are online.
+,office,router,number,1,One router.
+,office,router,power,10.0,Home / small-office modem-router 6-15 W.
+,office,router,windows,"[[480, 1020]]",08:00-17:00 office hours.
+,office,phone_charging,ownership_share,1.0,Staff phones.
+,office,phone_charging,number,4,One per staff.
+,office,phone_charging,windows,"[[480, 1020]]",08:00-17:00 office hours.
+,church,lights_sunday,ownership_share,1.0,Lit during services.
+,church,lights_sunday,number,10,A hall of a few hundred people.
+,church,lights_sunday,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,church,lights_sunday,windows,"[[480, 780]]",Sunday services 08:00-13:00.
+,church,sound_sunday,ownership_share,0.8,Amplified services in most churches.
+,church,sound_sunday,number,1,One system.
+,church,sound_sunday,windows,"[[480, 780]]",Sunday services 08:00-13:00.
+,church,lights_evening,ownership_share,0.6,Many hold weekday evening prayers or choir practice.
+,church,lights_evening,number,4,Part of the hall.
+,church,lights_evening,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,church,lights_evening,windows,"[[1080, 1260]]",Weekday evening prayers / choir practice 18:00-21:00.
+,warehouse_light,lights,ownership_share,1.0,Lit for loading.
+,warehouse_light,lights,number,4,A store of ~200 m2.
+,warehouse_light,lights,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,warehouse_light,lights,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,warehouse_light,security_light,ownership_share,0.7,Most stores keep an outside light on.
+,warehouse_light,security_light,number,1,One.
+,warehouse_light,security_light,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,warehouse_light,security_light,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).

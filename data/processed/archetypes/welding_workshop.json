@@ -1,0 +1,348 @@
+{
+ "archetype_id": "welding_workshop",
+ "description": "Welding / metal workshop on the grid. Welder power and working hours from evidence.",
+ "population": "grid-connected welding workshops",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "welder",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Defines a welder.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One welding set.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 3020.0,
+    "evidence_ids": [
+     "ev-2ddaf52856f3"
+    ],
+    "assumption": null,
+    "derivation": "median of 1 approved rated_power_w values matching '^welding_equipment$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 90,
+    "evidence_ids": [
+     "ev-7ae91741e901"
+    ],
+    "assumption": "Arc-on time is about a quarter of working time (positioning, grinding, fitting).",
+    "derivation": "median of 1 approved hours_per_day values matching '^metal_workshop_machines$' x 0.25 (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1080
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-18:00 workshop day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "angle_grinder",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Every metal shop grinds.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One grinder.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 900.0,
+    "evidence_ids": [],
+    "assumption": "Hand angle grinders 700-1,200 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 60,
+    "evidence_ids": [],
+    "assumption": "Cutting and finishing.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1080
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "08:00-18:00 workshop day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "lights",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Workshop lit.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [],
+    "assumption": "Two bulbs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Dusk work.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1290
+     ],
+     [
+      360,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}

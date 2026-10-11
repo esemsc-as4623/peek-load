@@ -1,0 +1,593 @@
+{
+ "archetype_id": "kiosk_shop",
+ "description": "Small shop / kiosk on the grid (MTF 2022 household enterprises: shops/trading, grid-connected).",
+ "population": "grid-connected shops and kiosks (MTF 2022 enterprise sample, n=147)",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "lights",
+   "ownership_share": {
+    "value": 0.47,
+    "evidence_ids": [
+     "mtf:RWA2022:ent:shops_trading:grid"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 uses_light for Shops/trading|grid (n=147)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [],
+    "assumption": "One bulb inside, one at the front.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 180,
+    "evidence_ids": [
+     "mtf:RWA2022:ent:shops_trading:grid"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 hours_6pm_6am_median for Shops/trading|grid (n=147) (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1290
+     ],
+     [
+      360,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "radio",
+   "ownership_share": {
+    "value": 0.416,
+    "evidence_ids": [
+     "mtf:RWA2022:ent:shops_trading:grid"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 uses_radio for Shops/trading|grid (n=147)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One radio.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [
+     "ev-38cc3db38222"
+    ],
+    "assumption": "Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 360,
+    "evidence_ids": [],
+    "assumption": "On for about half of the 12 h trading day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-21:00, around MTF's median 12 h shop day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "tv",
+   "ownership_share": {
+    "value": 0.166,
+    "evidence_ids": [
+     "mtf:RWA2022:ent:shops_trading:grid"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 uses_tv for Shops/trading|grid (n=147)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One TV.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 47.8,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.tv",
+     "mtf:RWA2022:hh:grid_all:flat_color_tv",
+     "mtf:RWA2022:hh:grid_all:typical_color_tv",
+     "mtf:RWA2022:hh:grid_all:black_and_white_tv"
+    ],
+    "assumption": "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households).",
+    "derivation": "5.2 kWh/month / (30 d x 3.63 h/day)",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 360,
+    "evidence_ids": [],
+    "assumption": "On for about half of the trading day (news, football).",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-21:00, around MTF's median 12 h shop day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "fridge",
+   "ownership_share": {
+    "value": 0.187,
+    "evidence_ids": [
+     "mtf:RWA2022:ent:shops_trading:grid"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 uses_refrigerator for Shops/trading|grid (n=147)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One drinks fridge.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 80.0,
+    "evidence_ids": [
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": null,
+    "derivation": "median of 4 approved rated_power_w values matching '^refrigerator$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 734.0,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.fridge",
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": "Measured fridge energy of grid households (QSEL 2025). Shop fridges are opened far more often than household fridges.",
+    "derivation": "19.58 kWh/month / 30 d x 1.5 = 979 Wh/day, / 80.0 W",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Compressor cycles of ~30 min spread over the day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "phone_charging",
+   "ownership_share": {
+    "value": 0.658,
+    "evidence_ids": [
+     "mtf:RWA2022:ent:shops_trading:grid"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 uses_mobile_phone for Shops/trading|grid (n=147)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [],
+    "assumption": "The owner's phone plus customers' phones.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 6.5,
+    "evidence_ids": [
+     "ev-9bb1546605fe",
+     "ev-87179d89e08d"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^phone_charger$|^usb_port$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 180,
+    "evidence_ids": [],
+    "assumption": "Charged in turns during the day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-21:00, around MTF's median 12 h shop day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}

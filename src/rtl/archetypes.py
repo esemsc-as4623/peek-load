@@ -93,7 +93,9 @@ class Archetype(BaseModel):
         return cls.model_validate(json.loads(Path(path).read_text()))
 
     def expected_daily_kwh(self, n_households: int) -> float:
-        """Deterministic expectation (no randomness): sum of share x n x number x power x hours."""
+        """Deterministic upper bound: sum of share x n x number x power x hours, i.e. every one of an appliance's
+        `number` units on for its whole func_time. RAMP switches on only part of them at a time (coincidence,
+        Lombardi et al. 2019), so simulated energy is lower when number > 1."""
         return sum(round(a.ownership_share.value * n_households) * a.number.value * a.power.value
                    * a.func_time.value / 60 * a.occasional_use.value for a in self.appliances) / 1000
 
@@ -121,13 +123,28 @@ class Archetype(BaseModel):
         return users
 
 
-def smoke_run(archetype: Archetype, n_households: int = 100, day: str = "2026-01-05", seed: int = 1):
-    """One simulated day (1440 one-minute values, W). A format check, not a calibrated result."""
+def ramp_usecase(archetype: Archetype, n_households: int, start: str, end: str, seed: int):
+    """A RAMP UseCase that is initialised AFTER its users exist, with a reproducible seed.
+
+    RAMP (0.5.2) computes the peak time window in UseCase.initialize(), which runs inside __init__ when dates are
+    given, i.e. before any user is added (so the window comes from an empty profile: anywhere in the day), and it
+    seeds `random` only after that. Adding users first, then seeding, then initialising fixes both.
+    """
+    import random
+
     from ramp import UseCase
 
-    uc = UseCase(name=archetype.archetype_id, date_start=day, date_end=day, random_seed=seed)
+    uc = UseCase(name=archetype.archetype_id)
     uc.add_user(archetype.to_ramp(n_households, usecase=uc))
-    return uc.generate_daily_load_profiles()
+    uc.date_start, uc.date_end = start, end
+    random.seed(seed)
+    uc.initialize()
+    return uc
+
+
+def smoke_run(archetype: Archetype, n_households: int = 100, day: str = "2026-01-05", seed: int = 1):
+    """One simulated day (1440 one-minute values, W). A format check, not a calibrated result."""
+    return ramp_usecase(archetype, n_households, day, day, seed).generate_daily_load_profiles()
 
 
 if __name__ == "__main__":  # pixi run archetype-smoke

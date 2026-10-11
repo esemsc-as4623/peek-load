@@ -20,7 +20,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from rtl.archetypes import Archetype
+from rtl.archetypes import Archetype, ramp_usecase
 from rtl.settings import PROCESSED_DIR
 
 ARCH_DIR = PROCESSED_DIR / "archetypes"
@@ -34,11 +34,8 @@ SEED = 20261010
 
 def simulate(arch: Archetype, n: int = N_HOUSEHOLDS, days: int = DAYS, seed: int = SEED) -> np.ndarray:
     """Aggregate load of n users, W, shape (days, 1440)."""
-    from ramp import UseCase
-
     end = (pd.Timestamp(START) + pd.Timedelta(days=days - 1)).strftime("%Y-%m-%d")
-    uc = UseCase(name=arch.archetype_id, date_start=START, date_end=end, random_seed=seed)
-    uc.add_user(arch.to_ramp(n, usecase=uc))
+    uc = ramp_usecase(arch, n, START, end, seed)  # users first, then seed, then the peak window
     return np.asarray(uc.generate_daily_load_profiles(), dtype=float).reshape(days, 1440)
 
 
@@ -51,7 +48,7 @@ def summarise(arch: Archetype, load: np.ndarray, n: int = N_HOUSEHOLDS) -> dict:
             "daily_kwh_mean": daily_kwh.mean(), "daily_kwh_p10": np.quantile(daily_kwh, 0.1),
             "daily_kwh_p90": np.quantile(daily_kwh, 0.9), "annual_kwh_mean": daily_kwh.mean() * 365,
             "coincident_peak_w_p50": np.median(peaks), "coincident_peak_w_p90": np.quantile(peaks, 0.9),
-            "expected_daily_kwh_deterministic": arch.expected_daily_kwh(n) / n,
+            "kwh_day_all_units_on": arch.expected_daily_kwh(n) / n,
             **{f"w_h{h:02d}": hourly_w[h] for h in range(24)}}
 
 
@@ -63,7 +60,7 @@ def build_library() -> pd.DataFrame:
         arch = Archetype.load(path)
         rows.append(summarise(arch, simulate(arch)))
         r = rows[-1]
-        print(f"{arch.archetype_id} [{arch.status}]: {r['daily_kwh_mean']:.2f} kWh/day per household "
+        print(f"{arch.archetype_id} [{arch.status}]: {r['daily_kwh_mean']:.2f} kWh/day per unit "
               f"(p10-p90 {r['daily_kwh_p10']:.2f}-{r['daily_kwh_p90']:.2f}), coincident peak "
               f"{r['coincident_peak_w_p50']:.0f} W (p90 {r['coincident_peak_w_p90']:.0f} W)")
     lib = pd.DataFrame(rows)

@@ -1,0 +1,1533 @@
+{
+ "archetype_id": "health_post",
+ "description": "Health facility on the grid, built from MTF 2022 health CENTRES (148 of 153 surveyed): an upper bound for health posts.",
+ "population": "grid-connected health centres (MTF 2022, n=150); smaller health posts use less",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "fluorescent_tubes",
+   "ownership_share": {
+    "value": 0.669,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:fluorescent_tube:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility fluorescent_tube ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 10,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:fluorescent_tube:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility fluorescent_tube number_used_median (n=103)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 36.0,
+    "evidence_ids": [],
+    "assumption": "Standard 1.2 m T8 fluorescent tube.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 480,
+    "evidence_ids": [],
+    "assumption": "Wards and corridors lit at night (98% open 24 h).",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1440
+     ],
+     [
+      0,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Dusk to dawn (long-burning and security lights).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "incandescent_bulbs",
+   "ownership_share": {
+    "value": 0.429,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:incandescent_light_bulb:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility incandescent_light_bulb ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 27,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:incandescent_light_bulb:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility incandescent_light_bulb number_used_median (n=63)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "The most common incandescent rating (40-100 W).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 360,
+    "evidence_ids": [],
+    "assumption": "Night lighting, not all at once.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1440
+     ],
+     [
+      0,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Dusk to dawn (long-burning and security lights).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "led_bulbs",
+   "ownership_share": {
+    "value": 0.448,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:led_light_bulb:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility led_light_bulb ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 40,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:led_light_bulb:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility led_light_bulb number_used_median (n=60)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 7.5,
+    "evidence_ids": [
+     "ev-db6067019d2b"
+    ],
+    "assumption": null,
+    "derivation": "median of 1 approved rated_power_w values matching '^led_bulb$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 480,
+    "evidence_ids": [],
+    "assumption": "Night lighting.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1440
+     ],
+     [
+      0,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Dusk to dawn (long-burning and security lights).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "computers",
+   "ownership_share": {
+    "value": 0.991,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:computer:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility computer ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 12,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:computer:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility computer number_used_median (n=149)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 50.0,
+    "evidence_ids": [],
+    "assumption": "Laptop 30-65 W, desktop 80-150 W; households mostly have laptops.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 480,
+    "evidence_ids": [],
+    "assumption": "Records and reporting during the working day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "printers",
+   "ownership_share": {
+    "value": 0.957,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:printer:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility printer ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:printer:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility printer number_used_median (n=145)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 50.0,
+    "evidence_ids": [],
+    "assumption": "Average draw of an office printer over its working hours (mostly idle).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 480,
+    "evidence_ids": [],
+    "assumption": "Working day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "routers",
+   "ownership_share": {
+    "value": 0.932,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:internet_modem_router:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility internet_modem_router ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:internet_modem_router:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility internet_modem_router number_used_median (n=140)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Home / small-office modem-router 6-15 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 1200,
+    "evidence_ids": [],
+    "assumption": "Always on.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "fridges",
+   "ownership_share": {
+    "value": 0.9,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:refrigeration:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility refrigeration ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 3,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:refrigeration:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility refrigeration number_used_median (n=136)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 80.0,
+    "evidence_ids": [
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": null,
+    "derivation": "median of 4 approved rated_power_w values matching '^refrigerator$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 490.0,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.fridge",
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": "Measured fridge energy of grid households (QSEL 2025).",
+    "derivation": "19.58 kWh/month / 30 d x 1.0 = 653 Wh/day, / 80.0 W",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Compressor cycles of ~30 min spread over the day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "vaccine_fridges",
+   "ownership_share": {
+    "value": 0.871,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:refrigerator_for_vaccination:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility refrigerator_for_vaccination ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:refrigerator_for_vaccination:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility refrigerator_for_vaccination number_used_median (n=135)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 100.0,
+    "evidence_ids": [],
+    "assumption": "Ice-lined vaccine refrigerator compressor 60-150 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 600,
+    "evidence_ids": [],
+    "assumption": "Compressor duty ~40% in a warm room.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Compressor cycles of ~30 min spread over the day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "sterilizer",
+   "ownership_share": {
+    "value": 0.683,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:sterilizer:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility sterilizer ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:sterilizer:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility sterilizer number_used_median (n=103)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 1500.0,
+    "evidence_ids": [],
+    "assumption": "Electric autoclave / dry-heat sterilizer in a health centre 1-3 kW (the 200 W evidence row is a salon UV cabinet).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Two cycles a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Ironing / heating sessions of 15 min or more.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "microscopes",
+   "ownership_share": {
+    "value": 0.967,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:microscope:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility microscope ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:microscope:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility microscope number_used_median (n=146)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 20.0,
+    "evidence_ids": [],
+    "assumption": "Lab microscope with LED/halogen lamp 10-30 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 240,
+    "evidence_ids": [],
+    "assumption": "Lab hours.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "centrifuge",
+   "ownership_share": {
+    "value": 0.633,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:centrifuge:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility centrifuge ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:centrifuge:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility centrifuge number_used_median (n=101)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 150.0,
+    "evidence_ids": [],
+    "assumption": "Bench centrifuge 100-250 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 60,
+    "evidence_ids": [],
+    "assumption": "Batches of samples.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "tv",
+   "ownership_share": {
+    "value": 0.767,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:television:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility television ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:television:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility television number_used_median (n=119)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 47.8,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.tv",
+     "mtf:RWA2022:hh:grid_all:flat_color_tv",
+     "mtf:RWA2022:hh:grid_all:typical_color_tv",
+     "mtf:RWA2022:hh:grid_all:black_and_white_tv"
+    ],
+    "assumption": "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households).",
+    "derivation": "5.2 kWh/month / (30 d x 3.63 h/day)",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 360,
+    "evidence_ids": [],
+    "assumption": "Waiting-room TV.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "phone_charging",
+   "ownership_share": {
+    "value": 0.539,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:mobile_phone_charging_kiosks:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility mobile_phone_charging_kiosks ownership_share (n=150)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 25,
+    "evidence_ids": [
+     "mtf:RWA2022:health_facility:mobile_phone_charging_kiosks:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 health_facility mobile_phone_charging_kiosks number_used_median (n=86)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 6.5,
+    "evidence_ids": [
+     "ev-9bb1546605fe",
+     "ev-87179d89e08d"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^phone_charger$|^usb_port$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Patients and staff charge phones.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}

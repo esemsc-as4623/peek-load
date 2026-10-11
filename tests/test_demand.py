@@ -66,3 +66,82 @@ def test_validation_flags_unit_slips_ranges_and_disagreement():
     flags = checks(e, cfg)
     assert set(flags.evidence_id) == {"d", "e"}
     assert set(flags[flags.evidence_id == "d"].check) == {"range", "consensus"}
+
+
+def test_plausibility_rules_match_whole_words_not_substrings():
+    from rtl.demand.validate import power_range
+    from rtl.settings import load_yaml
+
+    rules = load_yaml("plausibility.yaml")["rated_power_w"]
+    assert power_range("rice_mill_maize_huller", rules) == (500, 40000)  # a mill, not "ice" (freezer)
+    assert power_range("ice_freezer", rules) == (25, 800)
+    assert power_range("flat_iron", rules) == (20, 300)                  # hair straightener, not a clothes iron
+    assert power_range("electric_iron", rules) == (300, 2600)
+
+
+def test_spending_inverts_the_block_tariff():
+    from rtl.ingest.mtf_appliances import kwh_from_spend
+
+    blocks = [(15, 89.0), (50, 212.0), (float("inf"), 249.0)]
+    vat = 1.18
+    spend = np.array([10 * 89, 15 * 89 + 5 * 212, 15 * 89 + 35 * 212 + 10 * 249]) * vat  # 10, 20 and 60 kWh
+    assert kwh_from_spend(spend, blocks) == pytest.approx([10, 20, 60])
+    assert kwh_from_spend(np.array([0.0]), blocks) == pytest.approx([0])
+
+
+def test_ubudehe_split_and_unknowns():
+    from rtl.ingest.mtf_appliances import ubudehe_half
+
+    s = pd.Series(["Category 1", "Category 2", "Category 3", "Category 4", "Don't know/ Don't have"])
+    assert ubudehe_half(s).tolist()[:4] == ["lower", "lower", "upper", "upper"]
+    assert pd.isna(ubudehe_half(s).iloc[4])
+
+
+def test_check_verdicts():
+    from rtl.demand.checks import mtf_tier, verdict
+
+    assert verdict(10, 8) == "ok" and verdict(10, 5) == "check" and verdict(10, 2) == "fail"
+    assert verdict(50, low=37, high=509) == "ok" and verdict(361, low=1367, high=4101) == "fail"
+    tiers = {1: {"min_wh_day": 12}, 2: {"min_wh_day": 200}, 3: {"min_wh_day": 1000}}
+    assert [mtf_tier(w, tiers) for w in (5, 12, 330, 999, 1000)] == [0, 1, 2, 2, 3]
+
+
+def test_recipe_values_need_a_source():
+    from rtl.demand.build_archetypes import sourced
+
+    v = sourced({"value": 15, "why": "typical CFL"}, src=None, family="rated_power_w")
+    assert v.value == 15 and v.assumption == "typical CFL"
+    with pytest.raises(KeyError):  # an assumed number without its rationale is rejected
+        sourced({"value": 15}, src=None, family="rated_power_w")
+
+
+def test_lighting_scaling_touches_only_lights_and_keeps_a_full_cycle():
+    from rtl.archetypes import Appliance, Sourced
+    from rtl.demand.build_archetypes import scale_lights
+
+    def app(name, minutes):
+        s = Sourced(value=1, assumption="test")
+        return Appliance(name=name, ownership_share=s, number=s, power=Sourced(value=10, assumption="t"),
+                         func_time=Sourced(value=minutes, assumption="t"),
+                         windows=Sourced(value=[[0, 1440]], assumption="t"),
+                         func_cycle=Sourced(value=30, assumption="t"))
+
+    out = scale_lights([app("bulb", 240), app("tv", 180), app("lamp", 40)], [True, False, True], 0.5, "; x0.5", "id")
+    assert [a.func_time.value for a in out] == [120, 180, 30]  # 40 x 0.5 = 20 < func_cycle 30 -> 30
+    assert out[0].func_time.evidence_ids == ["id"] and out[1].func_time.evidence_ids == []
+
+
+def test_ramp_runs_are_reproducible_and_peak_window_follows_the_users():
+    from rtl.archetypes import Appliance, Archetype, Sourced, ramp_usecase
+    from rtl.demand.runner import simulate
+
+    def s(v):
+        return Sourced(value=v, assumption="test")
+
+    lights = Appliance(name="bulb", ownership_share=s(1), number=s(4), power=s(10), func_time=s(180),
+                       windows=s([[1080, 1380]]), func_cycle=s(30))
+    arch = Archetype(archetype_id="t", description="t", population="t", year=2022, appliances=[lights])
+    a, b = simulate(arch, n=20, days=2), simulate(arch, n=20, days=2)
+    assert np.array_equal(a, b)  # same seed -> same profile (RAMP alone isn't: it seeds after drawing)
+    peak = ramp_usecase(arch, 20, "2025-01-06", "2025-01-06", seed=1).peak_time_range
+    assert 1000 < np.mean(peak) < 1440  # around the evening lights, not anywhere in the day

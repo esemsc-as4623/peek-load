@@ -1,0 +1,265 @@
+{
+ "archetype_id": "grain_mill",
+ "description": "Electric grain mill (maize / cassava / sorghum) on the grid. Power, hours and window from evidence.",
+ "population": "grid-connected grain mills",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "grain_mill",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Defines a mill.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [],
+    "assumption": "One mill motor.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10000.0,
+    "evidence_ids": [
+     "ev-a8a63308e90d",
+     "ev-aa90c1dcf172",
+     "ev-b9d9f419967d",
+     "ev-6190d722ce47",
+     "ev-98ab56c96828",
+     "ev-b1b138fdd3cc",
+     "ev-f515f5e8dd47",
+     "ev-9b2f2444da56"
+    ],
+    "assumption": null,
+    "derivation": "median of 8 approved rated_power_w values matching '^grain_mill$|^grain_mill_electric$|^maize_mill_electric$|^plate_mill_motor$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 156,
+    "evidence_ids": [
+     "ev-ace82b7a2f09",
+     "ev-5feeb5be5ad7",
+     "ev-aaec34ff4e44",
+     "ev-182cf1c309f7",
+     "ev-5159a2922b8f",
+     "ev-d82a1b0eed8b"
+    ],
+    "assumption": null,
+    "derivation": "median of 6 approved hours_per_day values matching '^grain_mill$' (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      540,
+      1020
+     ]
+    ],
+    "evidence_ids": [
+     "ev-a8a63308e90d",
+     "ev-aa90c1dcf172",
+     "ev-ace82b7a2f09",
+     "ev-b9d9f419967d",
+     "ev-5feeb5be5ad7",
+     "ev-e2424ef63c73",
+     "ev-aaec34ff4e44",
+     "ev-182cf1c309f7",
+     "ev-9b2f2444da56",
+     "ev-5159a2922b8f",
+     "ev-d82a1b0eed8b",
+     "ev-3be5d8ed104e"
+    ],
+    "assumption": "Mills run on weekdays 09:00-17:00 (NREL 2018, evidence usage window).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Machine jobs of ~10 min; work varies day to day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "lights",
+   "ownership_share": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "Mill houses are lit.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [],
+    "assumption": "Two bulbs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Dusk and early-morning work.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1290
+     ],
+     [
+      360,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}

@@ -1,0 +1,1146 @@
+{
+ "archetype_id": "school",
+ "description": "School on the grid (MTF 2022 school survey: appliances owned and in use, opening hours).",
+ "population": "grid-connected primary and secondary schools (MTF 2022, n=162)",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "incandescent_bulbs",
+   "ownership_share": {
+    "value": 0.467,
+    "evidence_ids": [
+     "mtf:RWA2022:school:incandescent_light_bulb:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school incandescent_light_bulb ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 10,
+    "evidence_ids": [
+     "mtf:RWA2022:school:incandescent_light_bulb:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school incandescent_light_bulb number_used_median (n=71)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "The most common incandescent rating (40-100 W).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Classrooms are day-lit; lights in dark rooms, offices and early morning.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "fluorescent_tubes",
+   "ownership_share": {
+    "value": 0.325,
+    "evidence_ids": [
+     "mtf:RWA2022:school:fluorescent_tube:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school fluorescent_tube ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 6,
+    "evidence_ids": [
+     "mtf:RWA2022:school:fluorescent_tube:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school fluorescent_tube number_used_median (n=58)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 36.0,
+    "evidence_ids": [],
+    "assumption": "Standard 1.2 m T8 fluorescent tube.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "As incandescent bulbs.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "cfl_bulbs",
+   "ownership_share": {
+    "value": 0.21,
+    "evidence_ids": [
+     "mtf:RWA2022:school:compact_fluorescent_light_cfl_bulb:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school compact_fluorescent_light_cfl_bulb ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 14,
+    "evidence_ids": [
+     "mtf:RWA2022:school:compact_fluorescent_light_cfl_bulb:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school compact_fluorescent_light_cfl_bulb number_used_median (n=40)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "As incandescent bulbs.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "led_bulbs",
+   "ownership_share": {
+    "value": 0.173,
+    "evidence_ids": [
+     "mtf:RWA2022:school:led_light_bulb:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school led_light_bulb ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 15,
+    "evidence_ids": [
+     "mtf:RWA2022:school:led_light_bulb:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school led_light_bulb number_used_median (n=36)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 7.5,
+    "evidence_ids": [
+     "ev-db6067019d2b"
+    ],
+    "assumption": null,
+    "derivation": "median of 1 approved rated_power_w values matching '^led_bulb$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "As incandescent bulbs.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "laptops",
+   "ownership_share": {
+    "value": 0.963,
+    "evidence_ids": [
+     "mtf:RWA2022:school:computer:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school computer ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 105,
+    "evidence_ids": [
+     "mtf:RWA2022:school:computer:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school computer number_used_median (n=155)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Education laptops (e.g. the Positivo models used in Rwandan schools) draw ~30 W charging.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 60,
+    "evidence_ids": [],
+    "assumption": "Class sets are recharged ~1 h a day (lessons rotate between classes).",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "printer",
+   "ownership_share": {
+    "value": 0.818,
+    "evidence_ids": [
+     "mtf:RWA2022:school:printer:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school printer ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [
+     "mtf:RWA2022:school:printer:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school printer number_used_median (n=135)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 50.0,
+    "evidence_ids": [],
+    "assumption": "Average draw of an office printer over its working hours (mostly idle).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 240,
+    "evidence_ids": [],
+    "assumption": "Office hours.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "router",
+   "ownership_share": {
+    "value": 0.562,
+    "evidence_ids": [
+     "mtf:RWA2022:school:internet_modem_router:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school internet_modem_router ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [
+     "mtf:RWA2022:school:internet_modem_router:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school internet_modem_router number_used_median (n=98)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Home / small-office modem-router 6-15 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 600,
+    "evidence_ids": [],
+    "assumption": "On during the school day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "projector",
+   "ownership_share": {
+    "value": 0.582,
+    "evidence_ids": [
+     "mtf:RWA2022:school:projector:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school projector ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2,
+    "evidence_ids": [
+     "mtf:RWA2022:school:projector:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school projector number_used_median (n=89)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 200.0,
+    "evidence_ids": [],
+    "assumption": "LCD classroom projectors 150-300 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "A couple of lessons a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "tv",
+   "ownership_share": {
+    "value": 0.258,
+    "evidence_ids": [
+     "mtf:RWA2022:school:television:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school television ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1,
+    "evidence_ids": [
+     "mtf:RWA2022:school:television:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school television number_used_median (n=49)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 47.8,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.tv",
+     "mtf:RWA2022:hh:grid_all:flat_color_tv",
+     "mtf:RWA2022:hh:grid_all:typical_color_tv",
+     "mtf:RWA2022:hh:grid_all:black_and_white_tv"
+    ],
+    "assumption": "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households).",
+    "derivation": "5.2 kWh/month / (30 d x 3.63 h/day)",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Staff room / lessons.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "phone_charging",
+   "ownership_share": {
+    "value": 0.497,
+    "evidence_ids": [
+     "mtf:RWA2022:school:mobile_phone_charger:ownership_share"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school mobile_phone_charger ownership_share (n=162)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 8,
+    "evidence_ids": [
+     "mtf:RWA2022:school:mobile_phone_charger:number_used_median"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 school mobile_phone_charger number_used_median (n=79)",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 6.5,
+    "evidence_ids": [
+     "ev-9bb1546605fe",
+     "ev-87179d89e08d"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^phone_charger$|^usb_port$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "Staff phones.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      420,
+      1020
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "07:00-17:00 (MTF 2022 schools: median opening 07:00, 10 h day).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "Schools run on weekdays (term-time; holidays are not modelled).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}

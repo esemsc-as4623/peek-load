@@ -1,0 +1,2757 @@
+{
+ "archetype_id": "household_urban_t3",
+ "description": "Urban grid-connected household, Ubudehe categories 3-4 (upper half). Appliances from MTF Rwanda 2022.",
+ "population": "urban grid-connected households, Ubudehe 3-4 (mapping: urban buildings with RWI above the urban median)",
+ "year": 2022,
+ "user_preference": {
+  "value": 0.0,
+  "evidence_ids": [],
+  "assumption": "RAMP default (rampdemand 0.5.2)",
+  "derivation": null,
+  "human_reviewed": false
+ },
+ "appliances": [
+  {
+   "name": "cfl_bulb",
+   "ownership_share": {
+    "value": 0.6743,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:cfl_bulb"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=588 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 6.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:cfl_bulb"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (6.50), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 157,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:cfl_bulb",
+     "mtf:RWA2022:kwh:grid_urban_upper"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (5 h) x 60; x 0.523 lighting calibration factor (simulated 1229 -> 972 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_upper, 29.2 kWh/month)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1410
+     ],
+     [
+      300,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "incandescent_light_bulb",
+   "ownership_share": {
+    "value": 0.2791,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:incandescent_light_bulb"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=288 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 7.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:incandescent_light_bulb"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (6.88), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "The most common incandescent rating (40-100 W).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 157,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:incandescent_light_bulb",
+     "mtf:RWA2022:kwh:grid_urban_upper"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (5 h) x 60; x 0.523 lighting calibration factor (simulated 1229 -> 972 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_upper, 29.2 kWh/month)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1410
+     ],
+     [
+      300,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "led_light_bulb",
+   "ownership_share": {
+    "value": 0.1275,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:led_light_bulb"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=118 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 7.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:led_light_bulb"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (6.72), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 7.5,
+    "evidence_ids": [
+     "ev-db6067019d2b"
+    ],
+    "assumption": null,
+    "derivation": "median of 1 approved rated_power_w values matching '^led_bulb$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 157,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:led_light_bulb",
+     "mtf:RWA2022:kwh:grid_urban_upper"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (5 h) x 60; x 0.523 lighting calibration factor (simulated 1229 -> 972 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_upper, 29.2 kWh/month)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1410
+     ],
+     [
+      300,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "fluorescent_tube",
+   "ownership_share": {
+    "value": 0.0793,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:fluorescent_tube"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=73 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 3.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:fluorescent_tube"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (3.25), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 36.0,
+    "evidence_ids": [],
+    "assumption": "Standard 1.2 m T8 fluorescent tube.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 314,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:fluorescent_tube",
+     "mtf:RWA2022:kwh:grid_urban_upper"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (10 h) x 60; x 0.523 lighting calibration factor (simulated 1229 -> 972 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_upper, 29.2 kWh/month)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1440
+     ],
+     [
+      0,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Dusk to dawn (long-burning and security lights).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.2,
+    "evidence_ids": [],
+    "assumption": "Lights stay on >= 30 min once switched on; RAMP example-file variability for lights.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "typical_mobile_phone_charger",
+   "ownership_share": {
+    "value": 0.6884,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:typical_mobile_phone_charger"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=649 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:typical_mobile_phone_charger"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.63), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 6.5,
+    "evidence_ids": [
+     "ev-9bb1546605fe",
+     "ev-87179d89e08d"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^phone_charger$|^usb_port$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "A 1,000-2,000 mAh feature-phone battery charges in 1-2 h.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1440
+     ],
+     [
+      0,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Phones charged in the evening and overnight.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "smartphone_or_internet_phone_and_charger",
+   "ownership_share": {
+    "value": 0.6938,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:smartphone_or_internet_phone_and_charger"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=598 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 2.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:smartphone_or_internet_phone_and_charger"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (2.13), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 6.5,
+    "evidence_ids": [
+     "ev-9bb1546605fe",
+     "ev-87179d89e08d"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^phone_charger$|^usb_port$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120,
+    "evidence_ids": [],
+    "assumption": "A smartphone charges fully in about 2 h.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      1080,
+      1440
+     ],
+     [
+      0,
+      420
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Phones charged in the evening and overnight.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "One charge lasts about an hour.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "radio",
+   "ownership_share": {
+    "value": 0.1353,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:radio"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=113 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:radio"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.09), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [
+     "ev-38cc3db38222"
+    ],
+    "assumption": "Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 240.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:radio"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (4 h) x 60",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      360,
+      540
+     ],
+     [
+      720,
+      840
+     ],
+     [
+      1080,
+      1320
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Morning, lunchtime and evening listening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "flat_color_tv",
+   "ownership_share": {
+    "value": 0.3484,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:flat_color_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=315 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:flat_color_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.02), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 47.8,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.tv",
+     "mtf:RWA2022:hh:grid_all:flat_color_tv",
+     "mtf:RWA2022:hh:grid_all:typical_color_tv",
+     "mtf:RWA2022:hh:grid_all:black_and_white_tv"
+    ],
+    "assumption": "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households).",
+    "derivation": "5.2 kWh/month / (30 d x 3.63 h/day)",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 240.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:flat_color_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (4 h) x 60",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      720,
+      840
+     ],
+     [
+      1080,
+      1410
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Lunchtime news and evening viewing.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "typical_color_tv",
+   "ownership_share": {
+    "value": 0.2353,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:typical_color_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=191 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:typical_color_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 47.8,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.tv",
+     "mtf:RWA2022:hh:grid_all:flat_color_tv",
+     "mtf:RWA2022:hh:grid_all:typical_color_tv",
+     "mtf:RWA2022:hh:grid_all:black_and_white_tv"
+    ],
+    "assumption": "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households).",
+    "derivation": "5.2 kWh/month / (30 d x 3.63 h/day)",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 180.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:typical_color_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (3 h) x 60",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      720,
+      840
+     ],
+     [
+      1080,
+      1410
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Lunchtime news and evening viewing.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "black_and_white_tv",
+   "ownership_share": {
+    "value": 0.0926,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:black_and_white_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=83 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:black_and_white_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 47.8,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.tv",
+     "mtf:RWA2022:hh:grid_all:flat_color_tv",
+     "mtf:RWA2022:hh:grid_all:typical_color_tv",
+     "mtf:RWA2022:hh:grid_all:black_and_white_tv"
+    ],
+    "assumption": "Measured TV energy (QSEL 2025) / (30 days x MTF median TV hours of grid households).",
+    "derivation": "5.2 kWh/month / (30 d x 3.63 h/day)",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 180.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:black_and_white_tv"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (3 h) x 60",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      720,
+      840
+     ],
+     [
+      1080,
+      1410
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Lunchtime news and evening viewing.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "vcd_and_dvd",
+   "ownership_share": {
+    "value": 0.1083,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:vcd_and_dvd"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=100 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:vcd_and_dvd"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.04), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "DVD / VCD player 10-25 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 60,
+    "evidence_ids": [],
+    "assumption": "Used alongside the TV, for part of viewing time.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      720,
+      840
+     ],
+     [
+      1080,
+      1410
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Lunchtime news and evening viewing.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.1,
+    "evidence_ids": [],
+    "assumption": "Viewing/listening sessions of about an hour; RAMP example-file variability for TVs.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "electric_iron",
+   "ownership_share": {
+    "value": 0.618,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_iron"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=547 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_iron"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.03), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 1000.0,
+    "evidence_ids": [
+     "ev-127af8543821"
+    ],
+    "assumption": "Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 15,
+    "evidence_ids": [],
+    "assumption": "About 30 min of ironing every other day; thermostat cycling halves the draw on time.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      360,
+      480
+     ],
+     [
+      1080,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Ironing and chores before work and in the evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Ironing / heating sessions of 15 min or more.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "refrigerator",
+   "ownership_share": {
+    "value": 0.2105,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:refrigerator"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=180 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:refrigerator"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.01), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 80.0,
+    "evidence_ids": [
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": null,
+    "derivation": "median of 4 approved rated_power_w values matching '^refrigerator$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 490.0,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.fridge",
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": "Measured fridge energy of grid households (QSEL 2025).",
+    "derivation": "19.58 kWh/month / 30 d x 1.0 = 653 Wh/day, / 80.0 W",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Compressor cycles of ~30 min spread over the day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "freezer",
+   "ownership_share": {
+    "value": 0.0105,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:freezer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=6 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "one per owning household (too few owners to estimate)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 110.0,
+    "evidence_ids": [
+     "ev-f1aa55397d5d",
+     "ev-8a715d26ac09"
+    ],
+    "assumption": null,
+    "derivation": "median of 2 approved rated_power_w values matching '^freezer$|^ice_freezer$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 480,
+    "evidence_ids": [],
+    "assumption": "Compressor runs about a third of the time.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Compressor cycles of ~30 min spread over the day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "computer",
+   "ownership_share": {
+    "value": 0.2876,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:computer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=248 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:computer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.34), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 50.0,
+    "evidence_ids": [],
+    "assumption": "Laptop 30-65 W, desktop 80-150 W; households mostly have laptops.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 180,
+    "evidence_ids": [],
+    "assumption": "Household computers used/charged a few hours a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      480,
+      1020
+     ],
+     [
+      1080,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Work/study during the day and evening.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "internet_modem_or_router",
+   "ownership_share": {
+    "value": 0.0989,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:internet_modem_or_router"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=68 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:internet_modem_or_router"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Home / small-office modem-router 6-15 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 1200,
+    "evidence_ids": [],
+    "assumption": "Left on most of the day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "electric_hot_water_pot_or_kettle",
+   "ownership_share": {
+    "value": 0.2324,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_hot_water_pot_or_kettle"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=191 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_hot_water_pot_or_kettle"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.05), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 1500.0,
+    "evidence_ids": [],
+    "assumption": "Electric kettles / hot-water pots 1,000-2,200 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 12,
+    "evidence_ids": [],
+    "assumption": "Three or four boils of 3-4 min a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ],
+     [
+      690,
+      780
+     ],
+     [
+      1080,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Breakfast, lunch and dinner.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 5.0,
+    "evidence_ids": [],
+    "assumption": "Short bursts (kettle, blender, microwave, hair dryer).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "electric_food_processor_or_blender",
+   "ownership_share": {
+    "value": 0.1171,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_food_processor_or_blender"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=98 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_food_processor_or_blender"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 350.0,
+    "evidence_ids": [],
+    "assumption": "Blender / food processor 300-500 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 6,
+    "evidence_ids": [],
+    "assumption": "A few minutes a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ],
+     [
+      690,
+      780
+     ],
+     [
+      1080,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Breakfast, lunch and dinner.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 5.0,
+    "evidence_ids": [],
+    "assumption": "Short bursts (kettle, blender, microwave, hair dryer).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "microwave_oven",
+   "ownership_share": {
+    "value": 0.0499,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:microwave_oven"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=37 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:microwave_oven"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 1000.0,
+    "evidence_ids": [
+     "ev-127af8543821"
+    ],
+    "assumption": "Microwave ovens 800-1,200 W (high-load class).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 12,
+    "evidence_ids": [],
+    "assumption": "Reheating, about 10-15 min a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ],
+     [
+      690,
+      780
+     ],
+     [
+      1080,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Breakfast, lunch and dinner.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 5.0,
+    "evidence_ids": [],
+    "assumption": "Short bursts (kettle, blender, microwave, hair dryer).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "electric_water_heater",
+   "ownership_share": {
+    "value": 0.0389,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_water_heater"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=27 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:electric_water_heater"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 2000.0,
+    "evidence_ids": [
+     "ev-1b8d6b612c62"
+    ],
+    "assumption": "Electric water heater 1.5-3 kW (very-high-load class).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 60,
+    "evidence_ids": [],
+    "assumption": "Thermostat-controlled heating for morning showers.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Morning routine.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Ironing / heating sessions of 15 min or more.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "fan",
+   "ownership_share": {
+    "value": 0.0177,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:fan"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=10 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:fan"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.07), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 24.0,
+    "evidence_ids": [
+     "ev-1345df999203",
+     "ev-6fb61c921afb",
+     "ev-2881467ff553"
+    ],
+    "assumption": null,
+    "derivation": "median of 3 approved rated_power_w values matching '^(?:pedestal_)?fan$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 120.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:fan"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 median hours/day among grid_urban_upper owners (2 h) x 60",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      360,
+      1380
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Waking hours.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "rice_cooker",
+   "ownership_share": {
+    "value": 0.0169,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:rice_cooker"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=13 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:rice_cooker"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 500.0,
+    "evidence_ids": [
+     "ev-385dc2c38074"
+    ],
+    "assumption": "Rice cooker 400-700 W (medium-load class).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 30,
+    "evidence_ids": [],
+    "assumption": "One meal cooked a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ],
+     [
+      690,
+      780
+     ],
+     [
+      1080,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Breakfast, lunch and dinner.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 15.0,
+    "evidence_ids": [],
+    "assumption": "Ironing / heating sessions of 15 min or more.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "hair_dryer",
+   "ownership_share": {
+    "value": 0.0159,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:hair_dryer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_upper households owning one or more (n_owners=14 of 898)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_upper:hair_dryer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_upper owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 500.0,
+    "evidence_ids": [
+     "ev-536aa7d20bd6",
+     "ev-5b67076b3a64",
+     "ev-9cca48d610db",
+     "ev-d4bd40d5b745",
+     "ev-7510f67e91b8"
+    ],
+    "assumption": null,
+    "derivation": "median of 5 approved rated_power_w values matching '^hair_dryer'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 6,
+    "evidence_ids": [],
+    "assumption": "A few minutes a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Morning routine.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 5.0,
+    "evidence_ids": [],
+    "assumption": "Short bursts (kettle, blender, microwave, hair dryer).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  }
+ ],
+ "status": "draft"
+}
