@@ -1,7 +1,7 @@
 # Coarse plausibility rules for appliance evidence and profiles (`pixi run validate-evidence` applies them).
 #
-# These replace row-by-row human review with checks a reviewer would apply anyway. They catch unit slips
-# (kW read as W), transcription errors and out-of-scope values. They do NOT prove a value is right; they only
+# These replace row-by-row review with checks a reviewer would apply anyway. They catch unit slips (e.g. kW 
+# read as W), transcription errors and out-of-scope values. They do NOT prove a value is right; they only
 # flag values that can't be right or that disagree strongly with the other sources.
 
 # 1. Physical / market ranges for rated power (W), matched on the appliance name (first matching regex wins).
