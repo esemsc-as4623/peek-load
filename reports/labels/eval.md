@@ -1,22 +1,23 @@
 # Building-use labelling: Claude vs human gold
 
 - gold buildings labelled: 173 (first pass); repeats: 0; human self-agreement: nan%
-- recommended config (cheapest within 0.03 macro-F1 of best): **claude-haiku-4-5|text|label_v2**
+- recommended config (cheapest within 0.03 macro-F1 of best): **claude-haiku-4-5 | text | label_v2**
 
 ## Per config
 
-                         labeler   n  accuracy  macro_f1  abstain   ece  usd_per_1k
-  claude-haiku-4-5|text|label_v2 173     0.393     0.188      0.0 0.363       3.566
- claude-sonnet-5-5|text|label_v2 173     0.434     0.163      0.0 0.283       9.013
-  claude-opus-5-5|image|label_v1 173     0.370     0.160      0.0 0.156      17.014
-   claude-opus-5-5|text|label_v2 173     0.422     0.160      0.0 0.226      18.095
-   claude-opus-5-5|text|label_v1 173     0.387     0.159      0.0 0.164      16.232
- claude-sonnet-5-5|text|label_v1 173     0.376     0.148      0.0 0.249       8.141
-claude-sonnet-5-5|image|label_v1 173     0.382     0.145      0.0 0.234       8.548
- claude-sonnet-5-5|text|label_v3 173     0.416     0.145      0.0 0.313       9.661
-  claude-haiku-4-5|text|label_v1 173     0.289     0.143      0.0 0.401       3.130
-  claude-haiku-4-5|text|label_v3 173     0.376     0.134      0.0 0.341       3.844
- claude-haiku-4-5|image|label_v1 173     0.272     0.121      0.0 0.398       3.337
+| | | labeler | n | accuracy | macro_f1 | abstain | ece | usd_per_1k |
+|-|-|---------|---|----------|----------|---------|-----|------------|
+| claude-haiku-4-5 | text | label_v2 | 173 | 0.393 | 0.188 | 0.0 0.363 | 3.566 |
+| claude-sonnet-5-5 | text | label_v2 | 173 | 0.434 | 0.163 | 0.0 0.283 | 9.013
+| claude-opus-5-5 | image | label_v1 | 173 | 0.370 | 0.160 | 0.0 0.156 | 17.014
+| claude-opus-5-5 | text | label_v2 | 173 | 0.422 | 0.160 | 0.0 0.226 | 18.095
+| claude-opus-5-5 | text | label_v1 | 173 | 0.387 | 0.159 | 0.0 0.164 | 16.232
+| claude-sonnet-5-5 | text | label_v1 | 173 | 0.376 | 0.148 | 0.0 0.249 | 8.141
+| claude-sonnet-5-5 | image | label_v1 | 173 | 0.382 | 0.145 | 0.0 0.234 | 8.548
+| claude-sonnet-5-5 | text | label_v3 | 173 | 0.416 | 0.145 | 0.0 0.313 | 9.661
+| claude-haiku-4-5 | text | label_v1 | 173 | 0.289 | 0.143 | 0.0 0.401 | 3.130
+| claude-haiku-4-5 | text | label_v3 | 173 | 0.376 | 0.134 | 0.0 0.341 | 3.844
+| claude-haiku-4-5 | image | label_v1 | 173 | 0.272 | 0.121 | 0.0 0.398 | 3.337
 
 ## Diversity and use of context (all 400 gold candidates, gold labels not needed)
 
