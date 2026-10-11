@@ -1,6 +1,6 @@
 # Datasheet: Rwanda building energy-context dataset (v0.1, data phase)
 
-Status: Last updated on **2026-10-10**
+Status: Last update on **2026-10-10**
 
 Structured after *Datasheets for Datasets* (Gebru et al.). Covers the tables produced in the data phase of
 Rooftops → Load Curves (OSEAS26). Per-source details: [`data_sources.md`](data_sources.md). Building-use classes:
