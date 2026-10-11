@@ -19,7 +19,7 @@
 | claude-haiku-4-5 | text | label_v3 | 173 | 0.376 | 0.134 | 0.0 | 0.341 | 3.844
 | claude-haiku-4-5 | image | label_v1 | 173 | 0.272 | 0.121 | 0.0 | 0.398 | 3.337
 
-## Diversity and use of context (all 400 gold candidates, gold labels not needed)
+## Diversity and use of context (all 400 gold candidates)
 
 | | | labeller | n | entropy | non-residential | unknown | cues_cited | % residential | % mixed_shop_house | % commercial | % institutional | % religious | % productive_use | % industrial_warehouse | % ancillary | % unknown |
 |-|-|----------|---|---------|-----------------|---------|------------|---------------|--------------------|--------------|-----------------|----------------|------------------|------------------------|-------------|-----------|
@@ -37,84 +37,85 @@
 
 ## By group and tagged
 
-                         labeler         group  tagged  n  accuracy  macro_f1
- claude-haiku-4-5|image|label_v1 eastern_rural   False 52     0.288     0.102
- claude-haiku-4-5|image|label_v1  kigali_urban   False 33     0.273     0.094
- claude-haiku-4-5|image|label_v1  kigali_urban    True 11     0.455     0.436
- claude-haiku-4-5|image|label_v1  musanze_city   False 29     0.103     0.043
- claude-haiku-4-5|image|label_v1  musanze_city    True 13     0.615     0.317
- claude-haiku-4-5|image|label_v1      national   False 26     0.154     0.098
- claude-haiku-4-5|image|label_v1      national    True  9     0.333     0.250
-  claude-haiku-4-5 | text | label_v1 eastern_rural   False 52     0.308     0.106
-  claude-haiku-4-5 | text | label_v1  kigali_urban   False 33     0.242     0.084
-  claude-haiku-4-5|text|label_v1  kigali_urban    True 11     0.455     0.436
-  claude-haiku-4-5|text|label_v1  musanze_city   False 29     0.103     0.042
-  claude-haiku-4-5|text|label_v1  musanze_city    True 13     0.615     0.317
-  claude-haiku-4-5|text|label_v1      national   False 26     0.231     0.149
-  claude-haiku-4-5|text|label_v1      national    True  9     0.444     0.383
-  claude-haiku-4-5|text|label_v2 eastern_rural   False 52     0.404     0.128
-  claude-haiku-4-5|text|label_v2  kigali_urban   False 33     0.545     0.175
-  claude-haiku-4-5|text|label_v2  kigali_urban    True 11     0.455     0.394
-  claude-haiku-4-5|text|label_v2  musanze_city   False 29     0.241     0.110
-  claude-haiku-4-5|text|label_v2  musanze_city    True 13     0.538     0.239
-  claude-haiku-4-5|text|label_v2      national   False 26     0.269     0.187
-  claude-haiku-4-5|text|label_v2      national    True  9     0.333     0.250
-  claude-haiku-4-5|text|label_v3 eastern_rural   False 52     0.442     0.149
-  claude-haiku-4-5|text|label_v3  kigali_urban   False 33     0.455     0.150
-  claude-haiku-4-5|text|label_v3  kigali_urban    True 11     0.455     0.394
-  claude-haiku-4-5|text|label_v3  musanze_city   False 29     0.172     0.045
-  claude-haiku-4-5|text|label_v3  musanze_city    True 13     0.538     0.239
-  claude-haiku-4-5|text|label_v3      national   False 26     0.269     0.129
-  claude-haiku-4-5|text|label_v3      national    True  9     0.333     0.250
-  claude-opus-5-5|image|label_v1 eastern_rural   False 52     0.365     0.136
-  claude-opus-5-5|image|label_v1  kigali_urban   False 33     0.455     0.183
-  claude-opus-5-5|image|label_v1  kigali_urban    True 11     0.545     0.450
-  claude-opus-5-5|image|label_v1  musanze_city   False 29     0.207     0.078
-  claude-opus-5-5|image|label_v1  musanze_city    True 13     0.615     0.361
-  claude-opus-5-5|image|label_v1      national   False 26     0.269     0.139
-  claude-opus-5-5|image|label_v1      national    True  9     0.333     0.250
-   claude-opus-5-5|text|label_v1 eastern_rural   False 52     0.404     0.141
-   claude-opus-5-5|text|label_v1  kigali_urban   False 33     0.515     0.190
-   claude-opus-5-5|text|label_v1  kigali_urban    True 11     0.455     0.478
-   claude-opus-5-5|text|label_v1  musanze_city   False 29     0.207     0.052
-   claude-opus-5-5|text|label_v1  musanze_city    True 13     0.538     0.239
-   claude-opus-5-5|text|label_v1      national   False 26     0.269     0.127
-   claude-opus-5-5|text|label_v1      national    True  9     0.444     0.383
-   claude-opus-5-5|text|label_v2 eastern_rural   False 52     0.423     0.127
-   claude-opus-5-5|text|label_v2  kigali_urban   False 33     0.576     0.175
-   claude-opus-5-5|text|label_v2  kigali_urban    True 11     0.545     0.442
-   claude-opus-5-5|text|label_v2  musanze_city   False 29     0.241     0.076
-   claude-opus-5-5|text|label_v2  musanze_city    True 13     0.538     0.239
-   claude-opus-5-5|text|label_v2      national   False 26     0.308     0.135
-   claude-opus-5-5|text|label_v2      national    True  9     0.444     0.356
-claude-sonnet-5-5|image|label_v1 eastern_rural   False 52     0.423     0.132
-claude-sonnet-5-5|image|label_v1  kigali_urban   False 33     0.485     0.169
-claude-sonnet-5-5|image|label_v1  kigali_urban    True 11     0.455     0.478
-claude-sonnet-5-5|image|label_v1  musanze_city   False 29     0.207     0.050
-claude-sonnet-5-5|image|label_v1  musanze_city    True 13     0.538     0.239
-claude-sonnet-5-5|image|label_v1      national   False 26     0.231     0.111
-claude-sonnet-5-5|image|label_v1      national    True  9     0.444     0.383
- claude-sonnet-5-5|text|label_v1 eastern_rural   False 52     0.404     0.137
- claude-sonnet-5-5|text|label_v1  kigali_urban   False 33     0.485     0.166
- claude-sonnet-5-5|text|label_v1  kigali_urban    True 11     0.455     0.336
- claude-sonnet-5-5|text|label_v1  musanze_city   False 29     0.172     0.042
- claude-sonnet-5-5|text|label_v1  musanze_city    True 13     0.462     0.195
- claude-sonnet-5-5|text|label_v1      national   False 26     0.346     0.200
- claude-sonnet-5-5|text|label_v1      national    True  9     0.333     0.222
- claude-sonnet-5-5|text|label_v2 eastern_rural   False 52     0.423     0.129
- claude-sonnet-5-5|text|label_v2  kigali_urban   False 33     0.576     0.195
- claude-sonnet-5-5|text|label_v2  kigali_urban    True 11     0.545     0.442
- claude-sonnet-5-5|text|label_v2  musanze_city   False 29     0.241     0.055
- claude-sonnet-5-5|text|label_v2  musanze_city    True 13     0.615     0.317
- claude-sonnet-5-5|text|label_v2      national   False 26     0.346     0.219
- claude-sonnet-5-5|text|label_v2      national    True  9     0.444     0.356
- claude-sonnet-5-5|text|label_v3 eastern_rural   False 52     0.442     0.134
- claude-sonnet-5-5|text|label_v3  kigali_urban   False 33     0.515     0.157
- claude-sonnet-5-5|text|label_v3  kigali_urban    True 11     0.545     0.442
- claude-sonnet-5-5|text|label_v3  musanze_city   False 29     0.241     0.055
- claude-sonnet-5-5|text|label_v3  musanze_city    True 13     0.538     0.239
- claude-sonnet-5-5|text|label_v3      national   False 26     0.308     0.144
- claude-sonnet-5-5|text|label_v3      national    True  9     0.444     0.242
+| | | labeler | group | tagged | n | accuracy | macro_f1 |
+|-|-|---------|-------|--------|---|----------|----------|
+| claude-haiku-4-5 | image | label_v1 | eastern_rural | False | 52 | 0.288 | 0.102 |
+| claude-haiku-4-5 | image | label_v1 | kigali_urban | False | 33 | 0.273 | 0.094 |
+| claude-haiku-4-5 | image | label_v1 | kigali_urban | True | 11 | 0.455 | 0.436 |
+| claude-haiku-4-5 | image | label_v1 | musanze_city | False | 29 | 0.103 | 0.043 |
+| claude-haiku-4-5 | image | label_v1 | musanze_city | True | 13 | 0.615 | 0.317 |
+| claude-haiku-4-5 | image | label_v1 | national | False | 26 | 0.154 | 0.098 |
+| claude-haiku-4-5 | image | label_v1 | national | True |  9 | 0.333 | 0.250 |
+| claude-haiku-4-5 | text | label_v1 | eastern_rural | False | 52 | 0.308 | 0.106 |
+| claude-haiku-4-5 | text | label_v1 | kigali_urban | False | 33 | 0.242 | 0.084 |
+| claude-haiku-4-5 | text | label_v1 | kigali_urban | True | 11 | 0.455 | 0.436 |
+| claude-haiku-4-5 | text | label_v1 | musanze_city | False | 29 | 0.103 | 0.042 |
+| claude-haiku-4-5 | text | label_v1 | musanze_city | True | 13 | 0.615 | 0.317 |
+| claude-haiku-4-5 | text | label_v1 | national | False | 26 | 0.231 | 0.149 |
+| claude-haiku-4-5 | text | label_v1 | national | True |  9 | 0.444 | 0.383 |
+| claude-haiku-4-5 | text | label_v2 | eastern_rural | False | 52 | 0.404 | 0.128 |
+| claude-haiku-4-5 | text | label_v2 | kigali_urban | False | 33 | 0.545 | 0.175 |
+| claude-haiku-4-5 | text | label_v2 | kigali_urban | True | 11 | 0.455 | 0.394 |
+| claude-haiku-4-5 | text | label_v2 | musanze_city | False | 29 | 0.241 | 0.110 |
+| claude-haiku-4-5 | text | label_v2 | musanze_city | True | 13 | 0.538 | 0.239 |
+| claude-haiku-4-5 | text | label_v2 | national | False | 26 | 0.269 | 0.187 |
+| claude-haiku-4-5 | text | label_v2 | national | True |  9 | 0.333 | 0.250 |
+| claude-haiku-4-5 | text | label_v3 | eastern_rural | False | 52 | 0.442 | 0.149 |
+| claude-haiku-4-5 | text | label_v3 | kigali_urban | False | 33 | 0.455 | 0.150 |
+| claude-haiku-4-5 | text | label_v3 | kigali_urban | True | 11 | 0.455 | 0.394 |
+| claude-haiku-4-5 | text | label_v3 | musanze_city | False | 29 | 0.172 | 0.045 |
+| claude-haiku-4-5 | text | label_v3 | musanze_city | True | 13 | 0.538 | 0.239 |
+| claude-haiku-4-5 | text | label_v3 | national | False | 26 | 0.269 | 0.129 |
+| claude-haiku-4-5 | text | label_v3 | national | True |  9 | 0.333 | 0.250 |
+| claude-opus-5-5 | image | label_v1 | eastern_rural | False | 52 | 0.365 | 0.136 |
+| claude-opus-5-5 | image | label_v1 | kigali_urban | False | 33 | 0.455 | 0.183 |
+| claude-opus-5-5 | image | label_v1 | kigali_urban | True | 11 | 0.545 | 0.450 |
+| claude-opus-5-5 | image | label_v1 | musanze_city | False | 29 | 0.207 | 0.078 |
+| claude-opus-5-5 | image | label_v1 | musanze_city | True | 13 | 0.615 | 0.361 |
+| claude-opus-5-5 | image | label_v1 | national | False | 26 | 0.269 | 0.139 |
+| claude-opus-5-5 | image | label_v1 | national | True |  9 | 0.333 | 0.250 |
+| claude-opus-5-5 | text | label_v1 | eastern_rural | False | 52 | 0.404 | 0.141 |
+| claude-opus-5-5 | text | label_v1 | kigali_urban | False | 33 | 0.515 | 0.190 |
+| claude-opus-5-5 | text | label_v1 | kigali_urban | True | 11 | 0.455 | 0.478 |
+| claude-opus-5-5 | text | label_v1 | musanze_city | False | 29 | 0.207 | 0.052 |
+| claude-opus-5-5 | text | label_v1 | musanze_city | True | 13 | 0.538 | 0.239 |
+| claude-opus-5-5 | text | label_v1 | national | False | 26 | 0.269 | 0.127 |
+| claude-opus-5-5 | text | label_v1 | national | True |  9 | 0.444 | 0.383 |
+| claude-opus-5-5 | text | label_v2 | eastern_rural | False | 52 | 0.423 | 0.127 |
+| claude-opus-5-5 | text | label_v2 | kigali_urban | False | 33 | 0.576 | 0.175 |
+| claude-opus-5-5 | text | label_v2 | kigali_urban | True | 11 | 0.545 | 0.442 |
+| claude-opus-5-5 | text | label_v2 | musanze_city | False | 29 | 0.241 | 0.076 |
+| claude-opus-5-5 | text | label_v2 | musanze_city | True | 13 | 0.538 | 0.239 |
+| claude-opus-5-5 | text | label_v2 | national | False | 26 | 0.308 | 0.135 |
+| claude-opus-5-5 | text | label_v2 | national | True |  9 | 0.444 | 0.356 |
+| claude-sonnet-5-5 | image | label_v1 | eastern_rural | False | 52 | 0.423 | 0.132 |
+| claude-sonnet-5-5 | image | label_v1 | kigali_urban | False | 33 | 0.485 | 0.169 |
+| claude-sonnet-5-5 | image | label_v1 | kigali_urban | True | 11 | 0.455 | 0.478 |
+| claude-sonnet-5-5 | image | label_v1 | musanze_city | False | 29 | 0.207 | 0.050 |
+| claude-sonnet-5-5 | image | label_v1 | musanze_city | True | 13 | 0.538 | 0.239 |
+| claude-sonnet-5-5 | image | label_v1 | national | False | 26 | 0.231 | 0.111 |
+| claude-sonnet-5-5 | image | label_v1 | national | True |  9 | 0.444 | 0.383 |
+| claude-sonnet-5-5 | text | label_v1 | eastern_rural | False | 52 | 0.404 | 0.137 |
+| claude-sonnet-5-5 | text | label_v1 | kigali_urban | False | 33 | 0.485 | 0.166 |
+| claude-sonnet-5-5 | text | label_v1 | kigali_urban | True | 11 | 0.455 | 0.336 |
+| claude-sonnet-5-5 | text | label_v1 | musanze_city | False | 29 | 0.172 | 0.042 |
+| claude-sonnet-5-5 | text | label_v1 | musanze_city | True | 13 | 0.462 | 0.195 |
+| claude-sonnet-5-5 | text | label_v1 | national | False | 26 | 0.346 | 0.200 |
+| claude-sonnet-5-5 | text | label_v1 | national | True |  9 | 0.333 | 0.222 |
+| claude-sonnet-5-5 | text | label_v2 | eastern_rural | False | 52 | 0.423 | 0.129 |
+| claude-sonnet-5-5 | text | label_v2 | kigali_urban | False | 33 | 0.576 | 0.195 |
+| claude-sonnet-5-5 | text | label_v2 | kigali_urban | True | 11 | 0.545 | 0.442 |
+| claude-sonnet-5-5 | text | label_v2 | musanze_city | False | 29 | 0.241 | 0.055 |
+| claude-sonnet-5-5 | text | label_v2 | musanze_city | True | 13 | 0.615 | 0.317 |
+| claude-sonnet-5-5 | text | label_v2 | national | False | 26 | 0.346 | 0.219 |
+| claude-sonnet-5-5 | text | label_v2 | national | True |  9 | 0.444 | 0.356 |
+| claude-sonnet-5-5 | text | label_v3 | eastern_rural | False | 52 | 0.442 | 0.134 |
+| claude-sonnet-5-5 | text | label_v3 | kigali_urban | False | 33 | 0.515 | 0.157 |
+| claude-sonnet-5-5 | text | label_v3 | kigali_urban | True | 11 | 0.545 | 0.442 |
+| claude-sonnet-5-5 | text | label_v3 | musanze_city | False | 29 | 0.241 | 0.055 |
+| claude-sonnet-5-5 | text | label_v3 | musanze_city | True | 13 | 0.538 | 0.239 |
+| claude-sonnet-5-5 | text | label_v3 | national | False | 26 | 0.308 | 0.144 |
+| claude-sonnet-5-5 | text | label_v3 | national | True |  9 | 0.444 | 0.242 |
 
 ## Gold class distribution
 
