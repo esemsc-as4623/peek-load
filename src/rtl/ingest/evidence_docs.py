@@ -105,6 +105,35 @@ TRANSCRIBED = {
          175, "RWF/kWh (excl. VAT and regulatory fee)", "manufacturing plants 5,000-100,000 kWh/year",
          "consumption between 5,000 and 100,000 kWh All consumed kWh 175"),
     ],
+    # schedules in force for the MTF 2022 (2020 decision) and EICV5 2016-17 (closest official: Aug 2018) surveys,
+    # used to turn reported electricity spending into kWh
+    "tariffs_history": [
+        *[("rura_tariffs_2020", 8, "Annex 1: tariffs for all customer categories (effective 21 Jan 2020)",
+           f"tariff_rwf_per_kwh.{param}", value, "RWF/kWh (excl. VAT and regulatory fee)", pop, quote)
+          for param, value, pop, quote in [
+              ("residential.block_0_15", 89, "residential, <15 kWh/month, 2020-2025", "<15 kWh per month 89"),
+              ("residential.block_15_50", 212, "residential, 15-50 kWh/month, 2020-2025", "15-50 kWh per month 212"),
+              ("residential.block_over_50", 249, "residential, >50 kWh/month, 2020-2025", ">50 kWh per month 249"),
+              ("non_residential.block_0_100", 227, "non-residential, <100 kWh/month, 2020-2025",
+               "<100 kWh per month 227"),
+              ("non_residential.block_over_100", 255, "non-residential, >100 kWh/month, 2020-2025",
+               ">100 kWh per month 255"),
+              ("hotels", 157, "hotels, 2020-2025", "Hotels All consumed kWh 157"),
+              ("health_facilities", 186, "health facilities, 2020-2025", "Health Facilities All consumed kWh 186")]],
+        ("rura_tariffs_2020", 4, "Article on entry into force", "effective_from", 2020.05, "year",
+         "date the 2020 schedule took effect", "It shall take effect as of 21st January 2020"),
+        *[("rura_tariffs_2018_gazette", 8, "Annex 1: tariffs for non-industrial customer categories",
+           f"tariff_rwf_per_kwh.{param}", value, "RWF/kWh (excl. VAT and regulatory fee)", pop, quote)
+          for param, value, pop, quote in [
+              ("residential.block_0_15", 89, "residential, 0-15 kWh/month, Aug 2018-Jan 2020", "]0-15] 89"),
+              ("residential.block_15_50", 182, "residential, 15-50 kWh/month, Aug 2018-Jan 2020", "]15-50] 182"),
+              ("residential.block_over_50", 210, "residential, >50 kWh/month, Aug 2018-Jan 2020", ">50 210"),
+              ("non_residential.block_0_100", 204, "non-residential, 0-100 kWh/month, Aug 2018-Jan 2020",
+               "]0-100] 204"),
+              ("non_residential.block_over_100", 222, "non-residential, >100 kWh/month, Aug 2018-Jan 2020",
+               ">100 222"),
+              ("health_facilities", 192, "health facilities, Aug 2018-Jan 2020", "Health Facilities All 192")]],
+    ],
 }
 
 
@@ -171,6 +200,7 @@ def build_anchors() -> None:
             page_texts(doc_path("eicv7_utilities_amenities"))),
         "residential_kwh_qsel.csv": transcribed("residential_kwh"),
         "tariffs_2025.csv": transcribed("tariffs"),
+        "tariffs_history.csv": transcribed("tariffs_history"),
     }
     for name, df in tables.items():
         df.assign(role="validation").to_csv(out / name, index=False)

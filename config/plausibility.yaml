@@ -15,8 +15,9 @@ rated_power_w:
   - {match: "tv|television",             min: 5,    max: 300}
   - {match: "fan",                       min: 5,    max: 150}
   - {match: "fridge|refrigerat",         min: 25,   max: 500}
-  - {match: "freezer|ice",               min: 25,   max: 800}
+  - {match: "freezer|(^|_)ice(_|$)",     min: 25,   max: 800}   # not "rice", "device", "service"
   - {match: "computer|laptop",           min: 10,   max: 300}
+  - {match: "flat_iron|straighten",      min: 20,   max: 300}    # hair straighteners, not clothes irons
   - {match: "iron",                      min: 300,  max: 2600}
   - {match: "sewing",                    min: 20,   max: 500}
   - {match: "hair_dryer|dryer",          min: 100,  max: 2400}

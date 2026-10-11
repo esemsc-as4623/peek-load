@@ -88,10 +88,23 @@ def checks(e: pd.DataFrame, cfg: dict) -> pd.DataFrame:
     return pd.DataFrame(flags)
 
 
+def excluded_ids() -> set[str]:
+    """Evidence ids flagged by the checks and not overridden with `keep`: B1 profiles don't use them."""
+    if not OUT.exists():
+        return set()
+    f = pd.read_csv(OUT, dtype={"override": str})
+    kept = set(f[f.override.fillna("").str.strip().str.lower().eq("keep")].evidence_id)
+    return set(f.evidence_id) - kept
+
+
 def main() -> None:
     cfg = load_yaml("plausibility.yaml")
     e = load_evidence()
     flags = checks(e, cfg)
+    if OUT.exists() and len(flags):  # keep the owner's overrides across reruns
+        old = pd.read_csv(OUT, dtype={"override": str}).dropna(subset=["override"])
+        keep = dict(zip(zip(old.evidence_id, old.check, strict=True), old.override, strict=True))
+        flags["override"] = [keep.get(k, "") for k in zip(flags.evidence_id, flags.check, strict=True)]
     OUT.parent.mkdir(parents=True, exist_ok=True)
     flags.to_csv(OUT, index=False)
     n_rows = flags.evidence_id.nunique() if len(flags) else 0

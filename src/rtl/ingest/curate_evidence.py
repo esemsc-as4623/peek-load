@@ -7,6 +7,8 @@ Each entry names its document, page and an exact quote; the script checks the qu
 data/processed/evidence_curated.parquet (+ .csv for review). human_verified stays False until the repo owner signs off.
 
 GIZ catalogue values are for efficient **DC solar** products; grid-connected AC equivalents usually draw more.
+The Power Africa Rwanda catalogue (2020) lists off-grid products sold in Rwanda: its mills are small solar AC mills
+(1.3-1.8 kW), the low end of what grid-connected mills draw (7.5-17.5 kW in the other sources).
 """
 
 from __future__ import annotations
@@ -17,11 +19,14 @@ from rtl.llm.evidence import evidence_id, page_texts, to_frame, verify_quote
 from rtl.settings import PROCESSED_DIR, RAW_DIR
 
 OUT = PROCESSED_DIR / "evidence_curated.parquet"
-DOCS = {"nrel_pue_microgrids_2018": "2018-08-15", "giz_pv_productive_use_catalogue_2016": "2016-06-20"}
+DOCS = {"nrel_pue_microgrids_2018": "2018-08-15", "giz_pv_productive_use_catalogue_2016": "2016-06-20",
+        "power_africa_pue_catalog_rwanda_2020": "2026-10-11"}
 NREL = dict(doc_id="nrel_pue_microgrids_2018", geography="Tanzania (PowerGen micro-grids)", year=2018,
             population="micro-grid productive-use customer")
 GIZ = dict(doc_id="giz_pv_productive_use_catalogue_2016", geography="global (product catalogue)", year=2016,
            population="off-grid micro-enterprise, DC solar product")
+PUE_RW = dict(doc_id="power_africa_pue_catalog_rwanda_2020", geography="Rwanda (product catalogue)", year=2020,
+              population="off-grid productive-use product sold in Rwanda (solar powered)")
 
 # (parameter, value, low, high, unit, page, quote, extra fields)
 ENTRIES = [
@@ -56,6 +61,19 @@ ENTRIES = [
     ("hours_per_day.tv.dc", 6, None, None, "h/day", 193, "Working hours per day 6 h", GIZ),
     ("rated_power_w.hair_dryer.dc", 400, None, None, "W", 227, "Hair dryer Load 400 W", GIZ),
     ("rated_power_w.hair_dryer.dc", 180, None, None, "W", 228, "Hair dryer Load 180 W", GIZ),
+    ("rated_power_w.hammer_mill.agsol_v1_3", 1300, None, None, "W", 29, "Power rating 1,300 W 1,800 W", PUE_RW),
+    ("rated_power_w.hammer_mill.agsol_v1_8", 1800, None, None, "W", 29, "Power rating 1,300 W 1,800 W", PUE_RW),
+    ("other.throughput_kg_per_h.hammer_mill_agsol", 60, 60, 80, "kg/h", 29, "Throughput 60 kg/h 80 kg/h", PUE_RW),
+    ("rated_power_w.rice_mill_maize_huller.agsol_v1_3", 1300, None, None, "W", 33, "Power rating 1,300 W 1,800 W",
+     PUE_RW),
+    ("rated_power_w.rice_mill_maize_huller.agsol_v1_8", 1800, None, None, "W", 33, "Power rating 1,300 W 1,800 W",
+     PUE_RW),
+    ("rated_power_w.chaff_cutter.agsol_v1_3", 1300, None, None, "W", 27, "Power rating 1300 W 1800 W", PUE_RW),
+    ("rated_power_w.chaff_cutter.agsol_v1_8", 1800, None, None, "W", 27, "Power rating 1300 W 1800 W", PUE_RW),
+    ("rated_power_w.maize_thresher.agsol", 500, None, None, "W", 31, "Power rating 500 W 500 W", PUE_RW),
+    ("rated_power_w.refrigerator.dc_166_l", 70, None, None, "W", 40, "Power (energy consumption) 70 W 100 W", PUE_RW),
+    ("rated_power_w.refrigerator.dc_240_l", 100, None, None, "W", 40, "Power (energy consumption) 70 W 100 W", PUE_RW),
+    ("rated_power_w.water_pump.futurepump_sf2", 100, 80, 120, "W", 59, "Power rating 80–120 W", PUE_RW),
 ]
 
 
@@ -77,7 +95,8 @@ def main() -> None:
                      "prompt_version": "curated_v1", "human_verified": False,
                      "notes": "curated in the coding session"
                               + ("; DC solar product, AC grid equivalents usually draw more"
-                                 if extra is GIZ else "")})
+                                 if extra is GIZ else "")
+                              + ("; off-grid solar product" if extra is PUE_RW else "")})
     df = to_frame(rows)
     df.to_parquet(OUT, index=False)
     df.to_csv(OUT.with_suffix(".csv"), index=False)

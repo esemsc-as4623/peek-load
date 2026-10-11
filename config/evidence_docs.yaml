@@ -91,6 +91,26 @@ documents:
     rwanda_specific: true
     role: evidence
     status: verified
+  - doc_id: rura_tariffs_2020
+    title: Decision N°01/BD/ER-EWS/RURA/2020 reviewing the end user electricity tariffs (effective 21 Jan 2020)
+    publisher: RURA
+    year: 2020
+    url: https://web.archive.org/web/2022id_/https://rura.rw/fileadmin/publication/Board_Decision_on_Electricity_End_User_Tariffs_in_Rwanda.pdf
+    licence: to_verify  # official decision
+    topics: [tariff]
+    rwanda_specific: true
+    role: evidence
+    status: verified  # rura.rw now returns 404; Internet Archive copy (2026-10-11). In force for MTF 2022 fieldwork
+  - doc_id: rura_tariffs_2018_gazette
+    title: Official Gazette no.34 of 20/08/2018, end user electricity tariffs (RURA)
+    publisher: RURA (published by REG)
+    year: 2018
+    url: https://www.reg.rw:443/fileadmin/user_upload/August_2018_Official_Gazette_for_Electricity_Tariffs__1_.pdf
+    licence: to_verify  # official gazette
+    topics: [tariff]
+    rwanda_specific: true
+    role: evidence
+    status: verified  # closest official schedule to EICV5 (2016-17) fieldwork
   - doc_id: reg_annual_report_2022_23
     title: REG Annual Report 2022-2023
     publisher: Rwanda Energy Group
