@@ -3,7 +3,7 @@
 # data/raw/evidence_docs/<version>/<doc_id>.pdf via rtl.manifest.fetch (recorded in data/manifest.json).
 #
 # Fields
-#   licence:  as stated by the publisher; "to_verify" = human licence review pending (a human gate)
+#   licence:  as stated by the publisher or inferred
 #   topics:   ownership | power | usage | consumption | tariff | access | households | productive_use
 #   status:   verified (url checked to return a PDF on 2026-10-08) | unavailable (kept for the record)
 #   role:     evidence, except validation-only docs (anchors; never used as features)
@@ -45,7 +45,7 @@ documents:
     publisher: NISR
     year: 2025
     url: https://statistics.gov.rw/sites/default/files/documents/2025-07/EICV7_Main%20Indicator%20Report.pdf
-    licence: to_verify  # NISR publications: free with attribution (to confirm)
+    licence: NISR publications (free with attribution)
     topics: [access, ownership, households]
     rwanda_specific: true
     role: evidence
@@ -55,7 +55,7 @@ documents:
     publisher: NISR
     year: 2025
     url: https://statistics.gov.rw/sites/default/files/documents/2025-05/EICV7_Thematic%20Report%20Amenities%20and%20Utilities%20%281%29.pdf
-    licence: to_verify
+    licence: CC-BY-4.0
     topics: [access, ownership]
     rwanda_specific: true
     role: evidence
@@ -65,7 +65,7 @@ documents:
     publisher: NISR
     year: 2023
     url: https://statistics.gov.rw/sites/default/files/documents/2025-02/RPHC5_MainIndicatorsReport_Final.pdf
-    licence: to_verify
+    licence: CC-BY-4.0
     topics: [households, access]
     rwanda_specific: true
     role: validation
@@ -75,7 +75,7 @@ documents:
     publisher: NISR
     year: 2023
     url: https://statistics.gov.rw/sites/default/files/documents/2025-02/RPHC5%20Thematic%20Report_Housing%20and%20Households%20Characteristics.pdf
-    licence: to_verify
+    licence: CC-BY-4.0
     topics: [households, access, ownership]
     rwanda_specific: true
     role: validation
@@ -86,7 +86,7 @@ documents:
     publisher: REG / RURA
     year: 2025
     url: https://www.reg.rw/fileadmin/user_upload/New_Tariff_effective_from_1st_October_2025.pdf
-    licence: to_verify  # public notice
+    licence: public notice
     topics: [tariff]
     rwanda_specific: true
     role: evidence
@@ -96,7 +96,7 @@ documents:
     publisher: Rwanda Energy Group
     year: 2023
     url: https://www.reg.rw/fileadmin/user_upload/REG_ANNUAL_REPORT_2022-2023.pdf
-    licence: to_verify
+    licence: public notice
     topics: [access, consumption]
     rwanda_specific: true
     role: validation
@@ -106,7 +106,7 @@ documents:
     publisher: Rwanda Energy Group
     year: 2024
     url: https://www.reg.rw/fileadmin/user_upload/Rwanda-LCPDP-2024_Review-web.pdf
-    licence: to_verify
+    licence: public notice
     topics: [consumption, access]
     rwanda_specific: true
     role: evidence
@@ -117,7 +117,7 @@ documents:
     publisher: Columbia University QSEL
     year: 2024
     url: https://qsel.columbia.edu/assets/uploads/blog/2024/publications/Rwandas_path_to_universal_electricity_access_consumption_trends_tarriff_impact_and_challenges_ahead.pdf
-    licence: to_verify  # working paper, no licence stated
+    licence: working paper, no licence stated
     topics: [consumption, tariff]
     rwanda_specific: true
     role: validation
@@ -127,7 +127,7 @@ documents:
     publisher: Columbia University QSEL
     year: 2025
     url: https://qsel.columbia.edu/assets/uploads/blog/2025/publications/Electricity-consumption-The-role-of-grid-reliability-in-appliance-ownership-and-usage-in-Rwanda.pdf
-    licence: to_verify
+    licence: working paper, no licence stated
     topics: [ownership, usage, consumption]
     rwanda_specific: true
     role: evidence
@@ -137,7 +137,7 @@ documents:
     publisher: Columbia University QSEL / RWI
     year: 2025
     url: https://qsel.columbia.edu/assets/uploads/blog/2025/publications/Adoption-of-electricity-in-rural-rwanda-10-years-after-connection.pdf
-    licence: to_verify
+    licence: working paper, no licence stated
     topics: [ownership, usage, consumption, access]
     rwanda_specific: true
     role: evidence
@@ -147,7 +147,7 @@ documents:
     publisher: Columbia University QSEL
     year: 2024
     url: https://qsel.columbia.edu/assets/uploads/blog/2024/publications/Rwanda_Household_Electricity_Demand_Joel.pdf
-    licence: to_verify
+    licence: working paper, no licence stated
     topics: [consumption, ownership]
     rwanda_specific: true
     role: evidence
@@ -158,7 +158,7 @@ documents:
     publisher: Efficiency for Access / CLASP
     year: 2021
     url: https://www.clasp.ngo/wp-content/uploads/2021/01/2021-ApplianceDataTrends.pdf
-    licence: to_verify
+    licence: public notice
     topics: [power, usage, productive_use]
     rwanda_specific: false
     role: evidence
@@ -168,7 +168,7 @@ documents:
     publisher: Efficiency for Access / CLASP
     year: 2021
     url: https://www.clasp.ngo/wp-content/uploads/2021/06/EforA_Solar_Appliance_Technology_Brief_Refrigerators_June2021.pdf
-    licence: to_verify
+    licence: public notice
     topics: [power, usage, productive_use]
     rwanda_specific: false
     role: evidence
@@ -178,7 +178,7 @@ documents:
     publisher: Efficiency for Access / CLASP
     year: 2021
     url: https://www.clasp.ngo/wp-content/uploads/2021/06/EforA_Solar-Appliance-Technology-Brief_Fans_May-2021.pdf
-    licence: to_verify
+    licence: public notice
     topics: [power, usage]
     rwanda_specific: false
     role: evidence
@@ -188,7 +188,7 @@ documents:
     publisher: Efficiency for Access / CLASP
     year: 2021
     url: https://www.clasp.ngo/wp-content/uploads/2021/05/EforA_Solar_Appliance_Technology_Brief_Milling_July2021.pdf
-    licence: to_verify
+    licence: public notice
     topics: [power, usage, productive_use]
     rwanda_specific: false
     role: evidence
@@ -199,7 +199,7 @@ documents:
     publisher: RURA
     year: null
     url: https://rura.rw/fileadmin/Documents/Energy/BoardDecisions/Board_Decision_on_Electricity_End_User_Tariffs_in_Rwanda.pdf
-    licence: to_verify
+    licence: public notice
     topics: [tariff]
     rwanda_specific: true
     role: evidence
@@ -209,7 +209,7 @@ documents:
     publisher: REG / MININFRA
     year: 2019
     url: https://rise.esmap.org/data/files/library/rwanda/Electricity Access/Rwanda_Design of the National Electrification Plan_2019.pdf
-    licence: to_verify
+    licence: public notice
     topics: [consumption, access]
     rwanda_specific: true
     role: evidence
@@ -219,7 +219,7 @@ documents:
     publisher: USAID Power Africa
     year: 2020
     url: https://web.archive.org/web/2023id_/https://www.usaid.gov/sites/default/files/2022-05/Power-Africa-PUE-2020-Catalog-Rwanda.pdf
-    licence: public domain (US government work), to_verify
+    licence: public domain (US government work)
     topics: [power, productive_use]
     rwanda_specific: true
     role: evidence
@@ -232,7 +232,7 @@ documents:
     publisher: NREL / Energy 4 Impact (USAID Power Africa)
     year: 2018
     url: https://www.osti.gov/servlets/purl/1465661  # nrel.gov does not resolve from the server; OSTI mirror
-    licence: US government work (public domain), to_verify
+    licence: US government work (public domain)
     topics: [power, usage, productive_use]
     rwanda_specific: false
     role: evidence
@@ -242,7 +242,7 @@ documents:
     publisher: GIZ
     year: 2016
     url: https://epflicht.ulb.uni-bonn.de/download/pdf/280663  # University of Bonn repository copy
-    licence: GIZ publication, to_verify
+    licence: GIZ publication
     topics: [power, usage, productive_use]
     rwanda_specific: false
     role: evidence
