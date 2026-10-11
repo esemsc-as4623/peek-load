@@ -935,6 +935,253 @@
       "10m_v_component_of_wind"
     ]
   },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202207.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202207.nc",
+    "bytes": 3752819,
+    "sha256": "eb1d42c3b803126165e3c3addba63c5085f268aa4b9e7c439cc2731a375e6689",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T21:19:17+00:00",
+    "year": 2022,
+    "month": 7,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202208.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202208.nc",
+    "bytes": 3974120,
+    "sha256": "4d41a2cec8fdf5efa611abd77e8919bcee995a9dd671eff273e01b58aa517a3e",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T21:43:43+00:00",
+    "year": 2022,
+    "month": 8,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202209.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202209.nc",
+    "bytes": 3972014,
+    "sha256": "2b6157e10cde4e182ea7ac808e427f64c78b31528b49ce0c79a6e882ab25e4d2",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T21:58:20+00:00",
+    "year": 2022,
+    "month": 9,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202210.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202210.nc",
+    "bytes": 4008476,
+    "sha256": "371bca514d58129e38254bcf35f705901ffaab8b5dd1bf35de8ee75932a31c98",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T22:04:18+00:00",
+    "year": 2022,
+    "month": 10,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202211.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202211.nc",
+    "bytes": 4166781,
+    "sha256": "de477f37ee54ca777494d6ccf1c3b78f8882681b289cf3b94a4080faa0ee6238",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T22:10:36+00:00",
+    "year": 2022,
+    "month": 11,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202212.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202212.nc",
+    "bytes": 4227564,
+    "sha256": "33f5ebd5447fc319d91b1616c16ac63dcb0b1347c5cc82b20e74b9db3489dcbb",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T22:34:17+00:00",
+    "year": 2022,
+    "month": 12,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202301.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202301.nc",
+    "bytes": 4067017,
+    "sha256": "151c567a197064ae0dfce6beaa9ced59f2f0719fc0e29cbe59ebf2e4a934053a",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T22:48:22+00:00",
+    "year": 2023,
+    "month": 1,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202302.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202302.nc",
+    "bytes": 3653145,
+    "sha256": "abb1963b0f07668361826455cdbee2a5b0a2ea2f6f6f9f80eb605c07ba98d2cc",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-10T23:26:55+00:00",
+    "year": 2023,
+    "month": 2,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202303.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202303.nc",
+    "bytes": 4255128,
+    "sha256": "675cc4b0ce177e3f987d543d9c353c25e6d9984287bb93a0568c754259e91dde",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-11T00:13:19+00:00",
+    "year": 2023,
+    "month": 3,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202304.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202304.nc",
+    "bytes": 4089778,
+    "sha256": "56502ae089a4987f45d6d9dc01f34cf76615edfc3c9cc0f402dea6bb9592b71f",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-11T00:39:39+00:00",
+    "year": 2023,
+    "month": 4,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202305.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202305.nc",
+    "bytes": 3983734,
+    "sha256": "2e47ab5328b6c6f790e498a16697277b109b02ed92f298cda6cbd3d395e11487",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-11T01:03:51+00:00",
+    "year": 2023,
+    "month": 5,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202306.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202306.nc",
+    "bytes": 3830265,
+    "sha256": "b4d2732be081f72b32320badf149a3a8f5d18d3473f17c2acc8c48568ad7368e",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-11T00:23:08+00:00",
+    "year": 2023,
+    "month": 6,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202307.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:reanalysis-era5-land",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_hourly_202307.nc",
+    "bytes": 3624633,
+    "sha256": "3c14fd700d4b9ee10cc4887b57223bae993a92313b217831f214ab89bdf7a788",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-11T01:25:30+00:00",
+    "year": 2023,
+    "month": 7,
+    "variables": [
+      "2m_temperature",
+      "2m_dewpoint_temperature",
+      "surface_solar_radiation_downwards",
+      "total_precipitation",
+      "10m_u_component_of_wind",
+      "10m_v_component_of_wind"
+    ]
+  },
   "data/raw/evidence_docs/2016-06-20/giz_pv_productive_use_catalogue_2016.pdf": {
     "source_id": "evidence_docs",
     "url": "https://epflicht.ulb.uni-bonn.de/download/pdf/280663",
@@ -1145,6 +1392,16 @@
     "retrieved_at": "2026-10-10T21:10:28+00:00",
     "version": "2026-10-10",
     "note": "full text (OKR text bitstream), no page numbers"
+  },
+  "data/raw/evidence_docs/2026-10-11/power_africa_pue_catalog_rwanda_2020.pdf": {
+    "source_id": "evidence_docs",
+    "url": "https://web.archive.org/web/2023id_/https://www.usaid.gov/sites/default/files/2022-05/Power-Africa-PUE-2020-Catalog-Rwanda.pdf",
+    "path": "data/raw/evidence_docs/2026-10-11/power_africa_pue_catalog_rwanda_2020.pdf",
+    "bytes": 3449407,
+    "sha256": "9dafe9a5ae69a8c84f2827a7c59428a6ba6cb1b9fdfb0cd04e12dc2643199e4d",
+    "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
+    "retrieved_at": "2026-10-11T01:23:17+00:00",
+    "version": "2026-10-11"
   },
   "data/raw/ghsl_built_c/2025-01-27/GHS_BUILT_C_FUN_E2018_GLOBE_R2023A_54009_10_V1_0_R10_C21.zip": {
     "source_id": "ghsl_built_c",
@@ -2516,6 +2773,1326 @@
     "sha256": "6c348223d649553a8a2802a8f309f010abff11f898c9f163c3d70f391fbd655b",
     "licence": "DHS terms of use",
     "retrieved_at": "2026-10-09T14:59:13+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/power_africa/2023-Power-Africa-Annual-Report-Eng.pdf": {
+    "source_id": "power_africa_reports",
+    "url": "local:manual-download",
+    "path": "data/restricted/power_africa/2023-Power-Africa-Annual-Report-Eng.pdf",
+    "bytes": 9022117,
+    "sha256": "0bc12f417108f3e9c961421897a8273749ea01ac153ffbc11f41fa05b3fa8f2c",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:13+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/power_africa/Power-Africa-Powering-Potential-in-Sub-Saharan-Africa.pdf": {
+    "source_id": "power_africa_reports",
+    "url": "local:manual-download",
+    "path": "data/restricted/power_africa/Power-Africa-Powering-Potential-in-Sub-Saharan-Africa.pdf",
+    "bytes": 13464615,
+    "sha256": "64c35205cd7bde8ebcb1d479fb70311c11684934c5f18aa86abdfe7650367cf6",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:13+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/README.txt",
+    "bytes": 1771,
+    "sha256": "b3a118e16e95d749b1041fbebad806d2a3ece9abfdbd54446d6264e8e6c1b2c0",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Access_to_services/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Access_to_services/README.txt",
+    "bytes": 2000,
+    "sha256": "24cc9146592a7090c70eeaf65f25702558e82ced583fa3c0a95dbf53e336f26c",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Access_to_services/dataset/eicv5_s5f_access_to_services.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Access_to_services/dataset/eicv5_s5f_access_to_services.csv",
+    "bytes": 15334159,
+    "sha256": "00c674de7f9ad4bbb464802a863ccad28a35a59c342d2fb1e5ac9c524dfec187",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Access_to_services/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Access_to_services/metadata.csv",
+    "bytes": 1569,
+    "sha256": "dfb0f0691127f0ecdf40daeca09ae13334a2ab8f113621b81fa4a5ce685fa76a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Credits/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Credits/README.txt",
+    "bytes": 1952,
+    "sha256": "43df8deed91cca1105752e49980e61c11eff8e12ef31b695ac153318a98dfb29",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Credits/dataset/eicv5_s10a1_credits.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Credits/dataset/eicv5_s10a1_credits.csv",
+    "bytes": 797341,
+    "sha256": "be3eb48a716b4726284ea76194bef7c10e7a35caa20265fccd201237f8df02c4",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Credits/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Credits/metadata.csv",
+    "bytes": 1249,
+    "sha256": "f03fff86fc905bd08b363ae74033100cfadcce33841a38b9b25c230626327e11",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__1_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__1_/README.txt",
+    "bytes": 2022,
+    "sha256": "f3e9f8dfa34f2151fdbbc0846e8f3032b9d04219d463afb3a58b7e8b13e4f44a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__1_/dataset/eicv5_s10b1_durable_household_goods.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__1_/dataset/eicv5_s10b1_durable_household_goods.csv",
+    "bytes": 4184783,
+    "sha256": "a17d0dca15a4e418aefafb926c18ef0c3d471af8a6cc2d50aa689da22422f2ff",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__1_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__1_/metadata.csv",
+    "bytes": 1270,
+    "sha256": "4fc422e7eb5a96345d5a61ff74d5e13a9a2cf664c57a2a9ed589ae1ac72ea5a4",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__2_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__2_/README.txt",
+    "bytes": 2009,
+    "sha256": "8858b3522f65050ad905364313356543ac8439a08cf3e6b429538ecf6d75ff03",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__2_/dataset/eicv5_s10b2_durable_household_goods.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__2_/dataset/eicv5_s10b2_durable_household_goods.csv",
+    "bytes": 24730862,
+    "sha256": "5594de0723589b8383201c41e46d4308221cc5e8c1f04801267a555a7a8b799f",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__2_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Durable_household_goods__2_/metadata.csv",
+    "bytes": 1628,
+    "sha256": "d82e1c30aec048360d74c38396b7e2f193bf4db5de1eb22f72569f9c303827a4",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Employment__Salaried__Business/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Employment__Salaried__Business/README.txt",
+    "bytes": 2097,
+    "sha256": "429a4224ca8b2d7502147fdd8560e109f4fd258025de732193b71651c5d91032",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Employment__Salaried__Business/dataset/eicv5_s6b_employment_s6c_salaried_s6d_business.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Employment__Salaried__Business/dataset/eicv5_s6b_employment_s6c_salaried_s6d_business.csv",
+    "bytes": 9703669,
+    "sha256": "61d6609995824e639a13953ba615ea452972705915ace16b44e1b0ee2d358870",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Employment__Salaried__Business/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Employment__Salaried__Business/metadata.csv",
+    "bytes": 3213,
+    "sha256": "c847e6f6ada58f40238a355b04886026b6b410cf9eaa861549e2abe9035e36e9",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure/README.txt",
+    "bytes": 1871,
+    "sha256": "170715bd4fdc82e0fbda2b883f091adffdf54ebc9726798c9c23c94054ee72ce",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure/dataset/eicv5_s8a3_expenditure.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure/dataset/eicv5_s8a3_expenditure.csv",
+    "bytes": 49783912,
+    "sha256": "7720a06d46e9614de22c78eeea63e61c97b391b1b5b82b9282ce81391ac5b547",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure/metadata.csv",
+    "bytes": 1340,
+    "sha256": "2d577de71e39eb455933aff4bc24a6b33d3f1c44b2bd02575175ec2e0908bcd7",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_12_months_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_12_months_/README.txt",
+    "bytes": 2051,
+    "sha256": "9a875014e8d8f9340c325edb6b3f3eef0c1b0ab1b8a434858ad94de92a35b7c7",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_12_months_/dataset/eicv5_s8a1_expenditure.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_12_months_/dataset/eicv5_s8a1_expenditure.csv",
+    "bytes": 62305173,
+    "sha256": "6dff7885bc75c6771dee6c7451ebfbfe2cadf75222dc0101a711ca0f6084589a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_12_months_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_12_months_/metadata.csv",
+    "bytes": 1306,
+    "sha256": "b410eac4c5ba7bb20f8ab7c8c852d8738fdbc3454b7fef5b98bf557706bbe998",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_4_weeks_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_4_weeks_/README.txt",
+    "bytes": 2031,
+    "sha256": "54213de0f3ae97ffd9da67221a91e3704026eeffdb5f24f61641a36b60b8b131",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_4_weeks_/dataset/eicv5_s8a2_expenditure.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_4_weeks_/dataset/eicv5_s8a2_expenditure.csv",
+    "bytes": 49178504,
+    "sha256": "ead64b2e6e74129b02b247652b66c3dd473b911880f3cb9c80af91e7eded7eed",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_4_weeks_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_4_weeks_/metadata.csv",
+    "bytes": 1292,
+    "sha256": "54737c5ecf2ddabca9015478871beb766c1c330200c60ffce80dbddebb4c51c4",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_7_days_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_7_days_/README.txt",
+    "bytes": 2051,
+    "sha256": "6616b2cade3be06a9a8e031e4bba7ee85cc820bb7790e4eeb70e5547201a90f7",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_7_days_/dataset/eicv5_s8b_expenditure.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_7_days_/dataset/eicv5_s8b_expenditure.csv",
+    "bytes": 203927792,
+    "sha256": "be8cc599d4a04690c7badd5df9efbbbc89cff314d5415e23d759f12052261858",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_7_days_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure__last_7_days_/metadata.csv",
+    "bytes": 1545,
+    "sha256": "e500b8fa8071c8eeb4d53170edea46bc8bc6b7dfee333a6c751a91aa7c82da59",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure_on_agriculture/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure_on_agriculture/README.txt",
+    "bytes": 2019,
+    "sha256": "9d837e86672a23f00006456afb40dc2f46d628c3f4c6ee8f2fa0bedfca1982fc",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure_on_agriculture/dataset/eicv5_s7g_expenditure_agriculture.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure_on_agriculture/dataset/eicv5_s7g_expenditure_agriculture.csv",
+    "bytes": 13315474,
+    "sha256": "8004f8c6d9b5bf3ef6a36b2cb6f1cdd81b4346d351e391ae2a58186bdbcb26d7",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure_on_agriculture/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Expenditure_on_agriculture/metadata.csv",
+    "bytes": 1252,
+    "sha256": "317412b8fe52d851212396cb98c5da2762590591dc2d69fc1c737c040515a96b",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Farming/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Farming/README.txt",
+    "bytes": 1980,
+    "sha256": "494321a8d88c499ba6ad578476224db317243b407e992f8e45c0cea009386332",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:11+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Farming/dataset/eicv5_s8c_farming.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Farming/dataset/eicv5_s8c_farming.csv",
+    "bytes": 139705171,
+    "sha256": "d22c75667f5eb3d73d6777afdd941960329583a8413032fb9b095c0894cbb6c8",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Farming/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Farming/metadata.csv",
+    "bytes": 1576,
+    "sha256": "f696093c687e8e0de79b5852f43469535744b7d3813be15d16f3f7d56dba1b4b",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Household/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Household/README.txt",
+    "bytes": 2015,
+    "sha256": "79e211e720eae2ce41277975d077fbf40aa96e96cf5b6ea2cd64353da829e1bf",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Household/dataset/eicv5_s0_s5_household.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Household/dataset/eicv5_s0_s5_household.csv",
+    "bytes": 3472468,
+    "sha256": "60523a18fd1b2907024d43d725e90381754d14c23ed96dfe7ee7fefe1bd2f54b",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Household/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Household/metadata.csv",
+    "bytes": 6362,
+    "sha256": "920c10442a0a9d8daa30ce6959b956796e23849c902d130002b1ed2aea6af6e4",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Income_from_agriculture/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Income_from_agriculture/README.txt",
+    "bytes": 2075,
+    "sha256": "899892b47acf3c581ef3e8380e6cf36f960781ca48ceb315119d7681f4d5cd58",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Income_from_agriculture/dataset/eicv5_s7f_income_agriculture.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Income_from_agriculture/dataset/eicv5_s7f_income_agriculture.csv",
+    "bytes": 9995227,
+    "sha256": "c803b3cffe214110f4c8ded814db1ccb7ce6face6d32e1d10c6c9eb0158d867c",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Income_from_agriculture/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Income_from_agriculture/metadata.csv",
+    "bytes": 1337,
+    "sha256": "a30d0f0b10f3265491b22d435460ca1115db2df379f0a96ccf2f266c12db5314",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__1_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__1_/README.txt",
+    "bytes": 2132,
+    "sha256": "700afb96d138c9b31396a13f39ff75761e7b883a4a092f0e209afde0fb65906e",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__1_/dataset/eicv5_s7b1_land_agriculture.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__1_/dataset/eicv5_s7b1_land_agriculture.csv",
+    "bytes": 1010180,
+    "sha256": "7aa77b4a0be481c00a5c5ca8ccc146cb1009e7801fc5ccce5d21ab52d9ca8c15",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__1_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__1_/metadata.csv",
+    "bytes": 1937,
+    "sha256": "1cbefe9c8e9b8ed679c3e2497101c6e3c6d1905c16f3b6783995927214d6b36d",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__2_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__2_/README.txt",
+    "bytes": 1900,
+    "sha256": "7bf614b31224fa717e49bd1ed020a6314683797f0891fb699da051e58890a917",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__2_/dataset/eicv5_s7b2_land_agriculture.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__2_/dataset/eicv5_s7b2_land_agriculture.csv",
+    "bytes": 14599508,
+    "sha256": "53e853c17aaabd16059a60488e008251a95c56f8f30d7476909d03a1a716d2f8",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__2_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Land__Agriculture__2_/metadata.csv",
+    "bytes": 1237,
+    "sha256": "3920e66e52d0a9f113b60fce2a5a6b63cd3be87c1afe55f1f4cde29d2895e4c0",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Large_crop/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Large_crop/README.txt",
+    "bytes": 2037,
+    "sha256": "b6b84746f58507b517c0b786e9b9f4af5e4feded63afd78c53ca02954b2fae73",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Large_crop/dataset/eicv5_s7d_large_crop.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Large_crop/dataset/eicv5_s7d_large_crop.csv",
+    "bytes": 2555596,
+    "sha256": "b8f354e5d6e0d2e0a50edfe957778cb585b242d87ce71f81754df270af0b085a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Large_crop/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Large_crop/metadata.csv",
+    "bytes": 1373,
+    "sha256": "090bb5c3741ec1750c120fe7daffae62aad7e645e9a684527c777a39ef622902",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Listing_of_credits/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Listing_of_credits/README.txt",
+    "bytes": 1968,
+    "sha256": "52886b0c770027938d3d0e4b78779d764b23f512318e010cb9aa9b6abf71d1c5",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Listing_of_credits/dataset/eicv5_s10a2_listing_of_credits.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Listing_of_credits/dataset/eicv5_s10a2_listing_of_credits.csv",
+    "bytes": 1221181,
+    "sha256": "546295b9ea0b96db5b3fe3593ad5e675ed735ce18032d352836eb58ec9d2ca4c",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Listing_of_credits/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Listing_of_credits/metadata.csv",
+    "bytes": 1440,
+    "sha256": "3603ffcf400142bbc2e99ba58dbdee6785cb958e8a71521248979da4cc0c1919",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__1_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__1_/README.txt",
+    "bytes": 1873,
+    "sha256": "2bf2b6b5c4eb3ed8a4e6bf0f889473beed166cbb934cab71405dcce34c948256",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__1_/dataset/eicv5_s7a1_livestock.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__1_/dataset/eicv5_s7a1_livestock.csv",
+    "bytes": 6418231,
+    "sha256": "c8893d753d7d51a5a0154cd07f122c7b8c010c43287b7ea9412fccd6d8f55fce",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__1_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__1_/metadata.csv",
+    "bytes": 1331,
+    "sha256": "522ab070afbf89225520b05ff295d6ee2040a5103f7b75a2b81ce352c5fc185a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__2_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__2_/README.txt",
+    "bytes": 2056,
+    "sha256": "5ff49330e6c0e7afa6e14b0eb1e8e15386d5d4b5ad021bf69400ab55c7062851",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__2_/dataset/eicv5_s7a2_livestock.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__2_/dataset/eicv5_s7a2_livestock.csv",
+    "bytes": 565213,
+    "sha256": "a55f0085cd76bcf1eeca841d5ffdfe21756606bde36b96b1218690bcc6b6597d",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__2_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__2_/metadata.csv",
+    "bytes": 1612,
+    "sha256": "138113aa27e44924a2281f426f1fc919061057f1e1765b1fed9ce3417342de75",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__3_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__3_/README.txt",
+    "bytes": 2019,
+    "sha256": "fdc6908bf9ff9f355d918599941c0b4666a8004acec4589de06b0fbaaee0ec63",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__3_/dataset/eicv5_s7a3_livestock.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__3_/dataset/eicv5_s7a3_livestock.csv",
+    "bytes": 4890925,
+    "sha256": "2f0256170d323d49c4bc8d06dcdf91a46e128239c94e7ce6a33c7cddb169dcd6",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__3_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__3_/metadata.csv",
+    "bytes": 1479,
+    "sha256": "30ff16437edf35f9c11d63f79be55e3f8242d9409eb77c126b271f3a788275b2",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__4_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__4_/README.txt",
+    "bytes": 2062,
+    "sha256": "8e56a9c022a2c5ab0708d98b19ce221d34a0f3e06735853f73d5884cb1f6efba",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__4_/dataset/eicv5_s7a4_livestock.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__4_/dataset/eicv5_s7a4_livestock.csv",
+    "bytes": 5871100,
+    "sha256": "189b6608a7756779c0f7295e9c2ac3254af1c9a7e3463c04e98f5834dad7e049",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__4_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Livestock__4_/metadata.csv",
+    "bytes": 1415,
+    "sha256": "85632a3aa1f537ae57e9c0d4cd55277eb2db4e870b11a8920812fa55e465517f",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_expenditure/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_expenditure/README.txt",
+    "bytes": 1939,
+    "sha256": "3d3f314bf1970f3f289cc5253c6a4972b48a59ef9e4ddfbadcffc9b66b35d89a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_expenditure/dataset/eicv5_s9e_other_expenditure.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_expenditure/dataset/eicv5_s9e_other_expenditure.csv",
+    "bytes": 10613073,
+    "sha256": "f4df7fcc584326a6490ad7b3c5901c9a0945d70423a8c94fba3b3fa2bb401067",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_expenditure/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_expenditure/metadata.csv",
+    "bytes": 1168,
+    "sha256": "ad4087a13c0aec5c576d437f078739a1e8f528fed0ad09d0965b21a2df12229e",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_income/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_income/README.txt",
+    "bytes": 2062,
+    "sha256": "a730cceaae89b652181b73fbbd9dd604663898c2fd5d9f47ab3fd7a88d536b24",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_income/dataset/eicv5_s9d_other_income.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_income/dataset/eicv5_s9d_other_income.csv",
+    "bytes": 17806370,
+    "sha256": "03204df8baf8b837fb85447b36a5985338843e81bec158901a224fc407f63ec0",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_income/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Other_income/metadata.csv",
+    "bytes": 1328,
+    "sha256": "6e2774a24be05691d6b16354be654a277f3d9245646744f6cd297486b3bc874a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Parcels/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Parcels/README.txt",
+    "bytes": 1944,
+    "sha256": "4306b8343c845107bc17661669a4f965f848770317a55468ac8bf623564d63dd",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Parcels/dataset/eicv5_s7c_parcels.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Parcels/dataset/eicv5_s7c_parcels.csv",
+    "bytes": 3942550,
+    "sha256": "62c995fcac42d9d6b851ed2312faae48ffb93b6b24a55246f7030c19abf6e13a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Parcels/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Parcels/metadata.csv",
+    "bytes": 1903,
+    "sha256": "44d08d7ae944d37135aa28910b51315bdf5e4cbaf9dd982a332c6c74875c1272",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Person/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Person/README.txt",
+    "bytes": 1948,
+    "sha256": "330c8af4202135ca513389ea4fd0f005d9816ac63b19da3f9db0a5b03675f288",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Person/dataset/eicv5_s1_s2_s3_s4_s6a_s6e_person.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Person/dataset/eicv5_s1_s2_s3_s4_s6a_s6e_person.csv",
+    "bytes": 14397277,
+    "sha256": "2b534af790426642b244dcd49a69a9667ba9503d009f68e4ccfe85a0e84772bd",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Person/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Person/metadata.csv",
+    "bytes": 6620,
+    "sha256": "15714ee6ba4fd6a611e5a5ac5a8c6c4f3e592526ac7143347c472bd039a51590",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Poverty_file/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Poverty_file/README.txt",
+    "bytes": 1963,
+    "sha256": "2a5e74d6e753104994bfbf81574d4966146c6cb87d7ee7ff7bd84d2302739479",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Poverty_file/dataset/eicv5_poverty_file.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Poverty_file/dataset/eicv5_poverty_file.csv",
+    "bytes": 4136324,
+    "sha256": "5d99d40cc1088d994d3869901cf1e5c3eb7fadb116eb53f153998b2cabdb3c20",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Poverty_file/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Poverty_file/metadata.csv",
+    "bytes": 2253,
+    "sha256": "1c981dce1f4a0557050f66cb68d9ca5182dd920be4be74c1a08d48775ff1235d",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Savings/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Savings/README.txt",
+    "bytes": 1990,
+    "sha256": "f99accd5f371c82e3b83a0b57a4e3b4e326d6a5eca6d8977f465d0a5199ff86b",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Savings/dataset/eicv5_s10c1_savings.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Savings/dataset/eicv5_s10c1_savings.csv",
+    "bytes": 2375626,
+    "sha256": "2e034bd35d752b084ec4df71af90bef4cec44ba0e15fd5b5cccf2671ea86c47e",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Savings/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Savings/metadata.csv",
+    "bytes": 1402,
+    "sha256": "b7642164aba79d4b8fd02545abfb74d49c44076951ac854beb6351d2f0da71d3",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Small_crop/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Small_crop/README.txt",
+    "bytes": 2011,
+    "sha256": "9de2f48ad2b6898224f3df768821c02d68ba066fa584d3335f0e7770ce2e741d",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Small_crop/dataset/eicv5_s7e_small_crop.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Small_crop/dataset/eicv5_s7e_small_crop.csv",
+    "bytes": 9190477,
+    "sha256": "6683f6b7e25267f7e171d9c8d20f34c724f4b16d503b4f82c7f7b6cfd09e4f4a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Small_crop/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Small_crop/metadata.csv",
+    "bytes": 1670,
+    "sha256": "7d9fa6e3682582877d7a2300f759ca69f60de260ea990c3f84fcf5dc51705a79",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Tontine/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Tontine/README.txt",
+    "bytes": 1987,
+    "sha256": "99ac895a070e51603a2bd7893ed1d607c1c2211325f73c77b73b1554ff840f49",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Tontine/dataset/eicv5_s10c2_tontine.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Tontine/dataset/eicv5_s10c2_tontine.csv",
+    "bytes": 2435913,
+    "sha256": "64c5fc8d0ec03e7e70dd62f901bd5ab3ef3a010623efebd4aa40db3935ca4930",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Tontine/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Tontine/metadata.csv",
+    "bytes": 1284,
+    "sha256": "ec7aa96d0f624b2a6b5c6b3e6cd26d1653d1442deae24e6df993ad52fe464f51",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_in/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_in/README.txt",
+    "bytes": 2056,
+    "sha256": "8705097f06cc79ee90df17e30094ff4f1997708664189646aba331662f2d257a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_in/dataset/eicv5_s9b_transfers_in.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_in/dataset/eicv5_s9b_transfers_in.csv",
+    "bytes": 6904140,
+    "sha256": "5cc8528af6a76887b25d02046a756cbd07e1351a43dff223a5ee10d930a9a3c4",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_in/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_in/metadata.csv",
+    "bytes": 1789,
+    "sha256": "9347eded2def34835430ce7c72b36530107d295e7bffa0b8c3cc03061b70cfcb",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_out/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_out/README.txt",
+    "bytes": 2065,
+    "sha256": "a629ecc304667bf1c6f5a2259bc18f3add1d476c8bbd0287ac8f60cb25eb7b3f",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_out/dataset/eicv5_s9a_transfers_out.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_out/dataset/eicv5_s9a_transfers_out.csv",
+    "bytes": 6566739,
+    "sha256": "82098a613f4cda4c845833f0ef5b0d2eae6952b5d1fcbae2573d5bf48ff0acae",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_out/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transfers_out/metadata.csv",
+    "bytes": 1731,
+    "sha256": "782b8c96c1a31905d4fa672126d0d6066c6cc5e714fde667a83a783ba56b3e56",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transformation_of_agriculture/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transformation_of_agriculture/README.txt",
+    "bytes": 2085,
+    "sha256": "9c691503c9868b60d7c28444a6c63053d8d8124b2f74a2eec5fc042eb2e0b44a",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transformation_of_agriculture/dataset/eicv5_s7h_transformation_agriculture.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transformation_of_agriculture/dataset/eicv5_s7h_transformation_agriculture.csv",
+    "bytes": 3487483,
+    "sha256": "af549f87bcbaafc34020ee416548dce5f6fc9521442418f43277033364d3e576",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transformation_of_agriculture/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__Transformation_of_agriculture/metadata.csv",
+    "bytes": 1760,
+    "sha256": "b66ddd107719bfc90c3abc65acd3e379c251061c9a68192ed769f673c4ab524c",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__1_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__1_/README.txt",
+    "bytes": 2168,
+    "sha256": "52a7e6dce597027940f92a24b4c2797001a5888759494ce28a2f9d08bed012cb",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__1_/dataset/eicv5_s9c_vup_ubudehe_and_rssp_schemes.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__1_/dataset/eicv5_s9c_vup_ubudehe_and_rssp_schemes.csv",
+    "bytes": 1370818,
+    "sha256": "18eed0532ff29e128db830cd3f44ce581fdf3349375acbf551f0692af65a6012",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__1_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__1_/metadata.csv",
+    "bytes": 3967,
+    "sha256": "c8b99ff4091a6c1abf615f1495ecd450c75dc7c4420cffa29a3f70f3cbeba058",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__2_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__2_/README.txt",
+    "bytes": 2081,
+    "sha256": "05ee56dfb7c4b6bdedd0d6e42aebb58eb1b301a96b7b9881759133d6d571e9c3",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__2_/dataset/eicv5_s9c3_vup_ubudehe_and_rssp_schemes.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__2_/dataset/eicv5_s9c3_vup_ubudehe_and_rssp_schemes.csv",
+    "bytes": 44882,
+    "sha256": "8c56e28a1f3037b0acf9656c5fe54a044113218d0cd0eb0d8d9b2c65bdb19bed",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__2_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__2_/metadata.csv",
+    "bytes": 4033,
+    "sha256": "790ba5d926aaeea49b55fe01f2eb93d8773f828f26ff522acafc52418d5a39f9",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__3_/README.txt": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__3_/README.txt",
+    "bytes": 2081,
+    "sha256": "8dd8e01707338dd07a7b8520377986cd0927b1c4acabafea2990d020455b8b66",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__3_/dataset/eicv5_s9c4_vup_ubudehe_and_rssp_schemes.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__3_/dataset/eicv5_s9c4_vup_ubudehe_and_rssp_schemes.csv",
+    "bytes": 17946,
+    "sha256": "456da1ec4a44a538455644cf6a2838c91df4565ab24929f8917d65471733a94f",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__3_/metadata.csv": {
+    "source_id": "eicv5",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/datasets/EICV5__VUP__Ubudehe__and_RSSP_Schemes__3_/metadata.csv",
+    "bytes": 3155,
+    "sha256": "178021e599aef2eca43da788befd93bc997227fa6daed5db4b1d168267d645f8",
+    "licence": null,
+    "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectB.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectB.dta",
+    "bytes": 56151,
+    "sha256": "631bdc0365acaf7f41355ecb76f4f6f28acdb2778320922083cd25d07765d81e",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectE.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectE.dta",
+    "bytes": 214632,
+    "sha256": "05baa1f78dd0b21f429cf1e4824ddfccc6debb27d0c6eaf21dc8f953954e4cb1",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectF.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectF.dta",
+    "bytes": 145493,
+    "sha256": "c2c34f586e66dbb2f5ce741931592eded0468d4e063e1f99f3f483c8d9604120",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_Section_CDGHI.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_Section_CDGHI.dta",
+    "bytes": 107177,
+    "sha256": "98d368fd0ccfbaa7992a0b33c72b2757580b4848a1566a5333992581ff836f37",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Education facility_DATASET_BC.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Education facility_DATASET_BC.dta",
+    "bytes": 284110,
+    "sha256": "d171fd2684d163628aeeb4f13631702daf6ad9603df8149217775c105a124d45",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Education facility_DATASET_C2.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Education facility_DATASET_C2.dta",
+    "bytes": 15998,
+    "sha256": "9872ce754b0ff94f9c18911d218e217e59bde2becd87e087322af16a44415767",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Health facility_Dataset.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Health facility_Dataset.dta",
+    "bytes": 304807,
+    "sha256": "3807dd821b8a699b62e616ae77974db7a5059b4dc817bd46c3885335f06baf13",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/ROSTER_A1.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/ROSTER_A1.dta",
+    "bytes": 2380101,
+    "sha256": "89edc46a173c66010127798e5db99fd60fb86af0e3c750501a965f64b38c29ae",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_A2.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_A2.dta",
+    "bytes": 1919083,
+    "sha256": "1d92d8f4264ad0af884680a53b5257d04a0bb9cbf1b7ee13b735b84aa78242c3",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_B.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_B.dta",
+    "bytes": 543865,
+    "sha256": "529ae4effa990ef762ef741398cf8dfb6a3707ef66fb21f36012dd0507fee4c2",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_C1.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_C1.dta",
+    "bytes": 2879114,
+    "sha256": "78de0d08b46cfead83b83b7a80da095f1acf09a951a2de9ab2501566eec103e1",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_C2.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_C2.dta",
+    "bytes": 121873,
+    "sha256": "08f42a051cebb8bb20e390887ef21066195cbacdcea5a10f05271256bb88c613",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_D.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_D.dta",
+    "bytes": 263209,
+    "sha256": "9721633570090bd7abb89b3f5494afaf67c1d06883c93a068031c3ab9f9cfe36",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_DE.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_DE.dta",
+    "bytes": 821160,
+    "sha256": "ece83c51a21cb9ab9f4fa04f3ee95260f68ea6811639f85faad3b69e206b2990",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_EF1.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_EF1.dta",
+    "bytes": 703823,
+    "sha256": "ced8621064eb7c8e4c5bc2d649755db9bda34de91c6f7f4eed931c053849d279",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_F1.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_F1.dta",
+    "bytes": 1366045,
+    "sha256": "8fe2e895606c314950e9a55849c0ebbad401fe1c27a29b150ffe7e7e999352dc",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_F2.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_F2.dta",
+    "bytes": 1251493,
+    "sha256": "21c58cf53a9c006f457eae8908d591084b02bb0133eff41c64d614def148038e",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_G1.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_G1.dta",
+    "bytes": 7043191,
+    "sha256": "21da280f71e9d6fe3a5a99aa5919d733539b6a3a59f001e305359c018ac66278",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_G2.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_G2.dta",
+    "bytes": 644263,
+    "sha256": "81d975f4e0ef6e6577046966240ed809b6bb9bb0a5008e599e5a1461e86d9ca0",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_H.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_H.dta",
+    "bytes": 250804,
+    "sha256": "3b972cb0cf16be4adfbb212252dd587fc96ce740a292ef59f3d5caf286a9fcbb",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_I.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_I.dta",
+    "bytes": 8251465,
+    "sha256": "c6b3e5d2b58dfe2beaec5bcbd7d0d0fb65bbca1689968a2dcc405ceee496c6cf",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_I2J.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_I2J.dta",
+    "bytes": 350639,
+    "sha256": "2e9b0f6700eaa932607d978f60f8a12f4964d5697410802ee98da8f7f7a6a567",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_MN.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/SECTION_MN.dta",
+    "bytes": 1522455,
+    "sha256": "85493163028e2c7d6aafc236d2034aa0fab9ff8b15a38aa18121a40ca14659a5",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/Section_KL.dta": {
+    "source_id": "mtf_rwanda",
+    "url": "local:manual-download",
+    "path": "data/restricted/worldbank_mtf/RWA_2022_MTF/household_survey_data/Section_KL.dta",
+    "bytes": 978326,
+    "sha256": "d60f41f3c655abbfe93d4c189dcd150f86b041412a4ebc83aac048910b3df424",
+    "licence": "CC-BY-3.0-IGO (report)",
+    "retrieved_at": "2026-10-11T01:22:10+00:00",
     "access": "restricted"
   }
 }

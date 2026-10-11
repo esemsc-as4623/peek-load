@@ -48,3 +48,21 @@ def test_library_summary_on_a_constant_load():
     assert s["daily_kwh_mean"] == pytest.approx(2.4)
     assert s["coincident_peak_w_p90"] == pytest.approx(100.0)
     assert all(s[f"w_h{h:02d}"] == pytest.approx(100.0) for h in range(24))
+
+
+def test_validation_flags_unit_slips_ranges_and_disagreement():
+    from rtl.demand.validate import checks
+
+    cfg = {"rated_power_w": [{"match": "tv", "min": 5, "max": 300}, {"match": ".*", "min": 0.5, "max": 5e4}],
+           "hours_per_day": {"min": 0, "max": 24}, "ownership_share": {"min": 0, "max": 1},
+           "usage_window_hour": {"min": 0, "max": 24}, "consensus": {"min_sources": 3, "max_ratio": 3.0}}
+    rows = [("a", "rated_power_w", "tv", 60, "W"), ("b", "rated_power_w", "tv", 70, "W"),
+            ("c", "rated_power_w", "tv", 0.08, "kW"),       # 80 W after unit conversion: fine
+            ("d", "rated_power_w", "tv", 900, "W"),         # outside the TV range
+            ("e", "hours_per_day", "radio", 30, "h/day"),   # impossible hours
+            ("f", "ownership_share", "fridge", 0.4, "fraction")]
+    e = pd.DataFrame([{"evidence_id": i, "family": f, "appliance": a, "value": v, "value_low": None,
+                       "value_high": None, "unit": u, "doc_id": "x", "page": 1} for i, f, a, v, u in rows])
+    flags = checks(e, cfg)
+    assert set(flags.evidence_id) == {"d", "e"}
+    assert set(flags[flags.evidence_id == "d"].check) == {"range", "consensus"}

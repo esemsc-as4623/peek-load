@@ -131,6 +131,23 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
 - **RAMP library runner:** a per-building preview (`pixi run profile-library --buildings`). The single draft
   profile gives 2.4 kWh/month against REG/QSEL rural medians of 4–8 kWh/month.
 
+### Phase-2 progress (2026-10-11)
+- **Approvals recorded** (`data/gold/approvals.yaml`): evidence (blanket, backed by automated checks) and the
+  profile mapping.
+- **Automated evidence validation** (`pixi run validate-evidence`, rules in `config/plausibility.yaml`) checks units,
+  physical/market ranges per appliance and cross-source agreement. **18 of 1,067 values are flagged** (e.g. a 3.6 W
+  sewing machine, a 12 kW "irrigation pump" that is really a whole scheme) and listed in
+  `reports/review/validation_flags.csv`. Household profiles will also be checked against the World Bank
+  Multi-Tier Framework energy and capacity thresholds, the convention OnSSET and the Global Electrification
+  Platform use.
+- **MTF Rwanda 2022 microdata**, now in hand, fills the biggest gap: hours of use.
+  - Grid-connected households: phone charger 71%, CFL bulbs 58% (≈5 bulbs, 5 h/day), TV ≈27% (3–4 h/day),
+    iron 20%, radio 14% (4 h/day), fridge 5% (median 12 h/day).
+  - Household enterprises (n=400; mostly shops): a median of 11–12 operating hours a day, 2 of them after 6 pm.
+- **Power Africa PUE 2020 Rwanda catalogue** recovered from the Internet Archive (83 pages; to curate).
+- **EICV5 2016-17** received (household, durable goods, expenditure, poverty files) for a spending-based check
+  on consumption.
+
 ### After the mid-point (modelling phase)
 5. Appliance profiles per building class and context (urban/rural, grid/off-grid, wealth), with ownership from
    the DHS 2025 microdata and parameters from the evidence table.
@@ -146,7 +163,7 @@ and page for every value, and human review), not through the Claude API.
 
 | Priority | What | Why | How |
 |---|---|---|---|
-| 1 | **World Bank MTF Rwanda microdata** | appliance **usage hours** by tier: the biggest gap in the RAMP profiles (today mostly assumptions) | repo owner (registered; licensed download) |
+| 1 | ~~**World Bank MTF Rwanda microdata**~~ (received 2026-10-11) | appliance **usage hours** by tier: the biggest gap in the RAMP profiles (today mostly assumptions) | repo owner (registered; licensed download) |
 | 1 | **REG data**: customers and consumption by tariff category and village; hourly feeder/transformer loads (Kigali, Rusizi); MV/LV network GIS | demand validation; cooling attribution; better grid distances than Gridfinder | request via the organisers / REG |
 | 1 | **Productive-use sources**: ~~NREL/USAID PUE in African Micro-Grids (2018)~~, ~~GIZ PV for Productive Use catalogue (2016)~~, ~~ESMAP Mini Grids (2022, text)~~ (obtained; 26 values curated with verified quotes); **Power Africa PUE 2020 Rwanda catalogue** (blocked by a bot check, so a browser download is needed); AMDA benchmarking, more Efficiency for Access briefs | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | repo owner: download the Power Africa PDF in a browser, copy it to the server, then `pixi run register-local evidence_docs <path>`; the rest in the coding session |
 | 2 | **Published RAMP input sets** (RAMP repo examples; open-access RAMP studies in sub-Saharan Africa) | ready-made, peer-reviewed user-type parameters to compare with ours | public: fetched in the coding session |

@@ -1,0 +1,52 @@
+# Coarse plausibility rules for appliance evidence and profiles (`pixi run validate-evidence` applies them).
+#
+# These replace row-by-row human review with checks a reviewer would apply anyway. They catch unit slips
+# (kW read as W), transcription errors and out-of-scope values. They do NOT prove a value is right; they only
+# flag values that can't be right or that disagree strongly with the other sources.
+
+# 1. Physical / market ranges for rated power (W), matched on the appliance name (first matching regex wins).
+#    Wide on purpose: they span efficient DC products to typical AC grid appliances.
+rated_power_w:
+  - {match: "led",                       min: 1,    max: 25}
+  - {match: "cfl",                       min: 5,    max: 40}
+  - {match: "incandescent|bulb|light",   min: 1,    max: 150}
+  - {match: "phone|charg",               min: 1,    max: 30}
+  - {match: "radio",                     min: 1,    max: 50}
+  - {match: "tv|television",             min: 5,    max: 300}
+  - {match: "fan",                       min: 5,    max: 150}
+  - {match: "fridge|refrigerat",         min: 25,   max: 500}
+  - {match: "freezer|ice",               min: 25,   max: 800}
+  - {match: "computer|laptop",           min: 10,   max: 300}
+  - {match: "iron",                      min: 300,  max: 2600}
+  - {match: "sewing",                    min: 20,   max: 500}
+  - {match: "hair_dryer|dryer",          min: 100,  max: 2400}
+  - {match: "clipper|shaver",            min: 3,    max: 50}
+  - {match: "incubat",                   min: 20,   max: 1000}
+  - {match: "kettle",                    min: 800,  max: 3000}
+  - {match: "microwave",                 min: 500,  max: 1800}
+  - {match: "pressure_cooker",           min: 150,  max: 1500}   # electric pressure cookers: ~200-1,000 W
+  - {match: "cooker|stove|cook",         min: 300,  max: 5000}
+  - {match: "washing|laundry",           min: 200,  max: 2500}
+  - {match: "pump",                      min: 30,   max: 10000}
+  - {match: "weld",                      min: 1000, max: 20000}
+  - {match: "mill|grind|huller",         min: 500,  max: 40000}
+  - {match: "saw|planer|drill|lathe|carpent", min: 300, max: 5000}
+  - {match: ".*",                        min: 0.5,  max: 50000}   # anything else: only absurd values flagged
+
+hours_per_day: {min: 0, max: 24}
+ownership_share: {min: 0, max: 1}
+usage_window_hour: {min: 0, max: 24}
+
+# 2. Consistency: when an appliance + parameter has at least `min_sources` values, flag values more than
+#    `max_ratio` times above or below their median (a strong disagreement with the other sources).
+consensus: {min_sources: 3, max_ratio: 3.0}
+
+# 3. Household profiles vs the World Bank Multi-Tier Framework (Bhatia & Angelou 2015, ESMAP), the convention
+#    OnSSET and the Global Electrification Platform use: minimum daily energy (Wh/day) and peak capacity (W)
+#    per tier. A household archetype should land inside the tier it claims.
+mtf_tiers:
+  1: {min_wh_day: 12,   min_capacity_w: 3}
+  2: {min_wh_day: 200,  min_capacity_w: 50}
+  3: {min_wh_day: 1000, min_capacity_w: 200}
+  4: {min_wh_day: 3400, min_capacity_w: 800}
+  5: {min_wh_day: 8200, min_capacity_w: 2000}

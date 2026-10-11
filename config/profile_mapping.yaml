@@ -1,4 +1,5 @@
-# B2: building -> RAMP profile mapping (human-reviewable; `pixi run profile-mapping` applies it).
+# B2: building -> RAMP profile mapping (`pixi run profile-mapping` applies it).
+# Status: approved by the repo owner on 2026-10-11 (data/gold/approvals.yaml).
 #
 # Each building has Claude class probabilities (labels table). For each class, the rules below choose one or more
 # profiles from the building's context. A building's weight on a profile = sum over classes of

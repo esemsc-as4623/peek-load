@@ -43,7 +43,13 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 - **Building use:** Claude (Haiku 4.5, prompt v2) labels a *context card* built only from open vector data. No imagery is involved: footprint, height and floors, size against neighbours, land use, road frontage, nearby tags and places, density, settlement class, wealth and distances.
   - Measured against human gold labels, agreement is ~39–43%, and each answer cites ~5.4 context cues.
   - The human labels were mostly made with imagery, so they hold information the vector cards lack. The labels are probabilistic; use the class probabilities, not just the top class.
-- **Evidence:** extracted by Claude with source citations, then normalised to a schema. 81% of quotes were automatically verified verbatim on the cited page. No row is human-verified yet.
+- **Evidence:** extracted by Claude with source citations, then normalised to a schema. 81% of quotes were automatically verified verbatim on the cited page. The repo owner gave the RAMP-relevant rows a
+  blanket approval (2026-10-11), not a row-by-row review. Automated checks screen every value for units, physical or
+  market ranges and agreement between sources, and flagged rows (18 of 1,067) are excluded unless overridden.
+- **Appliance use (MTF 2022):** weighted aggregates from the World Bank MTF Rwanda 2022 microdata (restricted;
+  aggregates only, cells under 10 respondents suppressed). They give ownership, number owned and hours of use per
+  appliance for grid-connected urban and rural households, plus household-enterprise operating hours and appliance
+  use (`data/processed/validation_anchors/mtf_*.csv`).
 
 ## Known limitations
 1. Google's 2.5D heights are compressed: single-storey buildings read ~4–5 m and towers are under-estimated, so 3+ storey floors are unreliable.

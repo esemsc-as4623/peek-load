@@ -268,3 +268,20 @@ sources:
     role: evidence  # docs marked role: validation in evidence_docs.yaml feed validation anchors only
     status: verified
 
+  eicv5:
+    owner: A4
+    name: NISR EICV5 2016-17 cross-sectional household survey (household, durable goods, expenditure, poverty files)
+    url: null  # downloaded by the repo owner (NISR microdata); data/restricted/reg/EICV5
+    access: restricted  # never redistributed; aggregates only
+    licence: NISR terms of use
+    role: validation
+    status: verified
+
+  power_africa_reports:
+    owner: A4
+    name: Power Africa annual report 2023 and "Powering Potential in Sub-Saharan Africa" (context documents)
+    url: null  # downloaded by the repo owner; data/restricted/power_africa
+    access: open
+    licence: US government work, to_verify
+    role: evidence
+    status: verified

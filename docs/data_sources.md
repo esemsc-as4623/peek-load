@@ -21,16 +21,18 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `gridfinder` | Gridfinder predicted MV grid lines (Arderne et al. 2020), global grid.gpkg v1.1.1 | A2 | feature | open | CC-BY-4.0 | verified | 1 (725 MB) |
 | `health_facilities` | Health facilities (healthsites.io export on HDX, dataset rwanda-healthsites; derived from OSM) | A2 | weak_label | open | ODbL-1.0 | verified | 1 (1 MB) |
 | `era5_arco` | ERA5 hourly 2 m temperature via ARCO-ERA5 public Zarr (0.25 deg) | A3 | feature | open | to_verify | to_verify | - |
-| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | to_verify | 42 (167 MB) |
+| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | to_verify | 55 (219 MB) |
 | `nasa_power` | NASA POWER hourly T2M (MERRA-2, cross-check at 4 towns) + daily GHI ALLSKY_SFC_SW_DWN (CERES SYN1deg, 1 deg) | A3 | feature | open | NASA open data (no restrictions; acknowledgement of the NASA LaRC POWER Project requested) | verified | 11 (6 MB) |
 | `openmeteo` | ERA5-Land hourly 2 m temperature (0.1 deg) via Open-Meteo Historical Weather API (no downscaling) | A3 | feature | open | CC-BY-4.0 (Open-Meteo) + Copernicus C3S licence (ERA5-Land) | verified | 33 (88 MB) |
 | `census_2022` | Rwanda 5th Population and Housing Census 2022 (households by sector), NISR | A4 | validation | open | to_verify | to_verify | - |
 | `dhs_api` | DHS Program public API indicators for Rwanda (household electricity + asset ownership, 2015/2019/2025) | A4 | evidence | open | DHS Program terms (aggregate indicators, citation required) | verified | 2 (1 MB) |
 | `dhs_2025` | Rwanda DHS 2025 (released 2026-08-05; microdata + GPS restricted) | A4 | evidence | restricted | DHS terms of use | to_verify | 75 (375 MB) |
 | `dhs_2019` | Rwanda DHS 2019-20 (report public; microdata + GPS restricted) | A4 | evidence | restricted | DHS terms of use | to_verify | - |
-| `mtf_rwanda` | World Bank Multi-Tier Framework energy access survey, Rwanda ("Beyond Connections") | A4 | evidence | login | CC-BY-3.0-IGO (report) | to_verify | - |
+| `mtf_rwanda` | World Bank Multi-Tier Framework energy access survey, Rwanda ("Beyond Connections") | A4 | evidence | login | CC-BY-3.0-IGO (report) | to_verify | 24 (32 MB) |
 | `qsel_rwanda` | Columbia QSEL / REG Rwanda electricity consumption analyses | A4 | validation | open | to_verify | verified | - |
-| `evidence_docs` | Evidence corpus of public reports (DHS, MTF, EICV7, RPHC5, REG/RURA, QSEL, Efficiency for Access) | A4 | evidence | open | per document (config/evidence_docs.yaml); several to_verify (human licence review) | verified | 21 (154 MB) |
+| `evidence_docs` | Evidence corpus of public reports (DHS, MTF, EICV7, RPHC5, REG/RURA, QSEL, Efficiency for Access) | A4 | evidence | open | per document (config/evidence_docs.yaml); several to_verify (human licence review) | verified | 22 (157 MB) |
+| `eicv5` | NISR EICV5 2016-17 cross-sectional household survey (household, durable goods, expenditure, poverty files) | A4 | validation | restricted | NISR terms of use | verified | 106 (707 MB) |
+| `power_africa_reports` | Power Africa annual report 2023 and "Powering Potential in Sub-Saharan Africa" (context documents) | A4 | evidence | open | US government work, to_verify | verified | 2 (22 MB) |
 
 ## Evidence corpus (appliance profiles and validation anchors)
 
@@ -56,9 +58,9 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `efa_brief_milling_2021` | Solar Appliance Technology Brief: Milling | Efficiency for Access / CLASP | 2021 | verified |
 | `rura_tariff_board_decision` | RURA Board Decision on Electricity End-User Tariffs in Rwanda | RURA | None | unavailable |
 | `nep_rwanda_2019` | Design of the National Electrification Plan in Rwanda (2019) | REG / MININFRA | 2019 | unavailable |
-| `power_africa_pue_catalog_rwanda_2020` | Power Africa Productive Use of Energy Catalog 2020 - Rwanda | USAID Power Africa | 2020 | unavailable |
+| `power_africa_pue_catalog_rwanda_2020` | Power Africa Productive Use of Energy Catalog 2020 - Rwanda | USAID Power Africa | 2020 | verified |
 | `nrel_pue_microgrids_2018` | Productive Use of Energy in African Micro-Grids: Technical and Business Considerations | NREL / Energy 4 Impact (USAID Power Africa) | 2018 | verified |
 | `giz_pv_productive_use_catalogue_2016` | Photovoltaics for Productive Use Applications: A catalogue of DC-appliances | GIZ | 2016 | verified |
 | `esmap_minigrids_half_billion_2022` | Mini Grids for Half a Billion People: Market Outlook and Handbook for Decision Makers | ESMAP / World Bank | 2022 | verified |
 
-Manifest: 208 files, 3.4 GB in total.
+Manifest: 354 files, 4.3 GB in total.

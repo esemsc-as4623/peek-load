@@ -1,0 +1,18 @@
+# Human gate decisions by the repo owner. Cited by docs/datasheet.md and docs/ai_use.md.
+# A blanket approval is recorded as such; it is never presented as a row-by-row review.
+
+evidence_review:
+  decision: approved
+  scope: reports/review/evidence_review.csv as of commit ee90948 (1,067 RAMP-relevant values)
+  date: 2026-10-11
+  by: repo owner
+  basis: >-
+    Blanket approval without row-by-row review. Values are additionally screened by automated plausibility and
+    consistency checks (rtl.demand.validate); rows those checks flag are excluded from appliance profiles unless
+    the owner overrides them in reports/review/validation_flags.csv.
+
+profile_mapping:
+  decision: approved
+  scope: config/profile_mapping.yaml as of commit ee90948
+  date: 2026-10-11
+  by: repo owner

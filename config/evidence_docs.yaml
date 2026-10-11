@@ -218,13 +218,12 @@ documents:
     title: Power Africa Productive Use of Energy Catalog 2020 - Rwanda
     publisher: USAID Power Africa
     year: 2020
-    url: https://uatweb.usaid.gov/sites/default/files/2022-05/Power-Africa-PUE-2020-Catalog-Rwanda.pdf
+    url: https://web.archive.org/web/2023id_/https://www.usaid.gov/sites/default/files/2022-05/Power-Africa-PUE-2020-Catalog-Rwanda.pdf
     licence: public domain (US government work), to_verify
     topics: [power, productive_use]
     rwanda_specific: true
     role: evidence
-    status: unavailable  # USAID server answers scripted requests with an HTML bot check (2026-10-10); a browser
-                         # download by the repo owner + `pixi run register-local` would add it
+    status: verified  # USAID blocks scripted requests; Internet Archive copy (2026-10-11)
 
   # ------------------------------------------------------------------ productive use (added 2026-10-10; curated in
   # the coding session by rtl.ingest.curate_evidence, not by the Claude API)

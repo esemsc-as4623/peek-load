@@ -42,7 +42,11 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
   - first-seen threshold;
   - cooling-class approach;
   - climate source (Copernicus CDS).
+- **Approved 2026-10-11** (`data/gold/approvals.yaml`):
+  - the evidence review sheet, as a **blanket approval** (not row by row), backed by automated plausibility
+    checks (`rtl.demand.validate`, rules in `config/plausibility.yaml`) that flag rows for exclusion;
+  - the building → profile mapping (`config/profile_mapping.yaml`).
 - **Still to come:**
-  - review and sign-off of every appliance-profile parameter;
+  - sign-off of the finished appliance profiles (archetypes) built from approved evidence and the MTF 2022 survey;
   - licence review before publishing;
   - the final submission text.
