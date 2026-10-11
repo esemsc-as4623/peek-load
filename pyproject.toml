@@ -120,6 +120,7 @@ mtf-appliances = "python -m rtl.ingest.mtf_appliances"
 profile-mapping = "python -m rtl.demand.mapping"
 profile-library = "python -m rtl.demand.runner"
 profile-checks = "python -m rtl.demand.checks"
+dashboard-data = "python -m rtl.dashboard.export"
 docs-sources = "python -m rtl.docs_sources"
 # --- quality gates
 qa = "python -m rtl.qa"

@@ -42,14 +42,18 @@ def simulate(arch: Archetype, n: int = N_HOUSEHOLDS, days: int = DAYS, seed: int
 def summarise(arch: Archetype, load: np.ndarray, n: int = N_HOUSEHOLDS) -> dict:
     per_hh = load / n
     daily_kwh = per_hh.sum(axis=1) / 60 / 1000
-    hourly_w = per_hh.reshape(load.shape[0], 24, 60).mean(axis=(0, 2))
+    by_hour = per_hh.reshape(load.shape[0], 24, 60).mean(axis=2)  # (days, 24)
+    hourly_w = by_hour.mean(axis=0)
+    weekend = (pd.Timestamp(START).dayofweek + np.arange(load.shape[0])) % 7 >= 5
     peaks = per_hh.max(axis=1)
     return {"profile_id": arch.archetype_id, "status": arch.status, "n_households": n, "days": load.shape[0],
             "daily_kwh_mean": daily_kwh.mean(), "daily_kwh_p10": np.quantile(daily_kwh, 0.1),
             "daily_kwh_p90": np.quantile(daily_kwh, 0.9), "annual_kwh_mean": daily_kwh.mean() * 365,
             "coincident_peak_w_p50": np.median(peaks), "coincident_peak_w_p90": np.quantile(peaks, 0.9),
             "kwh_day_all_units_on": arch.expected_daily_kwh(n) / n,
-            **{f"w_h{h:02d}": hourly_w[h] for h in range(24)}}
+            **{f"w_h{h:02d}": hourly_w[h] for h in range(24)},
+            **{f"w_weekday_h{h:02d}": by_hour[~weekend, h].mean() if (~weekend).any() else np.nan for h in range(24)},
+            **{f"w_weekend_h{h:02d}": by_hour[weekend, h].mean() if weekend.any() else np.nan for h in range(24)}}
 
 
 def build_library() -> pd.DataFrame:

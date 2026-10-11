@@ -71,20 +71,27 @@ def building_weights(row: pd.Series, probs: dict[str, float], rules: dict) -> di
     return out
 
 
-def main() -> None:
+def weights_table(top_class: bool = False) -> pd.DataFrame:
+    """(bldg_id, profile_id, weight) for every labelled building. top_class=True puts all probability on the
+    top label (the dashboard's "top class only" alternative); the default keeps the full class probabilities."""
     cfg = load_yaml("profile_mapping.yaml")
     lab = pd.read_parquet(PROCESSED_DIR / "labels.parquet")
-    lab = lab[lab.labeler == LABELER][["bldg_id", "probs_json"]]
+    lab = lab[lab.labeler == LABELER][["bldg_id", "label", "probs_json"]]
     ctx = duckdb.sql(f"""SELECT bldg_id, pop_density_per_km2, ghsl_class, rwi, overture_category, facility_type
                          FROM read_parquet('{INTERIM_DIR / "building_context.parquet"}')""").df()
     df = context_flags(lab.merge(ctx, on="bldg_id", how="left"), cfg)
     rows = []
     for r in df.itertuples(index=False):
         r = pd.Series(r._asdict())
-        probs = {k: v for k, v in json.loads(r.probs_json).items() if not k.startswith("_")}
+        probs = ({r.label: 1.0} if top_class else
+                 {k: v for k, v in json.loads(r.probs_json).items() if not k.startswith("_")})
         rows += [{"bldg_id": r.bldg_id, "profile_id": p, "weight": w}
                  for p, w in building_weights(r, probs, cfg["classes"]).items() if w > 1e-6]
-    out = pd.DataFrame(rows)
+    return pd.DataFrame(rows)
+
+
+def main() -> None:
+    out = weights_table()
     out.to_parquet(OUT, index=False)
     summary = out.groupby("profile_id").weight.sum().sort_values(ascending=False)
     print(f"{out.bldg_id.nunique():,} buildings -> {len(out):,} building-profile weights -> {OUT}")

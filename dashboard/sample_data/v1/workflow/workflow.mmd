@@ -1,0 +1,141 @@
+flowchart LR
+  subgraph sources["Sources"]
+    src_vida["VIDA footprints (Google + Microsoft + OSM)"]
+    src_google25d["Google Open Buildings 2.5D Temporal"]
+    src_osm["OpenStreetMap (roads, land use, tags)"]
+    src_overture["Overture places"]
+    src_health["healthsites.io"]
+    src_admin["geoBoundaries ADM0-5"]
+    src_ghsl["GHSL BUILT-C 2018"]
+    src_worldpop["WorldPop 2023"]
+    src_rwi["Meta Relative Wealth Index"]
+    src_gridfinder["Gridfinder MV lines"]
+    src_dem["Copernicus DEM GLO-30"]
+    src_era5["ERA5-Land (Open-Meteo / Copernicus CDS)"]
+    src_power["NASA POWER"]
+    src_microdata["Survey microdata: DHS 2025, MTF 2022, EICV5 (restricted)"]
+    src_corpus["Evidence corpus (26 public reports)"]
+    src_anchors["QSEL / REG / RURA consumption and tariffs"]
+  end
+  subgraph ingest["Ingest and provenance"]
+    manifest["Download manifest (url, sha256, licence, time)"]
+  end
+  subgraph footprints["A1 Footprints and heights"]
+    conform["Conform footprints"]
+    t_base[("buildings_base")]
+    heights["Heights, floors, first seen"]
+    t_height[("building_height")]
+  end
+  subgraph context["A2 Context"]
+    ctx_vector["Vector context"]
+    ctx_raster["Raster context"]
+    t_context[("building_context")]
+  end
+  subgraph climate["A3 Climate"]
+    climate["Climate to H3 r7"]
+    power_check["NASA POWER cross-check"]
+    t_climate[("climate_h3")]
+  end
+  subgraph labels["A4 Building use"]
+    codebook{{"Codebook approval (human)"}}
+    cards["Context cards (open vector data only)"]
+    labeller["Claude Haiku 4.5 labeller"]
+    gold{{"Human gold labels (173)"}}
+    label_eval["Label evaluation"]
+    t_labels[("labels")]
+  end
+  subgraph evidence["Evidence and appliance data"]
+    extraction["Evidence extraction with citations"]
+    curation["Hand-curated productive-use values"]
+    plausibility["Automated plausibility checks"]
+    evidence_approval{{"Evidence approval (human)"}}
+    microdata_agg["Microdata to weighted aggregates (restricted)"]
+    t_anchors[("validation_anchors + MTF aggregates")]
+  end
+  subgraph demand["Demand modelling"]
+    builder["B1 archetype builder"]
+    signoff{{"Archetype sign-off (human, pending)"}}
+    t_archetypes[("17 archetypes (draft)")]
+    mapping_approval{{"Mapping approval (human)"}}
+    mapping["B2 building to profile mapping"]
+    t_weights[("building_profiles")]
+    ramp["B3 RAMP 0.5.2 simulation"]
+    t_library[("profile_library")]
+    aggregation["B4 building and area metrics"]
+  end
+  subgraph validation["Validation"]
+    checks["Profile checks"]
+    qa["Table QA (schema contracts)"]
+  end
+  subgraph outputs["Outputs"]
+    licence_review{{"Licence review (human)"}}
+    dataset(["Building energy dataset (GeoParquet / PostGIS)"])
+    bundle(["Dashboard data bundle (this)"])
+    docs(["Datasheet, QA and status reports"])
+  end
+  src_vida --> manifest
+  src_google25d --> manifest
+  src_osm --> manifest
+  src_overture --> manifest
+  src_health --> manifest
+  src_admin --> manifest
+  src_ghsl --> manifest
+  src_worldpop --> manifest
+  src_rwi --> manifest
+  src_gridfinder --> manifest
+  src_dem --> manifest
+  src_era5 --> manifest
+  src_power --> manifest
+  src_microdata --> manifest
+  src_corpus --> manifest
+  src_anchors --> manifest
+  manifest --> conform
+  conform --> t_base
+  t_base --> heights
+  manifest --> heights
+  heights --> t_height
+  t_base --> ctx_vector
+  t_base --> ctx_raster
+  manifest --> ctx_vector
+  manifest --> ctx_raster
+  ctx_vector --> t_context
+  ctx_raster --> t_context
+  manifest --> climate
+  climate --> t_climate
+  power_check --> t_climate
+  t_height --> cards
+  t_context --> cards
+  t_climate --> cards
+  codebook --> labeller
+  cards --> labeller
+  labeller --> t_labels
+  t_labels --> label_eval
+  gold --> label_eval
+  manifest --> extraction
+  manifest --> curation
+  extraction --> plausibility
+  curation --> plausibility
+  plausibility --> evidence_approval
+  manifest --> microdata_agg
+  microdata_agg --> t_anchors
+  evidence_approval --> builder
+  t_anchors --> builder
+  builder --> t_archetypes
+  signoff --> t_archetypes
+  t_labels --> mapping
+  t_context --> mapping
+  mapping_approval --> mapping
+  mapping --> t_weights
+  t_archetypes --> ramp
+  ramp --> t_library
+  t_weights --> aggregation
+  t_library --> aggregation
+  t_climate --> aggregation
+  t_library --> checks
+  t_anchors --> checks
+  t_base --> qa
+  aggregation --> dataset
+  aggregation --> bundle
+  licence_review --> dataset
+  checks --> docs
+  qa --> docs

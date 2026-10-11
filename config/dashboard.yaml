@@ -1,0 +1,311 @@
+# Dashboard data bundle (`pixi run dashboard-data`): everything the frontend reads that isn't computed from the
+# tables. The exporter copies these into meta.json / sources.json / workflow.json, adding live counts.
+# The data contract is documented in dashboard/DATA_CONTRACT.md.
+
+version: v1
+sample:  # the committed sample bundle: full national/admin/profile files + one small box of buildings per deep dive
+  bboxes:  # [min_lon, min_lat, max_lon, max_lat], around the median modelled building of each sector
+    nyamirambo: [30.0427, -1.9888, 30.0477, -1.9838]   # ~1,300 buildings, almost all modelled
+    muhoza: [29.6384, -1.5107, 29.6444, -1.5047]       # ~1,000 buildings, ~25% modelled (labelling is partial)
+    nasho: [30.7092, -2.1199, 30.7212, -2.1079]        # sparse rural, ~1,000 buildings
+
+deep_dives:  # id -> (district, sector) as in building_context adm2_name / adm3_name
+  nyamirambo: {district: Nyarugenge, sector: Nyamirambo, aoi_key: kigali_urban,
+               description: "Dense mixed-use urban sector in Kigali, with shop-houses and informal areas."}
+  muhoza: {district: Musanze, sector: Muhoza, aoi_key: musanze_city,
+           description: "Secondary city at ~1,850 m: cool, with a mixed commercial and residential core."}
+  nasho: {district: Kirehe, sector: Nasho, aoi_key: eastern_rural,
+          description: "Warm eastern lowland (~1,350 m): rural, with a solar irrigation scheme (productive use)."}
+
+classes:  # building-use classes, fixed order (labels.probs arrays follow it)
+  - {id: residential, label: Residential, colour: "#2a78d6"}
+  - {id: mixed_shop_house, label: Shop-house (mixed), colour: "#4a3aa7"}
+  - {id: commercial, label: Commercial, colour: "#eb6834"}
+  - {id: institutional, label: Institutional, colour: "#1baf7a"}
+  - {id: religious, label: Religious, colour: "#e87ba4"}
+  - {id: productive_use, label: Productive use, colour: "#eda100"}
+  - {id: industrial_warehouse, label: Industrial / warehouse, colour: "#52514e"}
+  - {id: ancillary, label: Ancillary (kitchen, latrine, store), colour: "#c9c8c3"}
+  - {id: unknown, label: Unknown, colour: "#e4e3df"}
+
+cooling:
+  rule: "tmax_p95 (95th percentile of daily maximum 2 m temperature, 2019-2024) < 26 C: low; 26-29 C: medium; >= 29 C: high"
+  categories:
+    - {id: low, label: Low, colour: "#f9c3a3"}
+    - {id: medium, label: Medium, colour: "#eb6834"}
+    - {id: high, label: High, colour: "#9a3a14"}
+
+profiles:  # display names and groups for the 17 RAMP archetypes
+  household_rural_t1: {name: "Rural household (lower)", group: household}
+  rural_grid_household_tier2: {name: "Rural household (upper)", group: household}
+  household_urban_t2: {name: "Urban household (lower)", group: household}
+  household_urban_t3: {name: "Urban household (upper)", group: household}
+  kiosk_shop: {name: "Kiosk / shop", group: commerce}
+  salon: {name: "Salon / barber", group: commerce}
+  bar_restaurant: {name: "Bar / restaurant", group: commerce}
+  guesthouse: {name: "Guesthouse", group: commerce}
+  school: {name: "School", group: institution}
+  health_post: {name: "Health facility", group: institution}
+  office: {name: "Office", group: institution}
+  church: {name: "Place of worship", group: institution}
+  warehouse_light: {name: "Store / warehouse", group: productive}
+  grain_mill: {name: "Grain mill", group: productive}
+  welding_workshop: {name: "Welding workshop", group: productive}
+  tailoring: {name: "Tailor", group: productive}
+  carpentry: {name: "Carpentry workshop", group: productive}
+
+profile_groups:
+  - {id: household, label: Households, colour: "#2a78d6"}
+  - {id: commerce, label: Shops and services, colour: "#eb6834"}
+  - {id: institution, label: Institutions, colour: "#1baf7a"}
+  - {id: productive, label: Productive use, colour: "#eda100"}
+
+pu_prototype:  # Productive-Use Viability, PROTOTYPE (status planned)
+  # score = 100 x sqrt(likelihood) x enabling, where enabling = sum(w x component) / sum(w of components present).
+  # The likelihood gates the score (a house in a well-served street is not a productive-use site); the square root
+  # softens the gate so a 25%-likely building can still reach the middle band where conditions are excellent.
+  status: prototype
+  categories: {low: [0, 33.3], medium: [33.3, 66.7], high: [66.7, 100]}
+  likelihood:
+    pu_likelihood: {label: "Productive-use likelihood",
+                    formula: "P(productive_use) + P(commercial) + P(mixed_shop_house) from the use labels, capped at 1"}
+  components:  # enabling conditions; weights adjustable in the UI
+    market_access: {weight: 0.30, label: "Market access",
+                    formula: "0.5 x min(POIs within 250 m / 10, 1) + 0.5 x (1 - min(distance to major road / 2000 m, 1))"}
+    demand_density: {weight: 0.20, label: "Customers nearby",
+                     formula: "log10(1 + population density per km2) / log10(1 + 15000), capped at 1"}
+    grid_proximity: {weight: 0.30, label: "Grid proximity",
+                     formula: "1 - min(distance to predicted MV line / 5000 m, 1)"}
+    ability_to_pay: {weight: 0.15, label: "Ability to pay",
+                     formula: "(RWI - (-0.415)) / (1.248 - (-0.415)), clipped to 0-1 (national 5th-95th percentile of buildings)"}
+    agri_context: {weight: 0.05, label: "Agricultural context",
+                   formula: "not computed yet (cropland/irrigation nearby): null, and its weight is dropped"}
+
+status:  # Built / Draft / In progress / Planned, per item shown in the dashboard
+  buildings: {status: built, note: "6,434,247 footprints, all six national tables pass QA"}
+  heights: {status: built, note: "Google 2.5D Temporal; first-seen year is experimental"}
+  context: {status: built}
+  climate: {status: built, note: "ERA5-Land via Open-Meteo 2019-2024; rebuild from Copernicus CDS in progress"}
+  climate_cds: {status: in_progress, note: "humidity, rainfall, solar, monthly climatology, 1991-2020 baseline"}
+  labels: {status: built, note: "three deep-dive sectors (Muhoza partly) and a national sample; ~40% agreement with human labels"}
+  profiles: {status: draft, note: "17 RAMP archetypes awaiting the owner's sign-off"}
+  mapping: {status: built, note: "approved 2026-10-11"}
+  demand_deep_dives: {status: draft, note: "potential demand if grid-connected; follows the draft profiles"}
+  demand_national: {status: planned}
+  expected_demand: {status: planned, note: "x probability of grid connection"}
+  single_building_peak: {status: planned, note: "minute-level, non-coincident"}
+  seasonal_profiles: {status: planned, note: "needs the CDS climate rebuild"}
+  pu_viability: {status: planned, note: "prototype score shown; method to be finalised"}
+  validation: {status: built}
+
+metrics:  # the five challenge outputs, with the wording the UI should use
+  peak_load: {name: "Estimated Peak Load", unit: "W (building), kW (area)",
+              definition: "Expected coincident peak: the highest hourly mean of the building's expected load (sum over profiles of weight x hourly profile). Area peaks sum the hourly curves first, so they are smaller than the sum of building peaks."}
+  annual_energy: {name: "Annual Energy Consumption", unit: "kWh/yr (building), MWh/yr (area)",
+                  definition: "Sum over profiles of weight x simulated daily kWh x 365. Potential demand if grid-connected, at 2022 appliance ownership. p10-p90 = day-to-day range."}
+  cooling: {name: "Cooling Demand Category", unit: "Low / Medium / High",
+            definition: "From the building's H3 r7 climate cell: tmax_p95 < 26 C Low, 26-29 C Medium, >= 29 C High. Relative indicator; AC demand is marginal in most of Rwanda."}
+  load_profile: {name: "Load Profile Characteristics", unit: "-",
+                 definition: "From the 24-hour curve: peak hour, load factor (mean / peak), evening share (18:00-23:00), daytime share (08:00-17:00), night base (00:00-05:00 mean), weekday/weekend energy ratio, shape label."}
+  pu_viability: {name: "Productive-Use Viability", unit: "score 0-100 (Low / Medium / High)",
+                 definition: "PROTOTYPE: weighted mix of productive-use likelihood, market access, customers nearby, grid proximity, ability to pay and agricultural context (formulas in meta.pu_prototype)."}
+
+citations:  # use these strings; keys are source ids (config/sources.yaml) or doc ids (config/evidence_docs.yaml)
+  vida_buildings: "VIDA. Google-Microsoft-OSM Open Buildings, combined (country partition RWA). Source Cooperative. ODbL-1.0."
+  google_open_buildings: "Sirko, W. et al. (2021). Continental-scale building detection from high resolution satellite imagery. arXiv:2107.12283. Google Open Buildings, CC-BY-4.0 / ODbL-1.0."
+  google_25d_temporal: "Google Research. Open Buildings 2.5D Temporal dataset (2016-2023). CC-BY-4.0 / ODbL-1.0."
+  microsoft_buildings: "Microsoft. Global ML Building Footprints. ODbL-1.0."
+  osm_geofabrik: "OpenStreetMap contributors (2026). Rwanda extract, Geofabrik. ODbL-1.0."
+  overture_places: "Overture Maps Foundation. Places theme. CDLA-Permissive-2.0."
+  health_facilities: "healthsites.io. Rwanda health facilities (via HDX). ODbL-1.0."
+  admin_boundaries: "Runfola, D. et al. geoBoundaries, gbOpen RWA ADM0-5. CC-BY-4.0."
+  ghsl_built_c: "European Commission, Joint Research Centre. GHS-BUILT-C R2023A, settlement characteristics 2018. CC-BY-4.0."
+  worldpop: "WorldPop (University of Southampton). Global2 R2025A constrained population count, Rwanda 2023. CC-BY-4.0."
+  meta_rwi: "Chi, G., Fang, H., Chatterjee, S., Blumenstock, J. E. (2022). Microestimates of wealth for all low- and middle-income countries. PNAS 119(3). Meta Relative Wealth Index, CC-BY-NC-4.0."
+  gridfinder: "Arderne, C., Zorn, C., Nicolas, C., Koks, E. E. (2020). Predictive mapping of the global power system using open data. Scientific Data 7, 19. CC-BY-4.0."
+  copernicus_dem: "ESA / Copernicus. Copernicus DEM GLO-30 Public. Free licence with attribution."
+  era5_land: "Munoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, 4349-4383. Copernicus Climate Change Service (C3S); accessed via the Copernicus Climate Data Store and Open-Meteo (CC-BY-4.0)."
+  nasa_power: "NASA Langley Research Center POWER Project (MERRA-2 hourly temperature; CERES SYN1deg irradiance)."
+  ramp: "Lombardi, F., Balderrama, S., Quoilin, S., Colombo, E. (2019). Generating high-resolution multi-energy load profiles for remote areas with an open-source stochastic model. Energy 177, 433-444. doi:10.1016/j.energy.2019.04.097. RAMP (rampdemand 0.5.2), EUPL-1.2."
+  mtf_framework: "Bhatia, M., Angelou, N. (2015). Beyond Connections: Energy Access Redefined. ESMAP Technical Report 008/15, World Bank."
+  mtf_rwanda_2022: "World Bank. Multi-Tier Framework survey, Rwanda 2022 (restricted microdata; weighted aggregates only)."
+  eicv5: "NISR. Integrated Household Living Conditions Survey EICV5 2016/17 (restricted microdata; weighted aggregates only)."
+  dhs_2025: "NISR, MoH, ICF. Rwanda Demographic and Health Survey 2025 (restricted microdata; aggregates only) and Final Report."
+  qsel: "Columbia University QSEL. Rwanda electricity consumption studies (2024-2025)."
+  rura_tariffs: "RURA. Decision N°01/BD/ER-EWS/RURA/2020 (effective 21 Jan 2020); Official Gazette no.34 of 20/08/2018; REG tariffs effective 1 Oct 2025."
+
+source_citations:  # which citation keys each source id uses
+  vida_buildings: [vida_buildings, google_open_buildings, microsoft_buildings, osm_geofabrik]
+  google_25d_temporal: [google_25d_temporal]
+  osm_geofabrik: [osm_geofabrik]
+  overture_places: [overture_places]
+  admin_boundaries: [admin_boundaries]
+  ghsl_built_c: [ghsl_built_c]
+  worldpop: [worldpop]
+  meta_rwi: [meta_rwi]
+  copernicus_dem: [copernicus_dem]
+  gridfinder: [gridfinder]
+  health_facilities: [health_facilities]
+  era5_land_cds: [era5_land]
+  openmeteo: [era5_land]
+  nasa_power: [nasa_power]
+  dhs_api: [dhs_2025]
+  dhs_2025: [dhs_2025]
+  mtf_rwanda: [mtf_rwanda_2022, mtf_framework]
+  qsel_rwanda: [qsel]
+  eicv5: [eicv5]
+
+workflow:  # the data-architecture graph (workflow.json; workflow.mmd is generated from it)
+  lanes:
+    - {id: sources, label: Sources}
+    - {id: ingest, label: Ingest and provenance}
+    - {id: footprints, label: "A1 Footprints and heights"}
+    - {id: context, label: "A2 Context"}
+    - {id: climate, label: "A3 Climate"}
+    - {id: labels, label: "A4 Building use"}
+    - {id: evidence, label: "Evidence and appliance data"}
+    - {id: demand, label: "Demand modelling"}
+    - {id: validation, label: Validation}
+    - {id: outputs, label: Outputs}
+  nodes:
+    - {id: src_vida, lane: sources, kind: source, label: "VIDA footprints (Google + Microsoft + OSM)", source: vida_buildings}
+    - {id: src_google25d, lane: sources, kind: source, label: "Google Open Buildings 2.5D Temporal", source: google_25d_temporal}
+    - {id: src_osm, lane: sources, kind: source, label: "OpenStreetMap (roads, land use, tags)", source: osm_geofabrik}
+    - {id: src_overture, lane: sources, kind: source, label: "Overture places", source: overture_places}
+    - {id: src_health, lane: sources, kind: source, label: "healthsites.io", source: health_facilities}
+    - {id: src_admin, lane: sources, kind: source, label: "geoBoundaries ADM0-5", source: admin_boundaries}
+    - {id: src_ghsl, lane: sources, kind: source, label: "GHSL BUILT-C 2018", source: ghsl_built_c}
+    - {id: src_worldpop, lane: sources, kind: source, label: "WorldPop 2023", source: worldpop}
+    - {id: src_rwi, lane: sources, kind: source, label: "Meta Relative Wealth Index", source: meta_rwi}
+    - {id: src_gridfinder, lane: sources, kind: source, label: "Gridfinder MV lines", source: gridfinder}
+    - {id: src_dem, lane: sources, kind: source, label: "Copernicus DEM GLO-30", source: copernicus_dem}
+    - {id: src_era5, lane: sources, kind: source, label: "ERA5-Land (Open-Meteo / Copernicus CDS)", source: openmeteo}
+    - {id: src_power, lane: sources, kind: source, label: "NASA POWER", source: nasa_power}
+    - {id: src_microdata, lane: sources, kind: source, restricted: true, label: "Survey microdata: DHS 2025, MTF 2022, EICV5", source: mtf_rwanda}
+    - {id: src_corpus, lane: sources, kind: source, label: "Evidence corpus (26 public reports)", source: evidence_docs}
+    - {id: src_anchors, lane: sources, kind: source, label: "QSEL / REG / RURA consumption and tariffs", source: qsel_rwanda}
+    - {id: manifest, lane: ingest, kind: process, label: "Download manifest (url, sha256, licence, time)", command: "pixi run fetch-* / register-local",
+       description: "Every download goes through one function that records its URL, checksum, size, licence and retrieval time; raw files are never edited."}
+    - {id: conform, lane: footprints, kind: process, label: "Conform footprints", command: "pixi run conform-buildings",
+       description: "Repair geometries, flag overlaps and slivers (flag, don't drop), compute area, perimeter, compactness and orientation in UTM 35S, index to H3 r9, assign stable bldg_id."}
+    - {id: t_base, lane: footprints, kind: table, label: "buildings_base", file: data/interim/buildings_base.parquet}
+    - {id: heights, lane: footprints, kind: process, label: "Heights, floors, first seen", command: "pixi run conform-height && pixi run derive",
+       description: "Sample Google 2.5D Temporal height and yearly presence (2016-2023) at each building; floors from height cut-points fitted on OSM building:levels (1 below 6.0 m, 2 below 8.5 m, +1 per 3 m); first-seen year where presence stays >= 0.5."}
+    - {id: t_height, lane: footprints, kind: table, label: "building_height", file: data/interim/building_height.parquet}
+    - {id: ctx_vector, lane: context, kind: process, label: "Vector context", command: "pixi run context-vector",
+       description: "Distances to major roads, any road and predicted MV lines; POI counts within 50/100/250 m; OSM/Overture tags and health facilities; admin names to village level."}
+    - {id: ctx_raster, lane: context, kind: process, label: "Raster context", command: "pixi run context-raster",
+       description: "Sample GHSL settlement class and non-residential share, WorldPop density, Meta RWI and Copernicus DEM elevation at each building."}
+    - {id: t_context, lane: context, kind: table, label: "building_context", file: data/interim/building_context.parquet}
+    - {id: climate, lane: climate, kind: process, label: "Climate to H3 r7", command: "pixi run climate-h3",
+       description: "ERA5-Land hourly 2 m temperature (0.1 deg, 2019-2024) interpolated to H3 r7 cell centres, corrected to cell elevation (-6.05 K/km), local time UTC+2; diurnal means, tmax_p95, CDD18/22/24, GHI; cooling class."}
+    - {id: power_check, lane: climate, kind: process, label: "NASA POWER cross-check", command: "pixi run cooling-check",
+       description: "Independent hourly temperatures at 4 towns confirm cooling demand is marginal in most of Rwanda."}
+    - {id: t_climate, lane: climate, kind: table, label: "climate_h3", file: data/interim/climate_h3.parquet}
+    - {id: codebook, lane: labels, kind: gate, label: "Codebook approval (human)"}
+    - {id: cards, lane: labels, kind: process, label: "Context cards (open vector data only)", command: "pixi run cards",
+       description: "A text card per building: footprint, height, size against neighbours, land use, road frontage, nearby tags and places, density, settlement class, wealth, distances. No imagery."}
+    - {id: labeller, lane: labels, kind: process, label: "Claude Haiku 4.5 labeller", command: "pixi run label",
+       description: "Returns probabilities over 9 use classes plus the cues it relied on; every call cached and costed (~$3.6 per 1,000 buildings)."}
+    - {id: gold, lane: labels, kind: gate, label: "Human gold labels (173)"}
+    - {id: label_eval, lane: labels, kind: process, label: "Label evaluation", command: "pixi run label-eval",
+       description: "11 model/prompt configurations compared against human gold labels on accuracy, class variety and cost."}
+    - {id: t_labels, lane: labels, kind: table, label: "labels", file: data/processed/labels.parquet}
+    - {id: extraction, lane: evidence, kind: process, label: "Evidence extraction with citations", command: "pixi run evidence",
+       description: "Values extracted from the corpus with document, page and quote; quotes verified verbatim on the page (81%)."}
+    - {id: curation, lane: evidence, kind: process, label: "Hand-curated productive-use values", command: "pixi run curate-evidence",
+       description: "37 values from NREL 2018, GIZ 2016 and the Power Africa Rwanda 2020 catalogue, each quote verified in code."}
+    - {id: plausibility, lane: evidence, kind: process, label: "Automated plausibility checks", command: "pixi run validate-evidence",
+       description: "Units, physical/market ranges per appliance and agreement between sources; 17 of 1,077 values flagged and excluded."}
+    - {id: evidence_approval, lane: evidence, kind: gate, label: "Evidence approval (human)"}
+    - {id: microdata_agg, lane: evidence, kind: process, restricted: true, label: "Microdata to weighted aggregates", command: "pixi run mtf-appliances && pixi run eicv5-electricity",
+       description: "Appliance ownership, hours, enterprise and facility use, spending converted to kWh with the RURA tariff in force. Aggregates only; cells under 10 respondents suppressed."}
+    - {id: t_anchors, lane: evidence, kind: table, label: "validation_anchors + MTF aggregates", file: data/processed/validation_anchors}
+    - {id: builder, lane: demand, kind: process, label: "B1 archetype builder", command: "pixi run build-archetypes",
+       description: "17 RAMP archetypes from recipes; every number cites survey data, evidence or measurements, or carries a written assumption; household lighting calibrated to MTF spending."}
+    - {id: signoff, lane: demand, kind: gate, label: "Archetype sign-off (human, pending)"}
+    - {id: t_archetypes, lane: demand, kind: table, label: "17 archetypes (draft)", file: data/processed/archetypes}
+    - {id: mapping_approval, lane: demand, kind: gate, label: "Mapping approval (human)"}
+    - {id: mapping, lane: demand, kind: process, label: "B2 building to profile mapping", command: "pixi run profile-mapping",
+       description: "Class probabilities x context (urban/rural, RWI above or below the setting median) give profile weights per building."}
+    - {id: t_weights, lane: demand, kind: table, label: "building_profiles", file: data/processed/building_profiles.parquet}
+    - {id: ramp, lane: demand, kind: process, label: "B3 RAMP 0.5.2 simulation", command: "pixi run profile-library",
+       description: "200 units x 28 days per profile; per-unit hourly means (all days, weekdays, weekends), daily kWh spread and coincident peaks."}
+    - {id: t_library, lane: demand, kind: table, label: "profile_library", file: data/processed/profile_library.parquet}
+    - {id: aggregation, lane: demand, kind: process, label: "B4 building and area metrics", command: "pixi run dashboard-data",
+       description: "The five headline metrics per building (deep dives) and per selection, from weights x profiles."}
+    - {id: checks, lane: validation, kind: process, label: "Profile checks", command: "pixi run profile-checks",
+       description: "Households vs QSEL meter data and EICV5 spending; schools, mills and workshops vs MTF and NREL; MTF energy tiers."}
+    - {id: qa, lane: validation, kind: process, label: "Table QA (schema contracts)", command: "pixi run qa",
+       description: "Every table validated against its pandera contract; reports in reports/qa."}
+    - {id: licence_review, lane: outputs, kind: gate, label: "Licence review (human)"}
+    - {id: dataset, lane: outputs, kind: output, label: "Building energy dataset (GeoParquet / PostGIS)"}
+    - {id: bundle, lane: outputs, kind: output, label: "Dashboard data bundle (this)"}
+    - {id: docs, lane: outputs, kind: output, label: "Datasheet, QA and status reports"}
+  edges:
+    - [src_vida, manifest]
+    - [src_google25d, manifest]
+    - [src_osm, manifest]
+    - [src_overture, manifest]
+    - [src_health, manifest]
+    - [src_admin, manifest]
+    - [src_ghsl, manifest]
+    - [src_worldpop, manifest]
+    - [src_rwi, manifest]
+    - [src_gridfinder, manifest]
+    - [src_dem, manifest]
+    - [src_era5, manifest]
+    - [src_power, manifest]
+    - [src_microdata, manifest]
+    - [src_corpus, manifest]
+    - [src_anchors, manifest]
+    - [manifest, conform]
+    - [conform, t_base]
+    - [t_base, heights]
+    - [manifest, heights]
+    - [heights, t_height]
+    - [t_base, ctx_vector]
+    - [t_base, ctx_raster]
+    - [manifest, ctx_vector]
+    - [manifest, ctx_raster]
+    - [ctx_vector, t_context]
+    - [ctx_raster, t_context]
+    - [manifest, climate]
+    - [climate, t_climate]
+    - [power_check, t_climate]
+    - [t_height, cards]
+    - [t_context, cards]
+    - [t_climate, cards]
+    - [codebook, labeller]
+    - [cards, labeller]
+    - [labeller, t_labels]
+    - [t_labels, label_eval]
+    - [gold, label_eval]
+    - [manifest, extraction]
+    - [manifest, curation]
+    - [extraction, plausibility]
+    - [curation, plausibility]
+    - [plausibility, evidence_approval]
+    - [manifest, microdata_agg]
+    - [microdata_agg, t_anchors]
+    - [evidence_approval, builder]
+    - [t_anchors, builder]
+    - [builder, t_archetypes]
+    - [signoff, t_archetypes]
+    - [t_labels, mapping]
+    - [t_context, mapping]
+    - [mapping_approval, mapping]
+    - [mapping, t_weights]
+    - [t_archetypes, ramp]
+    - [ramp, t_library]
+    - [t_weights, aggregation]
+    - [t_library, aggregation]
+    - [t_climate, aggregation]
+    - [t_library, checks]
+    - [t_anchors, checks]
+    - [t_base, qa]
+    - [aggregation, dataset]
+    - [aggregation, bundle]
+    - [licence_review, dataset]
+    - [checks, docs]
+    - [qa, docs]

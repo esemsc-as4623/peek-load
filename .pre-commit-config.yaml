@@ -13,4 +13,5 @@ repos:
     hooks:
       - id: check-added-large-files
         args: [--maxkb=2000]
+        exclude: ^dashboard/sample_data/  # the committed dashboard sample bundle (~14 MB; national hexes are 2.7 MB)
       - id: check-yaml
