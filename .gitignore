@@ -32,3 +32,6 @@ notebooks/*.ipynb
 
 # run logs
 reports/status/*.log
+
+# editor backups
+*.save
