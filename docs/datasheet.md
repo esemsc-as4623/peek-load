@@ -1,6 +1,6 @@
 # Datasheet: Rwanda building energy-context dataset (v0.1, data phase)
 
-Status: Last update on **2026-10-10**
+Status: Last update on **2026-10-11**
 
 Structured after *Datasheets for Datasets* (Gebru et al.). Covers the tables produced in the data phase of
 Rooftops → Load Curves (OSEAS26). Per-source details: [`data_sources.md`](data_sources.md). Building-use classes:
@@ -45,11 +45,17 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
   - The human labels were mostly made with imagery, so they hold information the vector cards lack. The labels are probabilistic; use the class probabilities, not just the top class.
 - **Evidence:** extracted by Claude with source citations, then normalised to a schema. 81% of quotes were automatically verified verbatim on the cited page. The repo owner gave the RAMP-relevant rows a
   blanket approval (2026-10-11), not a row-by-row review. Automated checks screen every value for units, physical or
-  market ranges and agreement between sources, and flagged rows (18 of 1,067) are excluded unless overridden.
+  market ranges and agreement between sources, and flagged rows (17 of 1,077) are excluded unless overridden.
 - **Appliance use (MTF 2022):** weighted aggregates from the World Bank MTF Rwanda 2022 microdata (restricted;
   aggregates only, cells under 10 respondents suppressed). They give ownership, number owned and hours of use per
   appliance for grid-connected urban and rural households, plus household-enterprise operating hours and appliance
-  use (`data/processed/validation_anchors/mtf_*.csv`).
+  use (`data/processed/validation_anchors/mtf_*.csv`). Grid households are also split by Ubudehe category (1–2 vs
+  3–4), and the MTF school and health-facility surveys give institutional appliance use. Electricity spending is
+  converted to kWh with the RURA tariff in force (2020 decision for MTF 2022; 2018 gazette for EICV5 2017).
+- **Appliance profiles (RAMP archetypes, draft):** 17 profiles built by `pixi run build-archetypes` from
+  `config/archetypes.yaml`. Every number cites its source (MTF aggregate, approved evidence, QSEL measured energy)
+  or a written assumption. Household lighting on-time is calibrated to MTF spending (one factor per archetype);
+  independent checks are in `reports/demand/profile_checks.md`.
 
 ## Known limitations
 1. Google's 2.5D heights are compressed: single-storey buildings read ~4–5 m and towers are under-estimated, so 3+ storey floors are unreliable.
@@ -58,6 +64,8 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 4. Microsoft footprints omit structures under ~15 m², so small ancillary buildings are under-counted where Microsoft is the source.
 5. Cooling demand is marginal in most of the country, including Kigali. Sustained heat is in the eastern lowlands (11.6% of buildings in areas above 100 CDD22 a year; provisional, as NASA POWER shows less there) and the Rusizi/Bugarama valley (confirmed). The cooling class is a relative proxy.
 6. Labels cover the three deep-dive sectors (Nyamirambo fully, Nasho fully, Muhoza partly) and a national sample, not the whole country.
+7. Appliance profiles are drafts. Bars, guesthouses, offices, churches and stores rest on assumptions; the health
+   profile is built from health centres and overstates health posts; all profiles assume a grid connection.
 
 ## Uses
 - **Intended:** electrification and mini-grid planning studies, demand modelling with RAMP, energy-access research, teaching.

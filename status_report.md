@@ -96,7 +96,8 @@ preprocessing. Modelling follows in phase 2.
 
 ## 3. In progress
 - **Climate from Copernicus CDS**: ERA5-Land hourly 2019–2025 (temperature, dewpoint, solar radiation,
-  precipitation, wind) plus a 1991–2020 daily baseline, downloading on the server (resumable). Then the climate
+  precipitation, wind) plus a 1991–2020 daily baseline, downloading on the server (resumable). As of 2026-10-11,
+  74 of 84 hourly files are done; the 60 baseline requests are still queued at CDS. Then the climate
   table is rebuilt: Copernicus licence, humidity and heat index, hourly 0.1° sunlight, rainfall seasonality, and
   cooling classes on a 30-year normal.
 - More gold labels: 174 of 400, plus 50 repeats to measure the labeller's own consistency.
@@ -148,9 +149,65 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
 - **EICV5 2016-17** received (household, durable goods, expenditure, poverty files) for a spending-based check
   on consumption.
 
+### Phase-2: appliance profiles built and checked (2026-10-11, later)
+- **17 RAMP archetypes**, one for every profile the approved mapping uses (`pixi run build-archetypes`; recipes in
+  `config/archetypes.yaml`; JSON in `data/processed/archetypes/`). Every number cites its source ids or carries a
+  written assumption. `archetype_sources.csv` counts them: household archetypes take 71–80% of their numbers from
+  data, establishments 0–60%. All are `draft` until the owner reviews them (human gate).
+  - **Households (4)**: ownership, bulbs per home and hours of use come from MTF 2022 grid households, split by
+    setting and by Ubudehe category (1–2 vs 3–4, mirroring the mapping's RWI split). TV power comes from measured TV
+    energy (QSEL) divided by MTF viewing hours (48 W), and fridge energy from QSEL.
+  - **One calibration**: lighting on-time per archetype, fitted so RAMP's simulated energy equals the same MTF
+    group's typical electricity spending, converted to kWh with the 2020 RURA tariff (factors 0.52–1.09). Without
+    it, lighting made the archetypes 1.3–1.9× too high, because MTF asks hours per bulb *type*.
+  - **Establishments (13)**:
+    - Shops and salons use MTF enterprise data. Grid shops: 47% lights, 42% radio, 19% fridge, 12 h day.
+    - Schools and health facilities use the MTF 2022 school survey (n=162) and health-facility survey (n=150).
+    - Mills, welding, tailoring and carpentry use the evidence table.
+    - Bars, guesthouses, offices, churches and stores are assumption-based, and marked as such.
+- **Checks** (`pixi run profile-checks` → `reports/demand/profile_checks.md`; figures `B1_profiles.png` and
+  `B1_household_check.png`):
+
+  | Setting | Profile mix | Anchor | Verdict |
+  |---|---|---|---|
+  | Urban | 24.4 kWh/month | REG customers in Kigali (QSEL): mean 24.8 | ok |
+  | Urban | 24.4 kWh/month | EICV5 2017 grid-lit households: mean 23.1 | ok |
+  | Rural | 9.9 kWh/month | QSEL rural connected households: mean 8.1 | ok |
+  | Rural | 9.9 kWh/month | EICV5 2017: mean 11.4 | ok |
+  | Rural | 9.9 kWh/month | REG customers outside Kigali: mean 5.9 | check (1.7×) |
+
+  | Profile | Simulated | Anchor | Verdict |
+  |---|---|---|---|
+  | School | 55 kWh/month | MTF school spending p25–p75: 37–509 | ok |
+  | Grain mill | 26 kWh/day | NREL: 20 | ok |
+  | Carpentry | 13.5 kWh/month | NREL: 18 | ok |
+  | Health | 366 kWh/month | MTF health **centres**: 1,367–4,101 | fail |
+
+  - **The health result is expected.** The profile stands for health posts, but MTF surveyed centres (21 beds,
+    open 24 h). A health-post source is needed.
+  - **MTF energy tier:** all four household archetypes are Tier 2 by energy. So the "t1" and "t3" in two of the
+    approved mapping's ids are names, not tiers, and a rename is suggested.
+- **New validation anchors**:
+  - RURA tariff decisions of 2018 and 2020, official documents with verified quotes;
+  - MTF 2022 household consumption (from spending), schools and health facilities;
+  - EICV5 2017 electricity use of grid-lit households (from spending).
+- **Power Africa PUE 2020 Rwanda catalogue curated**: 11 values, all quotes verified. They cover Agsol mills
+  (1.3–1.8 kW), a thresher (0.5 kW), DC fridges (70–100 W) and a pump. Validation now flags 17 of 1,077 values,
+  after fixing a regex that read "rice mill" as "ice".
+- **RAMP reproducibility fix**: RAMP 0.5.2 computes its peak window inside `UseCase.__init__`, before any user
+  exists, and seeds `random` only afterwards. The window that decides how many appliances switch on together was
+  therefore random and unrelated to the load (anywhere in the day, instead of the evening peak), and runs weren't
+  reproducible. `rtl.archetypes.ramp_usecase` adds users first, then seeds, then initialises. Rebuilds are now
+  byte-identical, with a regression test. Worth reporting upstream to RAMP.
+- **Known limits**:
+  - The two rural Ubudehe halves spend the same (about 10 kWh/month).
+  - Profiles assume a grid connection; expected demand needs P(connected) per building (B4).
+  - Single-building peaks still need a small-group run.
+  - School holidays are not modelled.
+
 ### After the mid-point (modelling phase)
-5. Appliance profiles per building class and context (urban/rural, grid/off-grid, wealth), with ownership from
-   the DHS 2025 microdata and parameters from the evidence table.
+5. ~~Appliance profiles per building class and context~~ (draft done 2026-10-11; see above). Next: the owner's review
+   of `config/archetypes.yaml`, a health-post source, and off-grid (solar) variants.
 6. RAMP Monte Carlo runs per building class → per-building median and 90th-percentile peak, annual kWh,
    load-profile shape.
 7. Productive-use viability score (road access, market proximity, density, grid distance).
@@ -165,7 +222,9 @@ and page for every value, and human review), not through the Claude API.
 |---|---|---|---|
 | 1 | ~~**World Bank MTF Rwanda microdata**~~ (received 2026-10-11) | appliance **usage hours** by tier: the biggest gap in the RAMP profiles (today mostly assumptions) | repo owner (registered; licensed download) |
 | 1 | **REG data**: customers and consumption by tariff category and village; hourly feeder/transformer loads (Kigali, Rusizi); MV/LV network GIS | demand validation; cooling attribution; better grid distances than Gridfinder | request via the organisers / REG |
-| 1 | **Productive-use sources**: ~~NREL/USAID PUE in African Micro-Grids (2018)~~, ~~GIZ PV for Productive Use catalogue (2016)~~, ~~ESMAP Mini Grids (2022, text)~~ (obtained; 26 values curated with verified quotes); **Power Africa PUE 2020 Rwanda catalogue** (blocked by a bot check, so a browser download is needed); AMDA benchmarking, more Efficiency for Access briefs | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | repo owner: download the Power Africa PDF in a browser, copy it to the server, then `pixi run register-local evidence_docs <path>`; the rest in the coding session |
+| 1 | **Productive-use sources**: ~~NREL/USAID PUE in African Micro-Grids (2018)~~, ~~GIZ PV for Productive Use catalogue (2016)~~, ~~ESMAP Mini Grids (2022, text)~~, ~~Power Africa PUE 2020 Rwanda catalogue~~ (Internet Archive copy; 37 values curated with verified quotes); AMDA benchmarking, more Efficiency for Access briefs | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | in the coding session |
+| 1 | **Health-post energy use** (MoH / WHO / SEforALL Powering Healthcare; any metered posts) | the health profile is built from MTF health *centres* and is far above what a health post uses | public reports; ask the organisers |
+| 2 | **EICV5 questionnaire / value labels** (NISR microdata portal) | the CSV export has no labels for the durable-goods item codes, so appliance ownership in 2017 can't be read yet | repo owner (NISR portal documentation) |
 | 2 | **Published RAMP input sets** (RAMP repo examples; open-access RAMP studies in sub-Saharan Africa) | ready-made, peer-reviewed user-type parameters to compare with ours | public: fetched in the coding session |
 | 2 | **EnAccess MicroPowerManager** anonymised meter data | real mini-grid customer load curves for validation | ask the organisers (hackathon partner) |
 | 2 | **Official facility registries**: MINEDUC schools, MoH health facilities (with coordinates) | better institutional labels than OSM/healthsites | ask the organisers / ministries; Giga school map |

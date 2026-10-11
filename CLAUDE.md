@@ -15,6 +15,12 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 - Long downloads (e.g. `pixi run fetch-era5-cds`) are resumable. Run them detached (`setsid nohup …`), because tool
   background jobs stop after 2 h.
 
+## Demand profiles (phase 2)
+- Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
+  `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`) → `profile-library --buildings`
+  → `profile-checks` (`reports/demand/profile_checks.md`).
+- Archetype numbers must cite evidence ids or carry a `why`. Archetypes stay `draft` until the owner signs off.
+
 ## Contracts and ownership
 - `src/rtl/schemas.py` is the interface between workstreams. Every table must validate against it.
   Adding or changing a column = one reviewed change to `schemas.py`, never ad hoc.

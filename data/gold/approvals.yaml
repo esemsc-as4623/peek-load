@@ -16,3 +16,7 @@ profile_mapping:
   scope: config/profile_mapping.yaml as of commit ee90948
   date: 2026-10-11
   by: repo owner
+
+# Not yet approved (recorded so nothing is mistaken for a sign-off):
+# - evidence rows added after ee90948 (11 curated Power Africa Rwanda values): covered by the automated checks only
+# - appliance archetypes (config/archetypes.yaml -> data/processed/archetypes/*.json): status draft, human gate open

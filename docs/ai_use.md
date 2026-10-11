@@ -29,6 +29,7 @@ tokens and cost (`data/llm_cache/`), so every result is reproducible and re-runn
 | Building-use labels from vector-only context cards | Haiku 4.5, Sonnet 5.5, Opus 5.5; prompts v1–v3 | 400 gold buildings × 11 configurations; 44,156 deep-dive buildings (Haiku, v2) | agreement with human gold labels, class variety, cues cited (`reports/labels/eval.md`); labels are never presented as ground truth |
 | Evidence extraction from 18 reports | Opus 5.5 with source citations | 3,076 parameters | quotes verified verbatim on the cited page (81%); human review before any value enters an appliance profile |
 | Productive-use appliance web research | Opus 5.5 with web search/fetch | 163 parameters | marked *summary statement, verify at source*; human review required |
+| Coding-session work (Claude Code): pipelines, checks, curation of 37 values from 3 productive-use PDFs, archetype recipes (`config/archetypes.yaml`) | Claude in the coding session, not the API | 17 draft archetypes; ~40 written assumptions | curated quotes verified in code; assumptions carry their rationale; profiles checked against independent anchors (`reports/demand/profile_checks.md`); archetypes stay `draft` until the owner signs off |
 
 API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
 
