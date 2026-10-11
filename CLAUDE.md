@@ -18,7 +18,8 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 ## Demand profiles (phase 2)
 - Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
   `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`) → `profile-library --buildings`
-  → `profile-checks` (`reports/demand/profile_checks.md`).
+  → `profile-checks` (`reports/demand/profile_checks.md`) → `dashboard-data` (`--sample` for the committed sample;
+  contract in `dashboard/DATA_CONTRACT.md`).
 - Archetype numbers must cite evidence ids or carry a `why`. Archetypes stay `draft` until the owner signs off.
 
 ## Contracts and ownership

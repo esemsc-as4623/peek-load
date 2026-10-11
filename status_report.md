@@ -205,6 +205,28 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
   - Single-building peaks still need a small-group run.
   - School holidays are not modelled.
 
+### Dashboard data bundle (2026-10-11)
+- **Static, versioned bundle for the dashboard**, which needs no server or database (`pixi run dashboard-data`; contract in
+  `dashboard/DATA_CONTRACT.md`; design brief in `docs/dashboard_design_prompt.md`). It holds:
+  - national H3 and admin aggregates;
+  - every deep-dive building with the five challenge metrics in two modes;
+  - per-building profile weights for in-browser area sums;
+  - details split into ~1 MB files by H3 cell;
+  - profiles with per-number provenance, validation, sources with citations, and the workflow graph.
+- A 14 MB sample bundle in the same schema is committed (`dashboard/sample_data/v1/`); the full bundle is about
+  170 MB. A test recomputes every sample building from the published formulas and matches the exported values.
+- **Finding: the class-probability weighting inflates energy.** Each house carries a 1–2% productive-use
+  probability, and over 20,000 houses that sums to hundreds of "expected" mills and workshops. Annual energy:
+
+  | Sector | Productive-use units (prob / top class) | Probabilities | Top class only | Difference |
+  |---|---|---|---|---|
+  | Nyamirambo | 434 / 2 | 6.6 GWh | 4.9 GWh | +34% |
+  | Nasho | 435 / 0.8 | 3.3 GWh | 1.7 GWh | +95% |
+
+  Peaks rise only ~3%. The bundle and dashboard show both modes. A proper fix is to calibrate the labeller's
+  probabilities on the gold set before using expected values. That's a decision on the approved mapping, for the
+  owner.
+
 ### After the mid-point (modelling phase)
 5. ~~Appliance profiles per building class and context~~ (draft done 2026-10-11; see above). Next: the owner's review
    of `config/archetypes.yaml`, a health-post source, and off-grid (solar) variants.
