@@ -1,6 +1,6 @@
 # Building-use codebook
 
-Status: Last edit on **2026-10-09**
+Status: Last update on **2026-10-09**
 
 ## Unit and question
 One footprint polygon. Question: *what is the main use of this structure, as it relates to electricity demand?*
