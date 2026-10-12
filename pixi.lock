@@ -4397,7 +4397,7 @@ packages:
   license: BSD-3-Clause
   license_family: BSD
   purls:
-  - pkg:pypi/shapely?source=compressed-mapping
+  - pkg:pypi/shapely?source=hash-mapping
   run_exports: {}
   size: 711362
   timestamp: 1791367969850
@@ -5471,7 +5471,7 @@ packages:
   license: Apache-2.0
   license_family: APACHE
   purls:
-  - pkg:pypi/earthengine-api?source=compressed-mapping
+  - pkg:pypi/earthengine-api?source=hash-mapping
   run_exports: {}
   size: 332757
   timestamp: 1791239302663

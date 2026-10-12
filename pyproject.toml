@@ -60,6 +60,7 @@ tippecanoe = "*"
 pytest = "*"
 ruff = "*"
 pre-commit = "*"
+scikit-learn = ">=1.9.1,<2"
 
 [tool.pixi.pypi-dependencies]
 rtl = { path = ".", editable = true }
@@ -84,6 +85,7 @@ archetype-smoke = "python -m rtl.archetypes"
 fetch-admin = "python -m rtl.ingest.admin"
 fetch-overture = "python -m rtl.ingest.overture"
 fetch-gridfinder = { cmd = "python -m rtl.ingest.gridfinder", depends-on = ["fetch-admin"] }
+fetch-worldcover = "python -m rtl.ingest.worldcover"  # cropland share per H3 r8 (productive use, grid model)
 fetch-facilities = { cmd = "python -m rtl.ingest.facilities", depends-on = ["fetch-osm"] }
 context-vector = "python -m rtl.join.vector"  # after fetch-admin/-overture/-gridfinder/-facilities
 # --- A3 climate + DEM (fetch-openmeteo takes ~2 h: paced for the free-tier rate limit, resumable)
@@ -117,13 +119,15 @@ validate-evidence = "python -m rtl.demand.validate"
 build-archetypes = "python -m rtl.demand.build_archetypes"
 eicv5-electricity = "python -m rtl.ingest.eicv5_electricity"
 mtf-appliances = "python -m rtl.ingest.mtf_appliances"
+pu-demand = "python -m rtl.demand.productive_use"  # B3: located + unlocated productive use (before profile-mapping)
 profile-mapping = "python -m rtl.demand.mapping"
+grid-model = "python -m rtl.demand.grid_connection"  # B4: grid-connection model (DHS 2025 label; restricted inputs stay local)
 profile-library = "python -m rtl.demand.runner"
 profile-checks = "python -m rtl.demand.checks"
 dashboard-data = "python -m rtl.dashboard.export"
 # the whole demand phase, in order (inputs: labels, context, climate, evidence, MTF/EICV5 aggregates)
-demand = """python -m rtl.demand.validate && python -m rtl.demand.mapping && python -m rtl.demand.build_archetypes \
-  && python -m rtl.demand.runner --buildings && python -m rtl.demand.checks \
+demand = """python -m rtl.demand.validate && python -m rtl.demand.productive_use && python -m rtl.demand.mapping && python -m rtl.demand.build_archetypes \
+  && python -m rtl.demand.runner --buildings && python -m rtl.demand.checks && python -m rtl.demand.grid_connection \
   && python -m rtl.dashboard.export --sample && python -m rtl.dashboard.export && python -m rtl.qa"""
 docs-sources = "python -m rtl.docs_sources"
 # --- quality gates
