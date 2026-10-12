@@ -96,7 +96,7 @@ documents:
     publisher: RURA
     year: 2020
     url: https://web.archive.org/web/2022id_/https://rura.rw/fileadmin/publication/Board_Decision_on_Electricity_End_User_Tariffs_in_Rwanda.pdf
-    licence: to_verify  # official decision
+    licence: public notice
     topics: [tariff]
     rwanda_specific: true
     role: evidence
@@ -106,7 +106,7 @@ documents:
     publisher: RURA (published by REG)
     year: 2018
     url: https://www.reg.rw:443/fileadmin/user_upload/August_2018_Official_Gazette_for_Electricity_Tariffs__1_.pdf
-    licence: to_verify  # official gazette
+    licence: public notice
     topics: [tariff]
     rwanda_specific: true
     role: evidence
