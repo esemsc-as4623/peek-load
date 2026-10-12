@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from rtl.dashboard.export import building_demand, characteristics, pu_score
+from rtl.dashboard.export import building_demand, characteristics, pu_scores
 
 SAMPLE = Path(__file__).resolve().parents[1] / "dashboard" / "sample_data" / "v1"
 needs_sample = pytest.mark.skipif(not (SAMPLE / "manifest.json").exists(), reason="sample bundle not built")
@@ -36,13 +36,18 @@ def test_building_demand_is_weights_times_profiles():
     assert dem.loc["b", "annual_kwh"] == pytest.approx(182.5, abs=0.1)
 
 
-def test_pu_score_is_gated_by_likelihood_and_skips_missing_components():
-    cfg = {"components": {"a": {"weight": 0.5}, "b": {"weight": 0.5}},
-           "categories": {"low": [0, 33.3], "medium": [33.3, 66.7], "high": [66.7, 100]}}
-    c = pd.DataFrame({"pu_likelihood": [0.0, 1.0, 0.25], "a": [1.0, 1.0, 1.0], "b": [1.0, np.nan, 1.0]})
-    score, cat = pu_score(c, cfg)
-    assert list(score) == [0.0, 100.0, 50.0]  # sqrt(0.25) = 0.5; the missing `b` is dropped, not counted as 0
-    assert list(cat) == ["low", "high", "medium"]
+def test_pu_score_uses_group_weights_and_only_eligible_buildings():
+    df = pd.DataFrame({"poi_count_250m": [10, 10, 0], "dist_road_major_m": [0.0, 0.0, 5000.0],
+                       "pop_density_per_km2": [15000.0, 15000.0, 0.0], "dist_powerline_m": [0.0, 0.0, 9000.0],
+                       "rwi": [1.248, 1.248, -1.0], "cropland_share": [0.0, 1.0, 0.0], "area_m2": [500.0, 500.0, 20.0],
+                       "pu_group": ["town", "grain_mill", "town"], "pu_eligible": [True, True, False]})
+    pu_cfg = {"candidate_score": {"town": {"market_access": 1, "agri_context": 0},
+                                  "grain_mill": {"agri_context": 1, "building_size": 1}}}
+    cats = {"categories": {"low": [0, 33.3], "medium": [33.3, 66.7], "high": [66.7, 100]}}
+    crit, score, cat = pu_scores(df, pu_cfg, cats)
+    assert list(score[:2]) == [100.0, 100.0]  # each group scored on its own criteria
+    assert pd.isna(score[2]) and cat[2] is None  # ineligible: no score
+    assert crit.building_size[2] == 0.0 and crit.ability_to_pay[2] == 0.0
 
 
 @needs_sample
@@ -59,7 +64,7 @@ def test_sample_bundle_files_match_their_manifest():
 def test_frontend_formulas_reproduce_exported_building_metrics():
     profiles = {p["profile_id"]: p for p in json.loads((SAMPLE / "profiles" / "profiles.json").read_text())["profiles"]}
     meta = json.loads((SAMPLE / "meta.json").read_text())
-    wts = {k: v["weight"] for k, v in meta["pu_prototype"]["components"].items()}
+    wts = meta["productive_use"]["weights"]
     for dd in ("nyamirambo", "muhoza", "nasho"):
         w = json.loads((SAMPLE / "deep_dives" / dd / "weights.json").read_text())
         order = w["profile_order"]
@@ -75,10 +80,12 @@ def test_frontend_formulas_reproduce_exported_building_metrics():
             curve = v @ P
             assert 365 * v @ daily == pytest.approx(p["annual_kwh"], abs=0.15)
             assert curve.max() == pytest.approx(p["peak_w"], abs=0.15) and int(curve.argmax()) == p["peak_hour"]
-            comp = dict(zip(w["pu_component_order"], w["pu_components"][p["bldg_id"]], strict=True))
-            present = {k: x for k, x in comp.items() if k in wts and x is not None}
-            score = 100 * np.sqrt(comp["pu_likelihood"]) * sum(wts[k] * x for k, x in present.items()) / sum(
-                wts[k] for k in present)
+            if p["bldg_id"] not in w["pu_criteria"]:
+                assert p["pu_score"] is None
+                continue
+            crit = dict(zip(w["pu_criteria_order"], w["pu_criteria"][p["bldg_id"]], strict=True))
+            g = {k: x for k, x in wts[w["pu_group"][p["bldg_id"]]].items() if x}
+            score = 100 * sum(x * crit[k] for k, x in g.items()) / sum(g.values())
             assert score == pytest.approx(p["pu_score"], abs=0.3)
 
 

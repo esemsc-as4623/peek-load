@@ -256,14 +256,56 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
 - The dashboard bundle gains `national/climate_monthly.json` and humidity/rainfall per cell; the prototype shows
   them on the Climate page.
 
+### Demand decisions, productive use and a grid-connection model (2026-10-12, later)
+- **Gold labels are an uncertain reference.** The owner cautions that the imagery behind the human labels showed
+  little beyond vegetation and roof shape (flat or pitched), so the ~40% agreement measures consistency between two
+  uncertain readers, not the labeller's accuracy.
+- **Class probabilities (decided):** per building, probabilities under 0.10 are ignored and the rest renormalised,
+  which keeps real commercial and institutional signal. Productive use is no longer taken from the labeller.
+  Annual energy, buildings only: Nyamirambo 5.45 GWh, Muhoza 2.29, Nasho 1.88 (top class only: 4.92 / 2.07 / 1.68).
+- **Productive use (`pixi run pu-demand`, config `config/productive_use.yaml`):**
+  - *Reported:* the NISR Establishment Census 2023 tables give enterprises by district and setting; manufacturing
+    (which holds milling, tailoring, metal work and carpentry) is 6.6% of urban and 7.0% of rural establishments, so
+    about **17,750 productive-use establishments** nationally.
+  - *Located:* only **57 buildings** carry a usable trade tag (OSM/Overture garages, mills, tailors, carpenters); they
+    get that trade's profile.
+  - *Unlocated:* the rest is spread over eligible buildings (≥ 30 m², not ancillary/religious/institutional, not a
+    facility) in proportion to a candidate score, then reported per H3 cell, sector and district, never on a
+    building. Owner's rule: mills only in rural roadside places (≤ 100 m from a road), tailors, welders and carpenters
+    in towns (equal shares, an assumption). Sector amounts: Nyamirambo 241 establishments / 0.21 GWh, Muhoza 164 /
+    0.19 GWh, Nasho 62 mills / 0.59 GWh.
+  - *Candidates:* the top-scoring buildings per cell (17,103 nationally) are flagged for field checks; no demand is
+    assigned to them. The score uses the dashboard criteria plus building size and a new **agricultural context**
+    (cropland share from ESA WorldCover 2021 within ~1.5 km), with separate weights for town trades and mills.
+  - **Caveat:** calling every rural manufacturing establishment an electric mill gives ~86 GWh/yr of potential demand
+    nationally, an upper bound; a mill share for rural manufacturing is the obvious next refinement.
+  - The dashboard shows three kinds of area figure in three colours: *reported* (purple), *sum over buildings*
+    (blue), *unlocated* (amber).
+- **Grid-connection model (`pixi run grid-model`, report `reports/demand/grid_model.md`):**
+  - Label: DHS 2025 "has electricity", 14,427 households in 560 clusters (55% weighted). DHS displaces clusters by up
+    to 2 km (urban) / 5 km (rural), so features are averaged over H3 rings of that size and each building gets its
+    neighbourhood's probability.
+  - Features: 13 open neighbourhood features (population and building density, RWI, distance to the MV line and
+    roads, building size, settlement class, places nearby, elevation, cropland). No DHS variable is an input.
+  - Held out by district (5-fold): logistic regression AUC 0.75, cluster R² 0.45 (gradient boosting 0.74; urban/rural
+    rate alone 0.68; the best any neighbourhood model could do is 0.89). Population density dominates, then wealth
+    and building size.
+  - Independent check: by district the predictions track EICV7 2024 grid lighting with r = 0.93.
+  - Figures: `B4_grid_raw_features.png`, `B4_grid_label.png`, `B4_grid_model.png`, `B4_grid_predictions.png`. Cluster
+    locations never leave `data/restricted/`.
+  - Not yet applied to demand: expected demand = potential × P(connected) is the next step.
+- QA now also checks that productive use conserves the census amount across cell, sector and district, and that every
+  building has one connection probability in [0, 1].
+
 ### After the mid-point (modelling phase)
 5. ~~Appliance profiles per building class and context~~ (done 2026-10-11, signed off 2026-10-12). Next: a
    health-post source, seasonal variants, and off-grid (solar) variants.
-6. RAMP Monte Carlo runs per building class → per-building median and 90th-percentile peak, annual kWh,
+6. Expected demand (potential × the grid model's probability); a rural mill share for unlocated productive use.
+7. RAMP Monte Carlo runs per building class → per-building median and 90th-percentile peak, annual kWh,
    load-profile shape.
-7. Productive-use viability score (road access, market proximity, density, grid distance).
-8. Validation against REG/Columbia consumption distributions and district electrification rates.
-9. Deliverable: an energy-classified building GeoParquet / PostGIS table plus a map viewer.
+8. ~~Productive-use viability score~~ (done 2026-10-12: candidate score, tagged + unlocated demand; see above).
+9. Validation against REG/Columbia consumption distributions and district electrification rates.
+10. Deliverable: an energy-classified building GeoParquet / PostGIS table plus a map viewer.
 
 ## 6. Data still to acquire (for phase 2)
 The API credit has expired, so new documents are read and curated directly in the coding session (with a quote

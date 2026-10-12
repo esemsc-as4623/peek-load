@@ -16,6 +16,9 @@ flowchart LR
     src_microdata["Survey microdata: DHS 2025, MTF 2022, EICV5 (restricted)"]
     src_corpus["Evidence corpus (26 public reports)"]
     src_anchors["QSEL / REG / RURA consumption and tariffs"]
+    src_worldcover["ESA WorldCover 2021 (cropland)"]
+    src_census["NISR Establishment Census 2023 (tables) (restricted)"]
+    src_dhs["DHS 2025 households + displaced cluster GPS (restricted)"]
   end
   subgraph ingest["Ingest and provenance"]
     manifest["Download manifest (url, sha256, licence, time)"]
@@ -40,7 +43,7 @@ flowchart LR
     codebook{{"Codebook approval (human)"}}
     cards["Context cards (open vector data only)"]
     labeller["Claude Haiku 4.5 labeller"]
-    gold{{"Human gold labels (173)"}}
+    gold{{"Human gold labels (173; uncertain reference)"}}
     label_eval["Label evaluation"]
     t_labels[("labels")]
   end
@@ -58,6 +61,10 @@ flowchart LR
     t_archetypes[("17 archetypes (signed off)")]
     mapping_approval{{"Mapping approval (human)"}}
     mapping["B2 building to profile mapping"]
+    pu_demand["B3 productive use: tagged + unlocated"]
+    t_pu[("pu_located / pu_unlocated_areas / pu_candidates")]
+    grid_model["B4 grid-connection model (restricted)"]
+    t_grid[("grid_connection (P per building)")]
     t_weights[("building_profiles")]
     ramp["B3 RAMP 0.5.2 simulation"]
     t_library[("profile_library")]
@@ -89,6 +96,18 @@ flowchart LR
   src_microdata --> manifest
   src_corpus --> manifest
   src_anchors --> manifest
+  src_worldcover --> manifest
+  src_census --> manifest
+  src_dhs --> manifest
+  manifest --> pu_demand
+  t_context --> pu_demand
+  pu_demand --> t_pu
+  t_pu --> mapping
+  t_pu --> aggregation
+  manifest --> grid_model
+  t_context --> grid_model
+  grid_model --> t_grid
+  t_grid --> aggregation
   manifest --> conform
   conform --> t_base
   t_base --> heights

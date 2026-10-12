@@ -19,7 +19,9 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 | `building_context` | 6,434,247 | admin area down to village; OSM/Overture/registry tags; distance to roads (any and major) and power lines; nearby tagged-place counts (50/100/250 m); GHSL settlement class and non-residential share; population density; relative wealth index; elevation; H3 r7 |
 | `climate_h3` | 4,034 H3 r7 cells | mean temperature, 95th-percentile daily max, cooling degree-days (18/22/24 °C), cooling class, 24-hour typical day, monthly temperature and rainfall, mean relative humidity, annual rainfall, solar irradiance (2020–2025) |
 | `labels` | 48,556 | building-use labels: class, probabilities, confidence, a one-line justification, model and prompt version. Covers 44,156 deep-dive buildings plus the 5,878-building pilot sample, with several model and prompt configurations on the 400 gold buildings |
-| `gold_labels.csv` | 174 (growing to 400 + 50 repeats) | human building-use labels with confidence, note and an imagery flag |
+| `gold_labels.csv` | 174 (growing to 400 + 50 repeats) | human building-use labels with confidence, note and an imagery flag. An uncertain reference, not ground truth: the imagery showed little beyond vegetation and roof shape |
+| `pu_located` / `pu_unlocated_areas` / `pu_candidates` | 57 / per area / 17,103 | productive use: buildings with a trade tag; census establishments not tied to a building, per H3 r7 cell, sector and district; top-scoring candidate buildings (no demand assigned) |
+| `grid_connection` | 6,434,247 | predicted probability that the building's neighbourhood is grid-connected (logistic model on DHS 2025; draft) |
 | `evidence` | 3,076 | appliance and usage parameters from 18 reports, each with document, page, verbatim quote and a verification flag |
 | `evidence_productive_use` | 163 | productive-use appliance parameters from web research (summary statements; to verify at the named source) |
 | `validation_anchors/` | 5 small tables | households by district, grid lighting by district, residential kWh distributions, tariffs, DHS ownership priors. **Never model inputs.** |
@@ -63,8 +65,11 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 3. Direct building-use tags are rare (~14k informative tags among 6.4M buildings), and open vector data rarely shows use. Building-use labels are therefore uncertain, and residential and ancillary dominate.
 4. Microsoft footprints omit structures under ~15 m², so small ancillary buildings are under-counted where Microsoft is the source.
 5. Cooling demand is marginal in most of the country, including Kigali. Sustained heat is in the eastern lowlands (12.9% of buildings in areas above 100 CDD22 a year; provisional, as NASA POWER shows less there) and the Rusizi/Bugarama valley (confirmed). The cooling class is a relative proxy.
-6. Labels cover the three deep-dive sectors (Nyamirambo fully, Nasho fully, Muhoza partly) and a national sample, not the whole country.
-7. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions; the health
+6. Human gold labels are themselves uncertain (imagery shows little beyond vegetation and roof shape), so label agreement is consistency, not accuracy.
+7. Unlocated productive use treats every rural manufacturing establishment as an electric mill: an upper bound.
+8. The grid-connection model predicts a neighbourhood rate (DHS clusters are displaced 2-5 km); neighbouring buildings share a value.
+9. Labels cover the three deep-dive sectors (Nyamirambo fully, Nasho fully, Muhoza partly) and a national sample, not the whole country.
+10. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions; the health
    profile is built from health centres and overstates health posts; all profiles assume a grid connection.
 
 ## Uses

@@ -17,6 +17,12 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 
 ## Demand profiles (phase 2)
 - `pixi run demand` runs the whole chain below in order and ends with `qa` (the demand check is `reports/qa/demand.md`).
+- Per-building weights ignore class probabilities < 0.10; productive use is never taken from the labeller. It comes
+  from `pixi run pu-demand` (trade tags + NISR Establishment Census per area; needs `fetch-worldcover`), and the
+  unlocated part is an area amount, never a building's. `pixi run grid-model` trains the grid-connection model on DHS
+  2025 (restricted: cluster locations stay in `data/restricted/`).
+- Gold labels are an uncertain reference (imagery shows little beyond vegetation and roof shape); don't treat
+  agreement with them as accuracy.
 - Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
   `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`) → `profile-library --buildings`
   → `profile-checks` (`reports/demand/profile_checks.md`) → `dashboard-data` (`--sample` for the committed sample;

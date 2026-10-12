@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 
 from rtl.archetypes import Archetype
+from rtl.demand import productive_use as pu
 from rtl.demand.mapping import LABELER
 from rtl.settings import DATA_DIR, INTERIM_DIR, PROCESSED_DIR, REPO_ROOT, REPORTS_DIR, load_yaml
 
@@ -122,36 +123,25 @@ def building_demand(weights: pd.DataFrame, lib: pd.DataFrame) -> tuple[pd.DataFr
     return pd.DataFrame(rows).set_index("bldg_id"), {k: v for k, v in load.items()} | {"_index": w.index}
 
 
-def pu_components(df: pd.DataFrame) -> pd.DataFrame:
-    """Prototype Productive-Use Viability components (formulas in config/dashboard.yaml pu_prototype)."""
-    probs = df.probs.apply(lambda p: p if isinstance(p, list) else [np.nan] * 9)
-    p = np.vstack(probs.to_numpy())
-    c = pd.DataFrame(index=df.index)
-    c["pu_likelihood"] = np.clip(p[:, 5] + p[:, 2] + p[:, 1], 0, 1)  # productive_use + commercial + mixed
-    c["market_access"] = (0.5 * np.minimum(df.poi_count_250m / 10, 1)
-                          + 0.5 * (1 - np.minimum(df.dist_road_major_m / 2000, 1)))
-    c["demand_density"] = np.minimum(np.log10(1 + df.pop_density_per_km2) / np.log10(1 + 15000), 1)
-    c["grid_proximity"] = 1 - np.minimum(df.dist_powerline_m / 5000, 1)
-    c["ability_to_pay"] = np.clip((df.rwi + 0.415) / (1.248 + 0.415), 0, 1)
-    c["agri_context"] = np.nan
-    return c
-
-
-def pu_score(c: pd.DataFrame, cfg: dict) -> tuple[pd.Series, pd.Series]:
-    """100 x sqrt(likelihood) x weighted mean of the enabling components present (config pu_prototype)."""
-    wts = {k: v["weight"] for k, v in cfg["components"].items()}
-    num = sum(c[k].fillna(0) * w for k, w in wts.items())
-    den = sum(c[k].notna() * w for k, w in wts.items())
-    score = 100 * np.sqrt(c.pu_likelihood) * num / den.replace(0, np.nan)
-    cats = cfg["categories"]
+def pu_scores(df: pd.DataFrame, pu_cfg: dict, dash_cfg: dict) -> tuple[pd.DataFrame, pd.Series, pd.Series]:
+    """Productive-use candidate criteria (0-1), score (0-100, weights by the building's group) and category, for
+    eligible buildings; others get null (config/dashboard.yaml productive_use, config/productive_use.yaml)."""
+    c = pu.criteria(df)
+    score = pd.Series(np.nan, index=df.index)
+    for g, w in pu_cfg["candidate_score"].items():
+        m = df.pu_group == g
+        score[m] = pu.candidate_score(c[m], w)
+    score[~df.pu_eligible.astype(bool)] = np.nan
+    cats = dash_cfg["categories"]
     cat = pd.cut(score, bins=[cats["low"][0], cats["medium"][0], cats["high"][0], 100.0001],
                  labels=["low", "medium", "high"], right=False, include_lowest=True)
-    return score.round(1), cat.astype(object).where(score.notna(), None)
+    return c, score.round(1), cat.astype(object).where(score.notna(), None)
 
 
 # ------------------------------------------------------------------------------------------------ deep dives
 def deep_dive(con, dd: dict, classes: list[str], bbox: list[float] | None) -> pd.DataFrame:
     I, P = INTERIM_DIR, PROCESSED_DIR  # noqa: E741, N806 (short names keep the SQL readable)
+    pu_cfg, map_cfg = load_yaml("productive_use.yaml"), load_yaml("profile_mapping.yaml")
     where = f"x.adm2_name = '{dd['district']}' AND x.adm3_name = '{dd['sector']}'"
     if bbox:
         where += f" AND b.lon BETWEEN {bbox[0]} AND {bbox[2]} AND b.lat BETWEEN {bbox[1]} AND {bbox[3]}"
@@ -164,17 +154,48 @@ def deep_dive(con, dd: dict, classes: list[str], bbox: list[float] | None) -> pd
                x.facility_type, x.dist_road_major_m, x.dist_road_any_m, x.dist_powerline_m, x.poi_count_50m,
                x.poi_count_100m, x.poi_count_250m, x.ghsl_class, x.ghsl_nres_share, x.pop_density_per_km2, x.rwi,
                x.elevation_m, x.h3_r7, k.cooling_class, k.tmax_p95_c, k.cdd22_per_year, k.t2m_mean_c,
-               l.label, l.confidence, l.probs_json
+               l.label, l.confidence, l.probs_json, c.cropland_share,
+               {pu.setting_sql(map_cfg)} AS setting, {pu.eligible_sql(pu_cfg, s="b")} AS pu_eligible
         FROM '{I}/buildings_base.parquet' b
         JOIN '{I}/building_context.parquet' x USING (bldg_id)
         LEFT JOIN '{I}/building_height.parquet' h USING (bldg_id)
         LEFT JOIN '{I}/climate_h3.parquet' k USING (h3_r7)
         LEFT JOIN (SELECT * FROM '{P}/labels.parquet' WHERE labeler = '{LABELER}') l USING (bldg_id)
+        LEFT JOIN '{I}/cropland_h3r8.parquet' c ON c.h3_r8 = h3_cell_to_parent(b.h3_r9, 8)
         WHERE {where} ORDER BY b.bldg_id""").df().set_index("bldg_id")
+    df["pu_group"] = df.setting.map(pu.group_of)
     pj = df.probs_json.apply(lambda s: json.loads(s) if isinstance(s, str) else None)
     df["probs"] = pj.apply(lambda j: [round(float(j.get(c, 0)), 3) for c in classes] if j else None)
     df["cues"] = pj.apply(lambda j: j.get("_evidence") if j else None)
     return df.drop(columns="probs_json")
+
+
+def pu_area_summary(dd: dict, lib: pd.DataFrame, df: pd.DataFrame) -> dict:
+    """Productive use for a deep-dive sector, by value kind: reported (census, district), building_sum (tagged
+    buildings in the sector), unlocated (census amount spread to this sector, not tied to buildings)."""
+    areas = pd.read_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet")
+    census = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv")
+    un = areas[(areas.level == "sector") & (areas.area_id == dd["sector"]) & (areas.district == dd["district"])]
+    units = un.groupby("profile_id").units.sum().reindex(lib.index, fill_value=0.0)
+    hourly = units.to_numpy() @ curves(lib)
+    located = df.pu_located.dropna().value_counts()
+    d = census[census.district == dd["district"]]
+    return {
+        "reported": {"district": dd["district"], "establishments_census": rnd(d.pu_census.sum(), 0),
+                     "by_setting": d.groupby("setting").pu_census.sum().round(0).to_dict(),
+                     "source": "NISR Establishment Census 2023 (manufacturing establishments, district level)"},
+        "building_sum": {"located_buildings": int(located.sum()), "units_by_profile": located.to_dict(),
+                         "annual_mwh": rnd(sum(located.get(p, 0) * lib.at[p, "daily_kwh_mean"] for p in located.index)
+                                           * 365 / 1000, 1)},
+        "unlocated": {"units_by_profile": {p: rnd(v, 1) for p, v in units.items() if v > 0},
+                      "units": rnd(units.sum(), 1),
+                      "annual_mwh": rnd(units.to_numpy() @ lib.daily_kwh_mean.to_numpy() * 365 / 1000, 1),
+                      "peak_kw": rnd(hourly.max() / 1000, 1),
+                      "hourly_kw": [rnd(v / 1000, 2) for v in hourly]},
+        "candidates_in_view": int(df.pu_candidate.notna().sum()),
+        "note": ("Unlocated productive use is an area amount: census establishments not tied to a building. "
+                 "Candidates are buildings worth checking, not identified workshops."),
+    }
 
 
 def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFrame, wtop: pd.DataFrame,
@@ -193,19 +214,27 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
         index=df.index, columns=["annual_kwh", "peak_w", "peak_hour"])
     top.loc[df.modelled & top.annual_kwh.isna(), ["annual_kwh", "peak_w"]] = 0.0
     df = df.join(top.add_suffix("_top"))
-    comp = pu_components(df)
-    df["pu_score"], df["pu_category"] = pu_score(comp, cfg["pu_prototype"])
-    df.loc[~df.modelled, ["pu_score", "pu_category"]] = None  # labels drive the likelihood component
+    pu_cfg = load_yaml("productive_use.yaml")
+    comp, df["pu_score"], df["pu_category"] = pu_scores(df, pu_cfg, cfg["productive_use"])
+    loc = pd.read_parquet(PROCESSED_DIR / "pu_located.parquet").set_index("bldg_id")
+    cand = pd.read_parquet(PROCESSED_DIR / "pu_candidates.parquet").set_index("bldg_id")
+    df["pu_located"] = loc.profile_id.reindex(df.index)
+    df["pu_candidate"] = cand.profile_id.reindex(df.index)
+    df["pu_candidate_rank"] = cand["rank"].reindex(df.index)
+    gc = con.sql(f"SELECT bldg_id, p_connected FROM '{PROCESSED_DIR}/grid_connection.parquet' WHERE bldg_id IN "
+                 "(SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df().set_index("bldg_id")
+    df["p_connected"] = gc.p_connected.reindex(df.index)
 
     map_cols = ["label", "confidence", "modelled", "annual_kwh", "peak_w", "peak_hour", "annual_kwh_top",
-                "peak_w_top", "cooling_class", "pu_score", "pu_category", "height_m", "est_floors", "first_seen_year",
-                "source", "area_m2"]
+                "peak_w_top", "cooling_class", "pu_score", "pu_category", "pu_located", "pu_candidate", "p_connected",
+                "height_m", "est_floors", "first_seen_year", "source", "area_m2"]
     props = []
     for b, r in df[map_cols].iterrows():
         p = {"bldg_id": b, **{k: r[k] for k in map_cols}, "h3_r9": df.at[b, "h3_r9"]}
         p["confidence"], p["area_m2"], p["height_m"] = rnd(p["confidence"], 2), rnd(p["area_m2"]), rnd(p["height_m"])
         p["peak_hour"] = None if pd.isna(p["peak_hour"]) else int(p["peak_hour"])
         p["annual_kwh_top"], p["peak_w_top"] = rnd(p["annual_kwh_top"]), rnd(p["peak_w_top"])
+        p["p_connected"] = rnd(p["p_connected"], 2)
         props.append(p)
     write_geojson(out / "deep_dives" / dd_id / "buildings.geojson", list(df.geom), props)
 
@@ -241,14 +270,19 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
             "climate": {"cooling_class": r.cooling_class, "tmax_p95_c": rnd(r.tmax_p95_c),
                         "cdd22_per_year": rnd(r.cdd22_per_year),
                         "t2m_mean_c": rnd(r.t2m_mean_c)},
-            "pu": None if not r.modelled else {"score": r.pu_score, "category": r.pu_category,
-                                               "components": {k: rnd(v, 2) for k, v in comp.loc[b].items()}},
+            "pu": {"eligible": bool(r.pu_eligible), "group": r.pu_group, "score": r.pu_score,
+                   "category": r.pu_category, "located": r.pu_located if isinstance(r.pu_located, str) else None,
+                   "candidate": r.pu_candidate if isinstance(r.pu_candidate, str) else None,
+                   "candidate_rank": None if pd.isna(r.pu_candidate_rank) else int(r.pu_candidate_rank),
+                   "criteria": {k: rnd(v, 2) for k, v in comp.loc[b].items()}},
             "context": {"dist_road_major_m": rnd(r.dist_road_major_m, 0), "dist_road_any_m": rnd(r.dist_road_any_m, 0),
                         "dist_powerline_m": rnd(r.dist_powerline_m, 0), "poi_count_50m": r.poi_count_50m,
                         "poi_count_100m": r.poi_count_100m, "poi_count_250m": r.poi_count_250m,
                         "pop_density_per_km2": rnd(r.pop_density_per_km2, 0), "rwi": rnd(r.rwi, 3),
                         "ghsl_class": r.ghsl_class, "ghsl_nres_share": rnd(r.ghsl_nres_share, 2),
-                        "elevation_m": rnd(r.elevation_m, 0)}}
+                        "elevation_m": rnd(r.elevation_m, 0), "setting": r.setting,
+                        "p_grid_connected": rnd(r.p_connected, 3),
+                        "cropland_share": rnd(r.cropland_share, 2)}}
     shards: dict[str, dict] = {}
     for b, d in details.items():
         shards.setdefault(d["h3_r9"], {})[b] = d
@@ -266,11 +300,12 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
             columns=order, fill_value=0.0).fillna(0.0).round(6)
         return {b: [float(v) for v in row] for b, row in zip(m.index, m.to_numpy(), strict=True)}
 
-    pu_order = ["pu_likelihood", *cfg["pu_prototype"]["components"]]
-    pu_rows = {b: [rnd(comp.at[b, k], 3) for k in pu_order] for b in df.index[df.modelled]}
-    write_json(out / "deep_dives" / dd_id / "weights.json", {"profile_order": order, "probabilities": arrays(weights),
-                                                              "top_class": arrays(weights_top),
-                                                              "pu_component_order": pu_order, "pu_components": pu_rows})
+    pu_order = list(cfg["productive_use"]["criteria"])
+    pu_rows = {b: [rnd(comp.at[b, k], 3) for k in pu_order] for b in df.index[df.pu_eligible.astype(bool)]}
+    write_json(out / "deep_dives" / dd_id / "weights.json", {
+        "profile_order": order, "probabilities": arrays(weights), "top_class": arrays(weights_top),
+        "pu_criteria_order": pu_order, "pu_criteria": pu_rows,
+        "pu_group": {b: g for b, g in df.pu_group[df.pu_eligible.astype(bool)].items()}})
 
     # area summary: curves summed over modelled buildings, split by profile group
     groups = {pid: cfg["profiles"][pid]["group"] for pid in lib.index}
@@ -284,14 +319,16 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
     total_top = {k: units_top.to_numpy() @ curves(lib, k) for k in ("", "weekday_", "weekend_")}
     ch = characteristics(total[""], total["weekday_"], total["weekend_"])
     mod = df[df.modelled]
+    labelled = mod[mod.probs.map(lambda p: isinstance(p, list))]  # tagged trades can be modelled without a label
     summary = {
         "id": dd_id, **dd, "n_buildings": len(df), "n_modelled": int(df.modelled.sum()),
         "bbox": [rnd(df.lon.min(), 5), rnd(df.lat.min(), 5), rnd(df.lon.max(), 5), rnd(df.lat.max(), 5)],
         "class_mix_top_label": mod.label.value_counts().reindex(classes, fill_value=0).to_dict(),
-        "class_mix_expected": (dict(zip(classes, np.nansum(np.vstack(mod.probs.to_numpy()), axis=0).round(1),
-                                        strict=True)) if len(mod) else {}),
+        "class_mix_expected": (dict(zip(classes, np.nansum(np.vstack(labelled.probs.to_numpy()), axis=0).round(1),
+                                        strict=True)) if len(labelled) else {}),
         "cooling_mix": df.cooling_class.value_counts().to_dict(),
-        "pu_mix": mod.pu_category.value_counts().to_dict(),
+        "pu_mix": df.pu_category.value_counts().to_dict(),
+        "productive_use": pu_area_summary(dd, lib, df),
         "units_by_profile": units.round(1).to_dict(),
         "metrics": {"annual_mwh": rnd(mod.annual_kwh.sum() / 1000, 1),
                     "annual_mwh_p10": rnd(mod.annual_kwh_p10.sum() / 1000, 1),
@@ -319,8 +356,37 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
 
 
 # ------------------------------------------------------------------------------------------------ national/admin
+PU_FIELD_KINDS = {"pu_census_reported": "reported", "pu_units_located": "building_sum",
+                  "annual_mwh_modelled": "building_sum", "pu_units_unlocated": "unlocated",
+                  "pu_mwh_unlocated": "unlocated", "pu_candidates": "building_sum"}
+
+
+def pu_by_area(lib: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Productive-use fields per H3 r7 cell, sector (district, sector) and district."""
+    areas = pd.read_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet")
+    kwh = lib.daily_kwh_mean.reindex(areas.profile_id).to_numpy() * 365 / 1000
+    areas = areas.assign(mwh=areas.units.to_numpy() * kwh)
+    loc = pd.read_parquet(PROCESSED_DIR / "pu_located.parquet")
+    cand = pd.read_parquet(PROCESSED_DIR / "pu_candidates.parquet")
+    census = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv")
+    out = {}
+    for level, keys, lk in [("h3_r7", ["h3_r7"], ["h3_r7"]), ("sector", ["district", "sector"], ["district", "sector"]),
+                            ("district", ["district"], ["district"])]:
+        a = areas[areas.level == level]
+        a = a.drop(columns="area_id") if level == "district" else a.rename(columns={"area_id": keys[-1]})
+        g = a.groupby(keys)[["units", "mwh"]].sum().rename(columns={"units": "pu_units_unlocated",
+                                                                    "mwh": "pu_mwh_unlocated"})
+        g = g.join(loc.groupby(lk).size().rename("pu_units_located"), how="outer")
+        g = g.join(cand.groupby(lk).size().rename("pu_candidates"), how="outer")
+        if level == "district":
+            g = g.join(census.groupby("district").pu_census.sum().rename("pu_census_reported"), how="outer")
+        out[level] = g.reset_index()
+    return out
+
+
 def national(con, out, lib: pd.DataFrame) -> None:
     I, P = INTERIM_DIR, PROCESSED_DIR  # noqa: E741, N806 (short names keep the SQL readable)
+    pua = pu_by_area(lib)
     daily = ", ".join(f"('{pid}', {v})" for pid, v in lib.daily_kwh_mean.items())
     con.sql(f"""CREATE OR REPLACE TEMP TABLE modelled AS
         SELECT w.bldg_id, sum(w.weight * d.kwh) * 365 AS annual_kwh
@@ -344,6 +410,13 @@ def national(con, out, lib: pd.DataFrame) -> None:
             "dist_powerline_m_median", "ghsl_class_mode", "elevation_m", "t2m_mean_c", "tmax_p95_c", "cdd18_per_year",
             "cdd22_per_year", "cdd24_per_year", "ghi_kwh_m2_day", "rh_mean_pct", "precip_mm_per_year", "cooling_class",
             "n_modelled", "annual_mwh_modelled"]
+    hexes = hexes.merge(pua["h3_r7"], on="h3_r7", how="left")
+    gc = PROCESSED_DIR / "grid_connection.parquet"
+    if gc.exists():  # mean predicted P(grid connection) over buildings >= 20 m2 (rtl.demand.grid_connection)
+        hexes = hexes.merge(con.sql(f"""SELECT g.h3_r7, avg(g.p_connected) AS p_connected_mean FROM '{gc}' g
+            JOIN '{INTERIM_DIR}/buildings_base.parquet' b USING (bldg_id) WHERE b.area_m2 >= 20 GROUP BY 1""").df(),
+                            on="h3_r7", how="left")
+    keep += ["pu_units_located", "pu_units_unlocated", "pu_mwh_unlocated", "pu_candidates", "p_connected_mean"]
     keep = [k for k in keep if k in hexes.columns]
     props = [{k: (rnd(r[k], 2) if isinstance(r[k], float) else r[k]) for k in keep} for _, r in hexes.iterrows()]
     for p in props:
@@ -369,6 +442,11 @@ def national(con, out, lib: pd.DataFrame) -> None:
                  a AS (SELECT {', '.join(keys[1:])}, {aggs} FROM ({base}) GROUP BY ALL)
             SELECT g.*, a.* EXCLUDE ({', '.join(keys[1:])}) FROM g LEFT JOIN a USING ({', '.join(keys[1:])})
             ORDER BY {k}""").df()
+        if level == "districts":
+            adm = adm.merge(pua["district"].rename(columns={"district": "adm2_name"}), on="adm2_name", how="left")
+        else:
+            adm = adm.merge(pua["sector"].rename(columns={"district": "adm2_name", "sector": "adm3_name"}),
+                            on=["adm2_name", "adm3_name"], how="left")
         cols = [c for c in adm.columns if c != "geom"]
         props = [{c: (rnd(r[c], 3) if isinstance(r[c], float) else r[c]) for c in cols} for _, r in adm.iterrows()]
         for p in props:
@@ -548,7 +626,11 @@ def meta(out, cfg: dict, summaries: dict) -> None:
                      "fixture_bbox": aoi["fixture"]["bbox"]},
         "classes": cfg["classes"], "cooling": cfg["cooling"], "profile_groups": cfg["profile_groups"],
         "profiles": cfg["profiles"], "metrics": cfg["metrics"], "status": cfg["status"],
-        "pu_prototype": cfg["pu_prototype"],
+        "productive_use": cfg["productive_use"] | {
+            "weights": load_yaml("productive_use.yaml")["candidate_score"],
+            "groups": {"town": list(pu.TOWN_TRADES), "grain_mill": ["grain_mill"]},
+            "trade_mix": load_yaml("productive_use.yaml")["trade_mix"],
+            "field_kinds": PU_FIELD_KINDS},
         "deep_dives": [{k: v for k, v in s.items() if k in ("id", "district", "sector", "description", "aoi_key",
                                                               "n_buildings", "n_modelled", "bbox")}
                        for s in summaries.values()],

@@ -15,6 +15,7 @@ from pathlib import Path
 
 import duckdb
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 import pandera.errors as pe
 
@@ -115,6 +116,8 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
         "archetype JSON": {f.stem for f in arch_dir.glob("*.json") if not f.name.endswith(".schema.json")},
         "mapping (config/profile_mapping.yaml)": _mapping_ids(load_yaml("profile_mapping.yaml")),
         "dashboard (config/dashboard.yaml)": set(load_yaml("dashboard.yaml")["profiles"]),
+        "productive use (config/productive_use.yaml)": set(load_yaml("productive_use.yaml")["located"]["rules"])
+        | {t for mix in load_yaml("productive_use.yaml")["trade_mix"].values() if isinstance(mix, dict) for t in mix},
         "profile_library": set(pd.read_parquet(PROCESSED_DIR / "profile_library.parquet").profile_id),
         "building_profiles": {r[0] for r in con.sql(
             f"SELECT DISTINCT profile_id FROM read_parquet('{PROCESSED_DIR / 'building_profiles.parquet'}')"
@@ -127,7 +130,8 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
     for name, ids in sets.items():
         missing, extra = sorted(ref - ids), sorted(ids - ref)
         # the mapping and the weights need not use every archetype, but must not name an unknown one
-        partial_ok = name in ("mapping (config/profile_mapping.yaml)", "building_profiles")
+        partial_ok = name in ("mapping (config/profile_mapping.yaml)", "building_profiles",
+                              "productive use (config/productive_use.yaml)")
         bad = bool(extra) or (bool(missing) and not partial_ok)
         ok &= not bad
         lines.append(f"| {name} | {len(ids)} | {', '.join(missing) or '-'} | {', '.join(extra) or '-'} |")
@@ -142,6 +146,21 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
     checks = [("weights non-negative and present", w[0] == 0, f"{w[0]} bad of {w[1]:,}"),
               ("library daily kWh > 0", bool((lib.daily_kwh_mean > 0).all()), f"{len(lib)} profiles"),
               ("archetype status matches approvals", statuses == want, f"{sorted(statuses)} vs {sorted(want)}")]
+    # productive use: census establishments are either located, unlocated (spread over areas) or reported as
+    # not allocated; the three area levels hold the same total
+    dist = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv")
+    areas = pd.read_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet")
+    lv = areas.groupby("level").units.sum()
+    unloc = float((dist.unlocated - dist.not_allocated).sum())
+    checks.append(("productive use: area levels add up to the allocated census amount",
+                   bool(np.allclose(lv.to_numpy(), unloc, rtol=1e-4))
+                   and set(lv.index) == {"h3_r7", "sector", "district"},
+                   f"{lv.round(0).to_dict()} vs {unloc:,.0f}"))
+    gc = PROCESSED_DIR / "grid_connection.parquet"
+    if gc.exists():
+        g = con.sql(f"SELECT count(*), count(*) FILTER (WHERE p_connected BETWEEN 0 AND 1) FROM '{gc}'").fetchone()
+        checks.append(("grid model: one probability in [0, 1] per building", g[0] == g[1] and g[0] > 6_000_000,
+                       f"{g[1]:,} of {g[0]:,}"))
     lines += ["", "| check | result | detail |", "|---|---|---|"]
     for label, passed, detail in checks:
         ok &= passed

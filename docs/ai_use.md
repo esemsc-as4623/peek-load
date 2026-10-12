@@ -49,7 +49,10 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
   - the building → profile mapping (`config/profile_mapping.yaml`).
 - **Approved 2026-10-12:** the archetype assumptions (`config/archetypes.yaml`, reviewed via
   `reports/review/archetype_assumptions.csv`), and the renaming of the four household profiles by wealth half.
+- **Decided 2026-10-12:** class probabilities under 0.10 are ignored; productive use comes from trade tags plus an
+  unlocated census amount per area (the owner's rule: mills in rural roadside places, other trades in towns).
 - **Still to come:**
-  - the decision on how class probabilities enter demand (probability-weighted against top class or a threshold);
+  - the productive-use trade shares, eligibility and candidate weights (`config/productive_use.yaml`);
+  - whether to apply the grid-connection model (a classical model written in the coding session) to demand;
   - licence review before publishing;
   - the final submission text.

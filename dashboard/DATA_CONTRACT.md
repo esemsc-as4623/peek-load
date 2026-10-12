@@ -82,7 +82,9 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 - **`profiles`:** `{profile_id: {name, group}}`.
 - **`metrics`:** `{key: {name, unit, definition}}` for the five headline metrics, with the exact UI wording.
 - **`status`:** `{item: {status, note}}`.
-- **`pu_prototype`:** weights, formulas and category bands.
+- **`productive_use`:** criteria (label, formula), category bands, `weights` {town, grain_mill: {criterion: weight}},
+  `groups`, `trade_mix` by setting, `value_kinds` {reported, building_sum, unlocated: {label, colour, note}} and
+  `field_kinds` (which area field is which kind).
 - **`deep_dives`:** `[{id, district, sector, description, aoi_key, n_buildings, n_modelled, bbox}]`.
 - **`attribution`:** the map attribution string.
 - **`licence_notes`**.
@@ -95,6 +97,14 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 | `pop_density_mean`, `rwi_mean`, `dist_powerline_m_median`, `ghsl_class_mode` | context (WorldPop, Meta RWI, Gridfinder, GHSL) |
 | `elevation_m`, `t2m_mean_c`, `tmax_p95_c`, `cdd18_per_year`, `cdd22_per_year`, `cdd24_per_year`, `ghi_kwh_m2_day`, `rh_mean_pct`, `precip_mm_per_year`, `cooling_class` | climate (Copernicus ERA5-Land hourly 2020–2025: temperature, humidity, rainfall and solar radiation) |
 | `n_modelled`, `annual_mwh_modelled`, `modelled_share` | demand where buildings are modelled (deep dives only; `modelled_share` tells you coverage, so don't map MWh where it's ~0) |
+| `pu_units_located` | *building_sum*: buildings in the cell with a productive-use trade tag (their demand is in `annual_mwh_modelled`) |
+| `pu_units_unlocated`, `pu_mwh_unlocated` | *unlocated*: census productive-use establishments allocated to the cell but tied to no building, and their potential MWh/yr. Never add them to a building; draw them in the unlocated colour |
+| `pu_candidates` | buildings in the cell flagged as productive-use candidates (top scores; no demand assigned) |
+| `p_connected_mean` | mean predicted probability of a grid connection over buildings ≥ 20 m² (draft model, B4) |
+
+**Value kinds.** Every area figure is one of three kinds (`meta.productive_use.value_kinds`), each drawn in its own
+colour: *reported* for the area by a source (purple; e.g. `pu_census_reported`, per district), a *sum over buildings*
+(blue), or *unlocated*, an area-only amount (amber). Don't mix kinds in one colour ramp.
 
 ### `national/climate_monthly.json`
 `{h3_r7: {t2m_c: [12 monthly mean 2 m temperatures, °C], precip_mm: [12 monthly mean rainfall totals, mm]}}`, January
@@ -107,7 +117,8 @@ indicative.
 ### `admin/districts.geojson` (30), `admin/sectors.geojson` (416)
 Dissolved from village polygons. Fields: `adm1_name`, `adm2_name`, (`adm3_name`), plus the same stock and context
 aggregates as the hexes, `n_modelled`, `annual_mwh_modelled`, and `share_low`, `share_medium`, `share_high` (the
-share of buildings in each cooling category).
+share of buildings in each cooling category). Both levels add the productive-use fields above; districts also carry
+`pu_census_reported` (*reported*: NISR Establishment Census 2023 manufacturing establishments in the district).
 
 ### `deep_dives/<id>/buildings.geojson` (footprint polygons; the map layer)
 | Field | Meaning |
@@ -118,12 +129,17 @@ share of buildings in each cooling category).
 | `annual_kwh`, `peak_w`, `peak_hour` | **Annual Energy Consumption** and **Estimated Peak Load** (W, local hour), using class probabilities |
 | `annual_kwh_top`, `peak_w_top` | the same using the **top class only** (the dashboard toggle) |
 | `cooling_class` | **Cooling Demand Category** (`low` / `medium` / `high`) |
-| `pu_score`, `pu_category` | **Productive-Use Viability**, PROTOTYPE score 0–100 and band |
+| `pu_score`, `pu_category` | productive-use **candidate score** 0–100 and band (eligible buildings only, else null) |
+| `pu_located` | profile id if a trade tag puts productive-use demand on this building, else null |
+| `pu_candidate` | profile id if the building is a flagged candidate (no demand assigned), else null |
+| `p_connected` | predicted probability of a grid connection for the building's neighbourhood (draft) |
 | `height_m`, `est_floors`, `first_seen_year`, `source`, `area_m2` | building attributes (`first_seen_year` is experimental) |
 
 ### `deep_dives/<id>/weights.json`
 `{profile_order: [17 ids], probabilities: {bldg_id: [17 weights]}, top_class: {bldg_id: [17 weights]},
-pu_component_order: [6 names], pu_components: {bldg_id: [6 values 0-1 or null]}}` (modelled buildings only).
+pu_criteria_order: [6 names], pu_criteria: {bldg_id: [6 values 0-1]}, pu_group: {bldg_id: "town" | "grain_mill"}}`.
+`probabilities`/`top_class` cover modelled buildings; `pu_criteria`/`pu_group` cover buildings eligible for
+productive use. Score = 100 × Σ w·criterion / Σ w over the group's weights with w > 0.
 - A weight is the expected number of units of that profile in the building. A shop-house can be 1 household + 1
   shop, so weights can sum above 1.
 - Modelled buildings with no load (top class ancillary) are absent from `top_class`.
@@ -143,8 +159,8 @@ pu_component_order: [6 names], pu_components: {bldg_id: [6 values 0-1 or null]}}
 | `demand` | `annual_kwh`, `annual_kwh_p10`, `annual_kwh_p90`, `peak_w`, `peak_hour`, `load_factor`, `evening_share`, `daytime_share`, `night_base_w`, `weekday_weekend_ratio`, `shape` |
 | `demand_top_class` | `annual_kwh`, `peak_w`, `peak_hour` |
 | `climate` | `cooling_class`, `tmax_p95_c`, `cdd22_per_year`, `t2m_mean_c` |
-| `pu` | `score`, `category`, `components` {pu_likelihood, market_access, demand_density, grid_proximity, ability_to_pay, agri_context}, each 0–1 or null |
-| `context` | `dist_road_major_m`, `dist_road_any_m`, `dist_powerline_m`, `poi_count_50m/100m/250m`, `pop_density_per_km2`, `rwi`, `ghsl_class`, `ghsl_nres_share`, `elevation_m` |
+| `pu` | `eligible`, `group` (town / grain_mill), `score`, `category`, `located`, `candidate`, `candidate_rank`, `criteria` {market_access, demand_density, grid_proximity, ability_to_pay, agri_context, building_size}, each 0–1 |
+| `context` | `dist_road_major_m`, `dist_road_any_m`, `dist_powerline_m`, `poi_count_50m/100m/250m`, `pop_density_per_km2`, `rwi`, `ghsl_class`, `ghsl_nres_share`, `elevation_m`, `setting` (urban/rural), `p_grid_connected`, `cropland_share` |
 
 ### `deep_dives/<id>/summary.json` (area panel)
 - `id`, `district`, `sector`, `description`, `n_buildings`, `n_modelled`, `bbox`.
@@ -156,6 +172,10 @@ pu_component_order: [6 names], pu_components: {bldg_id: [6 values 0-1 or null]}}
 - `metrics_top_class`.
 - `hourly_kw`: `all`, `weekday`, `weekend`, and `by_group` {household, commerce, institution, productive}, each 24
   values. `hourly_kw_top_class.all` has the same for top-class mode.
+- `productive_use`: `reported` {district, establishments_census, by_setting, source}, `building_sum`
+  {located_buildings, units_by_profile, annual_mwh} (included in `metrics`), `unlocated` {units_by_profile, units,
+  annual_mwh, peak_kw, hourly_kw [24]} (NOT included in `metrics`; show it as a separate, differently coloured
+  amount), `candidates_in_view`, `note`.
 - `note`.
 
 ### `profiles/profiles.json`
@@ -213,16 +233,19 @@ characteristics(c, cWeekday, cWeekend):
   weekday_weekend_ratio = sum(cWeekday) / sum(cWeekend)
   shape = evening_share >= 0.4 && peak.hour in 17..22 ? "evening peak"
         : daytime_share >= 0.5 ? "daytime" : load_factor >= 0.6 ? "flat" : "mixed"
-puScore(comp, wts) = 100 * sqrt(comp.pu_likelihood)
-                   * sum_{k present} wts[k] * comp[k] / sum_{k present} wts[k]   // k over the enabling components
+puScore(crit, w)   = 100 * sum_{k: w[k] > 0} w[k] * crit[k] / sum_{k: w[k] > 0} w[k]
+                     // w = meta.productive_use.weights[weights.pu_group[b]]  ("town" or "grain_mill")
 puCategory(s)      = s < 33.3 ? "low" : s < 66.7 ? "medium" : "high"
 ```
 - The probability ↔ top-class toggle swaps `weights.probabilities` for `weights.top_class`.
-- The productive-use sliders change `wts`. Recompute every building from `weights.pu_components`, which has the
-  same order as `pu_component_order`. With the default weights the result equals the stored `pu_score`.
+- The productive-use sliders change `w` for one group. Recompute every eligible building from `weights.pu_criteria`
+  (order `pu_criteria_order`). With the default weights the result equals the stored `pu_score`.
+- Area productive use is never recomputed in the browser: tagged buildings are already in the building weights, and
+  the unlocated amount comes from `summary.productive_use.unlocated` or the hex/admin `pu_*_unlocated` fields.
 
 ## 7. Restricted data, licences, attribution
-- **Restricted microdata:** DHS 2025, World Bank MTF 2022 and NISR EICV5 microdata **never** enter the bundle. Only
+- **Restricted microdata:** DHS 2025 (incl. cluster GPS), World Bank MTF 2022, NISR EICV5 microdata and the
+  Establishment Census workbook **never** enter the bundle. The grid model's predictions and district census counts do. Only
   their published aggregates appear, inside the profiles (`provenance` ids `mtf:…`) and checks. Show
   `sources.restricted_notice` wherever they're cited.
 - **Footprints:** ODbL-1.0 (share-alike for derived databases).
