@@ -38,7 +38,7 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 |---|---|---|
 | App start | `meta.json`, `manifest.json`, `national/h3_r7.geojson`, `admin/districts.geojson` | ~3 MB |
 | National view, sector layer | `admin/sectors.geojson` | 1 MB |
-| Click a hex / climate page | `national/climate_hourly.json` | 0.6 MB |
+| Click a hex / climate page | `national/climate_hourly.json`, `national/climate_monthly.json` | 0.6 MB + 0.6 MB |
 | Open a deep dive | `deep_dives/<id>/summary.json`, `buildings.geojson`, `weights.json` | 9–19 MB raw (2–4 MB gzipped) |
 | Click a building | `deep_dives/<id>/details/<h3_r9>.json` (the building's `h3_r9` is in its map properties) | ≤ 1.4 MB, usually < 300 kB |
 | Profiles page | `profiles/profiles.json`, `profiles/evidence_index.json` | 0.2 MB |
@@ -69,7 +69,7 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 - **Null:** not observed or not modelled, **never zero**. A building with `modelled: false` has null demand and
   productive-use fields. In top-class mode, a modelled building whose top class is ancillary has demand 0 (no load).
 - **Status enums:** `built`, `draft`, `in_progress`, `planned` (see `meta.status`). All demand is `draft`: the
-  potential demand if grid-connected, from draft profiles.
+  potential demand if grid-connected, pending the owner's decision on how class probabilities enter it.
 
 ## 5. File reference
 
@@ -93,8 +93,13 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 | `h3_r7`, `district` | cell id; the district most of its buildings fall in |
 | `n_buildings`, `footprint_m2`, `mean_height_m` | building stock |
 | `pop_density_mean`, `rwi_mean`, `dist_powerline_m_median`, `ghsl_class_mode` | context (WorldPop, Meta RWI, Gridfinder, GHSL) |
-| `elevation_m`, `t2m_mean_c`, `tmax_p95_c`, `cdd18_per_year`, `cdd22_per_year`, `cdd24_per_year`, `ghi_kwh_m2_day`, `cooling_class` | climate (ERA5-Land 2019–2024; GHI from NASA POWER) |
+| `elevation_m`, `t2m_mean_c`, `tmax_p95_c`, `cdd18_per_year`, `cdd22_per_year`, `cdd24_per_year`, `ghi_kwh_m2_day`, `rh_mean_pct`, `precip_mm_per_year`, `cooling_class` | climate (Copernicus ERA5-Land hourly 2020–2025: temperature, humidity, rainfall and solar radiation) |
 | `n_modelled`, `annual_mwh_modelled`, `modelled_share` | demand where buildings are modelled (deep dives only; `modelled_share` tells you coverage, so don't map MWh where it's ~0) |
+
+### `national/climate_monthly.json`
+`{h3_r7: {t2m_c: [12 monthly mean 2 m temperatures, °C], precip_mm: [12 monthly mean rainfall totals, mm]}}`, January
+first, Copernicus ERA5-Land 2020–2025. Rainfall is ERA5-Land's, which is known to run wet over mountains: treat it as
+indicative.
 
 ### `national/climate_hourly.json`
 `{h3_r7: [24 hourly mean 2 m temperatures, °C]}`, the diurnal curve per cell.
@@ -155,7 +160,7 @@ pu_component_order: [6 names], pu_components: {bldg_id: [6 values 0-1 or null]}}
 
 ### `profiles/profiles.json`
 `{profiles: [...], groups, simulation}`. Each profile has:
-- **Identity:** `profile_id`, `name`, `group`, `status` (`draft`), `description`, `population`, `year`.
+- **Identity:** `profile_id`, `name`, `group`, `status` (`draft`, or `human_reviewed` once the owner signs off; all 17 are signed off), `description`, `population`, `year`.
 - **Energy and peaks:** `daily_kwh` (+`_p10`/`_p90`), `annual_kwh`, `coincident_peak_w_p50/p90` (minute-level peak
   per unit in a group of 200).
 - **Simulation:** `simulated_units`, `simulated_days`.
@@ -227,7 +232,7 @@ puCategory(s)      = s < 33.3 ? "low" : s < 66.7 ? "medium" : "high"
 
 ## 8. What isn't in v1 (Planned) and the production path
 - **Not in v1:** national building-level demand; Expected demand (× P(grid connection)); single-building
-  instantaneous peaks; seasonal/monthly profiles (after the Copernicus CDS climate rebuild); the agricultural
+  instantaneous peaks; seasonal load profiles (monthly climate is in, profiles don't use it yet); the agricultural
   context component of the productive-use score. Show these as Planned empty states.
 - **v2 production path:**
   - national footprints (6.4M) as **PMTiles vector tiles** (tippecanoe), styled with the same fields;

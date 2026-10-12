@@ -1,6 +1,6 @@
 # Rooftops → Load Curves: status report
 
-*OSEAS26 challenge: building footprints → energy demand · repo `esemsc-as4623/peek-load` · updated 2026-10-10*
+*OSEAS26 challenge: building footprints → energy demand · repo `esemsc-as4623/peek-load` · updated 2026-10-12*
 
 ## 1. Plan in one paragraph
 We turn Rwanda's 6.4 million open building footprints into a **curated, provenance-tracked building
@@ -19,7 +19,7 @@ preprocessing. Modelling follows in phase 2.
 | `buildings_base` | footprints (Google V3 + Microsoft + OSM via VIDA), area, shape, orientation, H3 index | quality problems are **flagged, not dropped**: 12.6% low detector confidence, 0.5% tiny slivers, 2,186 nested duplicates; 87.2% unflagged |
 | `building_height` | height, estimated floors, floor area, first year seen, yearly presence 2016–2023 | heights for 71.6% of buildings (median 3.3 m). Floors come from **height cut-points fitted on OSM floor counts and tested on a held-out half**: 1 floor below 6.0 m, 2 floors below 8.5 m, then +1 per 3 m. That gives 83% exact for 1-storey buildings (MAE 0.20 floors, against 0.41 with a single 3.4 m storey height); the source under-estimates 3+ storeys. First-seen year uses presence ≥ 0.5 (33% of buildings get a year; 0.3 would give 52%) and is marked experimental |
 | `building_context` | admin area down to village, OSM/Overture/registry tags, distance to roads and power lines, nearby-place counts, settlement type (GHSL), population density, relative wealth, elevation | direct use tags are rare: only ~14k of 6.4M buildings have an informative tag |
-| `climate_h3` | ERA5-Land hourly temperature downscaled with elevation, cooling degree-days (18/22/24 °C), typical day, solar irradiance, cooling class | 4,034 areas; fitted lapse rate −6.05 K/km; Kigali 20.5 °C. Cooling class from the 95th-percentile daily maximum: low < 26 °C, medium 26–29, high ≥ 29 (2.30M / 3.38M / 0.76M buildings). **Checked against NASA POWER** (below) |
+| `climate_h3` | ERA5-Land hourly 2020–2025 **from the Copernicus Climate Data Store** (Copernicus licence): temperature downscaled with elevation, cooling degree-days (18/22/24 °C), typical day, monthly temperature and rainfall, humidity, solar irradiance, cooling class | 4,034 areas; fitted lapse rate −6.16 K/km (r² 0.94); Kigali 20.5 °C. Cooling class from the 95th-percentile daily maximum: low < 26 °C, medium 26–29, high ≥ 29 (2.27M / 3.16M / 1.01M buildings). **Checked against NASA POWER** (below) |
 
 ### Evidence for appliance profiles
 - 18 public reports (2,406 pages: DHS 2019 and 2025, World Bank MTF, NISR census and EICV7, tariffs, Columbia/REG
@@ -71,6 +71,9 @@ preprocessing. Modelling follows in phase 2.
   cached locally, so re-running costs nothing.
 
 ### Cooling demand: independent check (NASA POWER, hourly 2019–2024)
+*Table from the Open-Meteo build (2019–2024). The Copernicus rebuild (2020–2025) moves Kigali to 30 CDD22 and
+28.0 °C, and Kirehe/Nasho to 40 CDD22 and 28.4 °C: the same picture.*
+
 | Site | CDD22 per year, POWER / ERA5-Land | 95th-pct. daily max, POWER / ERA5-Land | Hours ≥ 26 °C per year | Hours ≥ 28 °C per year |
 |---|---|---|---|---|
 | Kigali | 26 / 28 | 29.4 / 27.9 °C | 832 | 202 |
@@ -83,9 +86,9 @@ preprocessing. Modelling follows in phase 2.
   afternoon fan use, not air conditioning.
 - **The Rusizi/Bugarama valley** (south-west) has real, year-round cooling need.
 - **The eastern lowlands also carry sustained heat in the ERA5-Land table.** Ngoma, Kirehe and Bugesera have
-  district medians of 100–116 CDD22 a year. Nationally, 11.6% of buildings are in areas above 100 CDD22 a year
-  and 2.2% above 200. NASA POWER at Nasho (east) shows much less (5 against 37 CDD22), so the eastern values stay
-  **provisional** until the Copernicus rebuild and, ideally, station data confirm them.
+  district medians of 100–116 CDD22 a year. Nationally, 12.9% of buildings are in areas above 100 CDD22 a year
+  and 2.6% above 200 (Copernicus rebuild; 11.6% and 2.2% before). NASA POWER at Nasho (east) shows much less (5 against 37 CDD22), so the eastern values stay
+  **provisional**: the Copernicus rebuild confirms the ERA5-Land values, but that is the same model, so station data are still needed.
 - Caveat: POWER's ~0.5° grid is coarse, so it is shifted to each cell's elevation. Bugarama's agreement is partly
   built in by that shift (the POWER cell's mean elevation is 1,872 m); Kigali's (only a 127 m shift) is a genuinely
   independent check.
@@ -95,11 +98,11 @@ preprocessing. Modelling follows in phase 2.
   `A3_cooling_class.png`, `A3_t2m_mean_c.png`; notebooks `03_cooling_check.py`, `02_report_figures.py`.
 
 ## 3. In progress
-- **Climate from Copernicus CDS**: ERA5-Land hourly 2019–2025 (temperature, dewpoint, solar radiation,
-  precipitation, wind) plus a 1991–2020 daily baseline, downloading on the server (resumable). As of 2026-10-11,
-  74 of 84 hourly files are done; the 60 baseline requests are still queued at CDS. Then the climate
-  table is rebuilt: Copernicus licence, humidity and heat index, hourly 0.1° sunlight, rainfall seasonality, and
-  cooling classes on a 30-year normal.
+- **1991–2020 climate baseline** (Copernicus "ERA5-Land daily statistics", 60 requests): CDS takes ~40 hours
+  to start each request of this product, and 502 errors made the client resubmit duplicates. As of 2026-10-12 only
+  1991 (daily mean and max) is in hand; duplicates were cancelled and the rest stays queued. At this pace it won't
+  finish before the finals, so the fallback is to compute the baseline from the hourly product (one request per
+  year, which CDS serves in 1–4 hours). Until then cooling classes rest on 2020–2025.
 - More gold labels: 174 of 400, plus 50 repeats to measure the labeller's own consistency.
 
 ## 4. Mid-point readiness (Oct 15–16)
@@ -153,7 +156,7 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
 - **17 RAMP archetypes**, one for every profile the approved mapping uses (`pixi run build-archetypes`; recipes in
   `config/archetypes.yaml`; JSON in `data/processed/archetypes/`). Every number cites its source ids or carries a
   written assumption. `archetype_sources.csv` counts them: household archetypes take 71–80% of their numbers from
-  data, establishments 0–60%. All are `draft` until the owner reviews them (human gate).
+  data, establishments 0–60%. The owner signed them off on 2026-10-12 (human gate).
   - **Households (4)**: ownership, bulbs per home and hours of use come from MTF 2022 grid households, split by
     setting and by Ubudehe category (1–2 vs 3–4, mirroring the mapping's RWI split). TV power comes from measured TV
     energy (QSEL) divided by MTF viewing hours (48 W), and fridge energy from QSEL.
@@ -185,8 +188,8 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
 
   - **The health result is expected.** The profile stands for health posts, but MTF surveyed centres (21 beds,
     open 24 h). A health-post source is needed.
-  - **MTF energy tier:** all four household archetypes are Tier 2 by energy. So the "t1" and "t3" in two of the
-    approved mapping's ids are names, not tiers, and a rename is suggested.
+  - **MTF energy tier:** all four household archetypes are Tier 2 by energy, so the household ids name the
+    wealth half instead of a tier (renamed 2026-10-12 to `household_{rural,urban}_{lower,upper}`).
 - **New validation anchors**:
   - RURA tariff decisions of 2018 and 2020, official documents with verified quotes;
   - MTF 2022 household consumption (from spending), schools and health facilities;
@@ -227,9 +230,35 @@ cooling check are done, and every step is reproducible and documented: [`docs/da
   probabilities on the gold set before using expected values. That's a decision on the approved mapping, for the
   owner.
 
+### Climate rebuilt from Copernicus, and pipeline review (2026-10-12)
+- **Climate from Copernicus CDS.** All 84 hourly ERA5-Land files (2019-01 to 2025-12) are in. `climate_h3` is rebuilt
+  from them (`pixi run climate-h3`; Open-Meteo stays available as `--source openmeteo`), for 2020–2025 in local time:
+  - temperature as before (bilinear + fitted lapse rate, now −6.16 K/km); within ±0.05 °C of the Open-Meteo table;
+  - **solar** from ERA5-Land radiation at 0.1° (mean 5.14 kWh/m²/day; NASA POWER's 1° grid gave 4.89), with
+    accumulated fields de-accumulated and short gaps (≤ 3 h) interpolated;
+  - **new:** mean relative humidity (Magnus formula, mean 71%), annual rainfall, and monthly temperature and rainfall
+    (`t2m_m01..12_c`, `precip_m01..12_mm`), which show the two rainy seasons. ERA5-Land rainfall runs wet over the
+    mountains (up to 4,346 mm/yr), so treat it as indicative;
+  - cooling classes shift slightly hotter: 157 cells move from medium to high (buildings low/medium/high
+    2.27M / 3.16M / 1.01M, against 2.30M / 3.38M / 0.76M).
+- **Archetypes signed off** by the owner (`data/gold/approvals.yaml`); the build now marks them `human_reviewed`. The
+  four household ids are renamed everywhere (config, JSON, bundle, docs, dashboard) from tier-like names to
+  `household_rural_lower/upper` and `household_urban_lower/upper`.
+- **Pipeline review** of phase 2:
+  - the demand steps had no dependency chain, so `pixi run demand` now runs validate → mapping → archetypes →
+    library → checks → dashboard bundle → QA in order;
+  - QA didn't cover the demand phase: a new check (`reports/qa/demand.md`) reconciles recipes, archetype JSON,
+    mapping, dashboard config, library and weights, and checks archetype status against the approvals;
+  - the dashboard export hard-coded workflow statuses; they now come from `config/dashboard.yaml`;
+  - still open: the class-probability decision (above), profiles that don't yet vary by season or climate, the
+    health profile (health centres, not posts), the national demand roll-out, and `evidence_curated.csv`, which the
+    checks need but which is rebuilt only from the PDFs.
+- The dashboard bundle gains `national/climate_monthly.json` and humidity/rainfall per cell; the prototype shows
+  them on the Climate page.
+
 ### After the mid-point (modelling phase)
-5. ~~Appliance profiles per building class and context~~ (draft done 2026-10-11; see above). Next: the owner's review
-   of `config/archetypes.yaml`, a health-post source, and off-grid (solar) variants.
+5. ~~Appliance profiles per building class and context~~ (done 2026-10-11, signed off 2026-10-12). Next: a
+   health-post source, seasonal variants, and off-grid (solar) variants.
 6. RAMP Monte Carlo runs per building class → per-building median and 90th-percentile peak, annual kWh,
    load-profile shape.
 7. Productive-use viability score (road access, market proximity, density, grid distance).

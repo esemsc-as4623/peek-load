@@ -11,7 +11,7 @@ flowchart LR
     src_rwi["Meta Relative Wealth Index"]
     src_gridfinder["Gridfinder MV lines"]
     src_dem["Copernicus DEM GLO-30"]
-    src_era5["ERA5-Land (Open-Meteo / Copernicus CDS)"]
+    src_era5["ERA5-Land (Copernicus Climate Data Store)"]
     src_power["NASA POWER"]
     src_microdata["Survey microdata: DHS 2025, MTF 2022, EICV5 (restricted)"]
     src_corpus["Evidence corpus (26 public reports)"]
@@ -54,8 +54,8 @@ flowchart LR
   end
   subgraph demand["Demand modelling"]
     builder["B1 archetype builder"]
-    signoff{{"Archetype sign-off (human, pending)"}}
-    t_archetypes[("17 archetypes (draft)")]
+    signoff{{"Archetype sign-off (human, 2026-10-12)"}}
+    t_archetypes[("17 archetypes (signed off)")]
     mapping_approval{{"Mapping approval (human)"}}
     mapping["B2 building to profile mapping"]
     t_weights[("building_profiles")]

@@ -342,7 +342,9 @@ def national(con, out, lib: pd.DataFrame) -> None:
         FROM '{I}/climate_h3.parquet' k LEFT JOIN a USING (h3_r7) ORDER BY k.h3_r7""").df()
     keep = ["h3_r7", "district", "n_buildings", "footprint_m2", "mean_height_m", "pop_density_mean", "rwi_mean",
             "dist_powerline_m_median", "ghsl_class_mode", "elevation_m", "t2m_mean_c", "tmax_p95_c", "cdd18_per_year",
-            "cdd22_per_year", "cdd24_per_year", "ghi_kwh_m2_day", "cooling_class", "n_modelled", "annual_mwh_modelled"]
+            "cdd22_per_year", "cdd24_per_year", "ghi_kwh_m2_day", "rh_mean_pct", "precip_mm_per_year", "cooling_class",
+            "n_modelled", "annual_mwh_modelled"]
+    keep = [k for k in keep if k in hexes.columns]
     props = [{k: (rnd(r[k], 2) if isinstance(r[k], float) else r[k]) for k in keep} for _, r in hexes.iterrows()]
     for p in props:
         p["n_buildings"] = int(p["n_buildings"] or 0)
@@ -351,6 +353,11 @@ def national(con, out, lib: pd.DataFrame) -> None:
     write_geojson(out / "national" / "h3_r7.geojson", list(hexes.geom), props)
     write_json(out / "national" / "climate_hourly.json",
                {r.h3_r7: [rnd(r[f"t2m_h{h:02d}_c"], 1) for h in HOURS] for _, r in hexes.iterrows()})
+    if "t2m_m01_c" in hexes.columns:  # Copernicus build only
+        write_json(out / "national" / "climate_monthly.json",
+                   {r.h3_r7: {"t2m_c": [rnd(r[f"t2m_m{m:02d}_c"], 1) for m in range(1, 13)],
+                              "precip_mm": [rnd(r[f"precip_m{m:02d}_mm"], 0) for m in range(1, 13)]}
+                    for _, r in hexes.iterrows()})
 
     for level, keys in [("districts", ["adm1_name", "adm2_name"]),
                         ("sectors", ["adm1_name", "adm2_name", "adm3_name"])]:
@@ -502,11 +509,7 @@ def workflow(con, out, cfg: dict, src_status: dict) -> None:
     nodes = []
     for n in wf["nodes"]:
         n = dict(n)
-        n.setdefault("status", "built")
-        if n["id"] in ("signoff", "t_archetypes", "builder"):
-            n["status"] = "draft"
-        if n["id"] in ("aggregation", "dataset"):
-            n["status"] = "draft"
+        n.setdefault("status", "built")  # per-node status lives in config/dashboard.yaml
         if n["kind"] == "source":
             n["status"] = {"verified": "built"}.get(src_status.get(n.get("source")), "built")
             n["citations"] = [cfg["citations"][c] for c in cfg["source_citations"].get(n.get("source"), [])]

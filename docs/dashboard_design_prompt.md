@@ -87,7 +87,7 @@ Province → District → Sector, plus the three deep-dive shortcuts), and a glo
 - **KPI cards** (top):
   - buildings mapped: 6,434,247;
   - buildings with a height: 4,603,981;
-  - climate cells: 4,034, by cooling class (Low 1,484 · Medium 1,672 · High 878);
+  - climate cells: 4,034, by cooling class (Low 1,468 · Medium 1,532 · High 1,034);
   - deep-dive buildings labelled and modelled: 44,556;
   - RAMP profiles: 17;
   - data sources: 27 datasets + 26 evidence documents.
@@ -213,11 +213,12 @@ Header: `bldg_id`, sector › cell › village, coordinates (copy button), footp
   when tmax_p95 ≥ 29 °C. Also explain why CDD22 is shown as a cross-check.
 - **Independent check panel**: NASA POWER hourly temperatures at 4 towns against our ERA5-Land values (figure
   `A3_cooling_check.png`). The finding: cooling demand is marginal in most of Rwanda, including Kigali. Sustained
-  heat is in the eastern lowlands (11.6% of buildings in areas above 100 CDD22 a year; provisional, since NASA POWER
+  heat is in the eastern lowlands (12.9% of buildings in areas above 100 CDD22 a year; provisional, since NASA POWER
   shows less there) and the Rusizi/Bugarama valley (confirmed).
-- **In progress banner**: the rebuild from the Copernicus CDS ERA5-Land archive. It adds humidity, rainfall, hourly
-  solar radiation, monthly and seasonal climatology, and a 1991–2020 baseline. Design the monthly views now, with
-  an empty state.
+- **Monthly view** (built from the Copernicus CDS ERA5-Land archive, 2020–2025): monthly mean temperature and
+  rainfall for the selected cell against the national median cell (`national/climate_monthly.json`), plus mean
+  humidity and annual rainfall layers. Rainfall is indicative (ERA5-Land runs wet over mountains).
+- **In progress note**: the 1991–2020 baseline is still queued at Copernicus.
 
 ### 3.6 Productive-use viability
 - A map of PU viability (deep dives), with candidate buildings highlighted and a ranked table of candidates (score,
@@ -324,7 +325,7 @@ shop). Let each profile have a per-unit hourly mean load *P_k(h)*, daily energy 
 
 ### 5.3 Cooling Demand Category (Low / Medium / High)
 - From the building's H3 r7 climate cell: **Low** when tmax_p95 < 26 °C, **Medium** when 26–29 °C, **High** when
-  ≥ 29 °C. tmax_p95 is the 95th percentile of daily maximum 2 m temperature, 2019–2024 (ERA5-Land, downscaled to
+  ≥ 29 °C. tmax_p95 is the 95th percentile of daily maximum 2 m temperature, 2020–2025 (ERA5-Land, downscaled to
   cell elevation).
 - Also show CDD22 per year as a magnitude cross-check.
 - Wording: "a relative indicator of where fans and cooling become likely; true air-conditioning demand is marginal
@@ -440,7 +441,7 @@ Then, by class:
 - **Ancillary** → no load.
 - **Unknown** → treated as residential (low confidence).
 
-### 6.4 Profiles (17 RAMP archetypes; status Draft)
+### 6.4 Profiles (17 RAMP archetypes; signed off 2026-10-12)
 - **Households (4)**: ownership, bulbs per home and hours of use come from the **World Bank MTF Rwanda 2022**
   survey of grid-connected households, split urban/rural × Ubudehe category (1–2 vs 3–4).
   - TV power = measured TV energy (QSEL) ÷ MTF viewing hours.
@@ -488,10 +489,9 @@ MTF energy tier: all four household profiles fall in Tier 2 by daily energy (Bha
 - The demand preview for 44,556 deep-dive buildings.
 
 ### 7.2 Draft, In progress, Planned
-- **Draft** (needs the owner's sign-off): the 17 profiles (archetype parameters are a human gate), and therefore
-  every demand number.
-- **In progress**: the climate rebuild from Copernicus CDS (humidity, rainfall, solar, monthly climatology,
-  1991–2020 baseline).
+- **Built and signed off** (2026-10-12): the 17 profiles.
+- **Draft**: every demand number, until the owner decides how class probabilities enter demand.
+- **In progress**: the 1991–2020 climate baseline from Copernicus CDS.
 - **Planned**:
   - national demand roll-out;
   - Expected demand (× probability of grid connection);
@@ -510,7 +510,7 @@ MTF energy tier: all four household profiles fall in Tier 2 by daily energy (Bha
 4. Microsoft footprints omit structures under ~15 m².
 5. Cooling demand is marginal in most of Rwanda; the category is a relative proxy.
 6. Labels cover the three deep dives (Muhoza partly) and a national sample.
-7. Profiles are drafts:
+7. Profiles are signed off, but:
    - several establishment profiles rest on assumptions;
    - the health profile reflects health centres;
    - all demand assumes a grid connection.
@@ -585,7 +585,7 @@ flowchart LR
     src_rwi["Meta Relative Wealth Index"]
     src_gridfinder["Gridfinder MV lines"]
     src_dem["Copernicus DEM GLO-30"]
-    src_era5["ERA5-Land (Open-Meteo / Copernicus CDS)"]
+    src_era5["ERA5-Land (Copernicus CDS)"]
     src_power["NASA POWER"]
     src_microdata["Survey microdata: DHS 2025, MTF 2022, EICV5 (restricted)"]
     src_corpus["Evidence corpus (26 public reports)"]
@@ -629,7 +629,7 @@ flowchart LR
   subgraph demand["Demand modelling"]
     builder["B1 archetype builder"]
     signoff{{"Archetype sign-off (human, pending)"}}
-    t_archetypes[("17 archetypes (draft)")]
+    t_archetypes[("17 archetypes (signed off)")]
     mapping_approval{{"Mapping approval (human)"}}
     mapping["B2 building to profile mapping"]
     t_weights[("building_profiles")]
@@ -737,9 +737,10 @@ record count, status and citations.
    - Raster values: GHSL settlement class and non-residential share, WorldPop density, Meta RWI, Copernicus DEM
      elevation.
 4. **Climate:**
-   - ERA5-Land hourly 2 m temperature (0.1°, 2019–2024) is interpolated to H3 r7 cell centres and corrected to
-     each cell's mean elevation with a fitted lapse rate (−6.05 K/km). Time is local (UTC+2).
-   - From it: hourly diurnal means, annual mean, tmax_p95, and CDD18/22/24. GHI comes from NASA POWER.
+   - ERA5-Land hourly 2 m temperature (0.1°, 2020–2025, Copernicus CDS) is interpolated to H3 r7 cell centres and
+     corrected to each cell's mean elevation with a fitted lapse rate (−6.16 K/km). Time is local (UTC+2).
+   - From it: hourly diurnal means, monthly means, annual mean, tmax_p95, and CDD18/22/24. Humidity (from
+     dewpoint), rainfall and GHI come from the same ERA5-Land files.
    - The cooling class follows the rule in 5.3, and an independent NASA POWER check was run at 4 towns.
 5. **Building use:**
    - Each building gets a text "context card" from open vector data only: footprint, height, size against
@@ -846,10 +847,10 @@ are suppressed."
 ## Appendix A: profile library sample (real values, per unit; hourly means in W, hours 00–23)
 ```json
 {
-  "household_rural_t1": {"daily_kwh":0.31,"coincident_peak_w":67,"hourly_w":[0.4,0.9,0.9,1.0,1.8,21.7,30.0,5.0,0.5,0.0,0.0,0.1,1.7,1.9,0.0,0.0,0.0,4.7,26.0,50.3,55.6,51.7,39.8,14.7]},
-  "rural_grid_household_tier2": {"daily_kwh":0.35,"coincident_peak_w":75,"hourly_w":[0.7,1.7,2.0,2.2,2.9,21.8,32.1,7.6,0.9,0.3,0.3,0.6,4.1,4.0,0.4,0.3,0.2,4.5,30.0,55.5,61.1,55.5,42.7,15.0]},
-  "household_urban_t2": {"daily_kwh":0.64,"coincident_peak_w":126,"hourly_w":[1.3,3.1,4.1,4.5,6.1,41.1,62.2,23.9,3.2,3.5,3.6,5.2,13.0,10.3,3.8,3.5,2.8,9.7,61.2,96.1,101.0,81.2,67.1,24.6]},
-  "household_urban_t3": {"daily_kwh":0.97,"coincident_peak_w":166,"hourly_w":[3.5,8.3,10.4,11.8,13.4,51.0,120.8,89.1,9.6,11.2,11.5,17.6,34.5,23.7,11.6,11.6,10.2,12.8,83.7,122.1,127.1,82.9,66.7,24.3]},
+  "household_rural_lower": {"daily_kwh":0.31,"coincident_peak_w":67,"hourly_w":[0.4,0.9,0.9,1.0,1.8,21.7,30.0,5.0,0.5,0.0,0.0,0.1,1.7,1.9,0.0,0.0,0.0,4.7,26.0,50.3,55.6,51.7,39.8,14.7]},
+  "household_rural_upper": {"daily_kwh":0.35,"coincident_peak_w":75,"hourly_w":[0.7,1.7,2.0,2.2,2.9,21.8,32.1,7.6,0.9,0.3,0.3,0.6,4.1,4.0,0.4,0.3,0.2,4.5,30.0,55.5,61.1,55.5,42.7,15.0]},
+  "household_urban_lower": {"daily_kwh":0.64,"coincident_peak_w":126,"hourly_w":[1.3,3.1,4.1,4.5,6.1,41.1,62.2,23.9,3.2,3.5,3.6,5.2,13.0,10.3,3.8,3.5,2.8,9.7,61.2,96.1,101.0,81.2,67.1,24.6]},
+  "household_urban_upper": {"daily_kwh":0.97,"coincident_peak_w":166,"hourly_w":[3.5,8.3,10.4,11.8,13.4,51.0,120.8,89.1,9.6,11.2,11.5,17.6,34.5,23.7,11.6,11.6,10.2,12.8,83.7,122.1,127.1,82.9,66.7,24.3]},
   "kiosk_shop": {"daily_kwh":0.3,"coincident_peak_w":24,"hourly_w":[1.8,4.5,5.9,7.0,7.8,8.3,13.9,11.3,13.7,15.1,15.8,16.0,16.5,16.5,16.6,16.6,16.4,16.8,21.1,22.2,18.8,10.5,5.8,3.5]},
   "salon": {"daily_kwh":0.58,"coincident_peak_w":65,"hourly_w":[0.0,0.0,0.0,0.0,0.0,0.1,5.9,20.4,36.1,39.1,42.1,45.1,40.5,42.2,43.9,42.2,42.0,43.4,47.5,49.0,38.1,4.4,0.1,0.0]},
   "bar_restaurant": {"daily_kwh":2.11,"coincident_peak_w":188,"hourly_w":[13.4,31.7,42.7,50.8,55.7,59.2,62.8,63.9,65.0,68.1,74.2,81.2,86.8,90.3,91.7,90.0,89.3,98.9,149.9,181.7,177.3,170.9,150.2,66.2]},
@@ -865,9 +866,9 @@ are suppressed."
   "carpentry": {"daily_kwh":0.45,"coincident_peak_w":94,"hourly_w":[0.0,0.0,0.0,0.0,0.0,0.1,5.2,0.1,37.4,40.8,41.2,42.1,41.7,40.6,42.2,41.9,39.9,38.0,7.0,12.0,11.1,3.8,0.0,0.0]}
 }
 ```
-Profile ids `household_rural_t1` … `household_urban_t3` are the four household profiles: rural lower, rural upper,
-urban lower and urban upper wealth half. Display them as "Rural household (lower)" and so on; the `t1`/`t3`
-suffixes are not MTF tiers (all four are Tier 2 by energy).
+Profile ids `household_rural_lower` … `household_urban_upper` are the four household profiles: rural and urban,
+lower and upper wealth half (Ubudehe 1–2 vs 3–4). Display them as "Rural household (lower)" and so on. All four are
+MTF Tier 2 by daily energy.
 
 ## Appendix B: key numbers for cards and examples
 - **Area results in both modes** (full bundle; potential demand if connected; Draft):
@@ -886,13 +887,13 @@ suffixes are not MTF tiers (all four are Tier 2 by energy).
   | Muhoza (labelled part, 8,658 buildings) | 2.84 GWh/yr | 379 kWh/yr | 418 kWh/yr |
   | Nasho | 3.28 GWh/yr | 197 kWh/yr | 289 kWh/yr |
 
-- **Climate**: mean temperature 5.7–23.9 °C; GHI 4.73–5.02 kWh/m²/day. Cooling cells:
+- **Climate**: mean temperature 5.6–23.9 °C; GHI 4.67–5.37 kWh/m²/day. Cooling cells:
 
   | Category | Cells | tmax_p95 | Mean CDD22 |
   |---|---|---|---|
-  | Low | 1,484 | < 26 °C | ≈ 1 |
-  | Medium | 1,672 | 26–29 °C | ≈ 35 |
-  | High | 878 | ≥ 29 °C | ≈ 167 |
+  | Low | 1,468 | < 26 °C | ≈ 1 |
+  | Medium | 1,532 | 26–29 °C | ≈ 31 |
+  | High | 1,034 | ≥ 29 °C | ≈ 163 |
 
 - **Households, kWh/month**: rural ≈ 9.4 (lower) and 10.5 (upper); urban ≈ 19.3 (lower) and 29.5 (upper). Evening
   peak 19:00–21:00; morning bump 05:00–07:00.
@@ -973,7 +974,7 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 - **Null:** not observed or not modelled, **never zero**. A building with `modelled: false` has null demand and
   productive-use fields. In top-class mode, a modelled building whose top class is ancillary has demand 0 (no load).
 - **Status enums:** `built`, `draft`, `in_progress`, `planned` (see `meta.status`). All demand is `draft`: the
-  potential demand if grid-connected, from draft profiles.
+  potential demand if grid-connected, pending the owner's decision on how class probabilities enter it.
 
 #### 5. File reference
 
@@ -997,7 +998,7 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 | `h3_r7`, `district` | cell id; the district most of its buildings fall in |
 | `n_buildings`, `footprint_m2`, `mean_height_m` | building stock |
 | `pop_density_mean`, `rwi_mean`, `dist_powerline_m_median`, `ghsl_class_mode` | context (WorldPop, Meta RWI, Gridfinder, GHSL) |
-| `elevation_m`, `t2m_mean_c`, `tmax_p95_c`, `cdd18_per_year`, `cdd22_per_year`, `cdd24_per_year`, `ghi_kwh_m2_day`, `cooling_class` | climate (ERA5-Land 2019–2024; GHI from NASA POWER) |
+| `elevation_m`, `t2m_mean_c`, `tmax_p95_c`, `cdd18_per_year`, `cdd22_per_year`, `cdd24_per_year`, `ghi_kwh_m2_day`, `cooling_class` | climate (Copernicus ERA5-Land 2020–2025, including GHI) |
 | `n_modelled`, `annual_mwh_modelled`, `modelled_share` | demand where buildings are modelled (deep dives only; `modelled_share` tells you coverage, so don't map MWh where it's ~0) |
 
 ##### `national/climate_hourly.json`
@@ -1059,7 +1060,7 @@ pu_component_order: [6 names], pu_components: {bldg_id: [6 values 0-1 or null]}}
 
 ##### `profiles/profiles.json`
 `{profiles: [...], groups, simulation}`. Each profile has:
-- **Identity:** `profile_id`, `name`, `group`, `status` (`draft`), `description`, `population`, `year`.
+- **Identity:** `profile_id`, `name`, `group`, `status` (`draft`, or `human_reviewed` once the owner signs off; all 17 are signed off), `description`, `population`, `year`.
 - **Energy and peaks:** `daily_kwh` (+`_p10`/`_p90`), `annual_kwh`, `coincident_peak_w_p50/p90` (minute-level peak
   per unit in a group of 200).
 - **Simulation:** `simulated_units`, `simulated_days`.

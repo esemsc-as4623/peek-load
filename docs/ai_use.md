@@ -29,7 +29,7 @@ tokens and cost (`data/llm_cache/`), so every result is reproducible and re-runn
 | Building-use labels from vector-only context cards | Haiku 4.5, Sonnet 5.5, Opus 5.5; prompts v1–v3 | 400 gold buildings × 11 configurations; 44,156 deep-dive buildings (Haiku, v2) | agreement with human gold labels, class variety, cues cited (`reports/labels/eval.md`); labels are never presented as ground truth |
 | Evidence extraction from 18 reports | Opus 5.5 with source citations | 3,076 parameters | quotes verified verbatim on the cited page (81%); human review before any value enters an appliance profile |
 | Productive-use appliance web research | Opus 5.5 with web search/fetch | 163 parameters | marked *summary statement, verify at source*; human review required |
-| Coding-session work (Claude Code): pipelines, checks, curation of 37 values from 3 productive-use PDFs, archetype recipes (`config/archetypes.yaml`) | Claude in the coding session, not the API | 17 draft archetypes; ~40 written assumptions | curated quotes verified in code; assumptions carry their rationale; profiles checked against independent anchors (`reports/demand/profile_checks.md`); archetypes stay `draft` until the owner signs off |
+| Coding-session work (Claude Code): pipelines, checks, curation of 37 values from 3 productive-use PDFs, archetype recipes (`config/archetypes.yaml`) | Claude in the coding session, not the API | 17 draft archetypes; ~40 written assumptions | curated quotes verified in code; assumptions carry their rationale; profiles checked against independent anchors (`reports/demand/profile_checks.md`); archetypes were `draft` until the owner signed them off (2026-10-12) |
 
 API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
 
@@ -47,7 +47,9 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
   - the evidence review sheet, as a **blanket approval** (not row by row), backed by automated plausibility
     checks (`rtl.demand.validate`, rules in `config/plausibility.yaml`) that flag rows for exclusion;
   - the building → profile mapping (`config/profile_mapping.yaml`).
+- **Approved 2026-10-12:** the archetype assumptions (`config/archetypes.yaml`, reviewed via
+  `reports/review/archetype_assumptions.csv`), and the renaming of the four household profiles by wealth half.
 - **Still to come:**
-  - sign-off of the finished appliance profiles (archetypes) built from approved evidence and the MTF 2022 survey;
+  - the decision on how class probabilities enter demand (probability-weighted against top class or a threshold);
   - licence review before publishing;
   - the final submission text.
