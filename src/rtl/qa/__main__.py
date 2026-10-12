@@ -95,15 +95,71 @@ def check_table(con: duckdb.DuckDBPyConnection, name: str) -> tuple[bool, str]:
     return ok, "\n".join(lines) + "\n"
 
 
+def _mapping_ids(rules: dict) -> set[str]:
+    return {pid for rs in rules["classes"].values() for r in rs for pid in r["profiles"] if not pid.startswith("@")}
+
+
+def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
+    """Phase-2 consistency: one set of profile ids across recipes, mapping, archetype JSON, library, weights and
+    dashboard config; sane weights and library values; archetype status matching data/gold/approvals.yaml."""
+    import json
+
+    import yaml
+
+    from rtl.settings import GOLD_DIR, load_yaml
+
+    arch_dir = PROCESSED_DIR / "archetypes"
+    recipes = load_yaml("archetypes.yaml")
+    sets = {
+        "recipes (config/archetypes.yaml)": set(recipes["household"]["archetypes"]) | set(recipes["establishments"]),
+        "archetype JSON": {f.stem for f in arch_dir.glob("*.json") if not f.name.endswith(".schema.json")},
+        "mapping (config/profile_mapping.yaml)": _mapping_ids(load_yaml("profile_mapping.yaml")),
+        "dashboard (config/dashboard.yaml)": set(load_yaml("dashboard.yaml")["profiles"]),
+        "profile_library": set(pd.read_parquet(PROCESSED_DIR / "profile_library.parquet").profile_id),
+        "building_profiles": {r[0] for r in con.sql(
+            f"SELECT DISTINCT profile_id FROM read_parquet('{PROCESSED_DIR / 'building_profiles.parquet'}')"
+        ).fetchall()},
+    }
+    ref = sets["archetype JSON"]
+    lines = ["# QA: demand", "", f"- checked: {datetime.now(UTC):%Y-%m-%d %H:%M} UTC", f"- archetypes: {len(ref)}", "",
+             "| id set | ids | missing vs archetype JSON | extra |", "|---|---|---|---|"]
+    ok = True
+    for name, ids in sets.items():
+        missing, extra = sorted(ref - ids), sorted(ids - ref)
+        # the mapping and the weights need not use every archetype, but must not name an unknown one
+        partial_ok = name in ("mapping (config/profile_mapping.yaml)", "building_profiles")
+        bad = bool(extra) or (bool(missing) and not partial_ok)
+        ok &= not bad
+        lines.append(f"| {name} | {len(ids)} | {', '.join(missing) or '-'} | {', '.join(extra) or '-'} |")
+    w = con.sql(f"SELECT count(*) FILTER (WHERE weight IS NULL OR weight < 0 OR isnan(weight)), count(*) "
+                f"FROM read_parquet('{PROCESSED_DIR / 'building_profiles.parquet'}')").fetchone()
+    lib = pd.read_parquet(PROCESSED_DIR / "profile_library.parquet")
+    approved = (yaml.safe_load((GOLD_DIR / "approvals.yaml").read_text()).get("archetypes", {}).get("decision")
+                == "approved")
+    statuses = {json.loads(f.read_text())["status"] for f in arch_dir.glob("*.json")
+                if not f.name.endswith(".schema.json")}
+    want = {"human_reviewed"} if approved else {"draft"}
+    checks = [("weights non-negative and present", w[0] == 0, f"{w[0]} bad of {w[1]:,}"),
+              ("library daily kWh > 0", bool((lib.daily_kwh_mean > 0).all()), f"{len(lib)} profiles"),
+              ("archetype status matches approvals", statuses == want, f"{sorted(statuses)} vs {sorted(want)}")]
+    lines += ["", "| check | result | detail |", "|---|---|---|"]
+    for label, passed, detail in checks:
+        ok &= passed
+        lines.append(f"| {label} | {'PASS' if passed else 'FAIL'} | {detail} |")
+    lines.insert(1, f"**{'PASS' if ok else 'FAIL'}**")
+    return ok, "\n".join(lines) + "\n"
+
+
 def main(names: list[str]) -> int:
     con = duckdb.connect()
     con.sql("LOAD spatial;")
-    names = names or [t for t, (p, _) in TABLES.items() if p.exists()]
+    names = names or [t for t, (p, _) in TABLES.items() if p.exists()] + (
+        ["demand"] if (PROCESSED_DIR / "building_profiles.parquet").exists() else [])
     out_dir = REPORTS_DIR / "qa"
     out_dir.mkdir(parents=True, exist_ok=True)
     all_ok = True
     for name in names:
-        ok, report = check_table(con, name)
+        ok, report = check_demand(con) if name == "demand" else check_table(con, name)
         (out_dir / f"{name}.md").write_text(report)
         print(f"{name}: {'PASS' if ok else 'FAIL'} -> reports/qa/{name}.md")
         all_ok &= ok

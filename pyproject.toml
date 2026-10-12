@@ -121,6 +121,10 @@ profile-mapping = "python -m rtl.demand.mapping"
 profile-library = "python -m rtl.demand.runner"
 profile-checks = "python -m rtl.demand.checks"
 dashboard-data = "python -m rtl.dashboard.export"
+# the whole demand phase, in order (inputs: labels, context, climate, evidence, MTF/EICV5 aggregates)
+demand = """python -m rtl.demand.validate && python -m rtl.demand.mapping && python -m rtl.demand.build_archetypes \
+  && python -m rtl.demand.runner --buildings && python -m rtl.demand.checks \
+  && python -m rtl.dashboard.export --sample && python -m rtl.dashboard.export && python -m rtl.qa"""
 docs-sources = "python -m rtl.docs_sources"
 # --- quality gates
 qa = "python -m rtl.qa"

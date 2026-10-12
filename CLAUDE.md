@@ -16,11 +16,13 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
   background jobs stop after 2 h.
 
 ## Demand profiles (phase 2)
+- `pixi run demand` runs the whole chain below in order and ends with `qa` (the demand check is `reports/qa/demand.md`).
 - Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
   `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`) → `profile-library --buildings`
   → `profile-checks` (`reports/demand/profile_checks.md`) → `dashboard-data` (`--sample` for the committed sample;
   contract in `dashboard/DATA_CONTRACT.md`).
-- Archetype numbers must cite evidence ids or carry a `why`. Archetypes stay `draft` until the owner signs off.
+- Archetype numbers must cite evidence ids or carry a `why`. An archetype is `draft` until
+  `data/gold/approvals.yaml` records the owner's sign-off (signed off 2026-10-12); then the build marks it `human_reviewed`.
 
 ## Contracts and ownership
 - `src/rtl/schemas.py` is the interface between workstreams. Every table must validate against it.
