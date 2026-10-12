@@ -1,8 +1,8 @@
 archetype_id,appliances,parameters,from_data,assumed,share_from_data,kwh_day_all_units_on
-household_rural_t1,11,44,35,9,0.8,0.476
-rural_grid_household_tier2,14,56,42,14,0.75,0.516
-household_urban_t2,17,68,50,18,0.74,0.902
-household_urban_t3,23,92,65,27,0.71,1.215
+household_rural_lower,11,44,35,9,0.8,0.476
+household_rural_upper,14,56,42,14,0.75,0.516
+household_urban_lower,17,68,50,18,0.74,0.902
+household_urban_upper,23,92,65,27,0.71,1.215
 kiosk_shop,5,20,10,10,0.5,0.324
 salon,5,20,7,13,0.35,0.636
 bar_restaurant,4,16,4,12,0.25,2.937

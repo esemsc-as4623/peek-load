@@ -30,7 +30,7 @@ same as mixed ownership in one class, because RAMP draws each appliance independ
 duty cycles (`p_11`, `t_11`, `cw11`, …: fridges, irons) and cooking preferences.
 
 ## Files
-- `rural_grid_household_tier2.json`: **draft**. Lights, phone charger, radio and TV. Ownership is from DHS
+- `household_rural_upper.json`: **draft**. Lights, phone charger, radio and TV. Ownership is from DHS
   2025 (rural); TV is P(TV)/P(electricity) = 0.172. Phone uses `mobile_phone_any` (FR401 Table 2.5), because
   the API phone indicator counts only ordinary phones (see validation_anchors/README.md). Every power, hour and
   window is a labelled assumption until evidence extraction runs and a human reviews it.

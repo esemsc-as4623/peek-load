@@ -16,10 +16,10 @@ context:
 
 classes:
   residential:
-    - {when: {urban: true, rich: true}, profiles: {household_urban_t3: 1}}
-    - {when: {urban: true, rich: false}, profiles: {household_urban_t2: 1}}
-    - {when: {urban: false, rich: true}, profiles: {rural_grid_household_tier2: 1}}
-    - {when: {urban: false, rich: false}, profiles: {household_rural_t1: 1}}
+    - {when: {urban: true, rich: true}, profiles: {household_urban_upper: 1}}
+    - {when: {urban: true, rich: false}, profiles: {household_urban_lower: 1}}
+    - {when: {urban: false, rich: true}, profiles: {household_rural_upper: 1}}
+    - {when: {urban: false, rich: false}, profiles: {household_rural_lower: 1}}
   mixed_shop_house:  # the household rule for its context, plus a small shop
     - {when: {}, profiles: {"@residential": 1, kiosk_shop: 1}}
   commercial:

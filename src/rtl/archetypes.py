@@ -152,7 +152,7 @@ if __name__ == "__main__":  # pixi run archetype-smoke
 
     from rtl.settings import PROCESSED_DIR
 
-    path = Path(sys.argv[1]) if len(sys.argv) > 1 else PROCESSED_DIR / "archetypes" / "rural_grid_household_tier2.json"
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else PROCESSED_DIR / "archetypes" / "household_rural_upper.json"
     arch = Archetype.load(path)
     profile = smoke_run(arch)
     print(f"{arch.archetype_id}: {len(profile)} minutes, peak {profile.max() / 1000:.2f} kW, "

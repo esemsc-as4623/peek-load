@@ -1,7 +1,7 @@
 {
- "archetype_id": "rural_grid_household_tier2",
- "description": "Rural grid-connected household, Ubudehe categories 3-4 (upper half). Appliances from MTF Rwanda 2022.",
- "population": "rural grid-connected households, Ubudehe 3-4 (mapping: rural buildings with RWI above the rural median)",
+ "archetype_id": "household_urban_lower",
+ "description": "Urban grid-connected household, Ubudehe categories 1-2 (lower half). Appliances from MTF Rwanda 2022.",
+ "population": "urban grid-connected households, Ubudehe 1-2 (mapping: urban buildings with RWI below the urban median)",
  "year": 2022,
  "user_preference": {
   "value": 0.0,
@@ -14,21 +14,21 @@
   {
    "name": "cfl_bulb",
    "ownership_share": {
-    "value": 0.5653,
+    "value": 0.6406,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:cfl_bulb"
+     "mtf:RWA2022:hh:grid_urban_lower:cfl_bulb"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=291 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=378 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 5.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:cfl_bulb"
+     "mtf:RWA2022:hh:grid_urban_lower:cfl_bulb"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (4.97), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (4.60), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -39,13 +39,13 @@
     "human_reviewed": false
    },
    "func_time": {
-    "value": 219,
+    "value": 326,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:cfl_bulb",
-     "mtf:RWA2022:kwh:grid_rural_upper"
+     "mtf:RWA2022:hh:grid_urban_lower:cfl_bulb",
+     "mtf:RWA2022:kwh:grid_urban_lower"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (5 h) x 60; x 0.731 lighting calibration factor (simulated 436 -> 346 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_rural_upper, 10.4 kWh/month)",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (5 h) x 60; x 1.087 lighting calibration factor (simulated 610 -> 639 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_lower, 19.2 kWh/month)",
     "human_reviewed": false
    },
    "windows": {
@@ -133,21 +133,21 @@
   {
    "name": "incandescent_light_bulb",
    "ownership_share": {
-    "value": 0.3542,
+    "value": 0.3456,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:incandescent_light_bulb"
+     "mtf:RWA2022:hh:grid_urban_lower:incandescent_light_bulb"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=135 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=220 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 4.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:incandescent_light_bulb"
+     "mtf:RWA2022:hh:grid_urban_lower:incandescent_light_bulb"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (4.46), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (4.38), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -158,13 +158,13 @@
     "human_reviewed": false
    },
    "func_time": {
-    "value": 176,
+    "value": 261,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:incandescent_light_bulb",
-     "mtf:RWA2022:kwh:grid_rural_upper"
+     "mtf:RWA2022:hh:grid_urban_lower:incandescent_light_bulb",
+     "mtf:RWA2022:kwh:grid_urban_lower"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (4 h) x 60; x 0.731 lighting calibration factor (simulated 436 -> 346 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_rural_upper, 10.4 kWh/month)",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (4 h) x 60; x 1.087 lighting calibration factor (simulated 610 -> 639 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_lower, 19.2 kWh/month)",
     "human_reviewed": false
    },
    "windows": {
@@ -252,21 +252,21 @@
   {
    "name": "led_light_bulb",
    "ownership_share": {
-    "value": 0.1249,
+    "value": 0.0863,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:led_light_bulb"
+     "mtf:RWA2022:hh:grid_urban_lower:led_light_bulb"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=57 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=60 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 4.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:led_light_bulb"
+     "mtf:RWA2022:hh:grid_urban_lower:led_light_bulb"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (4.18), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (4.05), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -279,13 +279,13 @@
     "human_reviewed": false
    },
    "func_time": {
-    "value": 219,
+    "value": 326,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:led_light_bulb",
-     "mtf:RWA2022:kwh:grid_rural_upper"
+     "mtf:RWA2022:hh:grid_urban_lower:led_light_bulb",
+     "mtf:RWA2022:kwh:grid_urban_lower"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (5 h) x 60; x 0.731 lighting calibration factor (simulated 436 -> 346 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_rural_upper, 10.4 kWh/month)",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (5 h) x 60; x 1.087 lighting calibration factor (simulated 610 -> 639 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_lower, 19.2 kWh/month)",
     "human_reviewed": false
    },
    "windows": {
@@ -373,21 +373,21 @@
   {
    "name": "fluorescent_tube",
    "ownership_share": {
-    "value": 0.0301,
+    "value": 0.0388,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:fluorescent_tube"
+     "mtf:RWA2022:hh:grid_urban_lower:fluorescent_tube"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=13 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=22 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 2.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:fluorescent_tube"
+     "mtf:RWA2022:hh:grid_urban_lower:fluorescent_tube"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.60), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.75), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -398,13 +398,13 @@
     "human_reviewed": false
    },
    "func_time": {
-    "value": 351,
+    "value": 261,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:fluorescent_tube",
-     "mtf:RWA2022:kwh:grid_rural_upper"
+     "mtf:RWA2022:hh:grid_urban_lower:fluorescent_tube",
+     "mtf:RWA2022:kwh:grid_urban_lower"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (8 h) x 60; x 0.731 lighting calibration factor (simulated 436 -> 346 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_rural_upper, 10.4 kWh/month)",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (4 h) x 60; x 1.087 lighting calibration factor (simulated 610 -> 639 Wh/day = MTF 2022 spending-derived kwh_month_mean of grid_urban_lower, 19.2 kWh/month)",
     "human_reviewed": false
    },
    "windows": {
@@ -492,21 +492,21 @@
   {
    "name": "typical_mobile_phone_charger",
    "ownership_share": {
-    "value": 0.7723,
+    "value": 0.7198,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:typical_mobile_phone_charger"
+     "mtf:RWA2022:hh:grid_urban_lower:typical_mobile_phone_charger"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=376 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=438 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:typical_mobile_phone_charger"
+     "mtf:RWA2022:hh:grid_urban_lower:typical_mobile_phone_charger"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.37), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.43), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -611,21 +611,21 @@
   {
    "name": "smartphone_or_internet_phone_and_charger",
    "ownership_share": {
-    "value": 0.2102,
+    "value": 0.4432,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:smartphone_or_internet_phone_and_charger"
+     "mtf:RWA2022:hh:grid_urban_lower:smartphone_or_internet_phone_and_charger"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=111 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=251 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 2.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:smartphone_or_internet_phone_and_charger"
+     "mtf:RWA2022:hh:grid_urban_lower:smartphone_or_internet_phone_and_charger"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.50), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.69), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -730,21 +730,21 @@
   {
    "name": "radio",
    "ownership_share": {
-    "value": 0.1833,
+    "value": 0.1158,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:radio"
+     "mtf:RWA2022:hh:grid_urban_lower:radio"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=86 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=74 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:radio"
+     "mtf:RWA2022:hh:grid_urban_lower:radio"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.00), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -759,10 +759,10 @@
    "func_time": {
     "value": 240.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:radio"
+     "mtf:RWA2022:hh:grid_urban_lower:radio"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (4 h) x 60",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (4 h) x 60",
     "human_reviewed": false
    },
    "windows": {
@@ -854,21 +854,21 @@
   {
    "name": "flat_color_tv",
    "ownership_share": {
-    "value": 0.0687,
+    "value": 0.1385,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:flat_color_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:flat_color_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=36 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=85 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:flat_color_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:flat_color_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.00), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -884,12 +884,12 @@
     "human_reviewed": false
    },
    "func_time": {
-    "value": 180.0,
+    "value": 240.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:flat_color_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:flat_color_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (3 h) x 60",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (4 h) x 60",
     "human_reviewed": false
    },
    "windows": {
@@ -977,21 +977,21 @@
   {
    "name": "typical_color_tv",
    "ownership_share": {
-    "value": 0.1142,
+    "value": 0.162,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:typical_color_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:typical_color_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=54 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=96 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:typical_color_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:typical_color_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.00), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -1009,10 +1009,10 @@
    "func_time": {
     "value": 180.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:typical_color_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:typical_color_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (3 h) x 60",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (3 h) x 60",
     "human_reviewed": false
    },
    "windows": {
@@ -1100,21 +1100,21 @@
   {
    "name": "black_and_white_tv",
    "ownership_share": {
-    "value": 0.0288,
+    "value": 0.0747,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:black_and_white_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:black_and_white_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=15 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=47 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:black_and_white_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:black_and_white_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.00), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -1130,12 +1130,12 @@
     "human_reviewed": false
    },
    "func_time": {
-    "value": 180.0,
+    "value": 240.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:black_and_white_tv"
+     "mtf:RWA2022:hh:grid_urban_lower:black_and_white_tv"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 median hours/day among grid_rural_upper owners (3 h) x 60",
+    "derivation": "MTF 2022 median hours/day among grid_urban_lower owners (4 h) x 60",
     "human_reviewed": false
    },
    "windows": {
@@ -1223,21 +1223,21 @@
   {
    "name": "vcd_and_dvd",
    "ownership_share": {
-    "value": 0.053,
+    "value": 0.0754,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:vcd_and_dvd"
+     "mtf:RWA2022:hh:grid_urban_lower:vcd_and_dvd"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=20 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=41 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:vcd_and_dvd"
+     "mtf:RWA2022:hh:grid_urban_lower:vcd_and_dvd"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.22), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.19), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -1339,21 +1339,21 @@
   {
    "name": "electric_iron",
    "ownership_share": {
-    "value": 0.0925,
+    "value": 0.3071,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:electric_iron"
+     "mtf:RWA2022:hh:grid_urban_lower:electric_iron"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=53 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=179 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:electric_iron"
+     "mtf:RWA2022:hh:grid_urban_lower:electric_iron"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.08), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.01), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -1455,23 +1455,146 @@
    "flat": "no"
   },
   {
-   "name": "computer",
+   "name": "refrigerator",
    "ownership_share": {
-    "value": 0.0245,
+    "value": 0.0659,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:computer"
+     "mtf:RWA2022:hh:grid_urban_lower:refrigerator"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=14 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=26 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:computer"
+     "mtf:RWA2022:hh:grid_urban_lower:refrigerator"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.25), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 80.0,
+    "evidence_ids": [
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": null,
+    "derivation": "median of 4 approved rated_power_w values matching '^refrigerator$'",
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 490.0,
+    "evidence_ids": [
+     "anchor:qsel_grid_reliability_2025:p13:monthly_kwh.fridge",
+     "ev-00a17644e2dd",
+     "ev-33f124913bc6",
+     "ev-3bec9cd85733",
+     "ev-d12ff8071361"
+    ],
+    "assumption": "Measured fridge energy of grid households (QSEL 2025).",
+    "derivation": "19.58 kWh/month / 30 d x 1.0 = 653 Wh/day, / 80.0 W",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 30.0,
+    "evidence_ids": [],
+    "assumption": "Compressor cycles of ~30 min spread over the day.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "computer",
+   "ownership_share": {
+    "value": 0.0996,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_lower:computer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=52 of 604)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_lower:computer"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.28), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -1571,23 +1694,135 @@
    "flat": "no"
   },
   {
-   "name": "electric_hot_water_pot_or_kettle",
+   "name": "internet_modem_or_router",
    "ownership_share": {
-    "value": 0.0158,
+    "value": 0.0245,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:electric_hot_water_pot_or_kettle"
+     "mtf:RWA2022:hh:grid_urban_lower:internet_modem_or_router"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 weighted share of grid_rural_upper households owning one or more (n_owners=15 of 466)",
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=11 of 604)",
     "human_reviewed": false
    },
    "number": {
     "value": 1.0,
     "evidence_ids": [
-     "mtf:RWA2022:hh:grid_rural_upper:electric_hot_water_pot_or_kettle"
+     "mtf:RWA2022:hh:grid_urban_lower:internet_modem_or_router"
     ],
     "assumption": null,
-    "derivation": "MTF 2022 mean number among grid_rural_upper owners (1.00), rounded",
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 10.0,
+    "evidence_ids": [],
+    "assumption": "Home / small-office modem-router 6-15 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 1200,
+    "evidence_ids": [],
+    "assumption": "Left on most of the day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      0,
+      1440
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Plugged in all day (cycling appliance).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 60.0,
+    "evidence_ids": [],
+    "assumption": "Long continuous use.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
+  },
+  {
+   "name": "electric_hot_water_pot_or_kettle",
+   "ownership_share": {
+    "value": 0.073,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_lower:electric_hot_water_pot_or_kettle"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=38 of 604)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_lower:electric_hot_water_pot_or_kettle"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
     "human_reviewed": false
    },
    "power": {
@@ -1689,7 +1924,127 @@
    },
    "fixed": "no",
    "flat": "no"
+  },
+  {
+   "name": "electric_food_processor_or_blender",
+   "ownership_share": {
+    "value": 0.0246,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_lower:electric_food_processor_or_blender"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 weighted share of grid_urban_lower households owning one or more (n_owners=11 of 604)",
+    "human_reviewed": false
+   },
+   "number": {
+    "value": 1.0,
+    "evidence_ids": [
+     "mtf:RWA2022:hh:grid_urban_lower:electric_food_processor_or_blender"
+    ],
+    "assumption": null,
+    "derivation": "MTF 2022 mean number among grid_urban_lower owners (1.00), rounded",
+    "human_reviewed": false
+   },
+   "power": {
+    "value": 350.0,
+    "evidence_ids": [],
+    "assumption": "Blender / food processor 300-500 W.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_time": {
+    "value": 6,
+    "evidence_ids": [],
+    "assumption": "A few minutes a day.",
+    "derivation": " (h/day x 60)",
+    "human_reviewed": false
+   },
+   "windows": {
+    "value": [
+     [
+      330,
+      480
+     ],
+     [
+      690,
+      780
+     ],
+     [
+      1080,
+      1260
+     ]
+    ],
+    "evidence_ids": [],
+    "assumption": "Breakfast, lunch and dinner.",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "func_cycle": {
+    "value": 5.0,
+    "evidence_ids": [],
+    "assumption": "Short bursts (kettle, blender, microwave, hair dryer).",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "time_fraction_random_variability": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "random_var_w": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "occasional_use": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "thermal_p_var": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "wd_we_type": {
+    "value": 2.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "pref_index": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed_cycle": {
+    "value": 0.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "continuous_duty_cycle": {
+    "value": 1.0,
+    "evidence_ids": [],
+    "assumption": "RAMP default (rampdemand 0.5.2)",
+    "derivation": null,
+    "human_reviewed": false
+   },
+   "fixed": "no",
+   "flat": "no"
   }
  ],
- "status": "draft"
+ "status": "human_reviewed"
 }

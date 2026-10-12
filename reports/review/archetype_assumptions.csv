@@ -1,106 +1,106 @@
 decision,archetype,appliance,parameter,value,why
-,household_rural_t1,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
-,household_rural_t1,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_rural_t1,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
-,household_rural_t1,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_rural_t1,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_rural_t1,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,household_rural_t1,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,household_rural_t1,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
-,household_rural_t1,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
-,household_rural_t1,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_rural_t1,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_rural_t1,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_rural_t1,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
-,household_rural_t1,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
-,household_rural_t1,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
-,household_rural_t1,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,rural_grid_household_tier2,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
-,rural_grid_household_tier2,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,rural_grid_household_tier2,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
-,rural_grid_household_tier2,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,rural_grid_household_tier2,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,rural_grid_household_tier2,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
-,rural_grid_household_tier2,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
-,rural_grid_household_tier2,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,rural_grid_household_tier2,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,rural_grid_household_tier2,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
-,rural_grid_household_tier2,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
-,rural_grid_household_tier2,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,rural_grid_household_tier2,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,rural_grid_household_tier2,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,rural_grid_household_tier2,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
-,rural_grid_household_tier2,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,rural_grid_household_tier2,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
-,rural_grid_household_tier2,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
-,rural_grid_household_tier2,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
-,rural_grid_household_tier2,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
-,rural_grid_household_tier2,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
-,rural_grid_household_tier2,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t2,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
-,household_urban_t2,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_urban_t2,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
-,household_urban_t2,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_urban_t2,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_urban_t2,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
-,household_urban_t2,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
-,household_urban_t2,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,household_urban_t2,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,household_urban_t2,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
-,household_urban_t2,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
-,household_urban_t2,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t2,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t2,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t2,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
-,household_urban_t2,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t2,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
-,household_urban_t2,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
-,household_urban_t2,refrigerator,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
-,household_urban_t2,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
-,household_urban_t2,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
-,household_urban_t2,internet_modem_or_router,power,10.0,Home / small-office modem-router 6-15 W.
-,household_urban_t2,internet_modem_or_router,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
-,household_urban_t2,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
-,household_urban_t2,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t2,electric_food_processor_or_blender,power,350.0,Blender / food processor 300-500 W.
-,household_urban_t2,electric_food_processor_or_blender,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t3,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
-,household_urban_t3,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_urban_t3,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
-,household_urban_t3,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_urban_t3,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
-,household_urban_t3,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
-,household_urban_t3,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
-,household_urban_t3,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,household_urban_t3,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
-,household_urban_t3,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
-,household_urban_t3,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
-,household_urban_t3,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t3,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t3,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t3,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
-,household_urban_t3,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
-,household_urban_t3,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
-,household_urban_t3,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
-,household_urban_t3,refrigerator,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
-,household_urban_t3,freezer,number,1.0,one per owning household (too few owners to estimate)
-,household_urban_t3,freezer,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
-,household_urban_t3,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
-,household_urban_t3,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
-,household_urban_t3,internet_modem_or_router,power,10.0,Home / small-office modem-router 6-15 W.
-,household_urban_t3,internet_modem_or_router,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
-,household_urban_t3,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
-,household_urban_t3,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t3,electric_food_processor_or_blender,power,350.0,Blender / food processor 300-500 W.
-,household_urban_t3,electric_food_processor_or_blender,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t3,microwave_oven,power,1000.0,"Microwave ovens 800-1,200 W (high-load class)."
-,household_urban_t3,microwave_oven,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t3,electric_water_heater,power,2000.0,Electric water heater 1.5-3 kW (very-high-load class).
-,household_urban_t3,electric_water_heater,windows,"[[330, 480]]",Morning routine.
-,household_urban_t3,fan,windows,"[[360, 1380]]",Waking hours.
-,household_urban_t3,rice_cooker,power,500.0,Rice cooker 400-700 W (medium-load class).
-,household_urban_t3,rice_cooker,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
-,household_urban_t3,hair_dryer,windows,"[[330, 480]]",Morning routine.
+,household_rural_lower,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_rural_lower,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_lower,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_rural_lower,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_lower,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_lower,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_rural_lower,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_rural_lower,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_rural_lower,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_rural_lower,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_lower,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_lower,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_lower,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_rural_lower,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_rural_lower,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_rural_lower,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_rural_upper,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_rural_upper,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_upper,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_rural_upper,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_upper,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_rural_upper,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,household_rural_upper,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,household_rural_upper,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_rural_upper,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_rural_upper,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_rural_upper,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_rural_upper,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_upper,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_upper,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_upper,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
+,household_rural_upper,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_rural_upper,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_rural_upper,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_rural_upper,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,household_rural_upper,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,household_rural_upper,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_rural_upper,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_lower,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_urban_lower,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_lower,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_urban_lower,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_lower,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_lower,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,household_urban_lower,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,household_urban_lower,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_lower,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_lower,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_urban_lower,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_urban_lower,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_lower,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_lower,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_lower,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
+,household_urban_lower,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_lower,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_urban_lower,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_urban_lower,refrigerator,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_lower,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,household_urban_lower,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,household_urban_lower,internet_modem_or_router,power,10.0,Home / small-office modem-router 6-15 W.
+,household_urban_lower,internet_modem_or_router,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_lower,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_urban_lower,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_lower,electric_food_processor_or_blender,power,350.0,Blender / food processor 300-500 W.
+,household_urban_lower,electric_food_processor_or_blender,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_upper,cfl_bulb,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,household_urban_upper,cfl_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_upper,incandescent_light_bulb,power,60.0,The most common incandescent rating (40-100 W).
+,household_urban_upper,incandescent_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_upper,led_light_bulb,windows,"[[1080, 1410], [300, 420]]",18:00-23:30 and 05:00-07:00 (dark hours at 2 deg S).
+,household_urban_upper,fluorescent_tube,power,36.0,Standard 1.2 m T8 fluorescent tube.
+,household_urban_upper,fluorescent_tube,windows,"[[1080, 1440], [0, 420]]",Dusk to dawn (long-burning and security lights).
+,household_urban_upper,typical_mobile_phone_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_upper,smartphone_or_internet_phone_and_charger,windows,"[[1080, 1440], [0, 420]]",Phones charged in the evening and overnight.
+,household_urban_upper,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,household_urban_upper,radio,windows,"[[360, 540], [720, 840], [1080, 1320]]","Morning, lunchtime and evening listening."
+,household_urban_upper,flat_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_upper,typical_color_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_upper,black_and_white_tv,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_upper,vcd_and_dvd,power,15.0,DVD / VCD player 10-25 W.
+,household_urban_upper,vcd_and_dvd,windows,"[[720, 840], [1080, 1410]]",Lunchtime news and evening viewing.
+,household_urban_upper,electric_iron,power,1000.0,"Clothes irons 1,000-1,800 W; MTF's high-load class (800-1,999 W) names irons."
+,household_urban_upper,electric_iron,windows,"[[360, 480], [1080, 1260]]",Ironing and chores before work and in the evening.
+,household_urban_upper,refrigerator,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_upper,freezer,number,1.0,one per owning household (too few owners to estimate)
+,household_urban_upper,freezer,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_upper,computer,power,50.0,"Laptop 30-65 W, desktop 80-150 W; households mostly have laptops."
+,household_urban_upper,computer,windows,"[[480, 1020], [1080, 1380]]",Work/study during the day and evening.
+,household_urban_upper,internet_modem_or_router,power,10.0,Home / small-office modem-router 6-15 W.
+,household_urban_upper,internet_modem_or_router,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,household_urban_upper,electric_hot_water_pot_or_kettle,power,1500.0,"Electric kettles / hot-water pots 1,000-2,200 W."
+,household_urban_upper,electric_hot_water_pot_or_kettle,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_upper,electric_food_processor_or_blender,power,350.0,Blender / food processor 300-500 W.
+,household_urban_upper,electric_food_processor_or_blender,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_upper,microwave_oven,power,1000.0,"Microwave ovens 800-1,200 W (high-load class)."
+,household_urban_upper,microwave_oven,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_upper,electric_water_heater,power,2000.0,Electric water heater 1.5-3 kW (very-high-load class).
+,household_urban_upper,electric_water_heater,windows,"[[330, 480]]",Morning routine.
+,household_urban_upper,fan,windows,"[[360, 1380]]",Waking hours.
+,household_urban_upper,rice_cooker,power,500.0,Rice cooker 400-700 W (medium-load class).
+,household_urban_upper,rice_cooker,windows,"[[330, 480], [690, 780], [1080, 1260]]","Breakfast, lunch and dinner."
+,household_urban_upper,hair_dryer,windows,"[[330, 480]]",Morning routine.
 ,kiosk_shop,lights,number,2,"One bulb inside, one at the front."
 ,kiosk_shop,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
 ,kiosk_shop,lights,windows,"[[1080, 1290], [360, 420]]",Evening trading after dark (MTF median 3 h between 18:00 and 06:00) and early morning.

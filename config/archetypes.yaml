@@ -142,19 +142,19 @@ household:
                                hours: {value: 0.1, why: "A few minutes a day."}}
   skip: [torch_or_flashlight_or_lantern, bicycle_for_home_use_only, other_electric_device]  # not mains / unknown
   archetypes:
-    household_rural_t1:
+    household_rural_lower:
       group: grid_rural_lower
       description: "Rural grid-connected household, Ubudehe categories 1-2 (lower half). Appliances from MTF Rwanda 2022."
       population: "rural grid-connected households, Ubudehe 1-2 (mapping: rural buildings with RWI below the rural median)"
-    rural_grid_household_tier2:
+    household_rural_upper:
       group: grid_rural_upper
       description: "Rural grid-connected household, Ubudehe categories 3-4 (upper half). Appliances from MTF Rwanda 2022."
       population: "rural grid-connected households, Ubudehe 3-4 (mapping: rural buildings with RWI above the rural median)"
-    household_urban_t2:
+    household_urban_lower:
       group: grid_urban_lower
       description: "Urban grid-connected household, Ubudehe categories 1-2 (lower half). Appliances from MTF Rwanda 2022."
       population: "urban grid-connected households, Ubudehe 1-2 (mapping: urban buildings with RWI below the urban median)"
-    household_urban_t3:
+    household_urban_upper:
       group: grid_urban_upper
       description: "Urban grid-connected household, Ubudehe categories 3-4 (upper half). Appliances from MTF Rwanda 2022."
       population: "urban grid-connected households, Ubudehe 3-4 (mapping: urban buildings with RWI above the urban median)"

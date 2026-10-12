@@ -17,6 +17,16 @@ profile_mapping:
   date: 2026-10-11
   by: repo owner
 
+  note: household profile ids renamed on 2026-10-12 at the owner's request (t1/t2/t3 suffixes were not MTF tiers);
+    rules unchanged
+
+archetypes:
+  decision: approved
+  scope: config/archetypes.yaml assumptions (reports/review/archetype_assumptions.csv) as of commit 947682f
+  date: 2026-10-12
+  by: repo owner
+  basis: Sign-off of the archetype assumptions; data-derived values rest on the evidence approval and the MTF aggregates.
+
 # Not yet approved (recorded so nothing is mistaken for a sign-off):
 # - evidence rows added after ee90948 (11 curated Power Africa Rwanda values): covered by the automated checks only
-# - appliance archetypes (config/archetypes.yaml -> data/processed/archetypes/*.json): status draft, human gate open
+# - how class probabilities enter demand (raw vs threshold vs top class): decision pending (status_report.md)

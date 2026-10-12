@@ -25,10 +25,9 @@ ANCHORS = PROCESSED_DIR / "validation_anchors"
 OUT = REPORTS_DIR / "demand" / "profile_checks.md"
 FIG_DIR = REPORTS_DIR / "figures"
 DAYS_PER_MONTH = 30.4
-HOUSEHOLDS = {"rural": ["household_rural_t1", "rural_grid_household_tier2"],
-              "urban": ["household_urban_t2", "household_urban_t3"]}
-CLAIMED_TIER = {"household_rural_t1": 1, "rural_grid_household_tier2": 2, "household_urban_t2": 2,
-                "household_urban_t3": 3}
+HOUSEHOLDS = {"rural": ["household_rural_lower", "household_rural_upper"],
+              "urban": ["household_urban_lower", "household_urban_upper"]}
+HOUSEHOLD_IDS = {a for ids in HOUSEHOLDS.values() for a in ids}
 
 
 def verdict(sim: float, value: float | None = None, low: float | None = None, high: float | None = None) -> str:
@@ -57,8 +56,7 @@ def household_rows(lib: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
             tier_rows.append({"archetype": aid, "simulated_kwh_month": kwh[aid],
                               "calibrated_to_mtf_spend_mean": mtf.loc[g, "kwh_month_mean"],
                               "mtf_spend_median": mtf.loc[g, "kwh_month_median"],
-                              "mtf_energy_tier": t, "tier_in_name": CLAIMED_TIER[aid],
-                              "tier_matches_name": t == CLAIMED_TIER[aid]})
+                              "mtf_energy_tier": t})
     q = pd.read_csv(ANCHORS / "residential_kwh_qsel.csv")
     e = pd.read_csv(ANCHORS / "eicv5_household_electricity.csv").set_index("group")
 
@@ -111,14 +109,14 @@ def establishment_rows(lib: pd.DataFrame) -> pd.DataFrame:
 def figures(lib: pd.DataFrame, tiers: pd.DataFrame, checks: pd.DataFrame) -> None:
     viz.use()
     FIG_DIR.mkdir(parents=True, exist_ok=True)
-    order = [a for ids in HOUSEHOLDS.values() for a in ids] + sorted(set(lib.profile_id) - set(CLAIMED_TIER))
+    order = [a for ids in HOUSEHOLDS.values() for a in ids] + sorted(set(lib.profile_id) - HOUSEHOLD_IDS)
     lib = lib.set_index("profile_id").loc[order]
     hours = np.arange(24) + 0.5
     fig, axes = plt.subplots(5, 4, figsize=(12, 12), sharex=True)
     for ax, (aid, r) in zip(axes.flat, lib.iterrows(), strict=False):
         w = np.array([r[f"w_h{h:02d}"] for h in range(24)])
         unit, scale = ("kW", 1000) if w.max() > 2000 else ("W", 1)
-        colour = viz.CAT[0] if aid in CLAIMED_TIER else viz.CAT[1]
+        colour = viz.CAT[0] if aid in HOUSEHOLD_IDS else viz.CAT[1]
         ax.fill_between(hours, w / scale, step="mid", color=colour, alpha=0.85)
         ax.set_ylim(0, w.max() / scale * 1.15)
         ax.set_title(f"{aid}", fontsize=9)

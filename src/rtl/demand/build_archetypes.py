@@ -19,15 +19,19 @@ from __future__ import annotations
 import json
 
 import pandas as pd
+import yaml
 
 from rtl.archetypes import Appliance, Archetype, Sourced
 from rtl.demand.review import load as load_evidence
 from rtl.demand.validate import excluded_ids
-from rtl.settings import PROCESSED_DIR, REPORTS_DIR, load_yaml
+from rtl.settings import GOLD_DIR, PROCESSED_DIR, REPORTS_DIR, load_yaml
 
 ANCHORS = PROCESSED_DIR / "validation_anchors"
 OUT_DIR = PROCESSED_DIR / "archetypes"
 YEAR = 2022  # MTF fieldwork year, the main source
+# the owner's sign-off is recorded in data/gold/approvals.yaml; until then archetypes are drafts
+_APPROVALS = yaml.safe_load((GOLD_DIR / "approvals.yaml").read_text())
+STATUS = "human_reviewed" if _APPROVALS.get("archetypes", {}).get("decision") == "approved" else "draft"
 POWER_UNITS = {"W": 1.0, "Wp": 1.0, "kW": 1000.0}
 
 
@@ -173,7 +177,7 @@ def household(aid: str, rec: dict, cfg: dict, src: Sources) -> Archetype:
         apps.append(appliance(name, a, own, number, minutes, cfg, src, p))
     apps = calibrate_lighting(aid, apps, group, hh, src)
     return Archetype(archetype_id=aid, description=rec["description"], population=rec["population"], year=YEAR,
-                     appliances=apps, status="draft")
+                     appliances=apps, status=STATUS)
 
 
 def sim_wh_day(aid: str, apps: list[Appliance]) -> float:
@@ -243,7 +247,7 @@ def establishment(aid: str, rec: dict, cfg: dict, src: Sources) -> Archetype:
         wd = sourced(a["wd_we_type"], src, "") if "wd_we_type" in a else wd_default
         apps.append(appliance(a["name"], a, own, number, minutes, cfg, src, p, wd))
     return Archetype(archetype_id=aid, description=rec["description"], population=rec["population"], year=YEAR,
-                     appliances=apps, status="draft")
+                     appliances=apps, status=STATUS)
 
 
 def provenance(arch: Archetype) -> dict:
