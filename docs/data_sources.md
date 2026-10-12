@@ -21,7 +21,7 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `gridfinder` | Gridfinder predicted MV grid lines (Arderne et al. 2020), global grid.gpkg v1.1.1 | A2 | feature | open | CC-BY-4.0 | verified | 1 (725 MB) |
 | `health_facilities` | Health facilities (healthsites.io export on HDX, dataset rwanda-healthsites; derived from OSM) | A2 | weak_label | open | ODbL-1.0 | verified | 1 (1 MB) |
 | `era5_arco` | ERA5 hourly 2 m temperature via ARCO-ERA5 public Zarr (0.25 deg) | A3 | feature | open | to_verify | to_verify | - |
-| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | to_verify | 74 (295 MB) |
+| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | verified | 84 (334 MB) |
 | `nasa_power` | NASA POWER hourly T2M (MERRA-2, cross-check at 4 towns) + daily GHI ALLSKY_SFC_SW_DWN (CERES SYN1deg, 1 deg) | A3 | feature | open | NASA open data (no restrictions; acknowledgement of the NASA LaRC POWER Project requested) | verified | 11 (6 MB) |
 | `openmeteo` | ERA5-Land hourly 2 m temperature (0.1 deg) via Open-Meteo Historical Weather API (no downscaling) | A3 | feature | open | CC-BY-4.0 (Open-Meteo) + Copernicus C3S licence (ERA5-Land) | verified | 33 (88 MB) |
 | `census_2022` | Rwanda 5th Population and Housing Census 2022 (households by sector), NISR | A4 | validation | open | to_verify | to_verify | - |
@@ -65,4 +65,4 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `giz_pv_productive_use_catalogue_2016` | Photovoltaics for Productive Use Applications: A catalogue of DC-appliances | GIZ | 2016 | verified |
 | `esmap_minigrids_half_billion_2022` | Mini Grids for Half a Billion People: Market Outlook and Handbook for Decision Makers | ESMAP / World Bank | 2022 | verified |
 
-Manifest: 375 files, 4.3 GB in total.
+Manifest: 385 files, 4.4 GB in total.

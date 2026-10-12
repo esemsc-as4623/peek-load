@@ -1,8 +1,8 @@
 {
   "cooling_class_cells": {
-    "medium": 1672,
-    "low": 1484,
-    "high": 878
+    "medium": 1532,
+    "low": 1468,
+    "high": 1034
   },
   "storey_calibration": {
     "storey_m": 3.4,

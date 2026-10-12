@@ -142,3 +142,29 @@ def test_table_matches_contract_and_is_internally_consistent(table):
     assert (table.cdd18_per_year >= table.cdd24_per_year).all()
     # colder with elevation across cells
     assert np.corrcoef(table.elevation_m, table.t2m_mean_c)[0, 1] < -0.8
+
+
+def test_deaccumulate_resets_at_01_utc():
+    import pandas as pd
+
+    from rtl.climate.build import deaccumulate
+
+    times = pd.date_range("2020-01-01 00:00", periods=5, freq="h", tz="UTC")
+    acc = np.array([[24.0, 1.0, 3.0, 6.0, 10.0]])  # 00 UTC holds the previous day's total
+    out = deaccumulate(acc, times)
+    assert np.isnan(out[0, 0]) and out[0, 1:].tolist() == [1.0, 2.0, 3.0, 4.0]
+
+
+def test_relative_humidity_bounds():
+    from rtl.climate.build import relative_humidity
+
+    rh = relative_humidity(np.array([20.0, 20.0, 30.0]), np.array([20.0, 10.0, 15.0]))
+    assert rh[0] == pytest.approx(100) and 50 < rh[1] < 55 and 38 < rh[2] < 42
+
+
+def test_fill_gaps_only_inside_short_runs():
+    from rtl.climate.build import fill_gaps
+
+    a = np.array([[0.0, np.nan, 2.0, np.nan, np.nan, np.nan, np.nan, 7.0, np.nan]])
+    out, n = fill_gaps(a, max_gap=3)
+    assert out[0, 1] == 1.0 and np.isnan(out[0, 3:7]).all() and np.isnan(out[0, 8]) and n == 1

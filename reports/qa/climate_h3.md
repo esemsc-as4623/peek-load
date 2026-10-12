@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `climate_h3.parquet`
-- checked: 2026-10-11 11:27 UTC
+- checked: 2026-10-12 08:57 UTC
 - rows: 4,034
 - duplicate `h3_r7`: 0
 - schema: PASS (all rows)
@@ -43,4 +43,30 @@
 | t2m_h21_c | 0.0% |
 | t2m_h22_c | 0.0% |
 | t2m_h23_c | 0.0% |
+| rh_mean_pct | 0.0% |
+| precip_mm_per_year | 0.0% |
+| t2m_m01_c | 0.0% |
+| t2m_m02_c | 0.0% |
+| t2m_m03_c | 0.0% |
+| t2m_m04_c | 0.0% |
+| t2m_m05_c | 0.0% |
+| t2m_m06_c | 0.0% |
+| t2m_m07_c | 0.0% |
+| t2m_m08_c | 0.0% |
+| t2m_m09_c | 0.0% |
+| t2m_m10_c | 0.0% |
+| t2m_m11_c | 0.0% |
+| t2m_m12_c | 0.0% |
+| precip_m01_mm | 0.0% |
+| precip_m02_mm | 0.0% |
+| precip_m03_mm | 0.0% |
+| precip_m04_mm | 0.0% |
+| precip_m05_mm | 0.0% |
+| precip_m06_mm | 0.0% |
+| precip_m07_mm | 0.0% |
+| precip_m08_mm | 0.0% |
+| precip_m09_mm | 0.0% |
+| precip_m10_mm | 0.0% |
+| precip_m11_mm | 0.0% |
+| precip_m12_mm | 0.0% |
 | cooling_class | 0.0% |

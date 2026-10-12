@@ -180,7 +180,7 @@ sources:
     access: login  # ~/.cdsapirc with a CDS personal access token; accept each dataset's licence on its CDS page
     licence: Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)
     role: feature
-    status: to_verify
+    status: verified  # hourly 2019-2025 complete (84 files, climate_h3 built from it 2026-10-12); baseline still queued
 
   nasa_power:
     owner: A3

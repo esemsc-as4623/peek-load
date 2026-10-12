@@ -1,14 +1,21 @@
 """A3: build data/interim/climate_h3.parquet (one row per H3 res-7 cell that contains a building).
 
+Two inputs (`--source`): `cds` (default) reads ERA5-Land hourly netCDF straight from the Copernicus Climate Data
+Store (2 m temperature, dewpoint, solar radiation, precipitation; local days 2020-01-01 .. 2025-12-31, December 2019
+supplying the UTC lead-in); `openmeteo` reads the earlier Open-Meteo copy of the same ERA5-Land temperature
+(2019-2024). The CDS path also writes humidity, rainfall, ERA5-Land solar radiation and monthly climatology.
+
 Steps
-  1. load the raw ERA5-Land grid (Open-Meteo, UTC) into arrays (node, hour) + each node's model elevation
-  2. shift to local time (CAT = UTC+2) and cut into whole local days 2019-01-01 .. 2024-12-31
+  1. load the raw ERA5-Land grid (UTC) into arrays (node, hour) + each node's elevation; CDS solar radiation and
+     precipitation are accumulated from 00 UTC, so they are de-accumulated to hourly values first
+  2. shift to local time (CAT = UTC+2) and cut into whole local days
   3. estimate the lapse rate gamma by regressing node mean temperature on node elevation
   4. target cells = res-7 parents of every building's h3_r9; cell elevation = mean of the 30 m DEM over the cell
   5. per cell: bilinear-interpolate the daily mean / daily max / typical-day series and the grid elevation
      to the cell centroid, add gamma * (DEM elevation - interpolated grid elevation), *then* compute
      degree-days and p95 (thresholds are non-linear, so the correction must come before them)
-  6. GHI: multi-year mean of NASA POWER daily ALLSKY_SFC_SW_DWN, bilinear from its 1 deg grid (no correction)
+  6. GHI: CDS: ERA5-Land ssrd (0.1 deg); Open-Meteo: NASA POWER daily ALLSKY_SFC_SW_DWN (1 deg). Humidity,
+     rainfall and GHI are interpolated without an elevation correction
   7. write, plus diagnostics (lapse rate, NASA POWER cross-check, town sanity checks) and quick-look maps
 """
 
@@ -34,14 +41,15 @@ from rtl.manifest import read_manifest
 from rtl.schemas import climate_h3
 from rtl.settings import INTERIM_DIR, REPO_ROOT, REPORTS_DIR
 
-FIRST_DAY, LAST_DAY = "2019-01-01", "2024-12-31"
-YEARS = "2019-2024"
+PERIODS = {"cds": ("2020-01-01", "2025-12-31", "2020-2025"), "openmeteo": ("2019-01-01", "2024-12-31", "2019-2024")}
 DEM = INTERIM_DIR / "dem_rwa_30m.tif"
 BUILDINGS = INTERIM_DIR / "buildings_base.parquet"
 OUT = INTERIM_DIR / "climate_h3.parquet"
 DIAG = INTERIM_DIR / "climate_h3_diagnostics.json"
 FIG_DIR = REPORTS_DIR / "figures"
 HOURLY = [f"t2m_h{h:02d}_c" for h in range(24)]
+MONTHLY_T = [f"t2m_m{m:02d}_c" for m in range(1, 13)]
+MONTHLY_P = [f"precip_m{m:02d}_mm" for m in range(1, 13)]
 
 
 def raw_files(source_id: str, pattern: str) -> list[Path]:
@@ -69,6 +77,75 @@ def load_grid() -> dict:
         raise ValueError(f"grid incomplete: {int(wide.isna().any(axis=1).sum())} nodes with missing hours")
     elev = df.groupby(["req_lat", "req_lon"]).elevation_m.first().reindex(full).to_numpy()
     return {"lat": lats, "lon": lons, "t": wide.to_numpy(np.float32), "times": times, "elev": elev}
+
+
+def node_elevation(lat: np.ndarray, lon: np.ndarray) -> np.ndarray:
+    """ERA5-Land node elevations (m), row-major over (lat, lon), as recorded with the Open-Meteo copy of the same
+    0.1 deg grid, so both sources share one lapse-rate method."""
+    om = pd.concat([pd.read_parquet(p, columns=["req_lat", "req_lon", "elevation_m"])
+                    for p in raw_files("openmeteo", "t2m_era5land_batch_")])
+    om = om.assign(req_lat=om.req_lat.round(1), req_lon=om.req_lon.round(1)).drop_duplicates(["req_lat", "req_lon"])
+    key = pd.MultiIndex.from_product([np.round(lat, 1), np.round(lon, 1)], names=["req_lat", "req_lon"])
+    elev = om.set_index(["req_lat", "req_lon"]).elevation_m.reindex(key).to_numpy(float)
+    if np.isnan(elev).any():
+        raise ValueError(f"{int(np.isnan(elev).sum())} CDS nodes have no recorded elevation")
+    return elev
+
+
+def fill_gaps(acc: np.ndarray, max_gap: int = 3) -> tuple[np.ndarray, int]:
+    """Linearly interpolate short NaN runs (<= max_gap hours) along time, per node. The CDS files have a few
+    missing ssrd values (mostly 04-05 UTC); one gap would otherwise void a whole local day."""
+    df = pd.DataFrame(acc.T)
+    nan = df.isna()
+    run = nan.ne(nan.shift()).cumsum()  # ids of consecutive NaN / non-NaN runs, per column
+    out = df.interpolate(limit_area="inside")
+    for c in df.columns:
+        lengths = nan[c].groupby(run[c]).transform("size")
+        out.loc[nan[c] & (lengths > max_gap), c] = np.nan  # leave long gaps alone
+    out = out.to_numpy(acc.dtype).T
+    return out, int(np.isnan(acc).sum() - np.isnan(out).sum())
+
+
+def deaccumulate(acc: np.ndarray, times: pd.DatetimeIndex) -> np.ndarray:
+    """ERA5-Land accumulations (reset so that 01 UTC holds the first hour) -> per-hour amounts, (node, hour).
+    The first time step has no predecessor and becomes NaN; tiny negative round-off is clipped to 0."""
+    out = np.full_like(acc, np.nan)
+    out[:, 1:] = acc[:, 1:] - acc[:, :-1]
+    first = times.hour.to_numpy() == 1
+    out[:, first] = acc[:, first]
+    return np.where(np.isnan(out), out, np.clip(out, 0, None))
+
+
+def relative_humidity(t_c: np.ndarray, td_c: np.ndarray) -> np.ndarray:
+    """Relative humidity (%) from temperature and dewpoint, Magnus formula (Alduchov & Eskridge 1996 constants)."""
+    es = lambda x: np.exp(17.625 * x / (243.04 + x))  # noqa: E731
+    return np.clip(100 * es(td_c) / es(t_c), 0, 100)
+
+
+def load_grid_cds() -> dict:
+    """ERA5-Land from the CDS hourly netCDF files: the same grid dict as load_grid, plus dewpoint (C), solar
+    radiation (kWh/m2 per hour) and precipitation (mm per hour)."""
+    import xarray as xr
+
+    parts: dict[str, list] = {v: [] for v in ("t2m", "d2m", "ssrd", "tp")}
+    stamps = []
+    for path in raw_files("era5_land_cds", "era5land_hourly_"):
+        with xr.open_dataset(path) as ds:
+            ds = ds.sortby("latitude").sortby("longitude")
+            lat, lon, n = ds.latitude.values, ds.longitude.values, ds.sizes["valid_time"]
+            for v in parts:
+                parts[v].append(ds[v].values.reshape(n, -1).T.astype(np.float32))
+            stamps.append(ds.valid_time.values)
+    times = pd.DatetimeIndex(np.concatenate(stamps)).tz_localize("UTC")
+    if not (np.diff(times.asi8) == 3_600_000_000_000).all():
+        raise ValueError("CDS hourly files have gaps or overlaps")
+    arr = {v: np.concatenate(x, axis=1) for v, x in parts.items()}
+    filled = {}
+    for v in arr:
+        arr[v], filled[v] = fill_gaps(arr[v])
+    return {"lat": lat, "lon": lon, "times": times, "elev": node_elevation(lat, lon), "filled_hours": filled,
+            "t": arr["t2m"] - 273.15, "td": arr["d2m"] - 273.15,
+            "ssrd_kwh": deaccumulate(arr["ssrd"], times) / 3.6e6, "tp_mm": deaccumulate(arr["tp"], times) * 1000}
 
 
 # ------------------------------------------------------------------------------------------- cells
@@ -112,9 +189,10 @@ def load_ghi() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
 
 
 # ------------------------------------------------------------------------------------------- main
-def build(buildings: Path, out: Path) -> dict:
-    g = load_grid()
-    t_days, days = to_local_days(g["t"], g["times"], FIRST_DAY, LAST_DAY)
+def build(buildings: Path, out: Path, source: str = "cds") -> dict:
+    g = load_grid_cds() if source == "cds" else load_grid()
+    first_day, last_day, years = PERIODS[source]
+    t_days, days = to_local_days(g["t"], g["times"], first_day, last_day)
     node = summarise(t_days, days)
     gamma, intercept, r2 = fit_lapse_rate(g["elev"], node["t2m_mean_c"])
     gamma_hour = [fit_lapse_rate(g["elev"], node["typical_day"][:, h])[0] * 1000 for h in range(24)]
@@ -135,6 +213,34 @@ def build(buildings: Path, out: Path) -> dict:
     typical = interpolate(node["typical_day"], idx, w) + shift[:, None]
     glat, glon, ghi_grid = load_ghi()
     gidx, gw = bilinear_weights(cells.lat.to_numpy(), cells.lon.to_numpy(), glat, glon)
+    ghi_power = interpolate(ghi_grid.ravel(), gidx, gw)
+    extra, extra_diag = {}, {}
+    if source == "cds":
+        local = lambda a: to_local_days(a, g["times"], first_day, last_day)[0]  # noqa: E731
+        months, n_years = days.month.to_numpy(), days.year.nunique()
+        rh = local(relative_humidity(g["t"], g["td"])).mean(axis=(-2, -1))
+        rain = local(g["tp_mm"]).sum(axis=-1)  # (node, day) mm
+        sun = local(g["ssrd_kwh"]).sum(axis=-1).mean(axis=-1)  # kWh/m2/day
+        ghi = interpolate(sun, idx, w)
+        extra = {"rh_mean_pct": interpolate(rh, idx, w),
+                 "precip_mm_per_year": interpolate(rain.sum(axis=-1) / n_years, idx, w),
+                 **{c: daily_mean[:, months == m].mean(axis=1) for m, c in enumerate(MONTHLY_T, start=1)},
+                 **{c: interpolate(rain[:, months == m].sum(axis=-1) / n_years, idx, w)
+                    for m, c in enumerate(MONTHLY_P, start=1)}}
+        extra_diag = {"cds_hours_gap_filled": g["filled_hours"],
+                      "ghi_era5land_vs_nasa_power_cell_mean": [round(float(ghi.mean()), 3),
+                                                              round(float(ghi_power.mean()), 3)]}
+        source_text = (f"ERA5-Land hourly 0.1deg from the Copernicus Climate Data Store (t2m, d2m, ssrd, tp), local "
+                       f"days {first_day}..{last_day}; t2m bilinear to cell centroid + lapse rate "
+                       f"{gamma * 1000:.2f} K/km (fit on grid) to Copernicus GLO-30 cell-mean elevation; humidity "
+                       f"(Magnus), rainfall and GHI (de-accumulated ssrd) bilinear, no elevation correction; local "
+                       f"time UTC+{CAT_OFFSET_H}")
+    else:
+        ghi = ghi_power
+        source_text = (f"t2m: ERA5-Land hourly 0.1deg via Open-Meteo archive API (raw grid, no API downscaling), "
+                       f"bilinear to cell centroid + lapse rate {gamma * 1000:.2f} K/km (fit on grid) to Copernicus "
+                       f"GLO-30 cell-mean elevation; local time UTC+{CAT_OFFSET_H}; "
+                       "GHI: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES SYN1deg 1deg), bilinear")
 
     df = pd.DataFrame({
         "h3_r7": cells.h3_r7,
@@ -144,13 +250,11 @@ def build(buildings: Path, out: Path) -> dict:
         "cdd18_per_year": degree_days_per_year(daily_mean, days, 18.0),
         "cdd22_per_year": degree_days_per_year(daily_mean, days, 22.0),
         "cdd24_per_year": degree_days_per_year(daily_mean, days, 24.0),
-        "ghi_kwh_m2_day": interpolate(ghi_grid.ravel(), gidx, gw),
-        "years": YEARS,
-        "source": (f"t2m: ERA5-Land hourly 0.1deg via Open-Meteo archive API (raw grid, no API downscaling), "
-                   f"bilinear to cell centroid + lapse rate {gamma * 1000:.2f} K/km (fit on grid) to Copernicus "
-                   f"GLO-30 cell-mean elevation; local time UTC+{CAT_OFFSET_H}; "
-                   "GHI: NASA POWER daily ALLSKY_SFC_SW_DWN (CERES SYN1deg 1deg), bilinear"),
+        "ghi_kwh_m2_day": ghi,
+        "years": years,
+        "source": source_text,
         **{c: typical[:, h] for h, c in enumerate(HOURLY)},
+        **extra,
     })
     from rtl.derive import cooling_class  # thresholds live in config/params.yaml
     df["cooling_class"] = cooling_class(df["tmax_p95_c"])
@@ -168,6 +272,7 @@ def build(buildings: Path, out: Path) -> dict:
                         "p95": round(float(np.percentile(np.abs(shift), 95)), 2)},
         "towns": town_checks(df, cells, g, t_days, gamma),
         "building_weighted": building_weighted(df, cells.n_buildings.to_numpy()),
+        "source": source, "years": years, **extra_diag,
     }
     return diag | {"_df": df, "_gdf": gdf}
 
@@ -226,13 +331,14 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--buildings", type=Path, default=BUILDINGS)
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--source", choices=sorted(PERIODS), default="cds", help="ERA5-Land copy to read (default: cds)")
     args = ap.parse_args()
     national = args.out == OUT
     if national:
         with heavy_job("A3-climate-h3"):  # waits for the national buildings rewrite to release the lock
-            diag = build(args.buildings, args.out)
+            diag = build(args.buildings, args.out, args.source)
     else:
-        diag = build(args.buildings, args.out)
+        diag = build(args.buildings, args.out, args.source)
     df = diag.pop("_df")
     diag.pop("_gdf")  # cell polygons; maps are drawn by notebooks/02_report_figures.py
     if national:

@@ -151,6 +151,11 @@ climate_h3 = pa.DataFrameSchema(
         "years": pa.Column(str),
         "source": pa.Column(str),
         **_hourly,
+        # CDS source only (optional so the Open-Meteo path still validates)
+        "rh_mean_pct": pa.Column(float, pa.Check.in_range(0, 100), required=False),
+        "precip_mm_per_year": pa.Column(float, pa.Check.in_range(0, 5000), required=False),
+        **{f"t2m_m{m:02d}_c": pa.Column(float, pa.Check.in_range(-5, 40), required=False) for m in range(1, 13)},
+        **{f"precip_m{m:02d}_mm": pa.Column(float, pa.Check.in_range(0, 1000), required=False) for m in range(1, 13)},
     },
     strict=True,
     name="climate_h3",

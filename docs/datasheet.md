@@ -17,7 +17,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 | `buildings_base` | 6,434,247 | footprint (EPSG:4326), source (google / microsoft / osm), detector confidence, area, perimeter, compactness, orientation, vertices, centroid, H3 r9, QA flags |
 | `building_height` | 6,434,247 | height (2023), estimated floors, floor area, first-seen year (experimental), yearly presence 2016–2023 |
 | `building_context` | 6,434,247 | admin area down to village; OSM/Overture/registry tags; distance to roads (any and major) and power lines; nearby tagged-place counts (50/100/250 m); GHSL settlement class and non-residential share; population density; relative wealth index; elevation; H3 r7 |
-| `climate_h3` | 4,034 H3 r7 cells | mean temperature, 95th-percentile daily max, cooling degree-days (18/22/24 °C), cooling class, 24-hour typical day, solar irradiance |
+| `climate_h3` | 4,034 H3 r7 cells | mean temperature, 95th-percentile daily max, cooling degree-days (18/22/24 °C), cooling class, 24-hour typical day, monthly temperature and rainfall, mean relative humidity, annual rainfall, solar irradiance (2020–2025) |
 | `labels` | 48,556 | building-use labels: class, probabilities, confidence, a one-line justification, model and prompt version. Covers 44,156 deep-dive buildings plus the 5,878-building pilot sample, with several model and prompt configurations on the 400 gold buildings |
 | `gold_labels.csv` | 174 (growing to 400 + 50 repeats) | human building-use labels with confidence, note and an imagery flag |
 | `evidence` | 3,076 | appliance and usage parameters from 18 reports, each with document, page, verbatim quote and a verification flag |
@@ -32,14 +32,14 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 - Footprints: VIDA's merge of Google Open Buildings V3, Microsoft and OSM (Source Cooperative, 2024).
 - Heights and growth: Google Open Buildings 2.5D Temporal, read at 2 m (height) and 4 m (presence) from the files' built-in overviews.
 - Context: OSM (Geofabrik), Overture places, geoBoundaries, healthsites/OSM facilities, Gridfinder, GHSL BUILT-C, WorldPop R2025A, Meta Relative Wealth Index, Copernicus DEM GLO-30.
-- Climate: ERA5-Land hourly 2019–2024 via Open-Meteo, plus NASA POWER for checks. A re-download from Copernicus CDS (2019–2025 hourly plus a 1991–2020 daily baseline) is in progress, to switch to the Copernicus licence.
+- Climate: ERA5-Land hourly 2019–2025 from the Copernicus Climate Data Store (2m temperature, dewpoint, solar radiation, precipitation, wind; the table uses 2020–2025, with December 2019 as the UTC lead-in), plus NASA POWER for checks. A 1991–2020 daily baseline is still queued at CDS. The earlier Open-Meteo build (2019–2024) can be rebuilt with `--source openmeteo`.
 - Every raw file is listed in `data/manifest.json` with its URL, sha256, size, licence and retrieval time.
 
 ## Preprocessing and labelling
 - **Footprints:** made valid, metrics computed in UTM 35S. One R-tree spatial join flags cross-source overlaps (none found) and nested same-source detections.
 - **Floors:** height cut-points fitted on OSM `building:levels` (even ids) and tested on odd ids: 1 floor below 6.0 m, 2 floors below 8.5 m, then +1 per 3 m. Held-out exact match is 83% for 1 storey, 33% for 2 and 10% for 3+.
 - **First-seen year:** first year with presence ≥ 0.5 that stays ≥ 0.5. Re-tunable from the stored presence columns (`config/params.yaml`, `pixi run derive`).
-- **Climate:** bilinear interpolation of the 0.1° grid plus a lapse-rate correction (−6.05 K/km, fitted) to each cell's mean DEM elevation. Local time is UTC+2.
+- **Climate:** bilinear interpolation of the 0.1° grid plus a lapse-rate correction (−6.16 K/km, fitted) to each cell's mean DEM elevation. Local time is UTC+2. Accumulated radiation and precipitation are de-accumulated (reset at 01 UTC); gaps of up to 3 hours are interpolated, longer ones stay missing. Relative humidity uses the Magnus formula on temperature and dewpoint.
 - **Building use:** Claude (Haiku 4.5, prompt v2) labels a *context card* built only from open vector data. No imagery is involved: footprint, height and floors, size against neighbours, land use, road frontage, nearby tags and places, density, settlement class, wealth and distances.
   - Measured against human gold labels, agreement is ~39–43%, and each answer cites ~5.4 context cues.
   - The human labels were mostly made with imagery, so they hold information the vector cards lack. The labels are probabilistic; use the class probabilities, not just the top class.
@@ -62,9 +62,9 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 2. `first_seen_year` has artefacts (jumps in 2019 and 2023). Treat it as experimental.
 3. Direct building-use tags are rare (~14k informative tags among 6.4M buildings), and open vector data rarely shows use. Building-use labels are therefore uncertain, and residential and ancillary dominate.
 4. Microsoft footprints omit structures under ~15 m², so small ancillary buildings are under-counted where Microsoft is the source.
-5. Cooling demand is marginal in most of the country, including Kigali. Sustained heat is in the eastern lowlands (11.6% of buildings in areas above 100 CDD22 a year; provisional, as NASA POWER shows less there) and the Rusizi/Bugarama valley (confirmed). The cooling class is a relative proxy.
+5. Cooling demand is marginal in most of the country, including Kigali. Sustained heat is in the eastern lowlands (12.9% of buildings in areas above 100 CDD22 a year; provisional, as NASA POWER shows less there) and the Rusizi/Bugarama valley (confirmed). The cooling class is a relative proxy.
 6. Labels cover the three deep-dive sectors (Nyamirambo fully, Nasho fully, Muhoza partly) and a national sample, not the whole country.
-7. Appliance profiles are drafts. Bars, guesthouses, offices, churches and stores rest on assumptions; the health
+7. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions; the health
    profile is built from health centres and overstates health posts; all profiles assume a grid connection.
 
 ## Uses
@@ -74,7 +74,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 ## Distribution and licences
 - **Data:** derived building data inherits **ODbL-1.0** (OSM / Microsoft / Google Open Buildings).
 - **Meta Relative Wealth Index (`rwi`):** CC-BY-NC-4.0, so release it separately or flag it for non-commercial use.
-- **Climate:** currently from Open-Meteo's free tier (non-commercial). It switches to the Copernicus licence once the CDS download is integrated.
+- **Climate:** Copernicus ERA5-Land, free to use including commercially, with attribution to the Copernicus Climate Change Service. ERA5-Land rainfall runs wet over the mountains; treat it as indicative.
 - **Restricted microdata** (DHS, World Bank MTF, NISR) is never redistributed.
 
 ## Maintenance
