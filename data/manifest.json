@@ -1755,6 +1755,26 @@
       "10m_v_component_of_wind"
     ]
   },
+  "data/raw/esa_worldcover/2022-10-26/ESA_WorldCover_10m_2021_v200_S03E027_Map.tif": {
+    "source_id": "esa_worldcover",
+    "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S03E027_Map.tif",
+    "path": "data/raw/esa_worldcover/2022-10-26/ESA_WorldCover_10m_2021_v200_S03E027_Map.tif",
+    "bytes": 77269683,
+    "sha256": "79e03e9e79c7ab0b65f7c1767f6a6e0abdfc5973690eff8d60267b6687478b36",
+    "licence": "CC-BY-4.0",
+    "retrieved_at": "2026-10-12T09:02:12+00:00",
+    "version": "2022-10-26"
+  },
+  "data/raw/esa_worldcover/2022-10-26/ESA_WorldCover_10m_2021_v200_S03E030_Map.tif": {
+    "source_id": "esa_worldcover",
+    "url": "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_S03E030_Map.tif",
+    "path": "data/raw/esa_worldcover/2022-10-26/ESA_WorldCover_10m_2021_v200_S03E030_Map.tif",
+    "bytes": 124518426,
+    "sha256": "69734c1e0cb6298f0277136d4233042fad30c3d76a03f2c525c6dfad9a53e69d",
+    "licence": "CC-BY-4.0",
+    "retrieved_at": "2026-10-12T09:02:28+00:00",
+    "version": "2022-10-26"
+  },
   "data/raw/evidence_docs/2016-06-20/giz_pv_productive_use_catalogue_2016.pdf": {
     "source_id": "evidence_docs",
     "url": "https://epflicht.ulb.uni-bonn.de/download/pdf/280663",

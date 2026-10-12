@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from rtl.demand.mapping import building_weights, class_profiles
+from rtl.demand.mapping import building_weights, class_profiles, kept_probabilities
 
 RULES = {
     "residential": [{"when": {"urban": True}, "profiles": {"hh_urban": 1}},
@@ -32,6 +32,18 @@ def test_weights_follow_class_probabilities_and_are_additive():
     assert w["hh_urban"] == pytest.approx(0.9)  # 0.6 residential + 0.3 from the shop-house
     assert w["kiosk"] == pytest.approx(0.3)
     assert w["mill"] == pytest.approx(0.05) and w["weld"] == pytest.approx(0.05)
+
+
+def test_threshold_drops_small_classes_and_area_level_productive_use():
+    cfg = {"min_class_probability": 0.10, "area_level_classes": ["productive_use"]}
+    probs = {"residential": 0.62, "commercial": 0.18, "mixed_shop_house": 0.05, "productive_use": 0.15}
+    kept = kept_probabilities(probs, cfg)
+    # productive use leaves the per-building weights, the 0.05 shop-house is ignored, the rest renormalised
+    assert kept == pytest.approx({"residential": 0.62 / 0.80, "commercial": 0.18 / 0.80})
+    assert kept_probabilities(probs, cfg, top_class=True) == {"residential": 1.0}
+    # a building labelled mostly productive use still gets its best remaining class rather than vanishing
+    assert kept_probabilities({"productive_use": 0.9, "residential": 0.06, "ancillary": 0.04}, cfg) == {
+        "residential": 1.0}
 
 
 def test_library_summary_on_a_constant_load():
@@ -145,3 +157,45 @@ def test_ramp_runs_are_reproducible_and_peak_window_follows_the_users():
     assert np.array_equal(a, b)  # same seed -> same profile (RAMP alone isn't: it seeds after drawing)
     peak = ramp_usecase(arch, 20, "2025-01-06", "2025-01-06", seed=1).peak_time_range
     assert 1000 < np.mean(peak) < 1440  # around the evening lights, not anywhere in the day
+
+
+def test_unlocated_allocation_conserves_units_and_follows_score():
+    from rtl.demand.productive_use import allocate
+
+    cand = pd.DataFrame({"score": [0.0, 50.0, 100.0]})
+    units = allocate(cand, 10.0)
+    assert units.sum() == pytest.approx(10.0)  # nothing created or lost when spreading the census amount
+    assert units[0] < units[1] < units[2] and units[0] > 0  # a zero score still gets a small share
+
+
+def test_census_parsing_on_a_planted_workbook(tmp_path, monkeypatch):
+    from rtl.demand import productive_use as pu
+
+    districts = [[f" D{i}", 0, 0, 0, 100 + i, 60, 40 + i] for i in range(30)]
+    with pd.ExcelWriter(tmp_path / "ec.xlsx") as xw:
+        pd.DataFrame([["title"] + [None] * 6, ["District", 2020, None, None, 2023, None, None],
+                      *districts, ["Kigali City", 1, 1, 1, 1, 1, 1], ["Rwanda", 1, 1, 1, 1, 1, 1]]).to_excel(
+            xw, sheet_name="T450", header=False, index=False)
+        pd.DataFrame([["title"] + [None] * 10, ["Activity"] + [None] * 10,
+                      ["Manufacturing", 0, 0, 0, 10, 0, 0, 0, 0, 20, 0],
+                      ["Total", 0, 0, 0, 100, 0, 0, 0, 0, 400, 0]]).to_excel(
+            xw, sheet_name="T243", header=False, index=False)
+    monkeypatch.setattr(pu, "RESTRICTED_DIR", tmp_path)
+    cfg = {"census": {"file": "ec.xlsx", "enterprises_by_district": "T450", "establishments_by_activity": "T243",
+                      "activity": "Manufacturing"}}
+    out = pu.census_counts(cfg)
+    d0 = out[out.district == "D0"].set_index("setting")
+    assert d0.at["urban", "pu_census"] == pytest.approx(60 * 0.10)  # 10 / 100 urban establishments
+    assert d0.at["rural", "pu_census"] == pytest.approx(40 * 0.05)  # 20 / 400 rural establishments
+    assert len(out) == 60  # province and national rows skipped
+
+
+def test_worldcover_block_fraction():
+    from rtl.ingest.worldcover import block_fraction
+
+    cls = np.full((20, 25), 10, dtype=np.uint8)
+    cls[:10, :10] = 40           # one whole block of cropland
+    cls[10:15, 10:20] = 40       # half of another block
+    frac = block_fraction(cls, 40, 10)
+    assert frac.shape == (2, 2)  # the ragged 5 columns are trimmed
+    assert frac[0, 0] == 1.0 and frac[1, 1] == 0.5 and frac[0, 1] == 0.0

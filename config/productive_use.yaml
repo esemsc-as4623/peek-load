@@ -1,0 +1,67 @@
+# Productive-use (PU) demand: where it is attached and how much (`pixi run pu-demand`).
+# Owner's decision (2026-10-12): the labeller can't see productive use, so PU demand is
+#   1. LOCATED on individual buildings that carry a trade tag (OSM / Overture), and
+#   2. UNLOCATED: an area-level amount from the NISR Establishment Census 2023, minus the located ones,
+#      shown per sector / H3 cell, never on a specific building.
+# The unlocated amount is spread inside each district over eligible buildings in proportion to a candidate score
+# (the dashboard's criteria plus building size), and the top-scoring buildings in each cell are flagged as
+# candidates: places worth a field visit, not buildings we claim are workshops.
+# Status: draft (the trade mix and the candidate weights below are assumptions for the owner's sign-off).
+
+census:
+  # NISR Establishment Census 2023 tables (data/restricted/reg/, placed by the owner). Manufacturing (ISIC C) holds
+  # all four PU trades we model: grain milling (C10), tailoring (C14), metal work/welding (C25), carpentry (C16/C31).
+  file: reg/EC-2023-Tables_Report_Final-9-july-2024.xlsx
+  enterprises_by_district: "Table 4.50"      # 2023 enterprises, urban / rural per district
+  establishments_by_activity: "Table 2.4. 3"  # 2023 business-oriented establishments by ISIC section, urban / rural
+  activity: Manufacturing
+  # district PU count = district enterprises in the setting x national manufacturing share of that setting
+  # (the report has no district x activity table)
+
+located:  # trade tags -> PU profile; a point tag goes to the building containing it, else the nearest within max_m
+  max_m: 30
+  rules:
+    grain_mill:
+      osm: {craft: [grinding_mill], industrial: [mill], man_made: [watermill, windmill]}
+      overture: [agricultural_service, food_processing]
+      why: "grinding mills; Overture 'agricultural_service' in Rwanda is mostly maize/cassava milling and hulling"
+    tailoring:
+      osm: {craft: [tailor, dressmaker], shop: [tailor, sewing]}
+      overture: [sewing_and_alterations, textile_manufacturer, t_shirt_printing_service]
+    welding_workshop:
+      osm: {craft: [metal_construction, welder, blacksmith], shop: [car_repair, motorcycle_repair]}
+      overture: [metal_fabricator, automotive_repair, motorcycle_repair, industrial_equipment_manufacturer]
+      why: "vehicle repair garages weld and grind; the welding profile is the closest of the four"
+    carpentry:
+      osm: {craft: [carpenter, joiner, cabinet_maker, sawmill]}
+      overture: [carpenter, furniture_manufacturer, furniture_assembly, mattress_manufacturing]
+
+trade_mix:  # share of the setting's PU establishments by trade (owner's rule, 2026-10-12)
+  rural: {grain_mill: 1.0}
+  urban: {tailoring: 0.34, welding_workshop: 0.33, carpentry: 0.33}
+  why: >-
+    The census does not split manufacturing by trade. Owner's rule: mills only in rural, roadside settings;
+    tailors, welders and carpenters in towns. Equal shares among the town trades until a source says otherwise.
+
+eligibility:  # buildings that can host an unlocated PU establishment
+  min_area_m2: 30            # smaller structures are latrines, kitchens and stores
+  exclude_qa_flags: [tiny, nested_same_source]
+  exclude_top_labels: [ancillary, religious, institutional]   # where a label exists
+  exclude_facilities: true   # schools, health facilities
+  roadside_m: {grain_mill: 100}  # "roadside": within this distance of any mapped road
+
+candidate_score:  # 100 x weighted mean of the criteria (formulas in rtl.demand.productive_use.criteria)
+  town:  # tailoring, welding_workshop, carpentry
+    market_access: 0.30
+    demand_density: 0.25
+    grid_proximity: 0.20
+    ability_to_pay: 0.15
+    building_size: 0.10
+    agri_context: 0.0
+  grain_mill:
+    agri_context: 0.30
+    market_access: 0.25
+    grid_proximity: 0.20
+    building_size: 0.15
+    demand_density: 0.10
+    ability_to_pay: 0.0

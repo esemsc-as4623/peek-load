@@ -92,6 +92,16 @@ sources:
     role: feature
     status: skipped
 
+  esa_worldcover:
+    owner: A2
+    name: ESA WorldCover 2021 v200 land cover (10 m; class 40 = cropland), tiles S03E027 and S03E030
+    url: https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_{tile}_Map.tif
+    docs: https://esa-worldcover.org/en/data-access
+    access: open
+    licence: CC-BY-4.0  # "© ESA WorldCover project 2021 / Contains modified Copernicus Sentinel data (2021)"
+    role: feature  # cropland share near a building: the productive-use "agricultural context" and a grid-model feature
+    status: verified
+
   worldpop:
     owner: A2
     name: WorldPop Global2 R2025A constrained population count, 2023, 3 arc-second (~93 m) (Rwanda)
@@ -229,8 +239,9 @@ sources:
     url: null
     access: restricted  # requires DHS Program approval; never redistribute microdata
     licence: DHS terms of use
-    role: evidence
-    status: to_verify
+    role: weak_label  # household electricity at displaced cluster GPS: the grid-connection model's label (B4);
+                      # cluster coordinates and microdata are never published, figures show district aggregates only
+    status: verified
 
   dhs_2019:
     owner: A4
@@ -275,6 +286,15 @@ sources:
     access: restricted  # never redistributed; aggregates only
     licence: NISR terms of use
     role: validation
+    status: verified
+
+  nisr_establishment_census_2023:
+    owner: A4
+    name: NISR Establishment Census 2023, tables report (establishments by district x urban/rural and by ISIC section)
+    url: null  # tables workbook placed by the repo owner in data/restricted/reg/ (EC-2023-Tables_Report_Final-9-july-2024.xlsx)
+    access: restricted  # kept out of git as the owner placed it; only derived area counts are published
+    licence: NISR terms of use
+    role: feature  # number of manufacturing (productive-use) establishments per area: the unlocated productive-use amount
     status: verified
 
   power_africa_reports:

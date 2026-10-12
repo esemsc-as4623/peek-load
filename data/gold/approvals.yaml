@@ -27,6 +27,34 @@ archetypes:
   by: repo owner
   basis: Sign-off of the archetype assumptions; data-derived values rest on the evidence approval and the MTF aggregates.
 
+class_probabilities:
+  decision: approved
+  scope: config/profile_mapping.yaml min_class_probability 0.10 and area_level_classes [productive_use]
+  date: 2026-10-12
+  by: repo owner
+  basis: >-
+    Per building, class probabilities under 0.10 are ignored (the rest renormalised) to keep the real commercial and
+    institutional signal. Productive use is not taken from the labeller: its demand sits on trade-tagged buildings
+    plus an "unlocated" area amount from the NISR Establishment Census 2023, shown on the map in its own colour.
+
+productive_use_method:
+  decision: approved
+  scope: located (trade tags) + unlocated (census, per area) + candidate ranking on the dashboard criteria
+  date: 2026-10-12
+  by: repo owner
+  note: >-
+    The owner set the rule "mills only in rural, roadside settings; tailors, welders and carpenters in towns".
+    The exact trade shares, eligibility thresholds and candidate weights in config/productive_use.yaml are
+    implementation choices still awaiting sign-off (see "Not yet approved").
+
+gold_labels:
+  note: >-
+    Owner's caution (2026-10-12): the gold labels are not reliable ground truth. The imagery showed little beyond
+    vegetation and roof shape (flat or pitched); roof shape may have swayed some decisions but matters little.
+    Agreement with them measures consistency between two uncertain readers, not accuracy.
+
 # Not yet approved (recorded so nothing is mistaken for a sign-off):
 # - evidence rows added after ee90948 (11 curated Power Africa Rwanda values): covered by the automated checks only
-# - how class probabilities enter demand (raw vs threshold vs top class): decision pending (status_report.md)
+# - config/productive_use.yaml: equal town-trade shares, 100% mills in rural areas, eligibility (>= 30 m2, roadside
+#   100 m for mills) and candidate weights
+# - the grid-connection model (rtl.demand.grid_connection): built for review, not yet applied to demand

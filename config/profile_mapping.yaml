@@ -7,6 +7,15 @@
 # Profiles are archetype ids in data/processed/archetypes/<id>.json (B1); any without a JSON yet is listed as
 # missing by the runner.
 
+# Per-building rule (owner's decision, 2026-10-12): class probabilities below min_class_probability are ignored
+# and the rest renormalised, so a house's 1-5% spread over every class doesn't add up to phantom shops and mills
+# across thousands of buildings, while real commercial and institutional signal (>= 0.10) is kept.
+# Productive use is NOT taken from the labeller's probabilities (gold buildings marked productive use got only
+# 0.02-0.05): its demand comes from trade tags on individual buildings plus an area-level "unlocated" amount from
+# the Establishment Census (config/productive_use.yaml, `pixi run pu-demand`).
+min_class_probability: 0.10
+area_level_classes: [productive_use]  # dropped from the per-building weights before the threshold
+
 context:
   urban:  # a building counts as urban if any of these hold
     pop_density_per_km2_min: 2500
@@ -33,8 +42,6 @@ classes:
     - {when: {}, profiles: {office: 1}}
   religious:
     - {when: {}, profiles: {church: 1}}
-  productive_use:  # without a tag saying which trade, spread over the common rural trades
-    - {when: {}, profiles: {grain_mill: 0.25, welding_workshop: 0.25, tailoring: 0.25, carpentry: 0.25}}
   industrial_warehouse:
     - {when: {}, profiles: {warehouse_light: 1}}
   ancillary:

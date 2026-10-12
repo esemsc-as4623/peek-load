@@ -3,7 +3,9 @@
     pixi run profile-mapping
 
 Uses the Claude class probabilities (not just the top label), so uncertainty carries into the demand estimate:
-a building that is 60% residential and 30% shop-house gets 0.6 + 0.3 household units and 0.3 shop units.
+a building that is 60% residential and 30% shop-house gets 0.67 + 0.33 household units and 0.33 shop units
+(probabilities under `min_class_probability` are ignored and the rest renormalised). Productive use is not
+mapped here: see rtl.demand.productive_use.
 Output: data/processed/building_profiles.parquet (bldg_id, profile_id, weight).
 """
 
@@ -59,10 +61,27 @@ def class_profiles(row: pd.Series, cls: str, rules: dict) -> dict[str, float]:
     return {}
 
 
+def kept_probabilities(probs: dict[str, float], cfg: dict, top_class: bool = False) -> dict[str, float]:
+    """Drop area-level classes, ignore probabilities under the threshold, renormalise what is left.
+    top_class=True keeps only the most likely remaining class. A building left with nothing keeps its most likely
+    remaining class, so every labelled building is still modelled."""
+    p = {c: float(probs.get(c, 0.0)) for c in LABEL_CLASSES if c not in cfg.get("area_level_classes", [])}
+    if not any(v > 0 for v in p.values()):
+        return {}
+    best = max(p, key=p.get)
+    if top_class:
+        return {best: 1.0}
+    keep = {c: v for c, v in p.items() if v >= cfg.get("min_class_probability", 0.0)} or {best: p[best]}
+    total = sum(keep.values())
+    return {c: v / total for c, v in keep.items()}
+
+
 def building_weights(row: pd.Series, probs: dict[str, float], rules: dict) -> dict[str, float]:
     total = sum(probs.get(c, 0.0) for c in LABEL_CLASSES) or 1.0
     out: dict[str, float] = {}
     for cls in LABEL_CLASSES:
+        if cls not in rules:
+            continue
         p = probs.get(cls, 0.0) / total
         if p <= 0:
             continue
@@ -73,7 +92,8 @@ def building_weights(row: pd.Series, probs: dict[str, float], rules: dict) -> di
 
 def weights_table(top_class: bool = False) -> pd.DataFrame:
     """(bldg_id, profile_id, weight) for every labelled building. top_class=True puts all probability on the
-    top label (the dashboard's "top class only" alternative); the default keeps the full class probabilities."""
+    most likely per-building class (the dashboard's "top class only" alternative); the default keeps the class
+    probabilities at or above the threshold."""
     cfg = load_yaml("profile_mapping.yaml")
     lab = pd.read_parquet(PROCESSED_DIR / "labels.parquet")
     lab = lab[lab.labeler == LABELER][["bldg_id", "label", "probs_json"]]
@@ -83,11 +103,19 @@ def weights_table(top_class: bool = False) -> pd.DataFrame:
     rows = []
     for r in df.itertuples(index=False):
         r = pd.Series(r._asdict())
-        probs = ({r.label: 1.0} if top_class else
-                 {k: v for k, v in json.loads(r.probs_json).items() if not k.startswith("_")})
+        raw = {k: v for k, v in json.loads(r.probs_json).items() if not k.startswith("_")}
+        if r.label and not any(raw.values()):
+            raw = {r.label: 1.0}
+        probs = kept_probabilities(raw, cfg, top_class)
         rows += [{"bldg_id": r.bldg_id, "profile_id": p, "weight": w}
                  for p, w in building_weights(r, probs, cfg["classes"]).items() if w > 1e-6]
-    return pd.DataFrame(rows)
+    out = pd.DataFrame(rows)
+    # located productive use (rtl.demand.productive_use): a trade tag replaces the class-based profiles
+    loc_path = PROCESSED_DIR / "pu_located.parquet"
+    if loc_path.exists():
+        loc = pd.read_parquet(loc_path)[["bldg_id", "profile_id"]].assign(weight=1.0)
+        out = pd.concat([out[~out.bldg_id.isin(loc.bldg_id)], loc], ignore_index=True)
+    return out
 
 
 def main() -> None:
