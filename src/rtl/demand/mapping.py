@@ -110,11 +110,13 @@ def weights_table(top_class: bool = False) -> pd.DataFrame:
         rows += [{"bldg_id": r.bldg_id, "profile_id": p, "weight": w}
                  for p, w in building_weights(r, probs, cfg["classes"]).items() if w > 1e-6]
     out = pd.DataFrame(rows)
-    # located productive use (rtl.demand.productive_use): a trade tag replaces the class-based profiles
-    loc_path = PROCESSED_DIR / "pu_located.parquet"
-    if loc_path.exists():
-        loc = pd.read_parquet(loc_path)[["bldg_id", "profile_id"]].assign(weight=1.0)
-        out = pd.concat([out[~out.bldg_id.isin(loc.bldg_id)], loc], ignore_index=True)
+    # located productive use and services (rtl.demand.productive_use, rtl.demand.services): a trade or service tag
+    # replaces the class-based profiles
+    for name in ("pu_located.parquet", "svc_located.parquet"):
+        loc_path = PROCESSED_DIR / name
+        if loc_path.exists():
+            loc = pd.read_parquet(loc_path)[["bldg_id", "profile_id"]].assign(weight=1.0)
+            out = pd.concat([out[~out.bldg_id.isin(loc.bldg_id)], loc], ignore_index=True)
     return out
 
 

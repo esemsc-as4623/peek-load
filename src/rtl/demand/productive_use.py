@@ -37,11 +37,13 @@ def _rows(xlsx, sheet: str) -> list[list]:
     return [[None if (isinstance(v, float) and np.isnan(v)) else v for v in r] for r in raw.itertuples(index=False)]
 
 
-def census_counts(cfg: dict) -> pd.DataFrame:
-    """(district, setting, enterprises, pu_share, pu_census): manufacturing establishments per district and setting."""
+def census_counts(cfg: dict, activity: str | None = None) -> pd.DataFrame:
+    """(district, setting, enterprises, pu_share, pu_census): establishments of one ISIC section (default the
+    config's, manufacturing) per district and setting."""
     c = cfg["census"]
     xlsx = RESTRICTED_DIR / c["file"]
-    act = next(r for r in _rows(xlsx, c["establishments_by_activity"]) if str(r[0]).strip() == c["activity"])
+    activity = activity or c["activity"]
+    act = next(r for r in _rows(xlsx, c["establishments_by_activity"]) if str(r[0]).strip() == activity)
     tot = next(r for r in _rows(xlsx, c["establishments_by_activity"]) if str(r[0]).strip() == "Total")
     share = {"urban": act[4] / tot[4], "rural": act[9] / tot[9]}  # 2023 columns of the urban and rural blocks
     rows = []
@@ -121,7 +123,8 @@ def candidate_score(c: pd.DataFrame, weights: dict[str, float]) -> pd.Series:
 
 # ------------------------------------------------------------------------------------------------ 2. located
 def located(con, cfg: dict) -> pd.DataFrame:
-    """Buildings with a trade tag: tags on the building itself, else POIs inside or within max_m of it."""
+    """Buildings with a trade tag: tags on the building itself, else POIs inside or within max_m of it.
+    `cfg["located"]` holds `rules` {profile_id: {osm: {key: [values]}, overture: [categories]}} and `max_m`."""
     I = INTERIM_DIR  # noqa: E741, N806
     rules = cfg["located"]["rules"]
     osm_cases, ov_cases = [], []

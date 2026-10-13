@@ -199,3 +199,17 @@ def test_worldcover_block_fraction():
     frac = block_fraction(cls, 40, 10)
     assert frac.shape == (2, 2)  # the ragged 5 columns are trimmed
     assert frac[0, 0] == 1.0 and frac[1, 1] == 0.5 and frac[0, 1] == 0.0
+
+
+def test_services_split_sections_into_profiles(monkeypatch):
+    from rtl.demand import productive_use as pu
+    from rtl.demand import services
+
+    base = pd.DataFrame({"district": ["D", "D"], "setting": ["urban", "rural"], "enterprises": [100, 200],
+                         "pu_share": [0.1, 0.2], "pu_census": [10.0, 40.0]})
+    monkeypatch.setattr(pu, "census_counts", lambda cfg, activity=None: base.copy())
+    cfg = {"census": {"sections": {"food": "Accommodation and food service activities"}},
+           "split": {"food": {"bar_restaurant": 0.97, "guesthouse": 0.03}}}
+    out = services.census({}, cfg)
+    assert out.census.sum() == pytest.approx(50.0)  # the shares split the section without losing establishments
+    assert out[(out.profile_id == "guesthouse") & (out.setting == "rural")].census.iloc[0] == pytest.approx(1.2)

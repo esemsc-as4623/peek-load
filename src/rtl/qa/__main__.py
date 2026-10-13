@@ -116,6 +116,7 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
         "archetype JSON": {f.stem for f in arch_dir.glob("*.json") if not f.name.endswith(".schema.json")},
         "mapping (config/profile_mapping.yaml)": _mapping_ids(load_yaml("profile_mapping.yaml")),
         "dashboard (config/dashboard.yaml)": set(load_yaml("dashboard.yaml")["profiles"]),
+        "services (config/services.yaml)": set(load_yaml("services.yaml")["located"]["rules"]),
         "productive use (config/productive_use.yaml)": set(load_yaml("productive_use.yaml")["located"]["rules"])
         | {t for mix in load_yaml("productive_use.yaml")["trade_mix"].values() if isinstance(mix, dict) for t in mix},
         "profile_library": set(pd.read_parquet(PROCESSED_DIR / "profile_library.parquet").profile_id),
@@ -131,7 +132,7 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
         missing, extra = sorted(ref - ids), sorted(ids - ref)
         # the mapping and the weights need not use every archetype, but must not name an unknown one
         partial_ok = name in ("mapping (config/profile_mapping.yaml)", "building_profiles",
-                              "productive use (config/productive_use.yaml)")
+                              "productive use (config/productive_use.yaml)", "services (config/services.yaml)")
         bad = bool(extra) or (bool(missing) and not partial_ok)
         ok &= not bad
         lines.append(f"| {name} | {len(ids)} | {', '.join(missing) or '-'} | {', '.join(extra) or '-'} |")
@@ -156,6 +157,12 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
                    bool(np.allclose(lv.to_numpy(), unloc, rtol=1e-4))
                    and set(lv.index) == {"h3_r7", "sector", "district"},
                    f"{lv.round(0).to_dict()} vs {unloc:,.0f}"))
+    sd = pd.read_csv(PROCESSED_DIR / "svc_census_districts.csv")
+    sl = pd.read_parquet(PROCESSED_DIR / "svc_unlocated_areas.parquet").groupby("level").units.sum()
+    sunloc = float((sd.unlocated - sd.not_allocated).sum())
+    checks.append(("services: area levels add up to the allocated census amount",
+                   bool(np.allclose(sl.to_numpy(), sunloc, rtol=1e-4)) and len(sl) == 3,
+                   f"{sl.round(0).to_dict()} vs {sunloc:,.0f}"))
     gc = PROCESSED_DIR / "grid_connection.parquet"
     if gc.exists():
         g = con.sql(f"SELECT count(*), count(*) FILTER (WHERE p_connected BETWEEN 0 AND 1) FROM '{gc}'").fetchone()

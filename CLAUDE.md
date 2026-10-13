@@ -19,7 +19,8 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 - `pixi run demand` runs the whole chain below in order and ends with `qa` (the demand check is `reports/qa/demand.md`).
 - Per-building weights ignore class probabilities < 0.10; productive use is never taken from the labeller. It comes
   from `pixi run pu-demand` (trade tags + NISR Establishment Census per area; needs `fetch-worldcover`), and the
-  unlocated part is an area amount, never a building's. `pixi run grid-model` trains the grid-connection model on DHS
+  unlocated part is an area amount, never a building's. `pixi run svc-demand` does the same for bars/restaurants,
+  guesthouses and salons (census sections I and S, allocated by population density). `pixi run grid-model` trains the grid-connection model on DHS
   2025 (restricted: cluster locations stay in `data/restricted/`).
 - Gold labels are an uncertain reference (imagery shows little beyond vegetation and roof shape); don't treat
   agreement with them as accuracy.

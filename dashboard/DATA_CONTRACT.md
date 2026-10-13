@@ -100,6 +100,7 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 | `pu_units_located` | *building_sum*: buildings in the cell with a productive-use trade tag (their demand is in `annual_mwh_modelled`) |
 | `pu_units_unlocated`, `pu_mwh_unlocated` | *unlocated*: census productive-use establishments allocated to the cell but tied to no building, and their potential MWh/yr. Never add them to a building; draw them in the unlocated colour |
 | `pu_candidates` | buildings in the cell flagged as productive-use candidates (top scores; no demand assigned) |
+| `svc_units_located`, `svc_units_unlocated`, `svc_mwh_unlocated` | the same three kinds for services (bars/restaurants, guesthouses, salons); districts add `svc_census_reported` |
 | `p_connected_mean` | mean predicted probability of a grid connection over buildings ≥ 20 m² (draft model, B4) |
 
 **Value kinds.** Every area figure is one of three kinds (`meta.productive_use.value_kinds`), each drawn in its own
@@ -132,6 +133,7 @@ share of buildings in each cooling category). Both levels add the productive-use
 | `pu_score`, `pu_category` | productive-use **candidate score** 0–100 and band (eligible buildings only, else null) |
 | `pu_located` | profile id if a trade tag puts productive-use demand on this building, else null |
 | `pu_candidate` | profile id if the building is a flagged candidate (no demand assigned), else null |
+| `svc_located` | profile id if a bar/restaurant, hotel or salon tag puts a service profile on this building, else null |
 | `p_connected` | predicted probability of a grid connection for the building's neighbourhood (draft) |
 | `height_m`, `est_floors`, `first_seen_year`, `source`, `area_m2` | building attributes (`first_seen_year` is experimental) |
 
@@ -176,6 +178,7 @@ productive use. Score = 100 × Σ w·criterion / Σ w over the group's weights w
   {located_buildings, units_by_profile, annual_mwh} (included in `metrics`), `unlocated` {units_by_profile, units,
   annual_mwh, peak_kw, hourly_kw [24]} (NOT included in `metrics`; show it as a separate, differently coloured
   amount), `candidates_in_view`, `note`.
+- `services`: the same structure (`reported` with `by_profile`, `building_sum`, `unlocated`, `note`), no candidates.
 - `note`.
 
 ### `profiles/profiles.json`

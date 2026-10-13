@@ -1,0 +1,43 @@
+# Services demand (bars/restaurants, guesthouses, salons): located on tagged buildings plus an area-level
+# "unlocated" amount from the NISR Establishment Census 2023 (`pixi run svc-demand`), like productive use.
+# Why: after the 0.10 probability rule (2026-10-12) almost no labelled building carries the bar/restaurant or salon
+# profile, yet the census counts ~62k food/accommodation and ~23k "other service" establishments.
+# Status: draft (the section splits below are assumptions for the owner's sign-off).
+
+census:  # reuses the productive-use census tables (config/productive_use.yaml `census`)
+  sections:
+    accommodation_food: "Accommodation and food service activities"   # ISIC I
+    other_services: "Other services activities"                        # ISIC S (incl. hairdressing, S9602)
+
+split:  # section -> profile shares (no finer breakdown in the report)
+  accommodation_food:
+    bar_restaurant: 0.97
+    guesthouse: 0.03
+  other_services:
+    salon: 0.60
+  why: >-
+    The tables report ISIC sections only. Accommodation (I55) is assumed to be ~3% of section I: RDB lists
+    on the order of 1-2 thousand hotels and guesthouses against ~60k establishments, nearly all bars and eateries
+    (I56). Hairdressing and beauty (S9602) is assumed to be 60% of section S; the rest (repairs of personal goods,
+    laundries, funeral and other personal services) is not modelled.
+
+located:
+  max_m: 30
+  rules:
+    bar_restaurant:
+      osm: {amenity: [restaurant, bar, cafe, pub, fast_food]}
+      overture: [restaurant, bar, cafe, coffee_shop, bar_and_grill_restaurant, african_restaurant, fast_food_restaurant,
+                 indian_restaurant, chinese_restaurant, italian_restaurant, lebanese_restaurant, asian_restaurant,
+                 pizza_restaurant, food_and_drink]
+    guesthouse:
+      osm: {tourism: [hotel, guest_house, hostel, motel]}
+      overture: [hotel, lodging, bed_and_breakfast, lodge]
+    salon:
+      osm: {shop: [hairdresser, beauty]}
+      overture: [beauty_salon, hair_salon, barber]
+
+allocation:
+  # Within a district and setting, the unlocated count is spread over eligible buildings in proportion to the
+  # population density at the building (WorldPop), i.e. establishments follow customers: denser places get more.
+  # Eligibility reuses config/productive_use.yaml `eligibility`, without the roadside rule.
+  weight: pop_density_per_km2

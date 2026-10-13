@@ -101,6 +101,7 @@ status:  # Built / Draft / In progress / Planned, per item shown in the dashboar
   single_building_peak: {status: planned, note: "minute-level, non-coincident"}
   seasonal_profiles: {status: planned, note: "monthly climate is now in; profiles are not yet seasonal"}
   pu_viability: {status: draft, note: "tagged buildings + unlocated census amount per area; candidate buildings ranked by criteria"}
+  services: {status: draft, note: "bars/restaurants, guesthouses, salons: tagged buildings + Establishment Census sections I and S per area, allocated by population density"}
   grid_connection: {status: draft, note: "classical model of household grid connection (DHS 2025 clusters); not yet applied to demand"}
   validation: {status: built}
 
@@ -240,6 +241,9 @@ workflow:  # the data-architecture graph (workflow.json; workflow.mmd is generat
     - {id: pu_demand, lane: demand, kind: process, status: draft, label: "B3 productive use: tagged + unlocated", command: "pixi run pu-demand",
        description: "Census manufacturing establishments per district and setting; trade tags locate a few; the rest is an unlocated amount per H3 cell and sector (mills rural and roadside, tailors/welders/carpenters in towns); top-scoring buildings flagged as candidates."}
     - {id: t_pu, lane: demand, kind: table, label: "pu_located / pu_unlocated_areas / pu_candidates", file: data/processed/pu_unlocated_areas.parquet}
+    - {id: svc_demand, lane: demand, kind: process, status: draft, label: "B3s services: tagged + unlocated", command: "pixi run svc-demand",
+       description: "Bars/restaurants, guesthouses and salons: OSM/Overture tags put a profile on 1,500 buildings; the rest of census sections I and S (assumed splits) is an unlocated amount per H3 cell and sector, allocated by population density."}
+    - {id: t_svc, lane: demand, kind: table, label: "svc_located / svc_unlocated_areas", file: data/processed/svc_unlocated_areas.parquet}
     - {id: grid_model, lane: demand, kind: process, status: draft, restricted: true, label: "B4 grid-connection model", command: "pixi run grid-model",
        description: "Logistic model of household grid connection (DHS 2025, displaced clusters) on neighbourhood features; grouped CV by district (AUC 0.75); checked against EICV7 district grid lighting (r = 0.93)."}
     - {id: t_grid, lane: demand, kind: table, label: "grid_connection (P per building)", file: data/processed/grid_connection.parquet}
@@ -281,6 +285,11 @@ workflow:  # the data-architecture graph (workflow.json; workflow.mmd is generat
     - [t_context, pu_demand]
     - [pu_demand, t_pu]
     - [t_pu, mapping]
+    - [manifest, svc_demand]
+    - [t_context, svc_demand]
+    - [svc_demand, t_svc]
+    - [t_svc, mapping]
+    - [t_svc, aggregation]
     - [t_pu, aggregation]
     - [manifest, grid_model]
     - [t_context, grid_model]

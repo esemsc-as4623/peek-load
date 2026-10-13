@@ -21,6 +21,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 | `labels` | 48,556 | building-use labels: class, probabilities, confidence, a one-line justification, model and prompt version. Covers 44,156 deep-dive buildings plus the 5,878-building pilot sample, with several model and prompt configurations on the 400 gold buildings |
 | `gold_labels.csv` | 174 (growing to 400 + 50 repeats) | human building-use labels with confidence, note and an imagery flag. An uncertain reference, not ground truth: the imagery showed little beyond vegetation and roof shape |
 | `pu_located` / `pu_unlocated_areas` / `pu_candidates` | 57 / per area / 17,103 | productive use: buildings with a trade tag; census establishments not tied to a building, per H3 r7 cell, sector and district; top-scoring candidate buildings (no demand assigned) |
+| `svc_located` / `svc_unlocated_areas` | 1,500 / per area | services: buildings with a bar, restaurant, hotel or salon tag; Establishment Census sections I and S (assumed splits) not tied to a building, per H3 r7 cell, sector and district |
 | `grid_connection` | 6,434,247 | predicted probability that the building's neighbourhood is grid-connected (logistic model on DHS 2025; draft) |
 | `evidence` | 3,076 | appliance and usage parameters from 18 reports, each with document, page, verbatim quote and a verification flag |
 | `evidence_productive_use` | 163 | productive-use appliance parameters from web research (summary statements; to verify at the named source) |

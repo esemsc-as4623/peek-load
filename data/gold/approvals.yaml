@@ -58,3 +58,5 @@ gold_labels:
 # - config/productive_use.yaml: equal town-trade shares, 100% mills in rural areas, eligibility (>= 30 m2, roadside
 #   100 m for mills) and candidate weights
 # - the grid-connection model (rtl.demand.grid_connection): built for review, not yet applied to demand
+# - config/services.yaml (2026-10-13): section I split 97% bars/restaurants / 3% accommodation, section S 60% salons,
+#   allocation by population density; the bar/restaurant profile is used for rural cabarets too (decisions.md A2)

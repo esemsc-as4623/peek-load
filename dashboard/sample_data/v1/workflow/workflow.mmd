@@ -63,6 +63,8 @@ flowchart LR
     mapping["B2 building to profile mapping"]
     pu_demand["B3 productive use: tagged + unlocated"]
     t_pu[("pu_located / pu_unlocated_areas / pu_candidates")]
+    svc_demand["B3s services: tagged + unlocated"]
+    t_svc[("svc_located / svc_unlocated_areas")]
     grid_model["B4 grid-connection model (restricted)"]
     t_grid[("grid_connection (P per building)")]
     t_weights[("building_profiles")]
@@ -103,6 +105,11 @@ flowchart LR
   t_context --> pu_demand
   pu_demand --> t_pu
   t_pu --> mapping
+  manifest --> svc_demand
+  t_context --> svc_demand
+  svc_demand --> t_svc
+  t_svc --> mapping
+  t_svc --> aggregation
   t_pu --> aggregation
   manifest --> grid_model
   t_context --> grid_model
