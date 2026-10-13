@@ -69,7 +69,7 @@ The two checks below show why this matters: one sector already fits, another doe
 | # | Item | Status |
 |---|---|---|
 | C1 | Gold labels are an uncertain reference (imagery shows vegetation and roof shape only) | recorded; use tags as silver labels, and treat agreement as consistency, not accuracy |
-| C2 | 1991–2020 climate baseline | 2 of 60 Copernicus requests done; each takes ~40 h to start. Fallback: compute it from the hourly product (one request per year) |
+| C2 | 1991–2020 climate baseline | 8 of 60 Copernicus requests done (1991–1994) after duplicates were cancelled; requests still wait many hours to start. Fallback: compute it from the hourly product (one request per year) |
 | C3 | Evidence rows added after the blanket approval (11 Power Africa values) | covered by automated checks only |
 | C4 | Low-confidence Google footprints (12.6%) count fully | consider weighting by confidence or checking against census households (A1) |
 | C5 | Census urban/rural vs our urban rule differ (e.g. Kicukiro has 49 rural enterprises; our rule calls far more of Kirehe urban) | allocation uses our rule within each district's census setting totals; align the definitions if NISR's boundaries can be obtained |

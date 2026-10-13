@@ -23,9 +23,9 @@ each building receives its neighbourhood's probability. The model cannot tell tw
 | logistic | all | 560 | 0.752 | 0.197 | 0.569 | 0.194 | 0.453 |
 | logistic | urban | 198 | 0.768 | 0.106 | 0.342 | 0.110 | 0.169 |
 | logistic | rural | 362 | 0.614 | 0.236 | 0.666 | 0.230 | 0.087 |
-| gradient_boosting | all | 560 | 0.737 | 0.206 | 0.593 | 0.202 | 0.376 |
-| gradient_boosting | urban | 198 | 0.749 | 0.110 | 0.354 | 0.115 | 0.061 |
-| gradient_boosting | rural | 362 | 0.592 | 0.247 | 0.695 | 0.239 | -0.043 |
+| gradient_boosting | all | 560 | 0.735 | 0.206 | 0.595 | 0.203 | 0.370 |
+| gradient_boosting | urban | 198 | 0.753 | 0.109 | 0.351 | 0.113 | 0.088 |
+| gradient_boosting | rural | 362 | 0.588 | 0.248 | 0.698 | 0.242 | -0.058 |
 | oracle_cluster_share | all | 560 | 0.885 | 0.137 | 0.409 | 0.000 | 1.000 |
 | oracle_cluster_share | urban | 198 | 0.882 | 0.079 | 0.251 | 0.000 | 1.000 |
 | oracle_cluster_share | rural | 362 | 0.838 | 0.162 | 0.476 | 0.000 | 1.000 |
