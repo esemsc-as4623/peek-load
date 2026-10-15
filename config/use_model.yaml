@@ -1,0 +1,74 @@
+# Building-use classifier (`pixi run use-model`): a classical model that predicts each building's use class from its
+# footprint and surroundings, nationally. Two training sets, compared side by side:
+#   A "tags":     labels that come with the data (OSM / Overture / facility tags, mapped by the rules below)
+#   B "tags+llm": A plus the LLM labels of the deep dives (Claude Haiku 4.5, prompt v2); a tag wins over the LLM
+# Human gold labels are never trained on: they are one (uncertain) evaluation set.
+# Status: draft (owner's request, 2026-10-15).
+
+classes: [residential, mixed_shop_house, commercial, institutional, religious, productive_use, industrial_warehouse,
+          ancillary]   # "unknown" is not a target
+
+# Tag -> class rules, first match wins (checked in this order: facility, OSM amenity/shop, OSM building, Overture).
+tags:
+  facility:  # facility_type prefix
+    institutional: ["education:", "health:"]
+    religious: ["worship:"]
+  osm_amenity:
+    religious: [place_of_worship]
+    institutional: [hospital, school, clinic, social_facility, police, townhall, courthouse, doctors, community_centre,
+                    childcare, post_office, public_building, kindergarten, college, university, library, fire_station]
+    commercial: [pharmacy, restaurant, bar, cafe, fuel, bank, marketplace, fast_food, pub, car_wash, veterinary,
+                 internet_cafe, atm, bureau_de_change]
+    ancillary: [toilets, shelter]
+  osm_shop: {commercial: ".*"}
+  osm_building:
+    residential: [residential, house, apartments, detached, hut, semidetached_house, terrace, bungalow, dormitory]
+    institutional: [school, hospital, government, public, university, civic, college, kindergarten, office]
+    religious: [church, cathedral, mosque, chapel]
+    commercial: [commercial, retail, hotel, bank, kiosk, supermarket]
+    industrial_warehouse: [industrial, warehouse, hangar, silo, storage_tank, transportation]
+    ancillary: [garage, shed, toilets, barn, roof, farm_auxiliary, kitchen, carport, garages, service, cowshed, sty]
+  overture:  # regular expressions on the Overture category
+    religious: "worship|religious|church|mosque"
+    institutional: "school|education|college|university|hospital|clinic|health|medical|government|embassy|police|ngo|non_governmental|social_or_community|public_service|library"
+    productive_use: "repair|manufactur|metal|carpent|sewing|tailor|mill|weld|printing|bakery"
+    industrial_warehouse: "warehouse|storage|industrial|factory|wholesale"
+    commercial: "hotel|lodging|bed_and_breakfast|restaurant|bar|cafe|coffee|store|shop|bank|salon|barber|beauty|market|gas_station|rental|pharmacy|grocery|mall|gym|service|agency|office|company"
+
+features:  # every feature is available for all 6.4M buildings; no tag or source column (they leak how labels were made)
+  - log_area
+  - log_perimeter
+  - compactness
+  - n_vertices
+  - height_m
+  - has_height
+  - est_floors
+  - first_seen_year
+  - log_dist_road_major
+  - log_dist_road_any
+  - log_dist_powerline
+  - poi_count_50m
+  - poi_count_250m
+  - ghsl_code
+  - ghsl_nres_share
+  - log_pop_density
+  - rwi
+  - elevation_m
+  - cropland_share
+  - r9_n_buildings
+  - r9_median_area
+  - r9_area_ratio      # this building's area / the median of its H3 r9 cell
+  - r9_area_pct        # percentile of its area within the cell
+  - r9_largest         # 1 if it is the largest building in its cell
+  - r10_n_buildings    # H3 r10 (~65 m cell): how many buildings share the compound-sized cell
+  - r10_area_ratio_max # area / the largest building in that cell (kitchens and latrines sit next to houses)
+  - r10_size_rank      # 1 = largest in the cell
+
+model:
+  max_iter: 300
+  learning_rate: 0.08
+  max_leaf_nodes: 31
+  l2_regularization: 1.0
+  class_weight_power: 0.5   # sample weight = (n_largest / n_class) ** power, capped at max_class_weight
+  max_class_weight: 20
+  seed: 7
