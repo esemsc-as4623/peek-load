@@ -427,6 +427,17 @@
     "year": 2000,
     "statistic": "daily_maximum"
   },
+  "data/raw/era5_land_cds/2026-10-10/era5land_daily_maximum_2001.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:derived-era5-land-daily-statistics",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_daily_maximum_2001.nc",
+    "bytes": 354008,
+    "sha256": "29c27146cb05b650c821b5497f93d9b8544310c048abb795ffde9322d90a354d",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-15T18:24:18+00:00",
+    "year": 2001,
+    "statistic": "daily_maximum"
+  },
   "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_1991.nc": {
     "source_id": "era5_land_cds",
     "url": "cds:derived-era5-land-daily-statistics",
@@ -546,6 +557,17 @@
     "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
     "retrieved_at": "2026-10-15T14:50:49+00:00",
     "year": 2001,
+    "statistic": "daily_mean"
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_2002.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:derived-era5-land-daily-statistics",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_2002.nc",
+    "bytes": 424896,
+    "sha256": "c31642131e82cabbce2a5acbb857e1597073362d17ce3114c116ca03c2421952",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-15T21:47:25+00:00",
+    "year": 2002,
     "statistic": "daily_mean"
   },
   "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201901.nc": {

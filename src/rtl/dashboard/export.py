@@ -213,7 +213,7 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
     df = df.join(top.add_suffix("_top"))
     pu_cfg = load_yaml("productive_use.yaml")
     comp, df["pu_score"], df["pu_category"] = pu_scores(df, pu_cfg, cfg["productive_use"])
-    bu = con.sql(f"SELECT bldg_id, use, establishment, households, source AS use_source FROM "
+    bu = con.sql(f"SELECT bldg_id, use, establishment, est_weight, households, upper, source AS use_source FROM "
                  f"'{PROCESSED_DIR}/building_use.parquet' WHERE bldg_id IN (SELECT unnest(?::VARCHAR[]))",
                  params=[list(df.index)]).df().set_index("bldg_id")
     df = df.join(bu)
@@ -225,6 +225,9 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
                  "WHERE bldg_id IN (SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df().set_index("bldg_id")
     df["annual_kwh_expected"] = pv.expected_annual_kwh.reindex(df.index)
     df.loc[df.modelled & df.annual_kwh_expected.isna(), "annual_kwh_expected"] = 0.0
+    by = PROCESSED_DIR / "building_demand_by_year.parquet"
+    yr = (con.sql(f"SELECT * FROM '{by}' WHERE bldg_id IN (SELECT unnest(?::VARCHAR[]))", params=[list(df.index)])
+          .df().set_index("bldg_id") if by.exists() else pd.DataFrame())
     ag = PROCESSED_DIR / "uncertainty" / "building_agreement.parquet"
     df["use_agreement"] = (con.sql(f"SELECT bldg_id, use_agreement FROM '{ag}' WHERE bldg_id IN "
                                    "(SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df()
@@ -267,7 +270,13 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
                     "tags": {k: r[k] for k in ("osm_building", "osm_amenity", "osm_shop", "overture_category",
                                                "facility_type") if isinstance(r[k], str)}},
             "allocation": {"use": r.use, "establishment": r.establishment if isinstance(r.establishment, str) else None,
-                           "households": None if pd.isna(r.households) else int(r.households), "source": r.use_source},
+                           "households": None if pd.isna(r.households) else int(r.households), "source": r.use_source,
+                           "establishment_share": rnd(r.est_weight, 4),
+                           "upper_wealth": None if pd.isna(r.households) or not r.households else bool(r.upper),
+                           "use_agreement": rnd(r.use_agreement, 2)},
+            "expected": None if not r.modelled else {
+                "annual_kwh": rnd(r.annual_kwh_expected),
+                "annual_kwh_by_year": ({c[-4:]: rnd(v) for c, v in yr.loc[b].items()} if b in yr.index else None)},
             "profiles": wmap.get(b),
             "profiles_top_class": wmap_top.get(b, {} if r.modelled else None),
             "demand": None if not r.modelled else {k: (int(r[k]) if k == "peak_hour" else r[k]) for k in (
@@ -342,6 +351,7 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
         "units_by_profile": units.round(1).to_dict(),
         "metrics": {"annual_mwh": rnd(mod.annual_kwh.sum() / 1000, 1),
                     "annual_mwh_expected": rnd(mod.annual_kwh_expected.sum() / 1000, 1),
+                    "by_year_whole_sector": sector_years(con, dd),
                     "uncertainty": sector_band(dd),
                     "annual_mwh_p10": rnd(mod.annual_kwh_p10.sum() / 1000, 1),
                     "annual_mwh_p90": rnd(mod.annual_kwh_p90.sum() / 1000, 1),
@@ -380,6 +390,84 @@ def sector_band(dd: dict) -> dict | None:
     r = r.iloc[0]
     return {k: rnd(r[f"{k}_mwh"], 1) for k in ("alloc_p10", "alloc_p90", "profile_p10", "profile_p90",
                                                 "combined_p10", "combined_p90", "base")}
+
+
+
+def district_extras(con) -> pd.DataFrame:
+    """Per district: the constraints and calibration the allocation imposes, growth and night lights (adm2_name)."""
+    P, I = PROCESSED_DIR, INTERIM_DIR  # noqa: E741, N806
+    u = con.sql(f"""SELECT district AS adm2_name,
+            sum(households * (setting = 'urban')::INT) / sum(households) AS households_urban_share,
+            sum(households * upper::INT) / nullif(sum(households), 0) AS households_upper_share,
+            sum(est_weight) FILTER (WHERE establishment = 'school') AS schools,
+            sum(est_weight) FILTER (WHERE establishment IN ('health_post', 'health_centre', 'hospital'))
+                AS health_facilities,
+            sum(est_weight) FILTER (WHERE use = 'religious') AS places_of_worship
+        FROM '{P}/building_use.parquet' GROUP BY 1""").df()
+    g = con.sql(f"""SELECT u.district AS adm2_name, sum(w.units * w.p_grid) / sum(w.units) AS p_grid_households
+        FROM '{P}/building_profiles.parquet' w JOIN '{P}/building_use.parquet' u USING (bldg_id)
+        WHERE w.profile_id LIKE 'household_%' GROUP BY 1""").df()
+    out = u.merge(g, on="adm2_name", how="left")
+    eicv = pd.read_csv(P / "validation_anchors" / "grid_lighting_by_district_2024.csv")
+    out = out.merge(eicv[["district", "grid_main_lighting_share"]].rename(
+        columns={"district": "adm2_name", "grid_main_lighting_share": "eicv7_grid_share_2024"}), how="left")
+    yrs = P / "demand_by_year.csv"
+    if yrs.exists():
+        y = pd.read_csv(yrs)
+        w = y.pivot_table(index="district", columns="year", values="expected_gwh")
+        out = out.merge(pd.DataFrame({"adm2_name": w.index, "growth_rate": y.groupby("district").growth_rate.first()
+                                      .reindex(w.index).to_numpy(), "expected_gwh_2016": w[2016].to_numpy(),
+                                      "expected_gwh_2030": w[2030].to_numpy()}), how="left")
+    ntl = I / "ntl_h3r8.parquet"
+    if ntl.exists():
+        n = con.sql(f"""WITH c AS (SELECT DISTINCT h3_cell_to_parent(b.h3_r9, 8) AS h3_r8, x.adm2_name
+                        FROM '{I}/buildings_base.parquet' b JOIN '{I}/building_context.parquet' x USING (bldg_id))
+            SELECT c.adm2_name, avg(radiance) FILTER (WHERE year = 2016) AS ntl_radiance_2016,
+                   avg(radiance) FILTER (WHERE year = 2024) AS ntl_radiance_2024,
+                   avg(lit_share) FILTER (WHERE year = 2024) AS ntl_lit_share_2024
+            FROM '{ntl}' n JOIN c USING (h3_r8) WHERE c.adm2_name IS NOT NULL GROUP BY 1""").df()
+        out = out.merge(n, on="adm2_name", how="left")
+    return out
+
+
+def hex_ntl(con) -> pd.DataFrame:
+    """Night lights per H3 r7 cell: mean radiance of its r8 children in 2016 and 2024, lit share in 2024."""
+    ntl = INTERIM_DIR / "ntl_h3r8.parquet"
+    if not ntl.exists():
+        return pd.DataFrame(columns=["h3_r7"])
+    return con.sql(f"""SELECT h3_cell_to_parent(h3_string_to_h3(h3_r8), 7) AS c,
+            avg(radiance) FILTER (WHERE year = 2016) AS ntl_radiance_2016,
+            avg(radiance) FILTER (WHERE year = 2024) AS ntl_radiance_2024,
+            avg(lit_share) FILTER (WHERE year = 2024) AS ntl_lit_share_2024
+        FROM '{ntl}' GROUP BY 1""").df().assign(h3_r7=lambda d: d.c.map(lambda v: f"{v:x}")).drop(columns="c")
+
+
+def sector_years(con, dd: dict) -> list[dict] | None:
+    """Potential and expected GWh per year for a deep-dive sector: back-cast per building, projection by the
+    district's growth rate (rtl.demand.years)."""
+    P = PROCESSED_DIR  # noqa: N806
+    f = P / "building_demand_by_year.parquet"
+    if not f.exists():
+        return None
+    cols = [c for c in con.sql(f"SELECT * FROM '{f}' LIMIT 0").columns if c.startswith("expected_kwh_")]
+    sums = ", ".join(f"sum(y.{c}) / 1e6 AS {c}" for c in cols)
+    r = con.sql(f"""SELECT {sums}, sum(p.annual_kwh) / 1e6 AS pot FROM '{f}' y
+                    JOIN '{P}/building_use.parquet' u USING (bldg_id)
+                    JOIN '{P}/building_demand_preview.parquet' p USING (bldg_id)
+                    WHERE u.district = ? AND u.sector = ?""", params=[dd["district"], dd["sector"]]).df().iloc[0]
+    d = pd.read_csv(P / "demand_by_year.csv")
+    d = d[d.district == dd["district"]].set_index("year")
+    base = int(d[d.kind == "base"].index[0])
+    rows = []
+    for yr, k in d.kind.items():
+        if yr <= base:
+            exp = float(r[f"expected_kwh_{yr}"])
+            pot = float(r.pot) * float(d.at[yr, "potential_gwh"] / d.at[base, "potential_gwh"])
+        else:
+            f_ = float(d.at[yr, "stock_index"])
+            exp, pot = float(r[f"expected_kwh_{base}"]) * f_, float(r.pot) * f_
+        rows.append({"year": int(yr), "kind": k, "potential_gwh": rnd(pot, 3), "expected_gwh": rnd(exp, 3)})
+    return rows
 
 
 # ------------------------------------------------------------------------------------------------ national/admin
@@ -443,7 +531,10 @@ def national(con, out, lib: pd.DataFrame) -> None:
         hexes = hexes.merge(con.sql(f"""SELECT g.h3_r7, avg(g.p_connected) AS p_connected_mean FROM '{gc}' g
             JOIN '{INTERIM_DIR}/buildings_base.parquet' b USING (bldg_id) WHERE b.area_m2 >= 20 GROUP BY 1""").df(),
                             on="h3_r7", how="left")
-    keep += ["pu_buildings", "svc_buildings", "households", "p_connected_mean"]
+    hexes = hexes.merge(hex_ntl(con), on="h3_r7", how="left")
+    keep += ["pu_buildings", "svc_buildings", "households", "p_connected_mean", "annual_mwh_expected",
+             "ntl_radiance_2016", "ntl_radiance_2024", "ntl_lit_share_2024"]
+    keep = list(dict.fromkeys(keep))
     keep = [k for k in keep if k in hexes.columns]
     props = [{k: (rnd(r[k], 2) if isinstance(r[k], float) else r[k]) for k in keep} for _, r in hexes.iterrows()]
     for p in props:
@@ -480,6 +571,7 @@ def national(con, out, lib: pd.DataFrame) -> None:
             ORDER BY {k}""").df()
         if level == "districts":
             adm = adm.merge(pua["district"].rename(columns={"district": "adm2_name"}), on="adm2_name", how="left")
+            adm = adm.merge(district_extras(con), on="adm2_name", how="left")
         else:
             adm = adm.merge(pua["sector"].rename(columns={"district": "adm2_name", "sector": "adm3_name"}),
                             on=["adm2_name", "adm3_name"], how="left")
@@ -588,7 +680,46 @@ def validation(out) -> None:
         "evidence": {"values_checked": int(len(pd.read_csv(REPORTS_DIR / "review" / "evidence_review.csv"))),
                      "values_flagged": int(flags.evidence_id.nunique()), "extracted_parameters": 3076,
                      "quotes_verified_share": 0.81},
-        "verdict_rule": "ok within 1.5x of an anchor or inside its p25-p75 range; check within 3x; fail beyond"})
+        "verdict_rule": "ok within 1.5x of an anchor or inside its p25-p75 range; check within 3x; fail beyond",
+        **constraint_checks()})
+
+
+def constraint_checks() -> dict:
+    """What the allocation and calibration impose, and how much the answer moves (sensitivity, uncertainty)."""
+    P = PROCESSED_DIR  # noqa: N806
+    out: dict = {}
+    t = pd.read_csv(P / "allocation_targets.csv")
+    g = t.groupby("item")[["target", "tagged", "assigned", "shortfall"]].sum().reset_index()
+    out["allocation_targets"] = {"note": "national sums of district targets: census (households, pu:, svc:, retail:), "
+                                         "registries (registry:), LLM rates (model:)",
+                                 "rows": g.to_dict("records")}
+    cal = P / "calibration.csv"
+    if cal.exists():
+        c = pd.read_csv(cal)
+        d = c[c.level == "district"]
+        out["calibration"] = {
+            "grid": {"note": "households' P(connected) shifted per district (logit) to EICV7 2024 grid lighting",
+                     "rows": [{"district": r.key, "eicv7_share": rnd(r.target, 3), "model_share": rnd(r.before, 3),
+                               "logit_shift": rnd(r.factor, 2)} for r in d.itertuples()]},
+            "household_energy": [{"scope": r.key, "item": r.item, "target_kwh_month": rnd(r.target, 2),
+                                  "before_kwh_month": rnd(r.before, 2),
+                                  "factor": None if pd.isna(r.factor) else rnd(r.factor, 3)}
+                                 for r in c[c.level != "district"].itertuples()]}
+    caps = REPORTS_DIR / "demand" / "cap_sensitivity.csv"
+    if caps.exists():
+        out["cap_sensitivity"] = {"note": "spacing caps x0.5 / base / x2 / x4 / none; district totals never change",
+                                  "rows": pd.read_csv(caps).round(3).to_dict("records")}
+    b = P / "uncertainty" / "sector_bands.csv"
+    if b.exists():
+        bands = pd.read_csv(b)
+        nat = bands.drop(columns=["district", "sector"]).sum() / 1000
+        out["uncertainty"] = {"note": "potential GWh/yr; allocation: 10 runs with class probabilities x "
+                                      "exp(0.5 N(0,1)); profile: RAMP p10/p90 day; combined adds relative "
+                                      "half-widths in quadrature",
+                              "national_gwh": {k.removesuffix("_mwh"): rnd(v, 1) for k, v in nat.items()},
+                              "sector_band_width_median": rnd(float(((bands.combined_p90_mwh - bands.combined_p10_mwh)
+                                                                     / bands.base_mwh).median()), 3)}
+    return out
 
 
 def sources(out, cfg: dict) -> None:
@@ -654,6 +785,23 @@ def workflow(con, out, cfg: dict, src_status: dict) -> None:
     (out / "workflow" / "workflow.mmd").write_text("\n".join(lines) + "\n")
 
 
+def national_demand() -> dict:
+    """Headline national totals from the processed outputs."""
+    P = PROCESSED_DIR  # noqa: N806
+    pv = pd.read_parquet(P / "building_demand_preview.parquet", columns=["annual_kwh", "expected_annual_kwh"])
+    u = pd.read_parquet(P / "building_use.parquet", columns=["households", "establishment", "est_weight"])
+    out = {"buildings_with_demand": int(len(pv)), "potential_gwh": rnd(pv.annual_kwh.sum() / 1e6, 1),
+           "expected_gwh": rnd(pv.expected_annual_kwh.sum() / 1e6, 1), "households": int(u.households.sum()),
+           "establishments_by_profile": {k: rnd(v, 1) for k, v in
+                                         u.groupby("establishment").est_weight.sum().sort_values(ascending=False).items()}}
+    y = P / "demand_by_year.csv"
+    if y.exists():
+        g = pd.read_csv(y).groupby("year")[["potential_gwh", "expected_gwh"]].sum()
+        out["by_year"] = [{"year": int(k), "potential_gwh": rnd(r.potential_gwh, 1),
+                           "expected_gwh": rnd(r.expected_gwh, 1)} for k, r in g.iterrows()]
+    return out
+
+
 def meta(out, cfg: dict, summaries: dict) -> None:
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO_ROOT, capture_output=True,
                             text=True).stdout.strip()
@@ -667,7 +815,7 @@ def meta(out, cfg: dict, summaries: dict) -> None:
         "units": {"power": "W (buildings), kW (areas)", "energy": "kWh/yr (buildings), MWh/yr (areas)",
                   "temperature": "degC", "cdd": "degC-days per year", "ghi": "kWh/m2/day", "distance": "m"},
         "national": {"buildings": 6434247, "buildings_with_height": 4603981, "climate_cells_h3_r7": 4034,
-                     "fixture_bbox": aoi["fixture"]["bbox"]},
+                     "fixture_bbox": aoi["fixture"]["bbox"], **national_demand()},
         "classes": cfg["classes"], "cooling": cfg["cooling"], "profile_groups": cfg["profile_groups"],
         "profiles": cfg["profiles"], "metrics": cfg["metrics"], "status": cfg["status"],
         "productive_use": cfg["productive_use"] | {

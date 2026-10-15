@@ -19,6 +19,9 @@ flowchart LR
     src_worldcover["ESA WorldCover 2021 (cropland)"]
     src_census["NISR Establishment Census 2023 (tables) (restricted)"]
     src_dhs["DHS 2025 households + displaced cluster GPS (restricted)"]
+    src_mineduc["MINEDUC Education Statistical Yearbook 2020/21"]
+    src_worship["Places of worship (news reports of RGB figures)"]
+    src_blackmarble["NASA VIIRS Black Marble night lights"]
   end
   subgraph ingest["Ingest and provenance"]
     manifest["Download manifest (url, sha256, licence, time)"]
@@ -33,6 +36,8 @@ flowchart LR
     ctx_vector["Vector context"]
     ctx_raster["Raster context"]
     t_context[("building_context")]
+    ntl["Night lights per H3 cell and year"]
+    t_ntl[("ntl_h3r8")]
   end
   subgraph climate["A3 Climate"]
     climate["Climate to H3 r7"]
@@ -58,8 +63,8 @@ flowchart LR
   subgraph demand["Demand modelling"]
     builder["B1 archetype builder"]
     signoff{{"Archetype sign-off (human, 2026-10-12)"}}
-    t_archetypes[("17 archetypes (signed off)")]
-    mapping_approval{{"Allocation rules (human)"}}
+    t_archetypes[("17 archetypes (signed off) + 2 derived health profiles (draft)")]
+    mapping_approval{{"Allocation rules (human, signed off 2026-10-15)"}}
     use_model["B2a use classifier (tags; tags + LLM)"]
     t_useprobs[("use_probs (8 class probabilities per building)")]
     pu_demand["B3 productive-use census targets + tags"]
@@ -70,12 +75,20 @@ flowchart LR
     t_svc[("svc_census_districts / svc_located")]
     grid_model["B4 grid-connection model (restricted)"]
     t_grid[("grid_connection (P per building)")]
+    registries["Registry and survey targets"]
+    t_registries[("schools_by_district / dhs_wealth_district")]
+    calibrate["B4c calibration: EICV7 grid shares + REG consumption"]
+    t_calibration[("calibration + building_demand_preview")]
+    years["B5y demand by year"]
+    t_years[("demand_by_year / building_demand_by_year")]
     t_weights[("building_profiles")]
     ramp["B3 RAMP 0.5.2 simulation"]
     t_library[("profile_library")]
     aggregation["B4 building and area metrics"]
   end
   subgraph validation["Validation"]
+    sensitivity["B6 uncertainty and cap sensitivity"]
+    t_bands[("uncertainty/ + cap_sensitivity")]
     checks["Profile checks"]
     qa["Table QA (schema contracts)"]
   end
@@ -104,6 +117,28 @@ flowchart LR
   src_worldcover --> manifest
   src_census --> manifest
   src_dhs --> manifest
+  src_mineduc --> manifest
+  src_worship --> registries
+  src_blackmarble --> manifest
+  manifest --> registries
+  registries --> t_registries
+  t_registries --> allocate
+  manifest --> ntl
+  ntl --> t_ntl
+  t_ntl --> aggregation
+  t_weights --> calibrate
+  t_grid --> calibrate
+  t_library --> calibrate
+  t_anchors --> calibrate
+  calibrate --> t_calibration
+  t_calibration --> years
+  t_height --> years
+  years --> t_years
+  t_years --> aggregation
+  t_calibration --> aggregation
+  t_useprobs --> sensitivity
+  sensitivity --> t_bands
+  t_bands --> aggregation
   manifest --> pu_demand
   t_context --> pu_demand
   pu_demand --> t_pu

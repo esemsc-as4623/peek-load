@@ -274,6 +274,23 @@ pixi run test                            # includes bundle formula and integrity
 ```
 
 ## Added 2026-10-15
+- `meta.json` `national`: `buildings_with_demand`, `potential_gwh`, `expected_gwh`, `households`,
+  `establishments_by_profile` (whole facilities), `by_year` (national potential and expected GWh, 2016-2030).
+- `meta.json` `status` adds `registries`, `demand_by_year`, `uncertainty`, `night_lights`; `classes` fixes the
+  ancillary label ("Ancillary (kitchen, latrine, store)").
+- `admin/districts.geojson`: `households_urban_share` (= census), `households_upper_share` (DHS-based),
+  `schools` (= MINEDUC), `health_facilities`, `places_of_worship` (whole facilities), `p_grid_households`
+  (= `eicv7_grid_share_2024` after raking), `growth_rate` (/yr), `expected_gwh_2016`, `expected_gwh_2030`,
+  `ntl_radiance_2016`, `ntl_radiance_2024` (nW/cm²/sr, mean over H3 r8 cells with buildings), `ntl_lit_share_2024`.
+- `national/h3_r7.geojson`: `ntl_radiance_2016`, `ntl_radiance_2024`, `ntl_lit_share_2024` (Black Marble; a few
+  cells are very bright, e.g. the Lake Kivu methane plant: cap the colour scale at a high percentile).
+- Deep-dive `summary.json` `metrics.by_year_whole_sector`: `[{year, kind, potential_gwh, expected_gwh}]` for the
+  whole sector (not the sample box), 2016-2030.
+- Building details: `allocation.establishment_share` (1/n of a facility compound), `allocation.upper_wealth`,
+  `allocation.use_agreement`; `expected.annual_kwh` and `expected.annual_kwh_by_year` (2016-2023). Yearly values
+  are presence-weighted expectations: a building detected later, or never detected, carries a fractional share.
+- `validation/checks.json`: `allocation_targets` (national sums of district targets), `calibration` (`grid` per
+  district, `household_energy` REG factors and the QSEL check), `cap_sensitivity`, `uncertainty`.
 - `national/demand_by_year.json`: `{note, rows: [{district, year, kind, potential_gwh, expected_gwh, growth_rate}]}`;
   `kind` is `backcast` (2016-2022), `base` (2023) or `projection` (2024-2030).
 - Deep-dive `summary.json` `metrics`: `annual_mwh_expected`, and `uncertainty` (MWh/yr: `alloc_p10/p90`,
