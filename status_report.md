@@ -1,142 +1,245 @@
-# Rooftops → Load Curves: status report
+# Rooftops → Load Curves: status report and decision log
 
-*OSEAS26 challenge: building footprints → energy demand · repo `esemsc-as4623/peek-load` · updated 2026-10-13*
+*OSEAS26 challenge: building footprints → energy demand · repo `esemsc-as4623/peek-load` · updated 2026-10-15*
+
+One file for the organisers and for us: what the pipeline does (section 2), results (3–4), every decision taken
+(5), what is still open (6), opportunities (7) and bookkeeping (8). It replaces `decisions.md`. Owner sign-offs are
+recorded in `data/gold/approvals.yaml`.
 
 ## 1. Summary
 We turn Rwanda's 6.4 million open building footprints into building-level electricity demand. Every building gets
-its shape, height, surroundings, climate and a use label. Use-specific appliance profiles (RAMP) then give a load 
-curve, peak and annual energy demand. The pipeline is a chain of separate steps (section 2), each with a
-clear input, output and check. This is designed to be modular to swap in and see the effect of ML models and decisions.
+its shape, height, surroundings, climate and a use. Use-specific appliance profiles (RAMP) then give a load curve,
+peak and annual energy. The pipeline is a chain of separate steps (section 2), each with a clear input, output and
+check. It is modular, so we can swap in ML models and decisions and see their effect.
 
-Current State:
+Current state (2026-10-15):
 - **All six national building tables** are built and pass QA.
-- **Demand is modelled** for three deep-dive sectors: Nyamirambo (Kigali), Muhoza (Musanze) and Nasho (Kirehe).
-  It is *potential* demand if every building were grid-connected.
-- **A grid-connection model** now exists (not yet applied to demand).
-- **A static dashboard bundle and design prototype**.
-
-Open decisions and data opportunities are in [`decisions.md`](decisions.md).
+- **Every unit of demand sits on a building, nationally.** A classical classifier gives every building use
+  probabilities. Census and registry counts are then placed on the most likely buildings, rarest first.
+  **3,488,223 buildings carry demand.**
+- **Demand is constrained to the aggregates we hold**:
+  - households: census counts per district, urban and rural;
+  - establishments: Establishment Census counts;
+  - schools: MINEDUC counts;
+  - wealth split: DHS 2025 per district;
+  - grid connection: EICV7 2024 shares per district;
+  - household consumption: REG billing means.
+- **National totals:**
+  - **potential demand 543 GWh/yr** (every building connected);
+  - **expected demand 440 GWh/yr** (2024 connection);
+  - **back-cast to 2016 (327 GWh expected) and projected to 2030 (542 GWh).**
+- Uncertainty bands per sector and a spacing-cap sensitivity are reported (section 4).
+- A static dashboard bundle and a design prototype exist.
 
 **How to read the numbers.** Most of our "ground truth" is aggregated: district census counts, survey clusters,
 national averages. Building-level values are a *plausible allocation* that reproduces those totals. They are not
-observations. Each step says which totals it matches and how we check it.
+observations. Each step says which totals it matches and how we check it. Gold labels are an uncertain reference
+(the imagery shows little beyond vegetation and roof shape), so agreement with them is consistency, not accuracy.
 
 ## 2. The pipeline, step by step
 
-| # | Step and goal | Input (raw data) | Output | Workflow, assumptions and decisions | Figures | Evaluation / extension |
-|---|---|---|---|---|---|---|
-| 1 | **Footprints.** One clean, de-duplicated footprint layer for the country. | VIDA combined Open Buildings (Google V3 + Microsoft + OSM, Source Cooperative, ODbL), 6,434,264 polygons | `buildings_base`: **6,434,247 buildings**. **Google 5,814,224 (90.4%)**, **Microsoft 491,967 (7.6%)**, **OSM 128,056 (2.0%)**. Each has area, perimeter, compactness, orientation, H3 r9 cell and a stable id | VIDA already merges the three sources (no cross-source overlaps remain: 0 pairs). We drop only 17 exact duplicates. We flag but don't drop: low detector confidence below 0.70 (808,772; 12.6%); tiny below 6 m² (34,070; 0.5%); same-source footprint more than half inside another (2,186). 87.2% carry no flag. Metrics are computed in UTM 35S | `eda01_area_by_source.png`, `eda01_google_confidence.png`, `eda01_density_h3r7.png` | **Evaluation:** QA (schema, geometry validity, duplicates). Not yet checked against 2022 census households per district. **Extension:** a completeness model (buildings vs households); Microsoft omits structures under ~15 m² |
-| 2 | **Height, floors, age.** Floors and floor area for loads that scale with size; a first-seen year for growth. | Google Open Buildings 2.5D Temporal (heights 2023, yearly presence 2016–2023); OSM `building:levels` (12,088 tagged polygons) | `building_height`: height for **71.6%** of buildings (median 3.3 m, p90 5.1 m), estimated floors, floor area, first-seen year, presence 2016–2023 | **Rule-based floors:** 1 floor below 6.0 m, 2 floors below 8.5 m, then +1 per 3 m. Cut-points fitted on OSM-tagged buildings with even ids (n = 4,919) and **tested on odd ids (n = 4,927)**. Exact on the test set: 82.9% for 1-storey, 32.9% for 2, 9.7% for 3+ (78.1% overall). A single 3.4 m storey height does worse on 1-storey buildings (MAE 0.41 vs 0.20 floors). First-seen year is the first year presence stays ≥ 0.5: 33% of buildings get one | **`A1_height_by_district.png`** (new: heights per district), `A1_height_vs_osm.png`, `A1_growth.png` | **Evaluation:** held-out OSM levels (above). The heights are compressed: single storeys read ~4–5 m, so 3+ floors are unreliable. **Extension:** a regression or classification model (footprint size and shape, neighbours' heights, GHSL built height) in place of the cut-points; quantile output for floor uncertainty |
-| 3 | **Building context.** Everything around a building that hints at its use, wealth and grid access. | OSM (Geofabrik: roads, land use, tags, power lines); Overture places; healthsites.io; Gridfinder MV lines; geoBoundaries ADM1–5; GHSL BUILT-C 2018; WorldPop 2023; Meta RWI; Copernicus DEM; **ESA WorldCover 2021** (new) | `building_context`: admin names to village; OSM/Overture/facility tags; distance to major road, any road and MV line; places within 50/100/250 m; GHSL settlement class and non-residential share; population density; RWI; elevation. Separately, cropland share per H3 r8 cell (`cropland_h3r8`) | Spatial joins in DuckDB (point-in-polygon, then nearest within a radius); raster values sampled at the centroid. A tag counts as **usable** if it says something about use: a non-generic OSM `building=*`, amenity/shop, an OSM point inside the footprint, an Overture category or a facility record. **Only 37,132 buildings (0.6%) have one** (Overture 2,100, facilities 8,088, the rest OSM). Distance to grid uses Gridfinder (a prediction) because OSM maps only ~120 lines | `A2v_match_coverage.png`, `B4_grid_raw_features.png` (raw feature maps) | **Evaluation:** QA on coverage and ranges (RWI and density are present for >99.9%). **Extension:** official registries (MINEDUC schools, MoH facilities), Kigali zoning, REG network GIS in place of Gridfinder |
-| 4 | **Climate.** Cooling need and hourly and seasonal climate per area. | ERA5-Land hourly 2019–2025 from the Copernicus Climate Data Store (temperature, dewpoint, solar, precipitation, wind); Copernicus DEM; NASA POWER for checks | `climate_h3`: 4,034 H3 r7 cells with mean and 95th-percentile daily max temperature, cooling degree-days (18/22/24 °C), 24-hour typical day, monthly temperature and rainfall, humidity, solar (GHI), cooling class | Bilinear interpolation of the 0.1° grid plus a fitted lapse rate (−6.16 K/km, r² 0.94) to each cell's elevation; local time UTC+2; 2020–2025. Cooling class from tmax p95: low < 26 °C, medium 26–29, high ≥ 29. **Cells: 1,468 / 1,532 / 1,034; buildings: 2.27M / 3.16M / 1.01M.** ERA5-Land rainfall runs wet over mountains (indicative) | `A3_cooling_class.png`, `A3_cdd22_per_year.png`, `A3_t2m_mean_c.png`, `A3_cooling_check.png` | **Evaluation:** NASA POWER at 4 towns. Kigali agrees (bias −0.01 °C after the elevation shift). The eastern lowlands run warmer in ERA5-Land than POWER (provisional). **Extension:** the 1991–2020 baseline (8 of 60 requests in as of 2026-10-13; Copernicus is slow); station data; seasonal load profiles |
-| 5 | **Building use (LLM labelling).** A use class for buildings without a usable tag. | A text "context card" per building, built only from steps 1–4; 400 gold candidates with **173 human labels** | `labels`: **44,556 buildings** labelled with probabilities over 9 classes plus cited cues (all of Nyamirambo and Nasho, 8.7k of Muhoza, and the 400 gold candidates). Top-class mix: residential 69%, ancillary 28%, commercial 0.8%, institutional 0.7%, shop-house 0.6%, productive use 5 buildings | Stratified sample (deep dives + national; size tercile × tagged). 11 model/prompt configurations compared; **Claude Haiku 4.5, prompt v2** chosen as the cheapest within 0.03 macro-F1 of the best ($3.6 per 1,000 buildings). Batch API, every call cached. **The labeller sees tags for only 1.1% (Nyamirambo), 2.1% (Muhoza) and 0.01% (Nasho) of buildings**; everything else is the LLM's inference from shape, size and surroundings | **`A4_labels_by_district.png`** (new: tagged vs LLM-only by district, and class mix), `labels_confusion.png` | **Evaluation:** agreement with the human labels is 39% (macro-F1 0.19). **The gold labels are themselves uncertain:** the imagery showed little beyond vegetation and roof shape, so this measures consistency between two uncertain readers, not accuracy. Productive use is invisible to both. **Extension:** a classical classifier (gradient boosting on context features) trained on tags as silver labels, needed for national coverage, where the LLM would cost ~$23k; calibrating class shares to census establishment counts |
-| 6 | **Evidence base.** Cited numbers for appliance power, hours, ownership, tariffs and consumption. | 26 public reports (DHS, MTF, NISR, RURA, REG/QSEL, NREL, GIZ, Power Africa); restricted microdata: DHS 2025, World Bank MTF 2022, NISR EICV5 | `evidence` (3,076 extracted parameters, 81% with a quote verified verbatim on the page); 163 productive-use web parameters; 37 hand-curated values; `validation_anchors` and MTF/EICV5 aggregates (cells under 10 respondents suppressed) | LLM extraction with page and quote, verified in code; automated plausibility checks (units, ranges, cross-source agreement) **flag 17 of 1,077** RAMP-relevant values, which are excluded. The owner gave a blanket approval backed by those checks (not row by row). Microdata never leaves `data/restricted/`; only aggregates are published | – | **Evaluation:** quote verification, plausibility flags. **Extension:** health-post energy data; RAMP input sets from published studies |
-| 7 | **Appliance profiles (RAMP archetypes).** One load profile per building type. | Step 6 evidence and aggregates; recipes in `config/archetypes.yaml` | **17 archetypes**, signed off 2026-10-12: 4 households (rural/urban × lower/upper wealth half), shop, salon, bar/restaurant, guesthouse, school, health facility, office, church, store, grain mill, welding, tailoring, carpentry. `profile_library`: per-unit hourly curves, daily kWh spread and coincident peak (RAMP 0.5.2, 200 units × 28 days) | Households: ownership and hours from MTF 2022 grid households by setting and Ubudehe group. **One calibration:** lighting on-time scaled to MTF spending, converted with the RURA tariff (factors 0.52–1.09). Establishments: MTF enterprise, school and health surveys plus the evidence table; bars, guesthouses, offices, churches and stores rest on written assumptions. We fixed a RAMP seeding bug: runs are now reproducible and peaks fall in the evening | `B1_profiles.png`, `B1_household_check.png` | **Evaluation** (`reports/demand/profile_checks.md`): urban 24.4 kWh/month vs REG Kigali 24.8 and EICV5 23.1 (ok); rural 9.96 vs QSEL 8.1 (ok) and REG outside Kigali 5.9 (1.7×, check); school, mill and carpentry ok; **health fails** (built from health centres, not posts). All four household archetypes are MTF Tier 2. **Extension:** seasonal variants (monthly climate is ready), off-grid/solar variants, a health-post source |
-| 8 | **Building → profile mapping.** How many units of which profile each building holds. | `labels`, `building_context`, rules in `config/profile_mapping.yaml`, tagged trades and services (steps 9–10) | `building_profiles`: **45,534 buildings → 56,746 weights** (44,062 labelled + tagged trade/service buildings elsewhere) | Class probabilities **under 0.10 are ignored and the rest renormalised** (owner, 2026-10-12): this keeps real commercial and institutional signal without adding phantom shops. Productive use is never taken from the labeller. Urban if density ≥ 2,500/km² or a GHSL urban class; upper wealth half if RWI is above its setting's median. A shop-house is 1 household + 1 shop. **Tagged trade and service buildings replace their class weights with their tag's profile** | – | **Evaluation:** QA reconciles profile ids across recipes, mapping, weights, library and dashboard. A "top class only" alternative is exported for comparison (about 10% less energy in each sector). **Extension:** calibrate the labeller's probabilities on gold and census counts |
-| 9 | **Productive use.** Mills and workshops are what the challenge asks about, but they can't be seen in open data. | NISR Establishment Census 2023 tables (`data/restricted/reg/`); trade tags (OSM, Overture); steps 1–3; ESA WorldCover | `pu_located` (**57 buildings**), `pu_unlocated_areas` (per H3 cell, sector, district), `pu_candidates` (**17,103 buildings**) | **Reported:** manufacturing is 6.6% of urban and 7.0% of rural establishments, giving **~17,750 nationally** (district enterprises × setting share; there is no district × activity table). **Located:** buildings with a trade tag get that trade's profile. **Unlocated:** the rest is spread over eligible buildings (≥ 30 m², not ancillary/religious/institutional or a facility) by a candidate score, then summed per area and never put on a building. **Owner's rule:** mills only in rural roadside places (≤ 100 m from a road); tailors, welders and carpenters in towns (equal shares, an assumption). **Candidates:** the top scorers per cell are flagged for field checks, with no demand assigned | dashboard *Productive use* page | **Evaluation:** QA checks the census amount is conserved across cell, sector and district. All rural manufacturing counted as mills gives ~86 GWh/yr nationally, an upper bound. **Extension:** a mill share for rural manufacturing; trade shares from the census microdata or the RDB register; field checks of candidates as labels |
-| 10 | **Services (new, 2026-10-13).** Bars/restaurants, guesthouses and salons, which almost vanished from the labels after the 0.10 rule. | Establishment Census 2023 sections I (accommodation and food, 61,923) and S (other services, 22,949); OSM/Overture bar, restaurant, hotel and salon tags; WorldPop density | `svc_located` (**1,500 buildings**: 768 bars/restaurants, 679 hotels/guesthouses, 53 salons), `svc_unlocated_areas` | Same pattern as productive use. **Assumed splits:** section I is 97% bars/restaurants and 3% accommodation; section S is 60% hairdressing and beauty. That gives ~60,200 bars/restaurants, 1,860 guesthouses and 12,800 salons nationally, of which 73,500 are unlocated. Within a district and setting, unlocated establishments are **allocated by population density** (they follow customers) | dashboard *Sector* and overview pages | **Evaluation:** QA conservation check, as in step 9. The implied rates (~1 bar or eatery per 100–150 residents in rural Nasho) look plausible for small cabarets, but the bar/restaurant profile (2.1 kWh/day, with a fridge) is an upper bound for them. **Extension:** a rural cabaret profile; RDB accommodation register; checking the overlap with labelled shops (`decisions.md`) |
-| 11 | **Grid connection (new, 2026-10-12).** Who is likely connected, to move from potential to expected demand. | DHS 2025 households (`hv206` "has electricity") and displaced cluster GPS (restricted); 13 open neighbourhood features from steps 1–3 | `grid_connection`: P(connected) for **all 6,434,247 buildings**; model, scores and figures in `data/processed/grid_model/` and `reports/demand/grid_model.md` | DHS shifts cluster locations by up to 2 km (urban) or 5 km (rural), so features are building-weighted means over H3 rings of that size. The model learns a **neighbourhood rate**, and neighbouring buildings share a value. Two rows per cluster (connected, not) weighted by household weights. Logistic regression chosen over gradient boosting on held-out log loss. No DHS variable is an input; cluster locations never leave `data/restricted/` | `B4_grid_raw_features.png`, `B4_grid_label.png`, `B4_grid_model.png`, `B4_grid_predictions.png` | **Evaluation:** 5-fold CV grouped by district: **AUC 0.75**, cluster R² 0.45 (urban/rural rate alone 0.68; a perfect neighbourhood model 0.89). Independent check: district predictions vs EICV7 2024 grid lighting, **r = 0.93**. Population density dominates. **Extension:** apply it (expected demand = potential × P); add night lights; REG customer counts per village would allow a much sharper model |
-| 12 | **Aggregation and dashboard bundle.** The five challenge metrics per building and per area, in a form a browser can read. | Steps 1–11 | Static JSON/GeoJSON bundle (`pixi run dashboard-data`; full 189 MB in `data/dashboard/v1`, committed sample 16 MB); contract `dashboard/DATA_CONTRACT.md`; design prototype (claude.ai canvas) | Building metrics = weights × profile curves; area peaks are coincident (the peak of the summed curve). Area figures come in **three kinds, each with its own colour**: *reported* for the area (census), *sum over buildings*, *unlocated* (area only). Unlocated productive use and services are reported next to building totals, never added into them silently | the dashboard prototype | **Evaluation:** a test recomputes every sample building from the published formulas. **Extension:** national roll-out (needs step 5 at national scale), PMTiles, PostGIS release |
-| 13 | **Quality gates.** Nothing moves on without passing. | all tables | `reports/qa/*.md` (9 reports, all PASS); 107 tests | `pixi run qa` checks schemas (pandera), coverage, ranges and duplicates, plus a demand check (one id set across the demand files; census conservation; one probability per building; archetype status vs approvals). `pixi run demand` runs steps 6–13 in order | – | Restricted-data rule: microdata, cluster GPS and the census workbook are never committed or published |
+| # | Step and goal | Input (raw data) | Output | Workflow, assumptions and decisions | Evaluation / extension |
+|---|---|---|---|---|---|
+| 1 | **Footprints.** One clean, de-duplicated layer | VIDA combined Open Buildings (Google V3 + Microsoft + OSM, ODbL), 6,434,264 polygons | `buildings_base`: **6,434,247 buildings** (Google 90.4%, Microsoft 7.6%, OSM 2.0%) | 17 exact duplicates dropped. Flagged, not dropped: low confidence < 0.70 (12.6%), tiny < 6 m² (0.5%), nested same-source (2,186) | QA (schema, validity, duplicates). Microsoft omits structures < ~15 m² |
+| 2 | **Height, floors, presence by year** | Google Open Buildings 2.5D Temporal (height 2023, presence 2016–2023); OSM `building:levels` | `building_height`: height for 71.6% (median 3.3 m); floors; presence 2016–2023 | Floors by cut-points (1 below 6.0 m, 2 below 8.5 m, +1 per 3 m), fitted on even ids, **78.1% exact on odd ids**. Floors cap households per building | Heights are compressed (single storeys read 4–5 m). Floor regression: opportunity O4 |
+| 3 | **Building context** | OSM, Overture, healthsites.io, Gridfinder, geoBoundaries, GHSL, WorldPop, Meta RWI, Copernicus DEM, ESA WorldCover; **new: VIIRS Black Marble night lights 2016–2024** | `building_context` (admin to village, tags, distances, density, RWI, elevation); `cropland_h3r8`; **`ntl_h3r8`** (radiance per H3 r8 cell and year) | Spatial joins in DuckDB. Only 37,132 buildings (0.6%) carry a usable tag | QA coverage. Night lights are downloaded; using them as a feature is O6 |
+| 4 | **Climate** | ERA5-Land hourly 2019–2025 (Copernicus CDS); DEM; NASA POWER checks | `climate_h3`: 4,034 H3 r7 cells; cooling class | Lapse-rate corrected (−6.16 K/km). Cooling is marginal in most of Rwanda | 1991–2020 baseline: 8 of 60 requests in. Seasonal shape: O1 |
+| 5 | **LLM labels (deep dives)** | Context cards from steps 1–4; 173 human gold labels | `labels`: 44,556 buildings (Nyamirambo, Nasho, part of Muhoza) | Claude Haiku 4.5, prompt v2, batch + cache | 39% agreement with uncertain gold. Used as training labels and class rates, not as truth |
+| 6 | **Use classifier** | Steps 1–3 features (27); tag labels (A) and tag + LLM labels (B) | `use_probs`: 8 class probabilities for every building | HistGradientBoosting; gold labels never trained on | Held-out AUC: tags by district 0.78, LLM by sector 0.76, ancillary 0.82 (model B) |
+| 7 | **Evidence and aggregates** | 26 public reports; restricted DHS 2025, MTF 2022, EICV5 | `evidence` (3,076), validation anchors, MTF/EICV5/DHS aggregates (cells < 10 suppressed) | Quotes verified on the page; plausibility flags exclude 17 of 1,077 | Restricted microdata never leaves `data/restricted/` |
+| 8 | **Appliance profiles (RAMP)** | Step 7; `config/archetypes.yaml` | **19 profiles**: 17 built archetypes (signed off 2026-10-12) + **health centre and hospital (derived, draft)** | Households from MTF grid households by setting × Ubudehe half, lighting calibrated to MTF spending. **Health split (A10):** the appliance-built profile (366 kWh/month) is the health post; a health centre is scaled to MTF centres' median (2,734 kWh/month); a hospital is 10 health centres (assumption) | `reports/demand/profile_checks.md`: health centre ok by construction; school, mill, carpentry ok |
+| 9 | **Census and registry targets** | Establishment Census 2023 tables; 2022 census households (urban/rural); **MINEDUC school counts 2020/21**; **worship count (news reports of RGB figures)**; **DHS 2025 wealth** | `pu_census_districts`, `svc_census_districts`, `registries/schools_by_district_2021.csv`, `dhs_wealth_district.csv` | Manufacturing, services and retail per district × setting. **5,904 schools** (primary 3,691, secondary 1,869, TVET 344). **7,000 places of worship** (range 6,000–9,000), spread by households | Section-level census only: trade and service splits stay assumptions (P1–P3) |
+| 10 | **Allocation** (`config/allocation.yaml`, signed off 2026-10-15) | Steps 6 and 9; tags; facility points | `building_use` (one use per building, establishment, its share, households, wealth, setting), `building_profiles` (units) | Order: (0) tags; (0b) **facility compounds**: tagged school and health buildings, plus institution-like buildings within 150 m (schools) or 100 m (health), share one facility (weight 1/n); pharmacies are shops. (1) productive use; (2) services; (3) retail; (4a) **schools to the MINEDUC count**; (4b) **worship to the national count**; (4c) offices and stores at LLM rates; (5) households, **urban and rural separately**, up to one per floor; **upper/lower wealth per district × setting from DHS**; (6) the rest is ancillary. Spacing caps per H3 cell | QA: every target met, no shortfall; urban share per district = census (Kirehe 0.068 vs 0.07); upper share 0.359 rural / 0.547 urban = MTF |
+| 11 | **Grid connection** | DHS 2025 households + displaced cluster GPS (restricted) | `grid_connection`: P(connected) for all buildings | Logistic regression on neighbourhood features | AUC 0.75; district r = 0.93 vs EICV7 |
+| 12 | **Calibration (new)** | Steps 10–11; EICV7 2024 district grid shares; REG means via QSEL 2024 | `building_profiles` gains `p_grid`, `scale`, energy `weight`; `calibration.csv`; `building_demand_preview` (potential and expected kWh) | **A9:** P(connected) shifted per district on the logit scale (−1.15 to +0.58) so households match EICV7. **REG:** household energy scaled per region so a connected household uses REG's mean: Kigali ×1.01 (24.75 kWh/month), elsewhere **×0.42** (5.92) | QA: every district within 0.005 of EICV7. QSEL rural check: 4.4 vs 8.1 kWh/month (P4) |
+| 13 | **Demand by year (new)** | Step 12; presence 2016–2023; censuses 2012/2022; EICV5 2017 | `demand_by_year.csv` (district × year), `building_demand_by_year.parquet` (expected kWh per building, 2016–2023) | Presence shows *where* and *in which order* buildings appeared; the census rate (3.1%/yr) sets *how much* (raw presence implies 7.5%/yr). Connection rolls back to EICV5 (urban 0.755, rural 0.152). Projection: district growth (2.3–4.6%/yr), connection held at 2024 | Seasonal and weekly shape: O1 |
+| 14 | **Uncertainty and sensitivity (new)** | Step 10 re-run | `uncertainty/sector_bands.csv`, `uncertainty/building_agreement.parquet`, `reports/demand/cap_sensitivity.csv` | 10 allocations with class probabilities × exp(0.5·N(0,1)); profile p10/p90; caps ×0.5 / ×1 / ×2 / ×4 / none | Section 4 |
+| 15 | **Dashboard bundle and QA** | All steps | Static JSON bundle; `reports/qa/*.md` | `pixi run demand` runs steps 6–15 in order and ends with QA | Every building in the sample recomputed from the published formulas in a test |
 
 ## 3. Per district
 
-From `pixi run status-figures` (`reports/status/district_table.md`). "Usable tag" is defined in step 3. LLM labels
-exist only where we labelled: the three deep dives plus the 400 gold candidates.
+Buildings, tags and labels: `reports/status/district_table.md` (`pixi run status-figures`). Demand by district:
 
-| District | Buildings | Google / Microsoft / OSM | With height | Median (p90) height | With usable tag | LLM-labelled |
-|---|---|---|---|---|---|---|
-| Gasabo | 415,079 | 94.3% / 4.1% / 1.6% | 78.4% | 3.8 m (5.6 m) | 1.6% | 12 |
-| Bugesera | 327,199 | 94.4% / 5.5% / 0.0% | 64.3% | 2.9 m (4.8 m) | 0.3% | 3 |
-| Nyagatare | 315,504 | 86.7% / 4.3% / 9.1% | 66.3% | 3.1 m (4.7 m) | 0.0% | 3 |
-| Gicumbi | 265,395 | 94.2% / 3.2% / 2.5% | 66.3% | 3.2 m (4.9 m) | 0.0% | 2 |
-| Kamonyi | 233,842 | 93.1% / 6.8% / 0.1% | 79.3% | 3.3 m (5.1 m) | 0.0% | 3 |
-| Kirehe | 232,044 | 93.3% / 6.6% / 0.1% | 79.4% | 3.4 m (4.9 m) | 0.0% | 15,979 |
-| Rwamagana | 231,602 | 94.0% / 6.0% / 0.0% | 76.7% | 3.3 m (5.0 m) | 0.2% | 1 |
-| Musanze | 231,142 | 86.9% / 10.7% / 2.4% | 73.5% | 3.5 m (5.4 m) | 1.3% | 8,666 |
-| Rusizi | 229,783 | 82.3% / 11.9% / 5.8% | 53.9% | 3.0 m (5.0 m) | 0.5% | 2 |
-| Kicukiro | 225,351 | 94.7% / 3.0% / 2.3% | 79.6% | 3.8 m (5.8 m) | 3.4% | 7 |
-| Gatsibo | 223,049 | 89.4% / 10.3% / 0.3% | 74.7% | 3.1 m (4.6 m) | 0.1% | 5 |
-| Rubavu | 212,058 | 93.6% / 5.6% / 0.7% | 79.9% | 3.8 m (5.6 m) | 0.4% | 4 |
-| Rulindo | 211,985 | 95.5% / 4.4% / 0.1% | 77.6% | 3.4 m (5.1 m) | 0.1% | 4 |
-| Nyamasheke | 210,077 | 88.4% / 11.1% / 0.5% | 66.0% | 3.6 m (5.6 m) | 0.1% | 4 |
-| Nyanza | 209,942 | 92.0% / 7.9% / 0.1% | 75.9% | 3.1 m (4.7 m) | 0.1% | 2 |
-| Gakenke | 209,407 | 83.4% / 16.5% / 0.1% | 69.4% | 3.6 m (5.3 m) | 0.4% | 3 |
-| Kayonza | 203,391 | 93.7% / 6.2% / 0.1% | 74.4% | 3.1 m (4.7 m) | 1.4% | 4 |
-| Ngoma | 200,820 | 91.3% / 8.7% / 0.0% | 52.8% | 2.8 m (4.6 m) | 0.1% | 4 |
-| Huye | 199,208 | 92.4% / 5.0% / 2.7% | 80.4% | 3.4 m (5.0 m) | 1.0% | 5 |
-| Karongi | 194,746 | 87.9% / 11.3% / 0.8% | 59.0% | 3.3 m (5.3 m) | 0.2% | 2 |
-| Ruhango | 193,229 | 89.0% / 10.0% / 1.0% | 75.0% | 3.0 m (4.8 m) | 0.3% | 3 |
-| Muhanga | 191,769 | 84.7% / 13.1% / 2.2% | 63.8% | 3.1 m (5.0 m) | 0.3% | 3 |
-| Burera | 181,985 | 91.6% / 6.3% / 2.1% | 80.1% | 3.7 m (5.2 m) | 0.1% | 2 |
-| Nyamagabe | 172,375 | 90.7% / 6.2% / 3.2% | 76.1% | 3.3 m (5.0 m) | 0.3% | 3 |
-| Ngororero | 167,685 | 77.2% / 18.6% / 4.2% | 52.7% | 3.0 m (4.9 m) | 0.4% | 1 |
-| Gisagara | 165,555 | 94.9% / 3.5% / 1.7% | 83.1% | 3.3 m (4.8 m) | 0.5% | 3 |
-| Rutsiro | 163,091 | 83.5% / 12.2% / 4.4% | 63.9% | 3.5 m (5.4 m) | 0.2% | 0 |
-| Nyarugenge | 142,873 | 93.9% / 5.3% / 0.8% | 86.5% | 3.7 m (5.4 m) | 2.6% | 19,825 |
-| Nyaruguru | 137,532 | 86.1% / 5.5% / 8.4% | 70.6% | 3.3 m (5.0 m) | 1.1% | 1 |
-| Nyabihu | 135,696 | 87.5% / 8.7% / 3.8% | 67.1% | 3.2 m (5.1 m) | 0.2% | 0 |
-| **Rwanda** | **6,433,414** | 90.4% / 7.6% / 2.0% | 71.6% | 3.3 m (5.1 m) | 0.6% | 44,556 |
+| District | Households (urban share) | Upper-wealth share | Productive use | Schools | EICV7 grid share | Potential GWh/yr | Expected GWh/yr | Growth %/yr | Expected 2030 |
+|---|---|---|---|---|---|---|---|---|---|
+| Gasabo | 249,420 (0.83) | 0.59 | 1,628 | 242 | 0.87 | 85.1 | 78.4 | 3.2 | 97.9 |
+| Kicukiro | 135,463 (0.99) | 0.58 | 1,097 | 157 | 0.94 | 52.3 | 50.1 | 3.3 | 62.9 |
+| Nyarugenge | 103,985 (0.88) | 0.69 | 1,465 | 103 | 0.94 | 40.2 | 38.9 | 2.8 | 47.3 |
+| Nyagatare | 160,435 (0.25) | 0.37 | 635 | 330 | 0.38 | 19.2 | 12.8 | 2.7 | 15.2 |
+| Bugesera | 137,777 (0.40) | 0.45 | 741 | 230 | 0.59 | 18.8 | 14.8 | 3.9 | 19.2 |
+| Rubavu | 124,080 (0.56) | 0.49 | 846 | 185 | 0.68 | 18.4 | 15.4 | 4.0 | 20.1 |
+| Musanze | 119,387 (0.49) | 0.32 | 868 | 192 | 0.64 | 17.3 | 14.2 | 4.2 | 18.9 |
+| Rwamagana | 121,051 (0.35) | 0.48 | 639 | 189 | 0.57 | 16.4 | 13.0 | 2.9 | 15.7 |
+| Kamonyi | 116,378 (0.31) | 0.48 | 602 | 210 | 0.29 | 15.9 | 10.3 | 3.8 | 13.2 |
+| Gatsibo | 136,208 (0.11) | 0.41 | 504 | 253 | 0.31 | 15.3 | 10.2 | 2.5 | 11.8 |
+| Kayonza | 114,186 (0.15) | 0.46 | 557 | 171 | 0.40 | 15.2 | 11.3 | 2.8 | 13.5 |
+| Rusizi | 104,937 (0.33) | 0.37 | 580 | 239 | 0.65 | 15.2 | 12.9 | 4.6 | 17.6 |
+| Gicumbi | 109,373 (0.06) | 0.48 | 587 | 229 | 0.40 | 14.7 | 11.2 | 2.9 | 13.5 |
+| Kirehe | 113,886 (0.07) | 0.25 | 515 | 188 | 0.54 | 13.9 | 11.1 | 3.1 | 13.5 |
+| Gakenke | 93,609 (0.04) | 0.44 | 423 | 203 | 0.28 | 13.1 | 9.6 | 3.0 | 11.6 |
+| Muhanga | 93,241 (0.23) | 0.46 | 546 | 217 | 0.38 | 12.9 | 9.7 | 2.7 | 11.6 |
+| Rulindo | 91,909 (0.11) | 0.53 | 404 | 192 | 0.31 | 12.7 | 9.2 | 3.1 | 11.2 |
+| Ngoma | 102,589 (0.09) | 0.31 | 479 | 175 | 0.38 | 12.7 | 9.3 | 2.3 | 10.7 |
+| Karongi | 91,444 (0.10) | 0.21 | 405 | 252 | 0.31 | 12.5 | 9.2 | 2.6 | 10.9 |
+| Huye | 96,037 (0.18) | 0.38 | 415 | 166 | 0.47 | 12.3 | 9.5 | 2.4 | 11.1 |
+| Rutsiro | 86,802 (0.06) | 0.28 | 438 | 183 | 0.41 | 12.2 | 9.6 | 3.2 | 11.7 |
+| Nyamasheke | 95,229 (0.08) | 0.46 | 417 | 241 | 0.47 | 12.2 | 9.5 | 3.4 | 11.8 |
+| Nyamagabe | 92,052 (0.10) | 0.25 | 452 | 202 | 0.21 | 11.9 | 8.0 | 2.6 | 9.4 |
+| Ngororero | 92,623 (0.05) | 0.26 | 426 | 176 | 0.34 | 11.3 | 8.2 | 2.5 | 9.6 |
+| Ruhango | 94,508 (0.11) | 0.37 | 382 | 165 | 0.40 | 11.1 | 8.1 | 2.6 | 9.5 |
+| Burera | 91,786 (0.10) | 0.28 | 421 | 183 | 0.52 | 11.1 | 8.7 | 3.2 | 10.7 |
+| Nyanza | 93,007 (0.10) | 0.40 | 351 | 170 | 0.35 | 10.5 | 7.3 | 3.4 | 9.0 |
+| Gisagara | 101,145 (0.03) | 0.29 | 298 | 154 | 0.37 | 10.0 | 6.8 | 3.0 | 8.1 |
+| Nyabihu | 76,391 (0.24) | 0.38 | 329 | 150 | 0.40 | 9.5 | 6.6 | 3.0 | 8.0 |
+| Nyaruguru | 73,805 (0.03) | 0.24 | 296 | 157 | 0.28 | 8.9 | 6.3 | 2.8 | 7.5 |
+| **Rwanda** | **3,312,743** | | **17,746** | **5,904** | | **543** | **440** | | **542** |
 
-## 4. Deep-dive results (potential demand if grid-connected; draft)
+## 4. Results
+
+### Deep dives
 
 | | Nyamirambo (Kigali) | Muhoza (Musanze) | Nasho (Kirehe) |
 |---|---|---|---|
-| Buildings / modelled | 21,126 / 19,460 | 32,538 / 8,620 (labelled part) | 17,374 / 15,876 |
-| **Buildings' annual energy** (sum over buildings) | 5.45 GWh (top class only 4.92) | 2.35 GWh (2.14) | 1.88 GWh (1.68) |
-| Area peak (coincident) | 1,917 kW at 20:00 | 831 kW at 20:00 | 855 kW at 20:00 |
-| Productive use: census, district (reported) | 1,465 (Nyarugenge) | 868 (Musanze) | 516 (Kirehe) |
-| Productive use: unlocated (area only) | 241 establishments, 0.21 GWh | 164, 0.19 GWh | 62 mills, 0.59 GWh |
-| Services: tagged buildings (sum over buildings) | 6 | 69 | 0 |
-| Services: unlocated (area only) | 562 establishments, 0.35 GWh | 526, 0.33 GWh | 251, 0.18 GWh |
-| Mean P(grid connection), model | 0.98 | 0.87 | 0.40 |
+| Buildings / carrying demand | 21,126 / 14,516 | 32,538 / 16,232 | 17,374 / 9,262 |
+| Census households placed (urban share) | 14,213 (0.98) | 15,549 (0.89) | 9,051 (0.00) |
+| Productive use (of which mills) | 214 (2) | 274 (18) | 49 (49) |
+| Services / shops | 500 / 1,521 | 459 / 650 | 183 / 174 |
+| Schools / health facilities (whole facilities) | 15.2 / 7.2 | 17.1 / 9.4 | 9 / 2 |
+| **Potential / expected energy** | **6.39 / 6.32 GWh** | **3.52 / 3.19 GWh** | **1.13 / 0.91 GWh** |
+| Uncertainty, combined p10–p90 (potential) | 6.31–6.45 GWh (−1.3% / +1.0%) | 3.46–3.56 GWh (−1.6% / +1.4%) | 1.11–1.15 GWh (−2.1% / +1.5%) |
 
-The unlocated rows are *not* included in the buildings' totals: add them to get the area's potential demand
-(Nasho: 1.88 + 0.59 + 0.18 = 2.65 GWh/yr).
+### National energy by profile (GWh/yr, potential / expected)
 
-## 5. Human gates
+Households: urban upper 135 / 121, rural lower 73 / 27, urban lower 65 / 48, rural upper 47 / 21. Grain mills
+86, bars/restaurants 46, **hospitals 42 (127 facilities, assumption P5)**, shops 16, health centres 12, welding 6,
+schools 4, salons 3, offices 2.5, guesthouses 2.4, health posts 1.8, tailoring 1.2, carpentry 0.5, churches 0.5,
+stores 0.3. Establishments count as connected.
+
+### Spacing-cap sensitivity (A6)
+
+`reports/demand/cap_sensitivity.csv` (caps on every establishment kind ×0.5, ×1, ×2, ×4, none). Without caps the
+best-scoring buildings cluster; with them, placements spread to more cells at little cost in fit:
+
+| Caps | Mills: H3 r8 cells used | Most mills in one block (r9) | Nasho mills (MWh/yr) | Bars: most in one block | Shops: most in one block | Above base cap (all placed) |
+|---|---|---|---|---|---|---|
+| ×0.5 | 9,075 | 1 | 49 (465) | 14 | 54 | as base for kinds capped at 1 |
+| **base** | **9,075** | **1** | **49 (465)** | **16** | **54** | **6.2%** (QA limit 10%) |
+| ×2 | 4,927 | 2 | 64 (607) | 17 | 54 | 26–46% by kind |
+| ×4 | 3,052 | 4 | 90 (854) | 23 | 64 | 45–70% by kind |
+| none | 1,419 | 66 | 165 (1,566) | 208 | 500 | 60–89% by kind |
+
+Productive-use energy in Nasho ranges from 465 MWh/yr (base) to 1,566 (no caps); in Nyamirambo 153–297 and in
+Muhoza 389–578. District totals never change (they are census counts); the caps move energy *within* districts.
+
+### Uncertainty (B6)
+
+Ten allocations with every class probability multiplied by exp(0.5·N(0,1)) per building, plus each profile's
+RAMP p10/p90 day (`data/processed/uncertainty/`, figure `C8_uncertainty.png`):
+- **National potential:** allocation p10–p90 540–546 GWh/yr, profile p10–p90 530–552, base 543.
+- **Sectors:** the combined band is ±5% wide at the median sector (p90 7.5%). District constraints hold the totals,
+  so the allocation band is narrower than the profile band. Perturbed runs place slightly more demand in
+  Nyamirambo (+0.5 to +0.9%) and less in Nasho (−1.9 to −0.5%) than the base.
+- **Buildings:** 90% keep their base use in a single perturbed run, and 65% in all ten. Mean agreement by use:
+  homes 0.92, productive use 0.93, ancillary 0.90, institutions 0.81, stores 0.71, shops 0.60, shop-houses and
+  churches 0.36. Totals are robust; *which* building holds a shop or church is not.
+
+## 5. Decisions made (dated log)
+
+| Date | Decision | By | Where |
+|---|---|---|---|
+| 2026-10-11 | Evidence review: blanket approval backed by automated checks | owner | approvals.yaml `evidence_review` |
+| 2026-10-11 | Building → profile mapping (household ids renamed 2026-10-12) | owner | `profile_mapping` |
+| 2026-10-12 | Archetype assumptions signed off (17 profiles) | owner | `archetypes` |
+| 2026-10-12 | Class probabilities < 0.10 ignored (now superseded by the allocation) | owner | `class_probabilities` |
+| 2026-10-12 | Mills only rural and roadside; tailors, welders and carpenters in towns | owner | `productive_use_method` |
+| 2026-10-12 | Gold labels are an uncertain reference, never trained on | owner | `gold_labels` |
+| 2026-10-15 | All demand on buildings; classical classifier (A tags, B tags + LLM); census counts on best candidates, rarest first | owner | `building_level_allocation` |
+| 2026-10-15 | Households per building: census households, up to one per floor (A1); shops placed to census retail (A3); national coverage by classifier (was A9); area-level "unlocated" amounts removed | owner | `building_level_allocation` |
+| 2026-10-15 | **Allocation rules signed off as defaults (A6)**, cap sensitivity reported | owner | `allocation_rules` |
+| 2026-10-15 | **A7:** schools from MINEDUC counts; buildings near a school facility take the school profile (compound shares 1/n); worship from a national count spread by population | owner | `constraints_and_registries` |
+| 2026-10-15 | **A8:** census urban/rural household shares imposed per district | owner | same |
+| 2026-10-15 | **A9:** both: expected = potential × P(connected), with P raked to EICV7 2024 per district | owner | same |
+| 2026-10-15 | **A10:** health facilities split by type (post / centre / hospital; pharmacies as shops) | owner | same |
+| 2026-10-15 | **Constraints:** census urban/rural households, EICV7 grid shares, REG consumption by region; DHS wealth by district (was B7) | owner | same |
+| 2026-10-15 | **Years:** back-cast by year from building presence; project with district growth (was B3) | owner | same |
+| 2026-10-15 | **B6** uncertainty bands added; **B5** (targeted relabelling) dropped; floor cut-points kept (regression is O4); seasonal and weekly shape left as O1 | owner | same |
+| 2026-10-15 | Validation is lower priority than using every aggregate as a constraint (A11 on hold) | owner | this file |
+
+## 6. Pending considerations
+
+| # | Item | What we do now | Why it matters | Options | Recommendation |
+|---|---|---|---|---|---|
+| P1 | **Services splits and rural bars** (was A2) | Section I = 97% bars/restaurants, 3% accommodation; S = 60% salons; one bar profile (with a fridge) everywhere | 60,204 bars at 2.1 kWh/day = 46 GWh/yr. Public census microdata has **ISIC section only**, so it can't split I55/I56; the RDB register isn't public (~170 graded hotels in 2021) | (a) keep; (b) ask NISR for the restricted ISIC4 file; (c) a lighter rural cabaret profile | (c) now, (b) by request |
+| P2 | **Rural manufacturing = mills** (was A4) | All 9,079 rural manufacturing establishments are 10 kW mills | 86 GWh/yr; Nasho gets 49 mills. Public microdata can't split manufacturing (section C only) | (a) keep; (b) a 20–30% mill share, the rest a light workshop; (c) ISIC4 from NISR | (b) with a range |
+| P3 | **Town trade shares** (was A5) | Tailoring 34%, welding 33%, carpentry 33% | Welding dominates the energy; no source | keep with a range; ISIC4 from NISR | keep, show the range |
+| P4 | **REG vs QSEL for rural households** | REG's outside-Kigali mean (5.92 kWh/month) is the constraint | It scales rural households to 4.4 kWh/month, below QSEL's rural survey mean (8.1). The two can't both hold: REG's "outside Kigali" includes towns | REG (billing, all customers) or QSEL (survey, rural) | REG, as now; QSEL shown as a check |
+| P5 | **Hospital profile** | 10 × a health centre (899 kWh/day), applied to 127 healthsites "hospitals" | 42 GWh/yr, 8% of potential; some tagged hospitals may be clinics | a metered or audited source; a smaller factor; MoH hospital list | sign off or replace; check the 127 against MoH |
+| P6 | **Worship count** | 7,000 national (6,000–9,000), spread by households | Weak evidence (news reports); 0.5 GWh/yr, so low stakes | keep, or an RGB list if obtainable | keep |
+| P7 | **Validation after constraining** (was A11) | Constrained aggregates can't validate | What's left: LLM labels in the deep dives, QSEL check, cap sensitivity, bands | hold out 5 districts once | after the finals' core work |
+| P8 | **Use-model choices** | `config/use_model.yaml` (features, class weights) | They rank buildings for every placement | sign off as defaults | sign off |
+| P9 | **Derived health profiles** | health centre and hospital are draft | They enter national totals | sign off | sign off with P5 |
+
+## 7. Future opportunities
+
+| # | Opportunity | Data we have | Approach | Effort |
+|---|---|---|---|---|
+| O1 | **Seasonal and weekly shape** (was B2) | monthly ERA5-Land climate, school calendar, harvest seasons | seasonal RAMP variants: fans by cooling class, mills busy after harvests, schools closed in holidays | medium |
+| O2 | **REG data** (customers and kWh by village, feeder loads; see 8.1) | none yet | village-level constraints on connection and consumption; observed hourly shapes for validation | small once obtained |
+| O3 | **ISIC4 establishment counts** | public microdata is section-only | resolves P1–P3: mills vs other manufacturing, bars vs lodging, salons | request to NISR |
+| O4 | **Floors by regression** (was B4) | 9,846 OSM-levelled buildings | regression in place of the cut-points (kept for now) | small |
+| O5 | **Wealth beyond DHS** | Meta RWI, DHS clusters | done at district × setting; a within-district RWI calibration could follow | small |
+| O6 | **Night lights as a feature** | Black Marble 2016–2024 per H3 r8 (downloaded) | add to the use classifier and grid model; activity check on the back-cast | small |
+| O7 | **Establishment size** | EC2023 microdata `size2`, `Total_workers` (when downloadable) | scale establishment energy by size class | small |
+| O8 | **Off-grid and solar profiles** | MTF solar tiers | expected demand for unconnected households | medium |
+
+## 8. Bookkeeping
+
+### 8.1 Data to acquire
+
+| Priority | What | Why | How |
+|---|---|---|---|
+| 1 | **REG data**: (a) billing aggregates: number of customers by tariff category and kWh sold per month, per village or cell; (b) **feeder loads**: hourly or 15-min MW per MV feeder (15/30 kV) from substation SCADA; (c) MV/LV network GIS (lines, transformers) | (a) village-level connection and consumption constraints, the sharpest check on step 12; (b) real load shapes and seasonality to validate the RAMP curves and cooling; (c) better grid distance than Gridfinder | request via the organisers / REG |
+| 1 | **NISR Establishment Census ISIC4 counts** (restricted file or a custom table: district × urban/rural × 4-digit activity) | resolves P1–P3 | request to NISR via the organisers |
+| 2 | EC2023 public microdata (catalog 112) | district × setting × section counts, size, market-place location | not downloadable for us on 2026-10-15; the 2020 report (section level) is held instead |
+| 2 | MoH facility list with type and beds | P5 (hospitals vs clinics) | MoH / organisers |
+| 2 | Health-post and hospital energy (MoH, WHO/SEforALL Powering Healthcare, metered sites) | P5, P9 | public reports |
+| 2 | EnAccess MicroPowerManager anonymised meter data | real mini-grid load curves for validation | organisers |
+| 3 | Kigali Master Plan zoning GIS; NISR sector-level 2022 households; EICV7 microdata | sharper Kigali labels; sector-level checks | City of Kigali; NISR |
+
+Received: MTF 2022 microdata (2026-10-11), productive-use reports (37 curated values), MINEDUC yearbook 2020/21,
+NASA Earthdata token (Black Marble downloaded 2026-10-15), NISR Establishment Census 2020 report.
+
+### 8.2 Human gates
 
 | Gate | Status |
 |---|---|
 | Codebook (9 use classes) | approved |
-| Gold labels (173 of 400) | done; an uncertain reference (owner's note, 2026-10-12) |
+| Gold labels (173 of 400) | done; an uncertain reference |
 | Evidence review | approved 2026-10-11 (blanket, backed by automated checks) |
-| Building → profile mapping | approved 2026-10-11; household ids renamed 2026-10-12 |
-| Archetype assumptions | **signed off 2026-10-12** |
-| Class-probability rule (0.10) and the productive-use method | **approved 2026-10-12** |
-| Productive-use trade shares, eligibility and candidate weights | pending (`decisions.md`) |
-| Services section splits (97/3, 60%) | pending (`decisions.md`) |
-| Applying the grid model to demand | pending |
-| Licence review before publishing | pending |
+| Archetype assumptions (17) | signed off 2026-10-12 |
+| Allocation rules | **signed off 2026-10-15** |
+| Registries, constraints, years, bands | **requested by the owner 2026-10-15** |
+| Derived health profiles; worship count; REG over QSEL | pending (P4–P6, P9) |
+| Trade shares, service splits, mill share | pending (P1–P3) |
+| Use-model choices | pending (P8) |
+| Licence review before publishing (ODbL share-alike, Meta RWI non-commercial) | pending |
 
-## 6. Mid-point readiness (Oct 15–16)
-Ready. Every step above runs from one command per step, passes QA and is documented: the
-[datasheet](docs/datasheet.md), [data sources](docs/data_sources.md), [AI use](docs/ai_use.md) and the
-[data contract](dashboard/DATA_CONTRACT.md). API spend is ~$157 of the $170 cap; all responses are cached, so
-re-runs cost nothing. The open items for the finals are in [`decisions.md`](decisions.md).
+### 8.3 Housekeeping
 
-## 7. Data still to acquire
-The API credit has expired, so new documents are read and curated directly in the coding session (with a quote
-and page for every value, and human review), not through the Claude API.
+| Item | Status |
+|---|---|
+| 1991–2020 climate baseline | 8 of 60 Copernicus requests done; fallback: compute from the hourly product |
+| Evidence rows added after the blanket approval (11 Power Africa values) | covered by automated checks only |
+| Low-confidence Google footprints (12.6%) | eligible like any other; consider down-weighting in the allocation scores |
+| Two tags on one building | the building's own facility/worship/store tag wins; the establishment is placed by the census step |
+| API spend | ~$157 of the $170 cap; responses cached, so re-runs cost nothing. New documents are curated in the coding session |
+| Earthdata token | in `.env` as `EARTHDATA_TOKEN` (expires after 60 days; LAADS archive URLs need a browser login, so downloads use Earthdata Cloud) |
 
-| Priority | What | Why | How |
-|---|---|---|---|
-| 1 | ~~**World Bank MTF Rwanda microdata**~~ (received 2026-10-11) | appliance **usage hours** by tier: the biggest gap in the RAMP profiles (today mostly assumptions) | repo owner (registered; licensed download) |
-| 1 | **REG data**: customers and consumption by tariff category and village; hourly feeder/transformer loads (Kigali, Rusizi); MV/LV network GIS | demand validation; cooling attribution; better grid distances than Gridfinder | request via the organisers / REG |
-| 1 | **Productive-use sources**: ~~NREL/USAID PUE in African Micro-Grids (2018)~~, ~~GIZ PV for Productive Use catalogue (2016)~~, ~~ESMAP Mini Grids (2022, text)~~, ~~Power Africa PUE 2020 Rwanda catalogue~~ (Internet Archive copy; 37 values curated with verified quotes); AMDA benchmarking, more Efficiency for Access briefs | rated power, hours and duty cycles for mills, welding, tailoring, refrigeration, pumping | in the coding session |
-| 1 | **Health-post energy use** (MoH / WHO / SEforALL Powering Healthcare; any metered posts) | the health profile is built from MTF health *centres* and is far above what a health post uses | public reports; ask the organisers |
-| 2 | **EICV5 questionnaire / value labels** (NISR microdata portal) | the CSV export has no labels for the durable-goods item codes, so appliance ownership in 2017 can't be read yet | repo owner (NISR portal documentation) |
-| 2 | **Published RAMP input sets** (RAMP repo examples; open-access RAMP studies in sub-Saharan Africa) | ready-made, peer-reviewed user-type parameters to compare with ours | public: fetched in the coding session |
-| 2 | **EnAccess MicroPowerManager** anonymised meter data | real mini-grid customer load curves for validation | ask the organisers (hackathon partner) |
-| 2 | **Official facility registries**: MINEDUC schools, MoH health facilities (with coordinates) | better institutional labels than OSM/healthsites | ask the organisers / ministries; Giga school map |
-| 3 | **Kigali Master Plan zoning GIS** | commercial/industrial zones improve Kigali building-use labels | City of Kigali / RLMUA geoportal |
-| 3 | **NISR**: sector-level 2022 census households; EICV7 microdata | sector-level completeness checks; energy-use detail | NISR (open tables; microdata needs registration) |
-| 3 | NASA Earthdata login (VIIRS Black Marble night lights) | optional check of electrification / activity | repo owner (free account) |
+### 8.4 Questions for the organisers
+- Can you help us obtain REG village-level billing aggregates and feeder loads (8.1), or NISR ISIC4 counts?
+- Is LLM-assisted labelling acceptable if disclosed and measured against human labels as above?
+- Any guidance on imagery? The pipeline uses only openly licensed vector data. Human gold labellers consulted
+  commercial imagery for interpretation only; nothing was traced from it.
 
-## 8. Questions for the organisers
-- Is there a preferred AOI, or validation data (metered consumption, MicroPowerManager exports) we could use?
-  Seasonal or hourly feeder loads for Kigali and the Rusizi valley would let us test whether hot-afternoon load is
-  really cooling.
-- Is LLM-assisted labelling acceptable if it's disclosed and measured against human labels as above?
-- Any guidance on imagery? Our pipeline deliberately uses only openly licensed vector data. Human gold labellers
-  consulted commercial imagery for interpretation only; nothing was traced from it.
+Documentation: [datasheet](docs/datasheet.md), [data sources](docs/data_sources.md), [AI use](docs/ai_use.md),
+[workstreams](docs/workstreams.md), [data contract](dashboard/DATA_CONTRACT.md).

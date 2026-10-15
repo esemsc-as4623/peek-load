@@ -54,8 +54,14 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
 - **Decided 2026-10-15:** all demand sits on buildings. A classical classifier (scikit-learn gradient boosting, written in
   the coding session, no API calls) is trained on tags (model A) and on tags plus the LLM labels (model B); census
   counts are then placed on buildings by explicit rules. The LLM labels are training data here, never ground truth.
+- **Decided 2026-10-15 (later):** the owner signed off the allocation rules and asked for registry counts (MINEDUC
+  schools, a national worship count), census urban/rural households, EICV7 grid shares, REG consumption and DHS wealth
+  as constraints, a health-facility split, a back-cast by year and uncertainty bands. The coding assistant found and
+  parsed the sources (school yearbook tables, NASA Black Marble files), wrote the code and reported where sources
+  conflict (REG vs QSEL); the owner chose which rules to apply. The worship count and the hospital factor are the
+  assistant's proposals from news reports and an assumption, flagged as pending sign-off. No API calls were made.
 - **Still to come:**
   - the productive-use trade shares, eligibility and candidate weights (`config/productive_use.yaml`);
-  - whether to apply the grid-connection model (a classical model written in the coding session) to demand;
+  - the derived health profiles, the worship count and the REG-over-QSEL choice (`status_report.md` section 6);
   - licence review before publishing;
   - the final submission text.

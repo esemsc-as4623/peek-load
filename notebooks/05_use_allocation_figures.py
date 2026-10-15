@@ -7,7 +7,9 @@
 # - `C3_allocation_maps.png`: every building's allocated use in a Nyamirambo and a Nasho sample box
 # - `C4_households_fit.png`: homes per district, one-per-residential-building vs the 2022 census
 # - `C5_allocation_sources.png`: where each building's use comes from (tag, census, model, remainder)
-# - `C6_national_demand.png`: potential annual demand per H3 r7 cell, now for every building
+# - `C6_national_demand.png`: potential and expected annual demand per H3 r7 cell, for every building
+# - `C7_demand_by_year.png`: national demand back-cast 2016-2023 and projected to 2030 (rtl.demand.years)
+# - `C8_uncertainty.png`: allocation and profile uncertainty bands for the three deep-dive sectors (B6)
 
 # %%
 import duckdb
@@ -155,7 +157,9 @@ plt.close(fig)
 src = con.sql(f"SELECT use, source, count(*) n FROM '{P}/building_use.parquet' GROUP BY ALL").df()
 pv = src.pivot_table(index="use", columns="source", values="n", fill_value=0).reindex(ORDER).fillna(0)
 srcs = [("tag", "tag on the building", "#2a78d6"), ("census", "census count, best candidate", "#eb6834"),
-        ("model", "classifier x LLM rate", "#1baf7a"), ("remainder", "left over (no load)", "#c9c8c3")]
+        ("registry", "registry count (schools, worship)", "#1baf7a"),
+        ("facility", "next to a school / health facility", "#eda100"),
+        ("model", "classifier x LLM rate", "#e87ba4"), ("remainder", "left over (no load)", "#c9c8c3")]
 fig, ax = plt.subplots(figsize=(12, 5.6))
 fig.subplots_adjust(left=0.2, bottom=0.28)
 left = np.zeros(len(pv))
@@ -170,30 +174,89 @@ ax.set_xlim(50, 2e7)
 ax.set_yticks(range(len(pv)), [NAME[c] for c in pv.index])
 ax.invert_yaxis()
 ax.set_xlabel("Buildings (log scale)")
-ax.legend(fontsize=9, ncol=4, loc="upper center", bbox_to_anchor=(0.45, -0.16))
+ax.legend(fontsize=9, ncol=3, loc="upper center", bbox_to_anchor=(0.45, -0.16))
 ax.set_title("6.43 million buildings, one use each, and where it comes from", loc="left")
-fig.text(0.0, 0.01, "Order: tags; productive use; services; shops; institutions, worship and stores; households; "
-                 "the remainder is ancillary. Shop-houses are shops that also host a census household.", fontsize=8,
+fig.text(0.0, 0.01, "Order: tags and facility compounds; productive use; services; shops; schools and worship "
+                 "(registries); other institutions and stores; households; the remainder is ancillary. "
+                 "Shop-houses are shops that also host a census household.", fontsize=8,
          color=viz.INK_2)
 fig.savefig(FIG / "C5_allocation_sources.png")
 plt.close(fig)
 
-# %% C6: national potential demand per H3 r7 cell
+# %% C6: national potential and expected demand per H3 r7 cell
 lib = pd.read_parquet(P / "profile_library.parquet")[["profile_id", "daily_kwh_mean"]]
 con.register("lib", lib)
-v = con.sql(f"""SELECT u.h3_r7, sum(w.weight * l.daily_kwh_mean) * 365 / 1000 AS mwh
+v = con.sql(f"""SELECT u.h3_r7, sum(w.weight * l.daily_kwh_mean) * 365 / 1000 AS potential,
+                       sum(w.weight * w.p_grid * l.daily_kwh_mean) * 365 / 1000 AS expected
     FROM '{P}/building_profiles.parquet' w JOIN lib l USING (profile_id)
     JOIN '{P}/building_use.parquet' u USING (bldg_id) GROUP BY 1""").df()
-m = con.sql("SELECT h3_r7, mwh, h3_cell_to_boundary_wkt(h3_r7) AS w FROM v WHERE h3_r7 IS NOT NULL").df()
+m = con.sql("SELECT *, h3_cell_to_boundary_wkt(h3_r7) AS w FROM v WHERE h3_r7 IS NOT NULL").df()
 gdf = gpd.GeoDataFrame(m.drop(columns="w"), geometry=m.w.map(wkt.loads), crs="EPSG:4326")
-fig, ax = plt.subplots(figsize=(10, 7))
-gdf.plot(column="mwh", ax=ax, cmap=viz.SEQ_BLUE, norm=LogNorm(10, gdf.mwh.quantile(0.99)), linewidth=0, legend=True,
-         legend_kwds={"shrink": 0.7, "label": "MWh per year per cell (log scale)", "extend": "both"})
-ax.set_axis_off()
-ax.set_title(f"Potential demand if grid-connected: {gdf.mwh.sum() / 1000:,.0f} GWh/yr across all 6.4M buildings",
-             loc="left")
-viz.caption(fig, "Sum over buildings of allocated profiles x RAMP daily energy. Potential, not expected: the "
-                 "grid-connection model is not yet applied.")
+fig, axs = plt.subplots(1, 2, figsize=(16, 6.2))
+fig.subplots_adjust(left=0.01, right=0.86, top=0.88, bottom=0.06, wspace=0.02)
+norm = LogNorm(10, gdf.potential.quantile(0.99))  # one scale for both panels
+for ax, col, title in zip(axs, ("potential", "expected"), ("Potential: every building grid-connected",
+                                                           "Expected: x P(connected), raked to EICV7 2024"),
+                          strict=True):
+    gdf.plot(column=col, ax=ax, cmap=viz.SEQ_BLUE, norm=norm, linewidth=0)
+    ax.set_axis_off()
+    ax.set_title(f"{title}\n{gdf[col].sum() / 1000:,.0f} GWh/yr", loc="left", fontsize=12)
+sm = plt.cm.ScalarMappable(norm=norm, cmap=viz.SEQ_BLUE)
+fig.colorbar(sm, cax=fig.add_axes([0.88, 0.15, 0.015, 0.65]), extend="both",
+             label="MWh per year per H3 r7 cell (log scale)")
+viz.caption(fig, "Sum over buildings of allocated profiles x RAMP daily energy; household energy scaled to REG "
+                 "residential consumption by region (Kigali / elsewhere). Establishments count as connected.")
 fig.savefig(FIG / "C6_national_demand.png")
 plt.close(fig)
-print(f"national potential demand {gdf.mwh.sum() / 1000:,.0f} GWh/yr")
+print(f"national demand: potential {gdf.potential.sum() / 1000:,.0f}, expected {gdf.expected.sum() / 1000:,.0f} GWh/yr")
+
+# %% C7: demand by year, back-cast and projection
+y = pd.read_csv(P / "demand_by_year.csv").groupby(["year", "kind"], as_index=False)[
+    ["potential_gwh", "expected_gwh"]].sum().sort_values("year")
+fig, ax = plt.subplots(figsize=(11, 5.4))
+for col, colour, label in (("potential_gwh", "#2a78d6", "potential (all connected)"),
+                           ("expected_gwh", "#eb6834", "expected (connection by year)")):
+    past, fut = y[y.year <= 2023], y[y.year >= 2023]
+    ax.plot(past.year, past[col], color=colour, lw=2, marker="o", ms=8, mec=viz.SURFACE, mew=2, label=label)
+    ax.plot(fut.year, fut[col], color=colour, lw=2, ls="--")
+    ax.text(2030.2, fut[col].iloc[-1], f"{fut[col].iloc[-1]:,.0f}", va="center", fontsize=9, color=viz.INK)
+ax.set_ylim(0, y.potential_gwh.max() * 1.12)
+ax.axvline(2023, color=viz.INK_2, lw=0.8)
+ax.text(2023.15, y.potential_gwh.max() * 1.06, "base year 2023", fontsize=8, color=viz.INK_2)
+ax.set_xlim(2015.5, 2031)
+ax.set_xlabel("Year")
+ax.set_ylabel("GWh per year")
+ax.legend(fontsize=9, loc="upper left")
+ax.set_title("Building demand by year: back-cast from building presence, projected with district growth", loc="left")
+viz.caption(fig, "Solid: 2016-2023 from each building's detected presence, with district stock pinned to census "
+                 "household growth (3.1%/yr nationally); connection rolls back to EICV5 2017 shares. Dashed: 2023 "
+                 "demand grown at each district's rate, connection held at 2024.")
+fig.savefig(FIG / "C7_demand_by_year.png")
+plt.close(fig)
+
+# %% C8: uncertainty bands in the deep-dive sectors
+bands = pd.read_csv(P / "uncertainty" / "sector_bands.csv")
+bands = bands[[(r.sector, r.district) in DD.items() for r in bands.itertuples()]].set_index("sector").reindex(list(DD))
+fig, ax = plt.subplots(figsize=(11, 4.6))
+fig.subplots_adjust(left=0.2, bottom=0.3)
+for i, (_, r) in enumerate(bands.iterrows()):
+    for k, (lo, hi, colour, label) in enumerate((
+            ("alloc_p10_mwh", "alloc_p90_mwh", "#2a78d6", "allocation (10 runs, scores perturbed)"),
+            ("profile_p10_mwh", "profile_p90_mwh", "#eb6834", "profile (RAMP day-to-day p10-p90)"),
+            ("combined_p10_mwh", "combined_p90_mwh", "#1baf7a", "combined"))):
+        yy = i + (k - 1) * 0.24
+        ax.plot([100 * (r[lo] / r.base_mwh - 1), 100 * (r[hi] / r.base_mwh - 1)], [yy, yy], color=colour, lw=7,
+                solid_capstyle="round", label=label if i == 0 else None)
+    ax.plot(0, i, "o", color=viz.INK, ms=8, mec=viz.SURFACE, mew=2, label="base allocation" if i == 0 else None)
+    ax.text(5.6, i, f"{r.base_mwh / 1000:.2f} GWh/yr", va="center", fontsize=9, color=viz.INK)
+ax.axvline(0, color=viz.INK_2, lw=0.8)
+ax.set_yticks(range(len(bands)), [f"{s} ({DD[s]})" for s in bands.index])
+ax.invert_yaxis()
+ax.set_xlim(-6, 8)
+ax.set_xlabel("Difference from the base allocation's potential energy, %")
+ax.legend(fontsize=9, ncol=2, loc="upper center", bbox_to_anchor=(0.45, -0.22))
+ax.set_title("Sector totals are robust: district constraints keep the bands within a few percent", loc="left")
+viz.caption(fig, "Which building holds a use is far less certain than the total: see the per-building use agreement "
+                 "in data/processed/uncertainty/building_agreement.parquet.")
+fig.savefig(FIG / "C8_uncertainty.png")
+plt.close(fig)

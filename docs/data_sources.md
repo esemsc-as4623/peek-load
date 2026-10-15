@@ -17,12 +17,11 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `worldpop` | WorldPop Global2 R2025A constrained population count, 2023, 3 arc-second (~93 m) (Rwanda) | A2 | feature | open | CC-BY-4.0 | verified | 1 (10 MB) |
 | `meta_hrsl` | Meta High Resolution Settlement Layer / population density (Rwanda, HDX) | A2 | feature | open | CC-BY-4.0 | skipped | - |
 | `meta_rwi` | Meta Relative Wealth Index (Rwanda, Bing quadkey level 14, ~2.4 km, April 2021) | A2 | feature | open | CC-BY-NC-4.0 | verified | 1 (0 MB) |
-| `viirs_ntl` | VIIRS night-time lights (annual VNL v2 or Black Marble) | A2 | validation | login | to_verify | blocked | - |
 | `copernicus_dem` | Copernicus DEM GLO-30 Public (1 arcsec DSM, COG tiles, AWS open data) | A3 | feature | open | Copernicus DEM GLO-30 Public licence (free incl. commercial, attribution required) | verified | 6 (242 MB) |
 | `gridfinder` | Gridfinder predicted MV grid lines (Arderne et al. 2020), global grid.gpkg v1.1.1 | A2 | feature | open | CC-BY-4.0 | verified | 1 (725 MB) |
 | `health_facilities` | Health facilities (healthsites.io export on HDX, dataset rwanda-healthsites; derived from OSM) | A2 | weak_label | open | ODbL-1.0 | verified | 1 (1 MB) |
 | `era5_arco` | ERA5 hourly 2 m temperature via ARCO-ERA5 public Zarr (0.25 deg) | A3 | feature | open | to_verify | to_verify | - |
-| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | verified | 86 (335 MB) |
+| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | verified | 105 (343 MB) |
 | `nasa_power` | NASA POWER hourly T2M (MERRA-2, cross-check at 4 towns) + daily GHI ALLSKY_SFC_SW_DWN (CERES SYN1deg, 1 deg) | A3 | feature | open | NASA open data (no restrictions; acknowledgement of the NASA LaRC POWER Project requested) | verified | 11 (6 MB) |
 | `openmeteo` | ERA5-Land hourly 2 m temperature (0.1 deg) via Open-Meteo Historical Weather API (no downscaling) | A3 | feature | open | CC-BY-4.0 (Open-Meteo) + Copernicus C3S licence (ERA5-Land) | verified | 33 (88 MB) |
 | `census_2022` | Rwanda 5th Population and Housing Census 2022 (households by sector), NISR | A4 | validation | open | to_verify | to_verify | - |
@@ -34,6 +33,11 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `evidence_docs` | Evidence corpus of public reports (DHS, MTF, EICV7, RPHC5, REG/RURA, QSEL, Efficiency for Access) | A4 | evidence | open | per document (config/evidence_docs.yaml); several to_verify (human licence review) | verified | 24 (159 MB) |
 | `eicv5` | NISR EICV5 2016-17 cross-sectional household survey (household, durable goods, expenditure, poverty files) | A4 | validation | restricted | NISR terms of use | verified | 106 (707 MB) |
 | `nisr_establishment_census_2023` | NISR Establishment Census 2023, tables report (establishments by district x urban/rural and by ISIC section) | A4 | feature | restricted | NISR terms of use | verified | - |
+| `mineduc_yearbook_2021` | MINEDUC Education Statistical Yearbook 2020/21 (school census; schools per district, Annexes 3-5) | A4 | feature | open | Government of Rwanda publication (public) | verified | 1 (3 MB) |
+| `worship_counts_news` | Places of worship in Rwanda, RGB inspection figures as reported in the press (2018-2024) | A4 | feature | open | news reports (facts cited, not redistributed) | verified | - |
+| `nisr_ec2023_microdata` | NISR Establishment Census 2023, public-use microdata (269,194 establishments, 68 variables; ISIC section only) | A4 | feature | login | NISR terms of use | blocked | - |
+| `nisr_ec2020_report` | NISR Establishment Census 2020, final report (counts by ISIC section, 2014 / 2017 / 2020; section level only) | A4 | evidence | open | NISR terms of use | verified | - |
+| `viirs_black_marble` | NASA VIIRS Black Marble annual night lights VNP46A4 (Collection 2), tiles h20v09 + h21v09, 2016-2024 | A2 | feature | login | NASA open data (no restrictions; cite Roman et al. 2018) | verified | 18 (1,392 MB) |
 | `power_africa_reports` | Power Africa annual report 2023 and "Powering Potential in Sub-Saharan Africa" (context documents) | A4 | evidence | open | US government work, to_verify | verified | 2 (22 MB) |
 
 ## Evidence corpus (appliance profiles and validation anchors)
@@ -67,4 +71,4 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `giz_pv_productive_use_catalogue_2016` | Photovoltaics for Productive Use Applications: A catalogue of DC-appliances | GIZ | 2016 | verified |
 | `esmap_minigrids_half_billion_2022` | Mini Grids for Half a Billion People: Market Outlook and Handbook for Decision Makers | ESMAP / World Bank | 2022 | verified |
 
-Manifest: 389 files, 4.6 GB in total.
+Manifest: 427 files, 6.0 GB in total.

@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `climate_h3.parquet`
-- checked: 2026-10-15 11:54 UTC
+- checked: 2026-10-15 17:13 UTC
 - rows: 4,034
 - duplicate `h3_r7`: 0
 - schema: PASS (all rows)

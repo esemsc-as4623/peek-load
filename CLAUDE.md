@@ -2,7 +2,7 @@
 
 Rooftops → Load Curves turns open building footprints for Rwanda into a curated, provenance-tracked
 building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS26 hackathon).
-**Phase 1 (data) is done for the mid-point review; phase 2 is demand modelling with RAMP (see `docs/workstreams.md`).**
+**Phase 1 (data) is done; phase 2 (building-level demand with RAMP) runs nationally (see `docs/workstreams.md`).**
 
 ## Environment
 - `pixi install`, then `pixi run <task>` (tasks in `pyproject.toml`). Python 3.12, DuckDB + spatial + h3.
@@ -20,15 +20,21 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 - All demand sits on buildings (owner, 2026-10-15). `pixi run use-model` trains the classical use classifier
   (A: tags; B: tags + LLM labels) and writes probabilities for every building; `pixi run pu-demand` / `svc-demand`
   prepare Establishment Census targets and tagged buildings; `pixi run allocate` places census counts on buildings,
-  rarest first, with spacing caps (`config/allocation.yaml`), and writes `building_use` and `building_profiles`.
-  QA (`reports/qa/demand.md`) checks census targets, households, one use per building and the classifier's AUC.
+  rarest first, with spacing caps (`config/allocation.yaml`, signed off 2026-10-15), and writes `building_use` and
+  `building_profiles`. It also imposes MINEDUC school counts (`pixi run fetch-schools`), a national worship count,
+  census urban/rural households per district and the DHS wealth split (`pixi run dhs-wealth`); school and health
+  compounds share one facility (weights 1/n). After `profile-library` and `grid-model`, `pixi run calibrate` rakes
+  P(connected) to EICV7 2024 per district and scales household energy to REG means (expected vs potential demand);
+  `pixi run demand-years` back-casts 2016-2023 and projects to 2030; `pixi run demand-sensitivity` (~30 min) gives
+  the cap sensitivity and uncertainty bands. QA (`reports/qa/demand.md`) checks every target and calibration.
   `pixi run grid-model` trains the grid-connection model on DHS 2025 (restricted: cluster locations stay in
   `data/restricted/`). Figures: `pixi run use-figures`.
+- Decisions, pending items and opportunities live in `status_report.md` (one file; `decisions.md` is retired).
 - Gold labels are an uncertain reference (imagery shows little beyond vegetation and roof shape); don't treat
   agreement with them as accuracy.
 - Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
-  `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`) → `profile-library --buildings`
-  → `profile-checks` (`reports/demand/profile_checks.md`) → `dashboard-data` (`--sample` for the committed sample;
+  `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`; `derived` profiles are scaled copies)
+  → `profile-library` → `grid-model` → `calibrate` → `demand-years` → `profile-checks` (`reports/demand/profile_checks.md`) → `dashboard-data` (`--sample` for the committed sample;
   contract in `dashboard/DATA_CONTRACT.md`).
 - Archetype numbers must cite evidence ids or carry a `why`. An archetype is `draft` until
   `data/gold/approvals.yaml` records the owner's sign-off (signed off 2026-10-12); then the build marks it `human_reviewed`.
