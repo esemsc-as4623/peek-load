@@ -60,8 +60,12 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
   parsed the sources (school yearbook tables, NASA Black Marble files), wrote the code and reported where sources
   conflict (REG vs QSEL); the owner chose which rules to apply. The worship count and the hospital factor are the
   assistant's proposals from news reports and an assumption, flagged as pending sign-off. No API calls were made.
+- **Decided 2026-10-15 (evening):** the owner chose REG over QSEL, a lighter rural bar profile, a 25% rural mill
+  share and kept the other recommendations. The coding assistant parsed the newly supplied reports (NISR yearbook,
+  RURA, EICV thematic tables), found the SEforALL health-facility survey, wrote the benchmark comparison and proposed
+  the options for the open health-facility and business items; the owner decides them.
 - **Still to come:**
-  - the productive-use trade shares, eligibility and candidate weights (`config/productive_use.yaml`);
+  - eligibility and candidate weights (`config/productive_use.yaml`);
   - the derived health profiles, the worship count and the REG-over-QSEL choice (`status_report.md` section 6);
   - licence review before publishing;
   - the final submission text.

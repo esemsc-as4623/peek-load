@@ -26,6 +26,7 @@ and then nationally. Status notes: `reports/status/<id>.md`.
 | B3 | RAMP runner | `demand/runner.py` | `profile_library`, per-building preview (potential and expected kWh) | ✅ |
 | B4 | grid connection and calibration | `demand/{grid_connection,calibrate}.py` | P(connected) for every building, raked to EICV7 2024; household energy scaled to REG means | ✅ |
 | B5 | demand by year | `demand/years.py`, `config/years.yaml` | back-cast 2016-2023 per building; projection to 2030 per district | ✅ |
+| B4v | benchmarks | `ingest/energy_statistics.py`, `demand/benchmarks.py` | REG/RURA sales, customers per branch, MoH facility counts and EICV3–5 district grid shares; the model checked against them | ✅ |
 | B6 | uncertainty and sensitivity | `demand/sensitivity.py` | sector p10/p50/p90 bands, per-building use agreement, spacing-cap sensitivity | ✅ |
 | B7 | deliverable | `dashboard/`, `rtl/dashboard/export.py` | static bundle + prototype; final GeoParquet / PostGIS release | 🔄 |
 

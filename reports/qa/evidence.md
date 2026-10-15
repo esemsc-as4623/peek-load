@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `evidence.parquet`
-- checked: 2026-10-15 22:03 UTC
+- checked: 2026-10-15 23:32 UTC
 - rows: 3,076
 - duplicate `evidence_id`: 0
 - schema: PASS (all rows)

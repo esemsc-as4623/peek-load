@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `context_raster.parquet`
-- checked: 2026-10-15 22:03 UTC
+- checked: 2026-10-15 23:32 UTC
 - rows: 6,434,247
 - duplicate `bldg_id`: 0
 - schema: PASS (random sample of 200,000)

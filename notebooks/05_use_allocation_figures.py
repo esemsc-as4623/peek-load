@@ -10,6 +10,7 @@
 # - `C6_national_demand.png`: potential and expected annual demand per H3 r7 cell, for every building
 # - `C7_demand_by_year.png`: national demand back-cast 2016-2023 and projected to 2030 (rtl.demand.years)
 # - `C8_uncertainty.png`: allocation and profile uncertainty bands for the three deep-dive sectors (B6)
+# - `C9_benchmarks.png`: the model against REG sales (households by year; categories in 2023)
 
 # %%
 import duckdb
@@ -259,4 +260,39 @@ ax.set_title("Sector totals are robust: district constraints keep the bands with
 viz.caption(fig, "Which building holds a use is far less certain than the total: see the per-building use agreement "
                  "in data/processed/uncertainty/building_agreement.parquet.")
 fig.savefig(FIG / "C8_uncertainty.png")
+plt.close(fig)
+
+# %% C9: benchmarks against REG sales
+bm_sales = pd.read_csv(P / "validation_anchors" / "reg_sales_by_category.csv")
+reg_y = bm_sales[(bm_sales.period_type == "year")].pivot_table(index="period", columns="category", values="kwh") / 1e6
+yy = pd.read_csv(P / "demand_by_year.csv").groupby("year")[["expected_household_gwh"]].sum()
+bm = pd.read_csv(P / "benchmarks.csv").set_index("item")
+fig, axs = plt.subplots(1, 2, figsize=(15, 5.6), gridspec_kw={"width_ratios": [1.1, 1]})
+fig.subplots_adjust(wspace=0.35, bottom=0.2)
+ax = axs[0]
+ax.plot(yy.index, yy.expected_household_gwh, color="#2a78d6", lw=2, label="model: households' expected demand")
+ax.plot(reg_y.index.astype(int), reg_y["residential"], color="#eb6834", lw=2, marker="o", ms=8, mec=viz.SURFACE,
+        mew=2, label="REG: residential electricity sold")
+ax.set_ylim(0, max(yy.expected_household_gwh.max(), reg_y["residential"].max()) * 1.15)
+ax.set_xlim(2015.5, 2030.5)
+ax.set_ylabel("GWh per year")
+ax.set_title("Households: model vs REG residential sales", loc="left", fontsize=12)
+ax.legend(fontsize=9, loc="upper left")
+ax = axs[1]
+cats = [("Residential electricity, Q3 2023 - Q2 2024", "Residential"), ("Non-residential + small industry electricity",
+        "Non-residential\n+ small industry"), ("Hotels electricity", "Hotels"), ("Health facilities electricity",
+        "Health facilities")]
+x = np.arange(len(cats))
+ax.bar(x - 0.2, [bm.at[c, "official"] for c, _ in cats], 0.38, color="#eb6834", label="REG / RURA (2023)")
+ax.bar(x + 0.2, [bm.at[c, "model"] for c, _ in cats], 0.38, color="#2a78d6", label="model (expected)")
+for i, (c, _) in enumerate(cats):
+    ax.text(i + 0.2, bm.at[c, "model"] + 4, f"{bm.at[c, 'ratio']:.2f}x", ha="center", fontsize=9, color=viz.INK)
+ax.set_xticks(x, [lab for _, lab in cats], fontsize=9)
+ax.set_ylabel("GWh per year")
+ax.set_title("Electricity sold by customer category vs the model", loc="left", fontsize=12)
+ax.legend(fontsize=9, loc="upper right")
+viz.caption(fig, "REG sales: NISR Statistical Yearbook 2024 (Table 7.4) and RURA Q2 2024 (last four quarters). Labels "
+                 "give model / REG. Households match by construction in level (REG's mean per customer is the "
+                 "constraint); businesses are under-counted and the health-facility profiles run high.")
+fig.savefig(FIG / "C9_benchmarks.png")
 plt.close(fig)

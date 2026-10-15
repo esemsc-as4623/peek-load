@@ -27,6 +27,8 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 | `building_demand_by_year` | 3,488,223 | expected annual kWh per building for 2016-2023 (presence-based back-cast) |
 | `demand_by_year.csv` | 30 districts x 15 years | potential and expected GWh, back-cast 2016-2023 and projection 2024-2030, with each district's growth rate |
 | `uncertainty/` | per sector; per building | potential energy p10/p50/p90 across 10 perturbed allocations, profile p10/p90 and combined; each building's share of runs keeping its base use |
+| `benchmarks.csv` | ~20 rows | the model against REG/RURA electricity sold by category, REG customers per branch and MoH facility counts (`reports/demand/benchmarks.md`) |
+| `validation_anchors/reg_*`, `health_facilities_by_type`, `grid_lighting_by_district_history` | small tables | REG sales 2021–2023 and Q2 2023–Q2 2024, customers per branch 2017–2023, health facilities and beds 2017–2023, district grid lighting 2011/2014/2017 (EICV3–5) |
 | `calibration.csv` | 32 rows | the EICV7 logit shift per district and the REG scale per region |
 | `registries/schools_by_district_2021.csv`, `dhs_wealth_district.csv` | 30; 60 | MINEDUC schools per district; DHS 2025 upper-wealth share and target per district x setting (aggregates only) |
 | `ntl_h3r8` | 56,370 cells x 9 years | VIIRS Black Marble annual radiance and lit share per H3 r8 cell, 2016-2024 |
@@ -47,6 +49,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 - Climate: ERA5-Land hourly 2019–2025 from the Copernicus Climate Data Store (2m temperature, dewpoint, solar radiation, precipitation, wind; the table uses 2020–2025, with December 2019 as the UTC lead-in), plus NASA POWER for checks. A 1991–2020 daily baseline is still queued at CDS. The earlier Open-Meteo build (2019–2024) can be rebuilt with `--source openmeteo`.
 - Constraints and registries: 2022 census households by district and residence (RPHC5), NISR Establishment Census 2023 tables, MINEDUC Education Statistical Yearbook 2020/21 (schools per district), a national count of places of worship (news reports of RGB figures), DHS 2025 wealth quintiles, EICV7 2024 grid lighting, REG residential consumption (QSEL 2024), EICV5 2017 grid shares, RPHC4 2012 households.
 - Night lights: NASA VIIRS Black Marble VNP46A4 (Collection 2), 2016-2024, from Earthdata Cloud.
+- Benchmarks and the connection back-cast: NISR Statistical Yearbook 2024 (REG and R-HMIS tables), RURA Electricity Statistics Q2 2024, EICV3/4/5 Utilities and Amenities thematic reports, SEforALL *Powering Healthcare in Rwanda* (2023), Mugyenyi et al. (2025).
 - Every raw file is listed in `data/manifest.json` with its URL, sha256, size, licence and retrieval time.
 
 ## Preprocessing and labelling
@@ -81,9 +84,10 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 7. Rural manufacturing is all treated as electric mills (owner's rule), an upper bound; the allocation reproduces census and registry counts per district, but which building holds which use is a plausible placement, not an observation (see the per-building use agreement in `uncertainty/`).
 8. The grid-connection model predicts a neighbourhood rate (DHS clusters are displaced 2-5 km); neighbouring buildings share a value.
 9. LLM labels cover the three deep-dive sectors and a national sample; national use comes from the classifier and the allocation.
-10. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions. The health centre is scaled to MTF centres; the hospital (10 health centres) is an assumption and carries 8% of potential demand. Profiles assume a grid connection.
+10. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions. Health facilities total 55 GWh/yr against REG's 22.7 GWh: the health-centre profile (MTF spending) is far above SEforALL's measured 5–11 kWh/day, and the 127 tagged hospitals are twice MoH's 63 (pending decision P5). Profiles assume a grid connection.
 11. Household energy is scaled to REG's mean consumption by region; outside Kigali this gives 4.4 kWh/month for rural households, below QSEL's rural survey mean (8.1): the two sources disagree.
-12. The back-cast pins district totals to census household growth (3.1%/yr); presence detection alone implies 7.5%/yr. Projections scale existing buildings (new buildings can't be placed). Seasonal and weekly variation is not modelled.
+12. The back-cast pins district totals to census household growth (3.1%/yr); presence detection alone implies 7.5%/yr. Connection rolls back per district to EICV4/EICV5. Households' expected demand tracks REG residential sales in 2022–2023 but grows more slowly than REG since 2021. Projections scale existing buildings (new buildings can't be placed). Seasonal and weekly variation is not modelled.
+13. Businesses are under-counted: modelled establishments use about 30% of REG's non-residential and small-industry sales, and large hotels are missing (pending decision P10).
 
 ## Uses
 - **Intended:** electrification and mini-grid planning studies, demand modelling with RAMP, energy-access research, teaching.
