@@ -1,7 +1,7 @@
 # QA: demand
 **PASS**
 
-- checked: 2026-10-15 17:13 UTC
+- checked: 2026-10-15 22:03 UTC
 - archetypes: 19
 
 | id set | ids | missing vs archetype JSON | extra |

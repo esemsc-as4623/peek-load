@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `context_vector.parquet`
-- checked: 2026-10-15 17:13 UTC
+- checked: 2026-10-15 22:03 UTC
 - rows: 6,434,247
 - duplicate `bldg_id`: 0
 - schema: PASS (random sample of 200,000)
