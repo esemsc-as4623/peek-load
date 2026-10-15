@@ -20,8 +20,9 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 | `climate_h3` | 4,034 H3 r7 cells | mean temperature, 95th-percentile daily max, cooling degree-days (18/22/24 °C), cooling class, 24-hour typical day, monthly temperature and rainfall, mean relative humidity, annual rainfall, solar irradiance (2020–2025) |
 | `labels` | 48,556 | building-use labels: class, probabilities, confidence, a one-line justification, model and prompt version. Covers 44,156 deep-dive buildings plus the 5,878-building pilot sample, with several model and prompt configurations on the 400 gold buildings |
 | `gold_labels.csv` | 174 (growing to 400 + 50 repeats) | human building-use labels with confidence, note and an imagery flag. An uncertain reference, not ground truth: the imagery showed little beyond vegetation and roof shape |
-| `pu_located` / `pu_unlocated_areas` / `pu_candidates` | 57 / per area / 17,103 | productive use: buildings with a trade tag; census establishments not tied to a building, per H3 r7 cell, sector and district; top-scoring candidate buildings (no demand assigned) |
-| `svc_located` / `svc_unlocated_areas` | 1,500 / per area | services: buildings with a bar, restaurant, hotel or salon tag; Establishment Census sections I and S (assumed splits) not tied to a building, per H3 r7 cell, sector and district |
+| `use_probs` | 6,434,247 | use-class probabilities from the classical classifier (model B: tags + LLM labels) and the top class of models A and B; draft |
+| `building_use` | 6,433,414 | one allocated use per building, its establishment profile (trade, service, shop, school, …) and census households placed in it; census counts per district reproduced exactly; draft |
+| `pu_located` / `svc_located` | 57 / 1,500 | buildings with a productive-use trade tag / a bar, restaurant, hotel or salon tag |
 | `grid_connection` | 6,434,247 | predicted probability that the building's neighbourhood is grid-connected (logistic model on DHS 2025; draft) |
 | `evidence` | 3,076 | appliance and usage parameters from 18 reports, each with document, page, verbatim quote and a verification flag |
 | `evidence_productive_use` | 163 | productive-use appliance parameters from web research (summary statements; to verify at the named source) |
@@ -67,7 +68,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 4. Microsoft footprints omit structures under ~15 m², so small ancillary buildings are under-counted where Microsoft is the source.
 5. Cooling demand is marginal in most of the country, including Kigali. Sustained heat is in the eastern lowlands (12.9% of buildings in areas above 100 CDD22 a year; provisional, as NASA POWER shows less there) and the Rusizi/Bugarama valley (confirmed). The cooling class is a relative proxy.
 6. Human gold labels are themselves uncertain (imagery shows little beyond vegetation and roof shape), so label agreement is consistency, not accuracy.
-7. Unlocated productive use treats every rural manufacturing establishment as an electric mill: an upper bound.
+7. Rural manufacturing is all treated as electric mills (owner's rule), an upper bound; the allocation reproduces census counts per district, but which building holds which use is a plausible placement, not an observation.
 8. The grid-connection model predicts a neighbourhood rate (DHS clusters are displaced 2-5 km); neighbouring buildings share a value.
 9. Labels cover the three deep-dive sectors (Nyamirambo fully, Nasho fully, Muhoza partly) and a national sample, not the whole country.
 10. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions; the health

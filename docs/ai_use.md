@@ -51,6 +51,9 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
   `reports/review/archetype_assumptions.csv`), and the renaming of the four household profiles by wealth half.
 - **Decided 2026-10-12:** class probabilities under 0.10 are ignored; productive use comes from trade tags plus an
   unlocated census amount per area (the owner's rule: mills in rural roadside places, other trades in towns).
+- **Decided 2026-10-15:** all demand sits on buildings. A classical classifier (scikit-learn gradient boosting, written in
+  the coding session, no API calls) is trained on tags (model A) and on tags plus the LLM labels (model B); census
+  counts are then placed on buildings by explicit rules. The LLM labels are training data here, never ground truth.
 - **Still to come:**
   - the productive-use trade shares, eligibility and candidate weights (`config/productive_use.yaml`);
   - whether to apply the grid-connection model (a classical model written in the coding session) to demand;

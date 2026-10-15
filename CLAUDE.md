@@ -17,11 +17,13 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 
 ## Demand profiles (phase 2)
 - `pixi run demand` runs the whole chain below in order and ends with `qa` (the demand check is `reports/qa/demand.md`).
-- Per-building weights ignore class probabilities < 0.10; productive use is never taken from the labeller. It comes
-  from `pixi run pu-demand` (trade tags + NISR Establishment Census per area; needs `fetch-worldcover`), and the
-  unlocated part is an area amount, never a building's. `pixi run svc-demand` does the same for bars/restaurants,
-  guesthouses and salons (census sections I and S, allocated by population density). `pixi run grid-model` trains the grid-connection model on DHS
-  2025 (restricted: cluster locations stay in `data/restricted/`).
+- All demand sits on buildings (owner, 2026-10-15). `pixi run use-model` trains the classical use classifier
+  (A: tags; B: tags + LLM labels) and writes probabilities for every building; `pixi run pu-demand` / `svc-demand`
+  prepare Establishment Census targets and tagged buildings; `pixi run allocate` places census counts on buildings,
+  rarest first, with spacing caps (`config/allocation.yaml`), and writes `building_use` and `building_profiles`.
+  QA (`reports/qa/demand.md`) checks census targets, households, one use per building and the classifier's AUC.
+  `pixi run grid-model` trains the grid-connection model on DHS 2025 (restricted: cluster locations stay in
+  `data/restricted/`). Figures: `pixi run use-figures`.
 - Gold labels are an uncertain reference (imagery shows little beyond vegetation and roof shape); don't treat
   agreement with them as accuracy.
 - Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
