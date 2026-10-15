@@ -98,7 +98,8 @@ URL constant (`DATA_BASE = "./data/v1/"` or a CDN URL), and never hard-code the 
 | `elevation_m`, `t2m_mean_c`, `tmax_p95_c`, `cdd18_per_year`, `cdd22_per_year`, `cdd24_per_year`, `ghi_kwh_m2_day`, `rh_mean_pct`, `precip_mm_per_year`, `cooling_class` | climate (Copernicus ERA5-Land hourly 2020–2025: temperature, humidity, rainfall and solar radiation) |
 | `n_modelled`, `annual_mwh_modelled`, `modelled_share` | buildings carrying demand and their potential MWh/yr (every building in Rwanda since 2026-10-15; `modelled_share` ≈ 0.54 is the share that isn't ancillary) |
 | `pu_buildings`, `svc_buildings`, `households` | sums over buildings: productive-use buildings (tagged or census-placed), service buildings (bars/restaurants, guesthouses, salons), households |
-| `p_connected_mean` | mean predicted probability of a grid connection over buildings ≥ 20 m² (draft model, B4) |
+| `annual_mwh_expected` | expected MWh/yr: households x P(connected) raked to EICV7 2024 per district (`rtl.demand.calibrate`); establishments count as connected |
+| `p_connected_mean` | mean predicted probability of a grid connection over buildings ≥ 20 m² (raw model, before raking) |
 
 **Value kinds.** An area figure is either a *sum over buildings* (blue) or *reported* for the area by a source
 (purple: districts carry `pu_census_reported`, `svc_census_reported` and `households_census_reported`, the census
@@ -132,7 +133,9 @@ share of buildings in each cooling category). Both levels add the productive-use
 | `establishment` | establishment profile on the building (a trade, service, shop, school, …), else null |
 | `households` | census households placed in the building (0 if none) |
 | `use_source` | `tag` (from a tag), `census` (a census count placed here), `model` (classifier × LLM rate), `remainder` |
-| `p_connected` | predicted probability of a grid connection for the building's neighbourhood (draft) |
+| `p_connected` | predicted probability of a grid connection for the building's neighbourhood (raw model) |
+| `annual_kwh_expected` | expected kWh/yr: household rows x P(connected) raked to EICV7 2024; `annual_kwh` is the potential (all connected) |
+| `use_agreement` | share of 10 perturbed allocations giving the building its base use (B6); low = the placement is uncertain |
 | `height_m`, `est_floors`, `first_seen_year`, `source`, `area_m2` | building attributes (`first_seen_year` is experimental) |
 
 ### `deep_dives/<id>/weights.json`
@@ -264,8 +267,18 @@ puCategory(s)      = s < 33.3 ? "low" : s < 66.7 ? "medium" : "high"
 
 ## 9. Regenerating and checking
 ```
-pixi run profile-library --buildings     # after any archetype change
+pixi run profile-library && pixi run calibrate   # after any archetype change (calibrate writes the preview)
 pixi run dashboard-data --sample         # dashboard/sample_data/v1 (commit)
 pixi run dashboard-data                  # data/dashboard/v1 (publish)
 pixi run test                            # includes bundle formula and integrity tests
 ```
+
+## Added 2026-10-15
+- `national/demand_by_year.json`: `{note, rows: [{district, year, kind, potential_gwh, expected_gwh, growth_rate}]}`;
+  `kind` is `backcast` (2016-2022), `base` (2023) or `projection` (2024-2030).
+- Deep-dive `summary.json` `metrics`: `annual_mwh_expected`, and `uncertainty` (MWh/yr: `alloc_p10/p90`,
+  `profile_p10/p90`, `combined_p10/p90`, `base`) from `pixi run demand-sensitivity`.
+- Household energy in every weight is scaled to REG means by region (`building_profiles.scale`), so `annual_kwh` and
+  the hourly curves already include it.
+- Profiles `health_centre` and `hospital` are scaled copies of `health_post` (draft); their appliance lists are the
+  base profile's.

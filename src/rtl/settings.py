@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     gee_project: str | None = None
     hf_token: SecretStr | None = None
     zenodo_token: SecretStr | None = None
+    earthdata_token: SecretStr | None = None  # NASA Earthdata (Black Marble night lights)
 
 
 @lru_cache

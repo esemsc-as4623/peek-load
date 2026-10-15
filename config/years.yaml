@@ -1,0 +1,21 @@
+# Demand by year (`pixi run demand-years`, rtl.demand.years). Base year 2023: footprints, 2022 census households,
+# 2023 Establishment Census, EICV7 2024 grid shares.
+base_year: 2023
+backcast: [2016, 2023]      # the years with building presence (Open Buildings Temporal)
+project_to: 2030
+presence_threshold: 0.5     # a building is detected in a year when its presence is at least this
+
+# Presence alone overstates growth: detection improves with newer imagery (half of today's buildings are detected in
+# 2016, i.e. ~11% a year). It decides WHERE and in which order buildings appeared; the census decides HOW MUCH:
+# district growth rates are rescaled so the national rate equals household growth between the last two censuses.
+census_growth:
+  households_2012: 2424898   # RPHC4 2012, private households (NISR, Main Indicators Report, 2014)
+  households_2022: 3312743   # RPHC5 2022 (validation_anchors/households_by_district_2022.csv)
+
+# Grid connection rolls back from EICV7 2024 (district) to EICV5 2016/17 (by setting): a logit shift per setting,
+# linear in time, reaching EICV5's share in 2017. Projections hold connection at its 2024 level (the potential is
+# the universal-access case).
+grid_history:
+  year: 2017
+  share: {urban: 0.755, rural: 0.152}   # eicv5:RWA2017:kwh:grid_lighting_{urban,rural}
+  base_year: 2024

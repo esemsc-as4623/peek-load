@@ -72,6 +72,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/grpcio-1.82.1-py312h5612a4c_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/h3-4.5.0-hee9eb32_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/h3-py-4.5.0-py312h80505a6_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/h5py-3.16.0-nompi_py312hfaa9938_105.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.6.0-ha770c72_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/hdf4-4.2.15-h2a13503_7.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/hdf5-1.14.6-nompi_h19486de_110.conda
@@ -289,6 +290,8 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/blinker-1.9.0-pyhff2d567_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/branca-0.8.2-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/ca-certificates-2026.7.22-hbd8a1cb_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/cached-property-2.0.1-pyhcf101f3_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/cached_property-2.0.1-pyhcf101f3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cdsapi-0.7.7-pyh5ded981_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/certifi-2026.7.22-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cfgv-3.5.0-pyhd8ed1ab_0.conda
@@ -1509,6 +1512,24 @@ packages:
   run_exports: {}
   size: 392358
   timestamp: 1788809330769
+- conda: https://conda.anaconda.org/conda-forge/linux-64/h5py-3.16.0-nompi_py312hfaa9938_105.conda
+  sha256: e20f7a562f287ee8cf3ba7b9ada2d12a34fcd2b63dfe0bca2e31804257b0a6e2
+  md5: 981bb354a64fed703065106a233718e6
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - cached-property
+  - hdf5 >=1.14.6,<1.14.7.0a0
+  - libgcc >=15
+  - numpy >=1.25,<3
+  - python >=3.12,<3.13.0a0
+  - python_abi 3.12.* *_cp312
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/h5py?source=compressed-mapping
+  run_exports: {}
+  size: 1401207
+  timestamp: 1790854960331
 - conda: https://conda.anaconda.org/conda-forge/linux-64/harfbuzz-14.6.0-ha770c72_1.conda
   sha256: 91b07a1ea0d353ffb0b98fda1806e96ba47bdb89f823920169e97a3af2a30301
   md5: c4ba2eba9b3746ef646cb1f11e2eff33
@@ -5266,6 +5287,31 @@ packages:
   run_exports: {}
   size: 131780
   timestamp: 1784754889428
+- conda: https://conda.anaconda.org/conda-forge/noarch/cached-property-2.0.1-pyhcf101f3_0.conda
+  sha256: 39358005c3cc44d8315ed79789b18a960d69365be979970cc6bae8f7a6177703
+  md5: 70e764e549c6c25de5e429d6e4a28b39
+  depends:
+  - cached_property >=2.0.1,<2.0.2.0a0
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/cached-property?source=compressed-mapping
+  run_exports: {}
+  size: 3720
+  timestamp: 1787678456483
+- conda: https://conda.anaconda.org/conda-forge/noarch/cached_property-2.0.1-pyhcf101f3_0.conda
+  sha256: 4bd96dab5a434e4ee59fb6910cae704d4c5b453907d4886272a9943d37e42b6f
+  md5: 256d863ded0f79464391a075944d24a6
+  depends:
+  - python >=3.10
+  - python
+  license: BSD-3-Clause
+  license_family: BSD
+  purls:
+  - pkg:pypi/cached-property?source=compressed-mapping
+  run_exports: {}
+  size: 16597
+  timestamp: 1787678456483
 - conda: https://conda.anaconda.org/conda-forge/noarch/cdsapi-0.7.7-pyh5ded981_0.conda
   sha256: 97152fdb9df5fd9f662b4ebb14d31125fe89628685992fea2287a2993d6ba839
   md5: b96b036de9f4d72d0fd1e5bd46170e4f

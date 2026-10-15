@@ -34,7 +34,8 @@ HOURS = range(24)
 EVENING, DAYTIME, NIGHT = range(18, 23), range(8, 17), range(0, 5)
 FIGURES = ["B1_profiles.png", "B1_household_check.png", "A3_cooling_check.png", "A3_cooling_class.png",
            "A3_cdd22_per_year.png", "A3_t2m_mean_c.png", "labels_confusion.png", "A1_height_vs_osm.png",
-           "A1_growth.png", "eda01_density_h3r7.png"]
+           "A1_growth.png", "eda01_density_h3r7.png", "C6_national_demand.png", "C7_demand_by_year.png",
+           "C8_uncertainty.png"]
 
 
 # ------------------------------------------------------------------------------------------------ helpers
@@ -219,11 +220,20 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
     gc = con.sql(f"SELECT bldg_id, p_connected FROM '{PROCESSED_DIR}/grid_connection.parquet' WHERE bldg_id IN "
                  "(SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df().set_index("bldg_id")
     df["p_connected"] = gc.p_connected.reindex(df.index)
+    # expected demand (x P(connected) raked to EICV7; rtl.demand.calibrate) and use agreement across runs (B6)
+    pv = con.sql(f"SELECT bldg_id, expected_annual_kwh FROM '{PROCESSED_DIR}/building_demand_preview.parquet' "
+                 "WHERE bldg_id IN (SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df().set_index("bldg_id")
+    df["annual_kwh_expected"] = pv.expected_annual_kwh.reindex(df.index)
+    df.loc[df.modelled & df.annual_kwh_expected.isna(), "annual_kwh_expected"] = 0.0
+    ag = PROCESSED_DIR / "uncertainty" / "building_agreement.parquet"
+    df["use_agreement"] = (con.sql(f"SELECT bldg_id, use_agreement FROM '{ag}' WHERE bldg_id IN "
+                                   "(SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df()
+                           .set_index("bldg_id").use_agreement.reindex(df.index) if ag.exists() else np.nan)
 
     map_cols = ["label", "confidence", "modelled", "annual_kwh", "peak_w", "peak_hour", "annual_kwh_top",
                 "peak_w_top", "cooling_class", "pu_score", "pu_category", "use", "establishment", "households",
                 "use_source",
-                "p_connected",
+                "p_connected", "annual_kwh_expected", "use_agreement",
                 "height_m", "est_floors", "first_seen_year", "source", "area_m2"]
     props = []
     for b, r in df[map_cols].iterrows():
@@ -232,6 +242,7 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
         p["peak_hour"] = None if pd.isna(p["peak_hour"]) else int(p["peak_hour"])
         p["annual_kwh_top"], p["peak_w_top"] = rnd(p["annual_kwh_top"]), rnd(p["peak_w_top"])
         p["p_connected"] = rnd(p["p_connected"], 2)
+        p["annual_kwh_expected"], p["use_agreement"] = rnd(p["annual_kwh_expected"]), rnd(p["use_agreement"], 2)
         props.append(p)
     write_geojson(out / "deep_dives" / dd_id / "buildings.geojson", list(df.geom), props)
 
@@ -330,6 +341,8 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
         "services": establishment_summary(dd, lib, df, "svc"),
         "units_by_profile": units.round(1).to_dict(),
         "metrics": {"annual_mwh": rnd(mod.annual_kwh.sum() / 1000, 1),
+                    "annual_mwh_expected": rnd(mod.annual_kwh_expected.sum() / 1000, 1),
+                    "uncertainty": sector_band(dd),
                     "annual_mwh_p10": rnd(mod.annual_kwh_p10.sum() / 1000, 1),
                     "annual_mwh_p90": rnd(mod.annual_kwh_p90.sum() / 1000, 1),
                     "area_peak_kw": rnd(total[""].max() / 1000, 1), "area_peak_hour": int(total[""].argmax()),
@@ -348,10 +361,25 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
                       "weekday": [rnd(v / 1000, 2) for v in total["weekday_"]],
                       "weekend": [rnd(v / 1000, 2) for v in total["weekend_"]],
                       "by_group": {g: [rnd(v / 1000, 2) for v in arr] for g, arr in by_group.items()}},
-        "note": "Potential demand if every modelled building were grid-connected (draft profiles).",
+        "note": "annual_mwh is potential demand (every building connected); annual_mwh_expected multiplies households "
+                "by P(connected) raked to EICV7 2024. Household energy is scaled to REG means by region.",
     }
     write_json(out / "deep_dives" / dd_id / "summary.json", summary)
     return summary
+
+
+def sector_band(dd: dict) -> dict | None:
+    """The deep-dive sector's potential-energy band from rtl.demand.sensitivity (MWh/yr), if it has run."""
+    f = PROCESSED_DIR / "uncertainty" / "sector_bands.csv"
+    if not f.exists():
+        return None
+    b = pd.read_csv(f)
+    r = b[(b.sector == dd.get("sector")) & (b.district == dd.get("district"))]
+    if r.empty:
+        return None
+    r = r.iloc[0]
+    return {k: rnd(r[f"{k}_mwh"], 1) for k in ("alloc_p10", "alloc_p90", "profile_p10", "profile_p90",
+                                                "combined_p10", "combined_p90", "base")}
 
 
 # ------------------------------------------------------------------------------------------------ national/admin
@@ -387,10 +415,10 @@ def national(con, out, lib: pd.DataFrame) -> None:
     pua = pu_by_area(lib)
     daily = ", ".join(f"('{pid}', {v})" for pid, v in lib.daily_kwh_mean.items())
     con.sql(f"""CREATE OR REPLACE TEMP TABLE modelled AS
-        SELECT w.bldg_id, sum(w.weight * d.kwh) * 365 AS annual_kwh
+        SELECT w.bldg_id, sum(w.weight * d.kwh) * 365 AS annual_kwh, sum(w.weight * w.p_grid * d.kwh) * 365 AS exp_kwh
         FROM '{P}/building_profiles.parquet' w JOIN (VALUES {daily}) d(pid, kwh) ON d.pid = w.profile_id GROUP BY 1""")
     base = f"""SELECT x.bldg_id, x.h3_r7, x.adm2_name, x.adm3_name, b.area_m2, h.height_m, x.pop_density_per_km2,
-                      x.rwi, x.dist_powerline_m, x.ghsl_class, k.cooling_class, m.annual_kwh
+                      x.rwi, x.dist_powerline_m, x.ghsl_class, k.cooling_class, m.annual_kwh, m.exp_kwh
                FROM '{I}/building_context.parquet' x JOIN '{I}/buildings_base.parquet' b USING (bldg_id)
                LEFT JOIN '{I}/building_height.parquet' h USING (bldg_id)
                LEFT JOIN '{I}/climate_h3.parquet' k USING (h3_r7) LEFT JOIN modelled m USING (bldg_id)"""
@@ -398,6 +426,7 @@ def national(con, out, lib: pd.DataFrame) -> None:
               avg(pop_density_per_km2) AS pop_density_mean, avg(rwi) AS rwi_mean,
               median(dist_powerline_m) AS dist_powerline_m_median, mode(ghsl_class) AS ghsl_class_mode,
               count(annual_kwh) AS n_modelled, sum(annual_kwh) / 1000 AS annual_mwh_modelled,
+              sum(exp_kwh) / 1000 AS annual_mwh_expected,
               avg((cooling_class = 'low')::INT) AS share_low, avg((cooling_class = 'medium')::INT) AS share_medium,
               avg((cooling_class = 'high')::INT) AS share_high"""
     hexes = con.sql(f"""WITH a AS (SELECT h3_r7, mode(adm2_name) AS district, {aggs} FROM ({base}) GROUP BY 1)
@@ -407,7 +436,7 @@ def national(con, out, lib: pd.DataFrame) -> None:
     keep = ["h3_r7", "district", "n_buildings", "footprint_m2", "mean_height_m", "pop_density_mean", "rwi_mean",
             "dist_powerline_m_median", "ghsl_class_mode", "elevation_m", "t2m_mean_c", "tmax_p95_c", "cdd18_per_year",
             "cdd22_per_year", "cdd24_per_year", "ghi_kwh_m2_day", "rh_mean_pct", "precip_mm_per_year", "cooling_class",
-            "n_modelled", "annual_mwh_modelled"]
+            "n_modelled", "annual_mwh_modelled", "annual_mwh_expected"]
     hexes = hexes.merge(pua["h3_r7"], on="h3_r7", how="left")
     gc = PROCESSED_DIR / "grid_connection.parquet"
     if gc.exists():  # mean predicted P(grid connection) over buildings >= 20 m2 (rtl.demand.grid_connection)
@@ -422,6 +451,15 @@ def national(con, out, lib: pd.DataFrame) -> None:
         p["n_modelled"] = int(p["n_modelled"] or 0)
         p["modelled_share"] = rnd(p["n_modelled"] / p["n_buildings"], 3) if p["n_buildings"] else 0.0
     write_geojson(out / "national" / "h3_r7.geojson", list(hexes.geom), props)
+    years = PROCESSED_DIR / "demand_by_year.csv"
+    if years.exists():  # back-cast 2016-2023 and projection to 2030 per district (rtl.demand.years)
+        y = pd.read_csv(years)
+        write_json(out / "national" / "demand_by_year.json", {
+            "note": "GWh/yr per district. kind: backcast (building presence, census-scaled growth), base (2023), "
+                    "projection (district growth, connection held at 2024).",
+            "rows": [{k: (rnd(v, 3) if isinstance(v, float) else v) for k, v in r.items()}
+                     for r in y[["district", "year", "kind", "potential_gwh", "expected_gwh", "growth_rate"]]
+                     .to_dict("records")]})
     write_json(out / "national" / "climate_hourly.json",
                {r.h3_r7: [rnd(r[f"t2m_h{h:02d}_c"], 1) for h in HOURS] for _, r in hexes.iterrows()})
     if "t2m_m01_c" in hexes.columns:  # Copernicus build only
@@ -465,8 +503,12 @@ def profiles(out, cfg: dict, lib: pd.DataFrame) -> set[str]:
     src = pd.read_csv(PROCESSED_DIR / "archetypes" / "archetype_sources.csv").set_index("archetype_id")
     cited: set[str] = set()
     items = []
+    derived = load_yaml("archetypes.yaml").get("derived", {})
     for pid, meta in cfg["profiles"].items():
-        arch = Archetype.load(PROCESSED_DIR / "archetypes" / f"{pid}.json")
+        base_id = pid
+        while base_id in derived:  # a scaled copy: appliances of its base, energy and curve from the library
+            base_id = derived[base_id]["base"]
+        arch = Archetype.load(PROCESSED_DIR / "archetypes" / f"{base_id}.json")
         r = lib.loc[pid]
         apps = []
         for a in arch.appliances:
@@ -482,8 +524,12 @@ def profiles(out, cfg: dict, lib: pd.DataFrame) -> set[str]:
                          "ramp": {k: d[k]["value"] for k in ("func_cycle", "time_fraction_random_variability",
                                                              "random_var_w", "occasional_use", "wd_we_type")},
                          "provenance": {k: provenance(v) for k, v in fields.items()}})
-        items.append({"profile_id": pid, "name": meta["name"], "group": meta["group"], "status": arch.status,
-                      "description": arch.description, "population": arch.population, "year": arch.year,
+        is_derived = pid in derived
+        items.append({"profile_id": pid, "name": meta["name"], "group": meta["group"],
+                      "status": "draft" if is_derived else arch.status,
+                      "description": " ".join(derived[pid]["why"].split()) + f" Appliances shown are {base_id}'s; "
+                      "energy and curve are scaled." if is_derived else arch.description,
+                      "population": arch.population, "year": arch.year,
                       "daily_kwh": rnd(r.daily_kwh_mean, 5), "daily_kwh_p10": rnd(r.daily_kwh_p10, 5),
                       "daily_kwh_p90": rnd(r.daily_kwh_p90, 5), "annual_kwh": rnd(r.daily_kwh_mean * 365, 1),
                       "coincident_peak_w_p50": rnd(r.coincident_peak_w_p50), "coincident_peak_w_p90":
@@ -495,7 +541,7 @@ def profiles(out, cfg: dict, lib: pd.DataFrame) -> set[str]:
                       "characteristics": characteristics(curves(lib.loc[[pid]])[0],
                                                          curves(lib.loc[[pid]], "weekday_")[0],
                                                          curves(lib.loc[[pid]], "weekend_")[0]),
-                      "share_from_data": rnd(src.loc[pid, "share_from_data"], 2), "appliances": apps})
+                      "share_from_data": rnd(src.loc[base_id, "share_from_data"], 2), "appliances": apps})
     write_json(out / "profiles" / "profiles.json", {"profiles": items, "groups": cfg["profile_groups"],
                                                     "simulation": "RAMP 0.5.2 (rampdemand), 200 units x 28 days, "
                                                                   "per-unit means; seed fixed"})

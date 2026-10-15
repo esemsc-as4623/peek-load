@@ -6,7 +6,9 @@ Household archetypes are calibrated to MTF 2022 spending (one lighting factor ea
 shown as `calibration`, not as a check. Independent checks:
 - MTF energy tier of each archetype (config/plausibility.yaml `mtf_tiers`) vs the tier in its id;
 - QSEL measured consumption (REG meter data and 2023-24 surveys) and EICV5 2017 spending, by setting. The
-  mapping splits each setting 50/50 at the RWI median, so a setting's archetype mix is the mean of its two;
+  setting's archetype mix weights its lower / upper archetypes by the allocated upper share (DHS-based, from
+  building_use; 50/50 if the allocation hasn't run). These check the profiles before the REG scaling
+  (rtl.demand.calibrate), which then imposes REG's means;
 - establishments: MTF 2022 school and health-centre spending, NREL 2018 mill and workshop energy.
 Verdict: `ok` within 1.5x of a point anchor (or inside its p25-p75 range), `check` within 3x, `fail` beyond.
 """
@@ -28,6 +30,16 @@ DAYS_PER_MONTH = 30.4
 HOUSEHOLDS = {"rural": ["household_rural_lower", "household_rural_upper"],
               "urban": ["household_urban_lower", "household_urban_upper"]}
 HOUSEHOLD_IDS = {a for ids in HOUSEHOLDS.values() for a in ids}
+
+
+def upper_shares() -> dict[str, float]:
+    """Share of allocated households in the upper wealth group per setting (0.5 each before the allocation)."""
+    path = PROCESSED_DIR / "building_use.parquet"
+    if not path.exists():
+        return {"rural": 0.5, "urban": 0.5}
+    u = pd.read_parquet(path, columns=["setting", "households", "upper"])
+    u = u[u.households > 0]
+    return {s: float((g.households * g.upper).sum() / g.households.sum()) for s, g in u.groupby("setting")}
 
 
 def verdict(sim: float, value: float | None = None, low: float | None = None, high: float | None = None) -> str:
@@ -63,7 +75,8 @@ def household_rows(lib: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     def qsel(param: str, pop: str) -> pd.Series:
         return q[(q.parameter == param) & q.population.str.contains(pop, regex=False)].iloc[0]
 
-    mix = {s: float(np.mean([kwh[a] for a in ids])) for s, ids in HOUSEHOLDS.items()}
+    up = upper_shares()
+    mix = {s: float((1 - up[s]) * kwh[lo] + up[s] * kwh[hi]) for s, (lo, hi) in HOUSEHOLDS.items()}
     checks = []
     for setting, label, value, unit_div, src in [
         ("rural", "QSEL 2025: rural connected households, mean", qsel("monthly_kwh.mean", "rural connected"), 1,
@@ -87,8 +100,9 @@ def establishment_rows(lib: pd.DataFrame) -> pd.DataFrame:
     cur = pd.read_csv(PROCESSED_DIR / "evidence_curated.csv").set_index("parameter")
     rows = []
     for aid, kind, label in [("school", "school", "MTF 2022 grid schools, spending-derived p25-p75"),
-                             ("health_post", "health_facility",
-                              "MTF 2022 grid health CENTRES, spending-derived p25-p75")]:
+                             ("health_centre", "health_facility",
+                              "MTF 2022 grid health centres, spending-derived p25-p75 (scaled to the median by "
+                              "construction; the appliance-built profile is used for health posts)")]:
         lo, hi = (fac.loc[(kind, "kwh_month_from_spend", s), "value"] for s in ("p25", "p75"))
         sim = kwh[aid] * DAYS_PER_MONTH
         rows.append({"archetype": aid, "simulated": sim, "unit": "kWh/month", "anchor": label,
@@ -193,8 +207,9 @@ def main() -> None:
              "from daily energy only (Bhatia & Angelou 2015 thresholds in `config/plausibility.yaml`).", "",
              md_table(tiers), "",
              "## Households: independent anchors", "",
-             "The mapping splits each setting 50/50 at the RWI median, so a setting's archetype mix is the mean of "
-             "its two archetypes.", "",
+             "A setting's archetype mix weights lower and upper households by the allocated upper share "
+             f"(rural {upper_shares()['rural']:.2f}, urban {upper_shares()['urban']:.2f}; DHS 2025 by district). "
+             "These are the profiles before the REG scaling in `rtl.demand.calibrate`.", "",
              md_table(checks), "",
              "## Establishments", "",
              md_table(est), "",

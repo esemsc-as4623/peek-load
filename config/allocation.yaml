@@ -1,17 +1,23 @@
 # Census-constrained allocation of uses to buildings (`pixi run allocate`): every unit of demand sits on a building.
 # Owner's direction (2026-10-15): all demand at building level; place the rarest uses first, using the best
-# candidates, and label the others from what is left. Status: draft.
+# candidates, and label the others from what is left. Rules signed off by the owner on 2026-10-15
+# (data/gold/approvals.yaml); the registry, setting and wealth additions below follow the owner's requests that day.
 #
 # Order (each step only sees buildings not taken by an earlier one):
 #   0. tags are kept: a tagged school stays a school, a tagged bar a bar, a tagged house a house candidate
+#   0b. facility compounds: buildings tagged with a school / health facility, and institution-like buildings within
+#      `facilities.radius_m` of one, share that facility's profile (weight 1/n each, so a compound = one facility)
 #   1. productive use (census manufacturing per district x setting): best candidates by viability x not-ancillary
 #   2. services, rarest first (guesthouse, salon, bar/restaurant): best by P(commercial or shop-house) x density
 #   3. retail shops (census wholesale/retail per district): best by P(commercial or shop-house); a shop may share its
 #      building with a household (a shop-house)
-#   4. institutions, places of worship, stores/warehouses (no census count): the LLM's rate per setting in the deep
+#   4a. schools: the MINEDUC count per district minus the compounds found in 0b, on the most likely institutions
+#   4b. places of worship: the national count spread over districts in proportion to households (population)
+#   4. other institutions, stores/warehouses (no census count): the LLM's rate per setting in the deep
 #      dives x the district's urban / rural buildings (tags count towards it), the most likely buildings first. The
 #      classifier's own expected counts drift with geography (e.g. 5.8% institutional in Nyabihu), so it only ranks
-#   5. households (2022 census households per district): the most likely homes first, one household per floor at most
+#   5. households (2022 census households per district, urban and rural separately): the most likely homes first,
+#      one household per floor at most; the upper / lower wealth split follows DHS 2025 per district x setting
 #   6. everything left is ancillary (kitchens, latrines, stores, sheds): no load
 
 census:
@@ -31,9 +37,49 @@ eligibility:
 # sample) before probabilities are used as expected counts. Only rankings are used for census-constrained uses.
 calibrate_to: llm_deep_dive_mix
 
-uncensused:   # step 4: class -> profile (facility tags choose school / health facility)
+# Setting (A8): each district's buildings are ranked by population density, and the densest ones are urban until
+# they hold the census share of urban households (expected household slots = P(home) x floors). The same setting
+# chooses household profiles, productive-use pools (mills rural, trades urban) and the LLM class rates.
+setting: census_households
+
+facilities:   # step 0b; facility type (config/facilities via rtl.ingest.facilities) -> profile
+  radius_m: {education: 150, health: 100}   # untagged institution-like buildings this close join the compound
+  tagged_max_m: 1000                        # a tagged building joins the nearest facility of its kind within this
+  min_area_m2: 30
+  profiles:
+    education:school: school
+    education:kindergarten: school
+    education:college: school
+    education:university: school
+    health:hospital: hospital
+    health:health_centre: health_centre
+    health:health_post: health_post
+    health:clinic: health_post
+    health:unspecified: health_post
+    health:dispensary: health_post
+    health:laboratory: health_post
+    health:dentist: health_post
+    health:alternative: health_post
+    health:pharmacy: kiosk_shop               # a pharmacy is a shop: counts towards census retail
+
+registries:
+  schools: registries/schools_by_district_2021.csv   # MINEDUC yearbook 2020/21: primary + secondary + TVET
+  school_min_area_m2: 60
+  worship:
+    # No district registry is published. RGB inspected over 14,000 places of worship in 2024 and closed about 8,000
+    # (Anglican Ink, 2024-09-23; RNS reports >5,600 closed, 2024-08-08), leaving ~6,000-9,000 open: 7,000 is used,
+    # spread over districts in proportion to census households (owner, 2026-10-15). Weak evidence: news reports.
+    national: 7000
+    range: [6000, 9000]
+    sources:
+      - https://anglican.ink/2024/09/23/rwanda-government-closes-more-than-8000-places-of-worship/
+      - https://religionnews.com/2024/08/08/rwanda-government-shuts-more-than-5000-churches-claiming-code-violations
+    profile: church
+
+wealth: dhs_wealth_district.csv   # target upper share per district x setting (rtl.ingest.dhs_wealth)
+
+uncensused:   # step 4: class -> profile, at the LLM's rate per setting (schools, health and worship come first)
   institutional: office
-  religious: church
   industrial_warehouse: warehouse_light
 
 # Spacing: at most `cap` establishments of a kind per H3 cell (r8 ~0.7 km2; r9 ~0.1 km2, a block). Without it the
@@ -48,3 +94,5 @@ spacing:
   salon: {cell: h3_r9, cap: 2}
   bar_restaurant: {cell: h3_r9, cap: 3}
   kiosk_shop: {cell: h3_r9, cap: 6}
+  school: {cell: h3_r8, cap: 1}            # registry top-up schools only (compounds are placed by their tags)
+  church: {cell: h3_r9, cap: 1}

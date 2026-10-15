@@ -67,28 +67,54 @@ def build_library() -> pd.DataFrame:
         print(f"{arch.archetype_id} [{arch.status}]: {r['daily_kwh_mean']:.2f} kWh/day per unit "
               f"(p10-p90 {r['daily_kwh_p10']:.2f}-{r['daily_kwh_p90']:.2f}), coincident peak "
               f"{r['coincident_peak_w_p50']:.0f} W (p90 {r['coincident_peak_w_p90']:.0f} W)")
-    lib = pd.DataFrame(rows)
+    lib = derived_profiles(pd.DataFrame(rows))
     lib.to_parquet(LIBRARY, index=False)
     return lib
 
 
+def derived_profiles(lib: pd.DataFrame) -> pd.DataFrame:
+    """Append scaled copies of built profiles (config/archetypes.yaml `derived`): every energy and power column of
+    the base is multiplied by `factor`, or by the ratio that makes its monthly energy equal the `scale_to` anchor."""
+    from rtl.settings import load_yaml
+
+    spec = load_yaml("archetypes.yaml").get("derived", {})
+    anchors = pd.read_csv(PROCESSED_DIR / "validation_anchors" / "mtf_facility_usage.csv").set_index("evidence_id")
+    cols = [c for c in lib.columns if c.startswith(("daily_kwh", "annual_kwh", "coincident_peak", "kwh_day", "w_"))]
+    out = lib.set_index("profile_id")
+    for pid, d in spec.items():
+        base = out.loc[d["base"]].copy()
+        f = (float(anchors.at[d["scale_to"], "value"]) / (base.daily_kwh_mean * 30.4) if "scale_to" in d
+             else float(d["factor"]))
+        base[cols] = base[cols].astype(float) * f
+        base["status"] = "draft"
+        out.loc[pid] = base
+        print(f"{pid}: derived from {d['base']} x {f:.2f} -> {base.daily_kwh_mean:.1f} kWh/day per unit")
+    return out.reset_index()
+
+
 def building_preview(lib: pd.DataFrame) -> None:
-    """Expected daily/annual kWh per building = sum over profiles of weight x per-unit mean (draft profiles only)."""
+    """Daily/annual kWh per building: potential = sum over profiles of weight x per-unit mean; expected multiplies
+    each row by p_grid (rtl.demand.calibrate; 1 when not calibrated)."""
     bp = pd.read_parquet(PROCESSED_DIR / "building_profiles.parquet")
+    if "p_grid" not in bp:
+        bp["p_grid"] = 1.0
     have = set(lib.profile_id)
     missing = bp[~bp.profile_id.isin(have)].groupby("profile_id").weight.sum().sort_values(ascending=False)
     covered = bp[bp.profile_id.isin(have)].merge(lib[["profile_id", "daily_kwh_mean", "status"]], on="profile_id")
     covered["daily_kwh"] = covered.weight * covered.daily_kwh_mean
-    out = covered.groupby("bldg_id").agg(daily_kwh=("daily_kwh", "sum")).reset_index()
+    covered["expected_daily_kwh"] = covered.daily_kwh * covered.p_grid
+    out = covered.groupby("bldg_id")[["daily_kwh", "expected_daily_kwh"]].sum().reset_index()
     g = bp.assign(ok_w=bp.weight * bp.profile_id.isin(have)).groupby("bldg_id")[["ok_w", "weight"]].sum()
     share = (g.ok_w / g.weight.where(g.weight > 0)).fillna(0.0)
     out = out.merge(share.rename("profile_weight_covered").reset_index(), on="bldg_id", how="right").fillna(
-        {"daily_kwh": 0.0})
+        {"daily_kwh": 0.0, "expected_daily_kwh": 0.0})
     out["annual_kwh"] = out.daily_kwh * 365
+    out["expected_annual_kwh"] = out.expected_daily_kwh * 365
     out["note"] = "demand from profiles without an archetype JSON is missing"
     out.to_parquet(PREVIEW, index=False)
-    print(f"preview for {len(out):,} buildings; {out.profile_weight_covered.mean():.0%} of profile weight has an "
-          f"archetype. Missing archetypes (expected units):\n{missing.round(0).astype(int).to_string()}")
+    print(f"preview for {len(out):,} buildings; potential {out.annual_kwh.sum() / 1e6:,.0f} GWh/yr, expected "
+          f"{out.expected_annual_kwh.sum() / 1e6:,.0f} GWh/yr; {out.profile_weight_covered.mean():.0%} of profile "
+          f"weight has an archetype. Missing archetypes (expected units):\n{missing.round(0).astype(int).to_string()}")
     (PROCESSED_DIR / "missing_archetypes.json").write_text(json.dumps(missing.round(1).to_dict(), indent=2) + "\n")
 
 

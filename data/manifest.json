@@ -59,6 +59,186 @@
     "retrieved_at": "2026-10-08T14:22:58+00:00",
     "version": "2026-10-08"
   },
+  "data/raw/blackmarble/2016/VNP46A4.A2016001.h20v09.002.2025102105504.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2016001.h20v09.002.2025102105504.h5",
+    "path": "data/raw/blackmarble/2016/VNP46A4.A2016001.h20v09.002.2025102105504.h5",
+    "bytes": 72311831,
+    "sha256": "e0e47de51e9f289cb5d658ec0bd470bacd082abea439c5d2410806c01b37c766",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:35:48+00:00",
+    "year": 2016
+  },
+  "data/raw/blackmarble/2016/VNP46A4.A2016001.h21v09.002.2025102105426.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2016001.h21v09.002.2025102105426.h5",
+    "path": "data/raw/blackmarble/2016/VNP46A4.A2016001.h21v09.002.2025102105426.h5",
+    "bytes": 78070969,
+    "sha256": "47e111746bdb9bac50e5ac624ec4b3dc6e1e23728d611d2a91d24f67a53b3d0e",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:35:37+00:00",
+    "year": 2016
+  },
+  "data/raw/blackmarble/2017/VNP46A4.A2017001.h20v09.002.2025104183837.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2017001.h20v09.002.2025104183837.h5",
+    "path": "data/raw/blackmarble/2017/VNP46A4.A2017001.h20v09.002.2025104183837.h5",
+    "bytes": 73367082,
+    "sha256": "747a1b65798ef02815f80de272c90a9de25ceed88732571c12a9c530c17f9cd0",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:36:18+00:00",
+    "year": 2017
+  },
+  "data/raw/blackmarble/2017/VNP46A4.A2017001.h21v09.002.2025105150816.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2017001.h21v09.002.2025105150816.h5",
+    "path": "data/raw/blackmarble/2017/VNP46A4.A2017001.h21v09.002.2025105150816.h5",
+    "bytes": 78552373,
+    "sha256": "8f171f9a7eeeb8f123706c8abc89a4f03817b8f99f5977614f18bea293bf82e8",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:36:07+00:00",
+    "year": 2017
+  },
+  "data/raw/blackmarble/2018/VNP46A4.A2018001.h20v09.002.2025114134258.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2018001.h20v09.002.2025114134258.h5",
+    "path": "data/raw/blackmarble/2018/VNP46A4.A2018001.h20v09.002.2025114134258.h5",
+    "bytes": 73096525,
+    "sha256": "0b08eb0d352559f108c1a78d8c6c6349972d46316fdd441f5a2410d562a7d71d",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:36:35+00:00",
+    "year": 2018
+  },
+  "data/raw/blackmarble/2018/VNP46A4.A2018001.h21v09.002.2025114150357.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2018001.h21v09.002.2025114150357.h5",
+    "path": "data/raw/blackmarble/2018/VNP46A4.A2018001.h21v09.002.2025114150357.h5",
+    "bytes": 79508824,
+    "sha256": "ca178981e9d530da35730e873cb2e1d0d5063d7e464c8210aafb11192c6f48c2",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:36:47+00:00",
+    "year": 2018
+  },
+  "data/raw/blackmarble/2019/VNP46A4.A2019001.h20v09.002.2025133143203.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2019001.h20v09.002.2025133143203.h5",
+    "path": "data/raw/blackmarble/2019/VNP46A4.A2019001.h20v09.002.2025133143203.h5",
+    "bytes": 74226532,
+    "sha256": "29ebf518984180ebffda8db0a044f56a5e11aff2d8c2b8aef647f72c047fad5e",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:37:00+00:00",
+    "year": 2019
+  },
+  "data/raw/blackmarble/2019/VNP46A4.A2019001.h21v09.002.2025134125144.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2019001.h21v09.002.2025134125144.h5",
+    "path": "data/raw/blackmarble/2019/VNP46A4.A2019001.h21v09.002.2025134125144.h5",
+    "bytes": 80709614,
+    "sha256": "5c2687d9d17c9680cdc4ffa81c1db0621c4eeaccf92e80924ec9b683b2f43940",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:37:11+00:00",
+    "year": 2019
+  },
+  "data/raw/blackmarble/2020/VNP46A4.A2020001.h20v09.002.2025134020639.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2020001.h20v09.002.2025134020639.h5",
+    "path": "data/raw/blackmarble/2020/VNP46A4.A2020001.h20v09.002.2025134020639.h5",
+    "bytes": 74392951,
+    "sha256": "c1eb0d11902826c57c76a7cca4220fbb9a86177b2b85aa78e8e5b02a8d71826f",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:37:25+00:00",
+    "year": 2020
+  },
+  "data/raw/blackmarble/2020/VNP46A4.A2020001.h21v09.002.2025134215322.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2020001.h21v09.002.2025134215322.h5",
+    "path": "data/raw/blackmarble/2020/VNP46A4.A2020001.h21v09.002.2025134215322.h5",
+    "bytes": 80056619,
+    "sha256": "e13515d87ca3936bc4ac9903f84d3ad3fcdc0de54ca875b71fe80796d1ec86bd",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:37:37+00:00",
+    "year": 2020
+  },
+  "data/raw/blackmarble/2021/VNP46A4.A2021001.h20v09.002.2025149111107.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2021001.h20v09.002.2025149111107.h5",
+    "path": "data/raw/blackmarble/2021/VNP46A4.A2021001.h20v09.002.2025149111107.h5",
+    "bytes": 73302001,
+    "sha256": "b306e29f0d8a324dedd0af533acb2ad2b98c3b6c586b74bd616e8c601df078d7",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:37:50+00:00",
+    "year": 2021
+  },
+  "data/raw/blackmarble/2021/VNP46A4.A2021001.h21v09.002.2025149143544.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2021001.h21v09.002.2025149143544.h5",
+    "path": "data/raw/blackmarble/2021/VNP46A4.A2021001.h21v09.002.2025149143544.h5",
+    "bytes": 80552361,
+    "sha256": "204a6abe5b06141ccabf6e44c90f88db3b77001b96ccd870ea67882ec43bdfaf",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:38:01+00:00",
+    "year": 2021
+  },
+  "data/raw/blackmarble/2022/VNP46A4.A2022001.h20v09.002.2025156154802.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2022001.h20v09.002.2025156154802.h5",
+    "path": "data/raw/blackmarble/2022/VNP46A4.A2022001.h20v09.002.2025156154802.h5",
+    "bytes": 74082967,
+    "sha256": "0e97916fef2a49526937875b601a30c7a148c44ef1f63e5b119b84ccd5e241c6",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:38:15+00:00",
+    "year": 2022
+  },
+  "data/raw/blackmarble/2022/VNP46A4.A2022001.h21v09.002.2025156193116.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2022001.h21v09.002.2025156193116.h5",
+    "path": "data/raw/blackmarble/2022/VNP46A4.A2022001.h21v09.002.2025156193116.h5",
+    "bytes": 83289998,
+    "sha256": "0c7891a5f08e8c50eabfe5617bed982da0c4109173367a8b0992e7d0752dbb78",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:38:27+00:00",
+    "year": 2022
+  },
+  "data/raw/blackmarble/2023/VNP46A4.A2023001.h20v09.002.2025161155648.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2023001.h20v09.002.2025161155648.h5",
+    "path": "data/raw/blackmarble/2023/VNP46A4.A2023001.h20v09.002.2025161155648.h5",
+    "bytes": 74236152,
+    "sha256": "5b91ed4434233adb038ae87cfbeb37316458080d7a67608c0e78233ec2ba93f8",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:35:08+00:00",
+    "year": 2023
+  },
+  "data/raw/blackmarble/2023/VNP46A4.A2023001.h21v09.002.2025161194328.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2023001.h21v09.002.2025161194328.h5",
+    "path": "data/raw/blackmarble/2023/VNP46A4.A2023001.h21v09.002.2025161194328.h5",
+    "bytes": 83764168,
+    "sha256": "a5c4a4cce61b805f3a8c60f65b53ea80b434e85adb93e35ef38a79581958248d",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:34:58+00:00",
+    "year": 2023
+  },
+  "data/raw/blackmarble/2024/VNP46A4.A2024001.h20v09.002.2025162063055.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2024001.h20v09.002.2025162063055.h5",
+    "path": "data/raw/blackmarble/2024/VNP46A4.A2024001.h20v09.002.2025162063055.h5",
+    "bytes": 75452076,
+    "sha256": "ac0b4031d7d4f17023207d6a6debef23ddf15a2bd90cbd6aad3bfbbb01d297fe",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:39:00+00:00",
+    "year": 2024
+  },
+  "data/raw/blackmarble/2024/VNP46A4.A2024001.h21v09.002.2025162071100.h5": {
+    "source_id": "viirs_black_marble",
+    "url": "https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/VNP46A4.A2024001.h21v09.002.2025162071100.h5",
+    "path": "data/raw/blackmarble/2024/VNP46A4.A2024001.h21v09.002.2025162071100.h5",
+    "bytes": 83502637,
+    "sha256": "78302163606c35a0cc8eedfae018a32c4224cab40eda1a5908c38a051aef005c",
+    "licence": "NASA open data (no restrictions; cite Rom\u00e1n et al. 2018)",
+    "retrieved_at": "2026-10-15T15:38:49+00:00",
+    "year": 2024
+  },
   "data/raw/copernicus_dem/2022-05-09/Copernicus_DSM_COG_10_S02_00_E028_00_DEM.tif": {
     "source_id": "copernicus_dem",
     "url": "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_S02_00_E028_00_DEM/Copernicus_DSM_COG_10_S02_00_E028_00_DEM.tif",
@@ -355,6 +535,17 @@
     "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
     "retrieved_at": "2026-10-15T05:55:44+00:00",
     "year": 2000,
+    "statistic": "daily_mean"
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_2001.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:derived-era5-land-daily-statistics",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_2001.nc",
+    "bytes": 425479,
+    "sha256": "8bafae2dca0c5336010bb5526b8e4db7fbc6770c00f63e200303e60271fb4970",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-15T14:50:49+00:00",
+    "year": 2001,
     "statistic": "daily_mean"
   },
   "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201901.nc": {
@@ -2293,6 +2484,16 @@
     "licence": "CC-BY-NC-4.0",
     "retrieved_at": "2026-10-08T14:28:37+00:00",
     "version": "2021-04-08"
+  },
+  "data/raw/mineduc_yearbook_2021/2023-04-28/Education_Statistical_Yearbook_2020_21.pdf": {
+    "source_id": "mineduc_yearbook_2021",
+    "url": "https://e-ihuriro.rcsprwanda.org/wp-content/uploads/2023/04/Education_Statistical_Yearbook_2020_21.pdf",
+    "path": "data/raw/mineduc_yearbook_2021/2023-04-28/Education_Statistical_Yearbook_2020_21.pdf",
+    "bytes": 2726455,
+    "sha256": "a1dc50f045750474cbdddd2605773c62fcd804e595abfd700a9f25a1d9bed6bc",
+    "licence": "Government of Rwanda publication (public)",
+    "retrieved_at": "2026-10-15T14:59:15+00:00",
+    "version": "2023-04-28"
   },
   "data/raw/nasa_power/2026-10-08/ghi_daily_2019.json": {
     "source_id": "nasa_power",

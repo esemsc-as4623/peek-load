@@ -64,11 +64,37 @@ building_level_allocation:
     class weights, allocation order and scores, spacing caps, LLM rates for uncensused uses) await sign-off. Census
     households per district are now an allocation constraint, so they no longer serve as validation.
 
+allocation_rules:
+  decision: approved
+  scope: config/allocation.yaml (order, scores, spacing caps, eligibility, one household per floor)
+  date: 2026-10-15
+  by: repo owner
+  note: >-
+    Signed off as defaults (A6), with the cap sensitivity reported (reports/demand/cap_sensitivity.csv).
+
+constraints_and_registries:
+  decision: approved
+  date: 2026-10-15
+  by: repo owner
+  scope: >-
+    A7 school counts from MINEDUC and buildings near a school facility share the school profile; places of worship
+    from a national count spread by population; A8 census urban/rural household shares per district; A9 expected
+    demand = potential x P(connected) with P raked to EICV7 2024 district shares; A10 health facilities split by
+    type; wealth split calibrated to DHS 2025 by district; REG/QSEL household consumption and EICV7 grid shares as
+    constraints; back-cast by year from building presence and projection with district growth; uncertainty bands (B6).
+  note: >-
+    The owner asked for these; their implementation details are in config/allocation.yaml, config/years.yaml and
+    rtl.demand.calibrate. Dropped: B5 (targeted relabelling). Kept as future opportunities: seasonal and weekly shape
+    (B2), a floor regression (B4; the cut-points stay). The derived health-centre and hospital profiles
+    (config/archetypes.yaml `derived`) are draft until signed off.
+
 # Not yet approved (recorded so nothing is mistaken for a sign-off):
 # - evidence rows added after ee90948 (11 curated Power Africa Rwanda values): covered by the automated checks only
 # - config/productive_use.yaml: equal town-trade shares, 100% mills in rural areas, eligibility (>= 30 m2, roadside
 #   100 m for mills) and candidate weights
-# - the grid-connection model (rtl.demand.grid_connection): built for review, not yet applied to demand
-# - config/use_model.yaml and config/allocation.yaml (2026-10-15): see building_level_allocation
+# - the grid-connection model itself (rtl.demand.grid_connection: features, logistic); applied to demand by the owner's A9 decision
+# - config/use_model.yaml (2026-10-15): features and class weights
+# - derived profiles health_centre (scaled to MTF centres) and hospital (10 x a health centre, an assumption)
+# - the worship count (7,000; news reports of RGB figures) and the REG constraint choice (REG over QSEL rural)
 # - config/services.yaml (2026-10-13): section I split 97% bars/restaurants / 3% accommodation, section S 60% salons,
-#   allocation by population density; the bar/restaurant profile is used for rural cabarets too (decisions.md A2)
+#   allocation by population density; the bar/restaurant profile is used for rural cabarets too (status_report.md, pending P1)

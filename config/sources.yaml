@@ -133,15 +133,6 @@ sources:
     role: feature
     status: verified
 
-  viirs_ntl:
-    owner: A2
-    name: VIIRS night-time lights (annual VNL v2 or Black Marble)
-    url: null
-    access: login  # EOG or NASA Earthdata; or Earth Engine
-    licence: to_verify
-    role: validation
-    status: blocked  # needs a login; validation-only, skipped by A2r
-
   copernicus_dem:
     owner: A3  # taken over from A2: A3 produces data/interim/dem_rwa_30m.tif, A2r samples it
     name: Copernicus DEM GLO-30 Public (1 arcsec DSM, COG tiles, AWS open data)
@@ -239,7 +230,8 @@ sources:
     url: null
     access: restricted  # requires DHS Program approval; never redistribute microdata
     licence: DHS terms of use
-    role: weak_label  # household electricity at displaced cluster GPS: the grid-connection model's label (B4);
+    role: weak_label  # household electricity at displaced cluster GPS: the grid-connection model's label (B4), and
+                      # household wealth quintiles per district (the allocation's wealth split);
                       # cluster coordinates and microdata are never published, figures show district aggregates only
     status: verified
 
@@ -295,6 +287,53 @@ sources:
     access: restricted  # kept out of git as the owner placed it; only derived area counts are published
     licence: NISR terms of use
     role: feature  # number of manufacturing (productive-use) establishments per area: the unlocated productive-use amount
+    status: verified
+
+  mineduc_yearbook_2021:
+    owner: A4
+    name: MINEDUC Education Statistical Yearbook 2020/21 (school census; schools per district, Annexes 3-5)
+    url: https://e-ihuriro.rcsprwanda.org/wp-content/uploads/2023/04/Education_Statistical_Yearbook_2020_21.pdf
+    docs: https://www.mineduc.gov.rw (yearbook mirrored by the RCSP library)
+    access: open
+    licence: Government of Rwanda publication (public)
+    role: feature  # school counts per district: the allocation's school target (rtl.demand.allocate)
+    status: verified
+
+  worship_counts_news:
+    owner: A4
+    name: Places of worship in Rwanda, RGB inspection figures as reported in the press (2018-2024)
+    url: null  # no district registry is published; figures and URLs in config/allocation.yaml (worship)
+    access: open
+    licence: news reports (facts cited, not redistributed)
+    role: feature  # national and Kigali counts for the worship target; weak evidence, flagged
+    status: verified
+
+  nisr_ec2023_microdata:
+    owner: A4
+    name: NISR Establishment Census 2023, public-use microdata (269,194 establishments, 68 variables; ISIC section only)
+    url: https://microdata.statistics.gov.rw/index.php/catalog/112
+    access: login  # free NISR account
+    licence: NISR terms of use
+    role: feature  # would give district x urban/rural x section counts and establishment size; no 4-digit activity
+    status: blocked  # not downloadable for the repo owner on 2026-10-15
+
+  nisr_ec2020_report:
+    owner: A4
+    name: NISR Establishment Census 2020, final report (counts by ISIC section, 2014 / 2017 / 2020; section level only)
+    url: null  # copy supplied by the repo owner (data/restricted/nisr/2020-Establishment-Census-Final-Report.pdf)
+    access: open
+    licence: NISR terms of use
+    role: evidence  # establishment trends by section; no activity detail below section, so no trade or service splits
+    status: verified
+
+  viirs_black_marble:
+    owner: A2
+    name: NASA VIIRS Black Marble annual night lights VNP46A4 (Collection 2), tiles h20v09 + h21v09, 2016-2024
+    url: https://data.laadsdaac.earthdatacloud.nasa.gov/prod-lads/VNP46A4/  # granules found via NASA CMR
+    docs: https://blackmarble.gsfc.nasa.gov
+    access: login  # NASA Earthdata token in .env as EARTHDATA_TOKEN
+    licence: NASA open data (no restrictions; cite Roman et al. 2018)
+    role: feature  # per H3 r8 cell and year (data/interim/ntl_h3r8.parquet); next: classifier and grid-model feature
     status: verified
 
   power_africa_reports:

@@ -1,0 +1,50 @@
+"""Planted cases for the census setting, wealth split, grid calibration, school-registry parsing, Black Marble tiles
+and the back-cast growth fit."""
+
+import numpy as np
+import pandas as pd
+
+from rtl.demand.allocate import census_setting, wealth_upper
+from rtl.demand.calibrate import shift_to_mean
+from rtl.demand.years import slope
+from rtl.ingest.blackmarble import tile_origin
+from rtl.ingest.schools import annex_table
+
+
+def test_census_setting_puts_densest_slots_urban_up_to_the_census_share():
+    df = pd.DataFrame({"district": ["A"] * 4 + ["B"] * 2, "pop_density_per_km2": [9000, 100, 5000, 50, 10, 20]})
+    slots = pd.Series([1.0, 1.0, 1.0, 1.0, 2.0, 2.0])
+    s = census_setting(df, slots, pd.Series({"A": 0.5, "B": 0.0}))
+    assert list(s) == ["urban", "rural", "urban", "rural", "rural", "rural"]
+
+
+def test_wealth_upper_takes_richest_homes_until_target_share():
+    df = pd.DataFrame({"district": ["A"] * 4, "rwi": [0.9, -0.5, 0.2, 0.1], "area_m2": [50.0] * 4})
+    hh = pd.Series([1, 1, 2, 0])
+    target = pd.DataFrame({"district": ["A"], "setting": ["rural"], "target_upper_share": [0.25]})
+    up = wealth_upper(df, hh, pd.Series(["rural"] * 4), target)
+    assert list(up) == [True, False, False, False]  # 1 of 4 households; the empty building is never upper
+
+
+def test_shift_to_mean_hits_the_target_share():
+    p = np.array([0.1, 0.5, 0.9, 0.3])
+    w = np.array([1.0, 2.0, 1.0, 4.0])
+    s = shift_to_mean(p, w, 0.62)
+    z = np.log(p / (1 - p)) + s
+    assert abs(np.average(1 / (1 + np.exp(-z)), weights=w) - 0.62) < 1e-6
+
+
+def test_annex_table_reads_the_last_column_and_skips_totals():
+    text = ("Annex 3: Number of Primary schools by district ..... 100\nother\n"
+            "Annex 3: Number of Primary schools by district\nDistrict/Province 2019 2020/21\n"
+            "Gisagara 64 95\nHuye 100 109\nSouth 754 900\nKigali city 247 323\nRwanda 2,961 3,691\nSource: x")
+    assert annex_table(text, "Annex 3: Number of Primary schools by district") == {"Gisagara": 95, "Huye": 109}
+
+
+def test_black_marble_tiles_cover_rwanda():
+    assert tile_origin("h20v09") == (20, 0) and tile_origin("h21v09") == (30, 0)  # Rwanda: 28.9-30.9 E, 1-2.9 S
+
+
+def test_slope_recovers_log_growth():
+    years = np.arange(2016, 2024)
+    assert abs(slope(years, 100 * np.exp(0.03 * (years - 2016))) - 0.03) < 1e-9

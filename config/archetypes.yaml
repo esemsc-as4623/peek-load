@@ -360,3 +360,19 @@ establishments:
          hours: {value: 2, why: "Loading and stock-taking."}, windows: day_evening, preset: light}
       - {name: security_light, power: cfl, ownership: {value: 0.7, why: "Most stores keep an outside light on."}, number: {value: 1, why: "One."},
          hours: {value: 11, why: "Dusk to dawn."}, windows: night, preset: light}
+
+# Derived profiles (2026-10-15, owner's request to split health facility types; draft until signed off):
+# a scaled copy of a built archetype's per-unit curve. `scale_to` names a validation-anchor evidence id whose value is
+# kWh/month; `factor` is a plain multiplier with its reason.
+derived:
+  health_centre:
+    base: health_post
+    scale_to: "mtf:RWA2022:health_facility:kwh_month_from_spend:median"
+    why: "MTF 2022 surveyed 148 health centres (and only 4 hospitals, 1 post); their median spending converts to
+      2,734 kWh/month. The appliance-built health profile gives 366, so it stands for health posts and is scaled
+      up for centres."
+  hospital:
+    base: health_centre
+    factor: 10
+    why: "Assumption: a district hospital (theatre, imaging, laboratory, wards, 24 h) uses about ten health centres'
+      energy. MTF's 4 hospitals are too few to publish. A metered source would replace this."

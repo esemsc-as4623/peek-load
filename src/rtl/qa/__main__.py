@@ -15,6 +15,7 @@ from pathlib import Path
 
 import duckdb
 import geopandas as gpd
+import numpy as np
 import pandas as pd
 import pandera.errors as pe
 
@@ -106,33 +107,59 @@ def allocation_checks(con: duckdb.DuckDBPyConnection) -> list[tuple[str, bool, s
     P, I = PROCESSED_DIR, INTERIM_DIR  # noqa: E741, N806
     out = []
     t = pd.read_csv(TARGETS_PATH)
-    est = t[t.item != "households"]
+    est = t[~t.item.str.startswith("households")]
     met = est.tagged.clip(upper=est.target) + est.assigned + est.shortfall
     out.append(("allocation: every district's establishments = census target (tagged + assigned + shortfall)",
                 bool(((met == est.target) | (est.tagged > est.target)).all()),
                 f"{len(est)} district x item rows; shortfall {int(est.shortfall.sum()):,}; tags above target in "
                 f"{int((est.tagged > est.target).sum())} rows"))
-    hh = t[t.item == "households"]
-    out.append(("allocation: households per district = 2022 census (or shortfall reported)",
-                bool((hh.assigned + hh.shortfall == hh.target).all()),
-                f"{int(hh.assigned.sum()):,} of {int(hh.target.sum()):,}; shortfall {int(hh.shortfall.sum()):,}"))
+    for item in ("households", "households_urban", "households_rural"):
+        hh = t[t.item == item]
+        out.append((f"allocation: {item.replace('_', ' ')} per district = 2022 census (or shortfall reported)",
+                    bool(len(hh) == 30 and (hh.assigned + hh.shortfall == hh.target).all()),
+                    f"{int(hh.assigned.sum()):,} of {int(hh.target.sum()):,}; shortfall {int(hh.shortfall.sum()):,}"))
     n_use, n_ids, n_bldg = con.sql(f"SELECT count(*), count(DISTINCT bldg_id), (SELECT count(*) FROM "
                                    f"'{I}/building_context.parquet' WHERE adm2_name IS NOT NULL) "
                                    f"FROM '{USE_PATH}'").fetchone()
     out.append(("allocation: one use per building, every building with a district",
                 n_use == n_ids == n_bldg, f"{n_use:,} rows, {n_ids:,} ids, {n_bldg:,} buildings"))
-    bad_w = con.sql(f"""WITH w AS (SELECT bldg_id, sum(weight) w FROM '{P}/building_profiles.parquet' GROUP BY 1)
+    bad_w = con.sql(f"""WITH w AS (SELECT bldg_id, sum(units) w FROM '{P}/building_profiles.parquet' GROUP BY 1)
         SELECT count(*) FROM '{USE_PATH}' u FULL JOIN w USING (bldg_id)
-        WHERE abs(coalesce(w.w, 0) - (coalesce(u.households, 0) + (u.establishment IS NOT NULL)::INT)) > 1e-9"""
+        WHERE abs(coalesce(w.w, 0) - (coalesce(u.households, 0) + coalesce(u.est_weight, 0))) > 1e-9"""
                    ).fetchone()[0]
-    out.append(("allocation: profile weights = households + establishment, building by building", bad_w == 0,
+    out.append(("allocation: profile units = households + the building's share of its establishment", bad_w == 0,
                 f"{bad_w} mismatches"))
+    comp = con.sql(f"""SELECT count(*) FROM (SELECT establishment, sum(est_weight) s, count(*) n FROM '{USE_PATH}'
+                       WHERE establishment IS NOT NULL GROUP BY 1) WHERE abs(s - round(s)) > 1e-6""").fetchone()[0]
+    out.append(("allocation: facility compounds add up to whole facilities (shares sum to integers per kind)",
+                comp == 0, f"{comp} kinds with a fractional total"))
+    wt = con.sql(f"""SELECT setting, sum(households * upper::INT) / sum(households) FROM '{USE_PATH}'
+                     WHERE households > 0 GROUP BY 1""").fetchall()
+    dhs = pd.read_csv(P / "dhs_wealth_district.csv")
+    hhw = con.sql(f"SELECT district, setting, sum(households) h FROM '{USE_PATH}' GROUP BY ALL").df()
+    tgt_w = dhs.merge(hhw, on=["district", "setting"])
+    want = {s: float(np.average(g.target_upper_share, weights=g.h)) for s, g in tgt_w.groupby("setting")}
+    out.append(("allocation: upper-wealth household share per setting matches the DHS-based targets (+-0.02)",
+                all(abs(v - want[s]) <= 0.02 for s, v in wt),
+                "; ".join(f"{s} {v:.3f} vs {want[s]:.3f}" for s, v in sorted(wt))))
+    cal = P / "calibration.csv"
+    if cal.exists():
+        c = pd.read_csv(cal)
+        bp = con.sql(f"""SELECT u.district, sum(w.units * w.p_grid) / sum(w.units) AS p
+                         FROM '{P}/building_profiles.parquet' w JOIN '{USE_PATH}' u USING (bldg_id)
+                         WHERE w.profile_id LIKE 'household_%' GROUP BY 1""").df().set_index("district").p
+        d = c[c.level == "district"].set_index("key").target
+        gap = float((bp.reindex(d.index) - d).abs().max())
+        out.append(("calibration: households' mean P(connected) = EICV7 2024 grid share in every district (+-0.005)",
+                    gap <= 0.005, f"largest gap {gap:.4f}"))
     fid = con.sql(f"""SELECT count(*) FILTER (WHERE p.tag_label IN ('institutional', 'religious',
-                             'industrial_warehouse',
-                             'ancillary') AND u.use <> p.tag_label), count(*) FILTER (WHERE p.tag_label IS NOT NULL)
-                      FROM '{USE_PATH}' u JOIN '{P}/use_probs.parquet' p USING (bldg_id)""").fetchone()
-    out.append(("allocation: tagged institutions, worship, stores and ancillary keep their tag", fid[0] == 0,
-                f"{fid[0]} changed of {fid[1]:,} tagged buildings"))
+                             'industrial_warehouse', 'ancillary') AND u.use <> p.tag_label
+                             AND NOT (x.facility_type = 'health:pharmacy' AND u.establishment = 'kiosk_shop')),
+                             count(*) FILTER (WHERE p.tag_label IS NOT NULL)
+                      FROM '{USE_PATH}' u JOIN '{P}/use_probs.parquet' p USING (bldg_id)
+                      JOIN '{I}/building_context.parquet' x USING (bldg_id)""").fetchone()
+    out.append(("allocation: tagged institutions, worship, stores and ancillary keep their tag (pharmacies are shops)",
+                fid[0] == 0, f"{fid[0]} changed of {fid[1]:,} tagged buildings"))
     loaded = con.sql(f"SELECT avg((households > 0 OR establishment IS NOT NULL)::INT) FROM '{USE_PATH}'").fetchone()[0]
     out.append(("allocation: share of buildings carrying demand is plausible (40-75%)", 0.40 <= loaded <= 0.75,
                 f"{loaded:.1%} (census: 0.52 households per building)"))
@@ -145,7 +172,7 @@ def allocation_checks(con: duckdb.DuckDBPyConnection) -> list[tuple[str, bool, s
         cell = "h3_cell_to_parent(b.h3_r9, 8)" if c["cell"] == "h3_r8" else "b.h3_r9"
         o, t2 = con.sql(f"""WITH k AS (SELECT {cell} AS cell, count(*) n FROM '{USE_PATH}' u
                 JOIN '{I}/buildings_base.parquet' b USING (bldg_id)
-                WHERE u.establishment = '{prof}' AND u.source = 'census' GROUP BY 1)
+                WHERE u.establishment = '{prof}' AND u.source IN ('census', 'registry') GROUP BY 1)
                 SELECT coalesce(sum(greatest(n - {c["cap"]}, 0)), 0), coalesce(sum(n), 0) FROM k""").fetchone()
         over, tot = over + o, tot + t2
     out.append(("allocation: establishments respect the spacing caps (relaxed caps used for <= 10%)",
@@ -184,7 +211,10 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
             f"SELECT DISTINCT profile_id FROM read_parquet('{PROCESSED_DIR / 'building_profiles.parquet'}')"
         ).fetchall()},
     }
-    ref = sets["archetype JSON"]
+    derived = set(recipes.get("derived", {}))  # scaled copies of built profiles (health centre, hospital)
+    sets["recipes (config/archetypes.yaml)"] |= derived
+    sets["archetype JSON (+ derived copies)"] = sets.pop("archetype JSON") | derived
+    ref = sets["archetype JSON (+ derived copies)"]
     lines = ["# QA: demand", "", f"- checked: {datetime.now(UTC):%Y-%m-%d %H:%M} UTC", f"- archetypes: {len(ref)}", "",
              "| id set | ids | missing vs archetype JSON | extra |", "|---|---|---|---|"]
     ok = True
