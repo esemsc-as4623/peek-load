@@ -2376,6 +2376,16 @@
     "retrieved_at": "2026-10-08T14:28:43+00:00",
     "version": "2026-08-05"
   },
+  "data/raw/evidence_docs/2026-09-23/seforall_powering_healthcare_rwanda_2023.pdf": {
+    "source_id": "evidence_docs",
+    "url": "https://www.seforall.org/system/files/2023-08/Rwanda%20PHC%20Market%20Assessment%20and%20Roadmap_Final.pdf",
+    "path": "data/raw/evidence_docs/2026-09-23/seforall_powering_healthcare_rwanda_2023.pdf",
+    "bytes": 8368810,
+    "sha256": "2b8e6f46eeac67ebc47de790e2417a4229b306b78d154cf5ef1e7081ca3295df",
+    "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
+    "retrieved_at": "2026-10-15T22:34:04+00:00",
+    "version": "2026-09-23"
+  },
   "data/raw/evidence_docs/2026-10-08/dhs_rw_2019_fr.pdf": {
     "source_id": "evidence_docs",
     "url": "https://www.dhsprogram.com/pubs/pdf/FR370/FR370.pdf",
@@ -3809,6 +3819,16 @@
     "retrieved_at": "2026-10-09T14:59:13+00:00",
     "access": "restricted"
   },
+  "data/restricted/nisr/Statistical_Year_Book_2024.pdf": {
+    "source_id": "nisr_statistical_yearbook_2024",
+    "url": "local:manual-download",
+    "path": "data/restricted/nisr/Statistical_Year_Book_2024.pdf",
+    "bytes": 4964898,
+    "sha256": "a47e0e836708a8d8f3e8533233fbdb31c2ef753a21373440a8d9f4e4b97833ed",
+    "licence": "NISR publications (free with attribution)",
+    "retrieved_at": "2026-10-15T22:19:49+00:00",
+    "access": "restricted"
+  },
   "data/restricted/power_africa/2023-Power-Africa-Annual-Report-Eng.pdf": {
     "source_id": "power_africa_reports",
     "url": "local:manual-download",
@@ -3827,6 +3847,26 @@
     "sha256": "64c35205cd7bde8ebcb1d479fb70311c11684934c5f18aa86abdfe7650367cf6",
     "licence": null,
     "retrieved_at": "2026-10-11T01:22:13+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV3_ThematicReport_Utilities_and_Amenities-compressed.pdf": {
+    "source_id": "eicv_utilities_thematic",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV3_ThematicReport_Utilities_and_Amenities-compressed.pdf",
+    "bytes": 1287762,
+    "sha256": "88e0c7927ff856c206b6da580eb82a222556ab7bcfcd64d930d5bcd94328af9a",
+    "licence": "NISR publications (free with attribution)",
+    "retrieved_at": "2026-10-15T22:19:49+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV4_Utilities_Amenities_new.xls": {
+    "source_id": "eicv_utilities_thematic",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV4_Utilities_Amenities_new.xls",
+    "bytes": 717824,
+    "sha256": "d537e9cdf7b72ffb028bb57f4d60e734f56bf51bf31226c0ea514a17d7dd245b",
+    "licence": "NISR publications (free with attribution)",
+    "retrieved_at": "2026-10-15T22:19:49+00:00",
     "access": "restricted"
   },
   "data/restricted/reg/EICV5/EICV5__2016-2017__Cross-Sectional_Sample/README.txt": {
@@ -4887,6 +4927,26 @@
     "sha256": "178021e599aef2eca43da788befd93bc997227fa6daed5db4b1d168267d645f8",
     "licence": null,
     "retrieved_at": "2026-10-11T01:22:12+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/reg/EICV5_Utilities_and_Amenities_Thematic_Report.xlsx": {
+    "source_id": "eicv_utilities_thematic",
+    "url": "local:manual-download",
+    "path": "data/restricted/reg/EICV5_Utilities_and_Amenities_Thematic_Report.xlsx",
+    "bytes": 522931,
+    "sha256": "ec8286547cb78305f5663e819a603bdddd04902f56331ce18083a6e13ba01a72",
+    "licence": "NISR publications (free with attribution)",
+    "retrieved_at": "2026-10-15T22:19:50+00:00",
+    "access": "restricted"
+  },
+  "data/restricted/rura/Electricity_Statistics_Report_as_of_the_Second_Quarter_2024.pdf": {
+    "source_id": "rura_electricity_q2_2024",
+    "url": "local:manual-download",
+    "path": "data/restricted/rura/Electricity_Statistics_Report_as_of_the_Second_Quarter_2024.pdf",
+    "bytes": 266173,
+    "sha256": "a8bdb6a1ec24f88407ae137aff19614f3f597abf9634823df2ba16ade88e94c7",
+    "licence": "RURA publication (public)",
+    "retrieved_at": "2026-10-15T22:19:48+00:00",
     "access": "restricted"
   },
   "data/restricted/worldbank_mtf/RWA_2022_MTF/community_and_public_institutions_surveys_data/Community_SectB.dta": {

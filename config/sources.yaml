@@ -326,6 +326,34 @@ sources:
     role: evidence  # establishment trends by section; no activity detail below section, so no trade or service splits
     status: verified
 
+  rura_electricity_q2_2024:
+    owner: A4
+    name: RURA Electricity Statistics Report as of Q2 2024 (EUCL-REG electricity sold by customer category, Q2 2023 - Q2 2024; peak demand; tariffs)
+    url: null  # copy supplied by the repo owner (data/restricted/rura/); a public RURA publication
+    access: open
+    licence: RURA publication (public)
+    role: validation  # national kWh sold to residential, non-residential, hotels, health facilities ...
+    status: verified
+
+  nisr_statistical_yearbook_2024:
+    owner: A4
+    name: NISR Statistical Yearbook 2024 (REG customers by branch 2017-2023; electricity sold by category 2021-2023; health facilities and beds by type 2017-2023)
+    url: null  # copy supplied by the repo owner (data/restricted/nisr/); ISBN 978-99977-43-46-9
+    docs: https://www.statistics.gov.rw
+    access: open
+    licence: NISR publications (free with attribution)
+    role: validation  # also the official health-facility count used for pending decision P5
+    status: verified
+
+  eicv_utilities_thematic:
+    owner: A4
+    name: NISR EICV3 (2010/11), EICV4 (2013/14) and EICV5 (2016/17) Utilities and Amenities thematic reports, Table A.6 (main lighting source by district)
+    url: null  # copies supplied by the repo owner (data/restricted/reg/)
+    access: open
+    licence: NISR publications (free with attribution)
+    role: feature  # district grid-lighting history: the connection back-cast in rtl.demand.years
+    status: verified
+
   viirs_black_marble:
     owner: A2
     name: NASA VIIRS Black Marble annual night lights VNP46A4 (Collection 2), tiles h20v09 + h21v09, 2016-2024

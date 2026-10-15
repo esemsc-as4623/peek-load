@@ -88,6 +88,7 @@ fetch-overture = "python -m rtl.ingest.overture"
 fetch-gridfinder = { cmd = "python -m rtl.ingest.gridfinder", depends-on = ["fetch-admin"] }
 fetch-schools = "python -m rtl.ingest.schools"  # MINEDUC school counts per district
 dhs-wealth = "python -m rtl.ingest.dhs_wealth"  # restricted DHS 2025 -> wealth share per district x setting
+energy-statistics = "python -m rtl.ingest.energy_statistics"  # REG sales/customers, MoH facilities, EICV3-5 district grid shares
 fetch-blackmarble = "python -m rtl.ingest.blackmarble"  # needs EARTHDATA_TOKEN in .env
 fetch-worldcover = "python -m rtl.ingest.worldcover"  # cropland share per H3 r8 (productive use, grid model)
 fetch-facilities = { cmd = "python -m rtl.ingest.facilities", depends-on = ["fetch-osm"] }
@@ -134,12 +135,13 @@ grid-model = "python -m rtl.demand.grid_connection"  # B4: grid-connection model
 profile-library = "python -m rtl.demand.runner"
 calibrate = "python -m rtl.demand.calibrate"  # B4c: EICV7 grid shares + REG consumption (after profile-library, grid-model)
 demand-years = "python -m rtl.demand.years"  # B5y: back-cast 2016-2023 and projection to 2030 (after calibrate)
+demand-benchmarks = "python -m rtl.demand.benchmarks"  # B4v: model vs REG/RURA sales, customers, MoH facility counts
 demand-sensitivity = "python -m rtl.demand.sensitivity"  # A6 cap sensitivity + B6 uncertainty bands (~30 min)
 profile-checks = "python -m rtl.demand.checks"
 dashboard-data = "python -m rtl.dashboard.export"
 # the whole demand phase, in order (inputs: labels, context, climate, evidence, MTF/EICV5 aggregates)
 demand = """python -m rtl.demand.validate && python -m rtl.demand.productive_use && python -m rtl.demand.services && python -m rtl.demand.use_model && python -m rtl.demand.allocate && python -m rtl.demand.build_archetypes \
-  && python -m rtl.demand.runner && python -m rtl.demand.grid_connection && python -m rtl.demand.calibrate && python -m rtl.demand.years && python -m rtl.demand.checks \
+  && python -m rtl.demand.runner && python -m rtl.demand.grid_connection && python -m rtl.demand.calibrate && python -m rtl.demand.years && python -m rtl.demand.benchmarks && python -m rtl.demand.checks \
   && python -m rtl.dashboard.export --sample && python -m rtl.dashboard.export && python -m rtl.qa"""
 docs-sources = "python -m rtl.docs_sources"
 # --- quality gates

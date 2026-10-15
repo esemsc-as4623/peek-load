@@ -1,0 +1,107 @@
+period,period_type,category,kwh,doc_id,table
+2023Q2,quarter,residential,50881861.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,residential,55420152.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,residential,56716702.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,residential,58677996.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,residential,61233673.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,non-residential,58978906.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,non-residential,60627423.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,non-residential,60493093.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,non-residential,65007854.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,non-residential,68659739.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,water pumping stations,10395276.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,water pumping stations,12187530.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,water pumping stations,10441416.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,water pumping stations,10278792.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,water pumping stations,11125939.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,water treatment plants,13110784.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,water treatment plants,12853175.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,water treatment plants,12834364.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,water treatment plants,12214934.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,water treatment plants,12676117.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,broadcasters,1322395.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,broadcasters,1400808.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,broadcasters,1347760.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,broadcasters,1313711.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,broadcasters,1298843.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,health facilities,5676452.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,health facilities,5691932.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,health facilities,5959688.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,health facilities,5935447.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,health facilities,5975793.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,telecom towers,13368779.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,telecom towers,13999029.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,telecom towers,14128902.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,telecom towers,14634130.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,telecom towers,15068371.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,hotels,12597106.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,hotels,13197207.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,hotels,13500633.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,hotels,12649030.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,hotels,12701488.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,commercial data centers,562508.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,commercial data centers,591368.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,commercial data centers,594926.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,commercial data centers,592027.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,commercial data centers,587835.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,industries,87183310.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,industries,82748823.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,industries,88680427.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,industries,87196477.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,industries,93480465.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,street lights,6350357.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,street lights,6762253.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,street lights,7441047.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,street lights,7598687.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,street lights,6879424.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,nasho own use,827240.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,nasho own use,534494.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,nasho own use,324150.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,nasho own use,303661.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,nasho own use,852997.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,exports,2728871.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,exports,2732345.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,exports,2685615.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,exports,2668299.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,exports,6566586.0,rura_electricity_q2_2024,Table 3
+2023Q2,quarter,total,263983845.0,rura_electricity_q2_2024,Table 3
+2023Q3,quarter,total,268746539.0,rura_electricity_q2_2024,Table 3
+2023Q4,quarter,total,275148722.0,rura_electricity_q2_2024,Table 3
+2024Q1,quarter,total,279071046.0,rura_electricity_q2_2024,Table 3
+2024Q2,quarter,total,297107270.0,rura_electricity_q2_2024,Table 3
+2021,year,residential,153561643.271588,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,residential,178975118.1,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,residential,211164883.87,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,non-residential,183209187.66,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,non-residential,209903082.1,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,non-residential,238307739.54,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,water pumping stations,37047611.68,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,water pumping stations,38682860.8,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,water pumping stations,43187599.1,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,water treatment plants,39055891.81,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,water treatment plants,49556989.98,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,water treatment plants,51359589.95,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,telecom towers,48117451.49,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,telecom towers,52908976.97,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,telecom towers,54586742.41,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,hotels,31007535.09,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,hotels,45367013.86,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,hotels,51329016.27,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,industries small,10404429.3,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,industries small,15324486.12,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,industries small,18916907.1,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,industries medium,40344493.5,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,industries medium,48734556.82,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,industries medium,51040769.01,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,industries large,194803402.45,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,industries large,231801628.64,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,industries large,268377244.88,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,street lights,18545101.86,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,street lights,20958347.5,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,street lights,26473093.45,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,health facilities,17313952.23,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,health facilities,21089831.9,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,health facilities,22654693.01,nisr_statistical_yearbook_2024,Table 7.4
+2021,year,commercial data centers,1845019.9,nisr_statistical_yearbook_2024,Table 7.4
+2022,year,commercial data centers,2019390.01,nisr_statistical_yearbook_2024,Table 7.4
+2023,year,commercial data centers,2278524.61,nisr_statistical_yearbook_2024,Table 7.4

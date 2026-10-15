@@ -60,6 +60,26 @@ documents:
     rwanda_specific: true
     role: evidence
     status: verified
+  - doc_id: mugyenyi_2025_post_connection
+    title: "Post-connection electricity demand and pricing in newly electrified households: Insights from a large-scale dataset in Rwanda"
+    publisher: Energy Policy 198, 114449 (Mugyenyi, Muhwezi, Fobi, Massa, Taneja, Williams, Modi)
+    year: 2025
+    url: https://doi.org/10.1016/j.enpol.2024.114449
+    licence: journal article (cited, not redistributed)
+    topics: [consumption, tariff]
+    rwanda_specific: true
+    role: evidence
+    status: unavailable  # publisher copy not downloadable; the owner holds a copy (data/restricted/); cited in status_report
+  - doc_id: seforall_powering_healthcare_rwanda_2023
+    title: "Powering Healthcare in Rwanda: Market Assessment and Roadmap for Healthcare Facilities"
+    publisher: Sustainable Energy for All (with Power Africa)
+    year: 2023
+    url: https://www.seforall.org/system/files/2023-08/Rwanda%20PHC%20Market%20Assessment%20and%20Roadmap_Final.pdf
+    licence: SEforALL publication (public; cited, not redistributed)
+    topics: [consumption, usage]
+    rwanda_specific: true
+    role: evidence  # measured daily consumption of hospitals, health centres and health posts (site surveys, 2023)
+    status: verified
   - doc_id: rphc5_main_indicators
     title: Fifth Rwanda Population and Housing Census 2022 (RPHC5) Main Indicators Report
     publisher: NISR

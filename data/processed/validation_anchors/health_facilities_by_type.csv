@@ -1,0 +1,64 @@
+facility_type,year,facilities,beds
+National Referral Hospitals,2017,8.0,
+National Referral Hospitals,2018,8.0,2181.0
+National Referral Hospitals,2019,7.0,2306.0
+National Referral Hospitals,2020,8.0,2527.0
+National Referral Hospitals,2021,8.0,2564.0
+National Referral Hospitals,2022,8.0,2481.0
+National Referral Hospitals,2023,15.0,2622.0
+Provincial Hospital,2017,4.0,
+Provincial Hospital,2018,4.0,761.0
+Provincial Hospital,2019,4.0,774.0
+Provincial Hospital,2020,4.0,784.0
+Provincial Hospital,2021,4.0,770.0
+Provincial Hospital,2022,4.0,763.0
+Provincial Hospital,2023,3.0,767.0
+District Hospitals,2017,36.0,
+District Hospitals,2018,36.0,6141.0
+District Hospitals,2019,36.0,6201.0
+District Hospitals,2020,37.0,6404.0
+District Hospitals,2021,39.0,6555.0
+District Hospitals,2022,40.0,6719.0
+District Hospitals,2023,34.0,7054.0
+Health Centers,2017,503.0,
+Health Centers,2018,504.0,11063.0
+Health Centers,2019,510.0,11192.0
+Health Centers,2020,509.0,11221.0
+Health Centers,2021,509.0,10738.0
+Health Centers,2022,514.0,10959.0
+Health Centers,2023,518.0,10921.0
+Prison Dispensaries,2017,13.0,
+Prison Dispensaries,2018,13.0,
+Prison Dispensaries,2019,13.0,
+Prison Dispensaries,2020,13.0,
+Prison Dispensaries,2021,13.0,
+Prison Dispensaries,2022,13.0,
+Prison Dispensaries,2023,13.0,
+Health Posts,2017,515.0,
+Health Posts,2018,703.0,
+Health Posts,2019,636.0,
+Health Posts,2020,653.0,
+Health Posts,2021,1220.0,
+Health Posts,2022,1250.0,
+Health Posts,2023,1282.0,
+Private Dispensaries,2017,130.0,
+Private Dispensaries,2018,130.0,
+Private Dispensaries,2019,111.0,
+Private Dispensaries,2020,107.0,
+Private Dispensaries,2021,115.0,
+Private Dispensaries,2022,116.0,
+Private Dispensaries,2023,113.0,
+Private Clinics,2017,128.0,
+Private Clinics,2018,128.0,
+Private Clinics,2019,131.0,
+Private Clinics,2020,118.0,
+Private Clinics,2021,129.0,
+Private Clinics,2022,187.0,
+Private Clinics,2023,232.0,
+Private Hospital,2017,5.0,
+Private Hospital,2018,8.0,
+Private Hospital,2019,8.0,
+Private Hospital,2020,8.0,
+Private Hospital,2021,9.0,
+Private Hospital,2022,9.0,
+Private Hospital,2023,11.0,
