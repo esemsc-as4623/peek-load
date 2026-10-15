@@ -35,7 +35,7 @@ EVENING, DAYTIME, NIGHT = range(18, 23), range(8, 17), range(0, 5)
 FIGURES = ["B1_profiles.png", "B1_household_check.png", "A3_cooling_check.png", "A3_cooling_class.png",
            "A3_cdd22_per_year.png", "A3_t2m_mean_c.png", "labels_confusion.png", "A1_height_vs_osm.png",
            "A1_growth.png", "eda01_density_h3r7.png", "C6_national_demand.png", "C7_demand_by_year.png",
-           "C8_uncertainty.png"]
+           "C8_uncertainty.png", "C9_benchmarks.png"]
 
 
 # ------------------------------------------------------------------------------------------------ helpers
@@ -709,6 +709,10 @@ def constraint_checks() -> dict:
     if caps.exists():
         out["cap_sensitivity"] = {"note": "spacing caps x0.5 / base / x2 / x4 / none; district totals never change",
                                   "rows": pd.read_csv(caps).round(3).to_dict("records")}
+    bm = P / "benchmarks.csv"
+    if bm.exists():  # rtl.demand.benchmarks: the model against REG / RURA sales, customers and MoH facility counts
+        out["benchmarks"] = {"note": "model / official; scopes differ (see each note)",
+                             "rows": pd.read_csv(bm).round(3).replace({np.nan: None}).to_dict("records")}
     b = P / "uncertainty" / "sector_bands.csv"
     if b.exists():
         bands = pd.read_csv(b)
@@ -820,7 +824,8 @@ def meta(out, cfg: dict, summaries: dict) -> None:
         "profiles": cfg["profiles"], "metrics": cfg["metrics"], "status": cfg["status"],
         "productive_use": cfg["productive_use"] | {
             "weights": load_yaml("productive_use.yaml")["candidate_score"],
-            "groups": {"town": list(pu.TOWN_TRADES), "grain_mill": ["grain_mill"]},
+            "groups": {"town": list(pu.TOWN_TRADES), "grain_mill": ["grain_mill"],
+                       "workshop_rural": ["workshop_rural"]},
             "trade_mix": load_yaml("productive_use.yaml")["trade_mix"],
             "field_kinds": PU_FIELD_KINDS},
         "deep_dives": [{k: v for k, v in s.items() if k in ("id", "district", "sector", "description", "aoi_key",

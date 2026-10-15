@@ -206,6 +206,20 @@ establishments:
          hours: {value: 6, why: "Afternoon and evening."}, windows: bar_day, preset: media}
       - {name: sound_system, power: sound_system, ownership: {value: 0.6, why: "Music in most bars."}, number: {value: 1, why: "One system."},
          hours: {value: 5, why: "Evening trade."}, windows: bar_night, preset: media}
+  bar_rural:
+    description: "Rural bar (cabaret) on the grid: lit for evening trade; fridge, TV and radio at the shares MTF 2022
+      measured among grid-connected household shops and traders, who include most rural drink sellers."
+    population: "grid-connected rural bars and cabarets (MTF 2022 household shops/trading on the grid, n=147)"
+    enterprise_row: "Shops/trading|grid"
+    appliances:
+      - {name: lights, power: cfl, ownership: {value: 1, why: "All bars are lit."}, number: {value: 3, why: "Inside and the doorway; smaller than a town bar."},
+         hours: {value: 5, why: "Evening trade."}, windows: bar_night, preset: light}
+      - {name: fridge, power: fridge, ownership: {enterprise: uses_refrigerator}, number: {value: 1, why: "One drinks fridge where there is one."},
+         energy: fridge, energy_factor: {value: 1.5, why: "Opened far more often than household fridges."}, windows: allday, preset: cycling}
+      - {name: tv, power: tv, ownership: {enterprise: uses_tv}, number: {value: 1, why: "One TV."},
+         hours: {value: 6, why: "Afternoon and evening."}, windows: bar_day, preset: media}
+      - {name: radio, power: radio, ownership: {enterprise: uses_radio}, number: {value: 1, why: "Music in the evening."},
+         hours: {value: 5, why: "Evening trade."}, windows: bar_night, preset: media}
   guesthouse:
     description: "Small guesthouse on the grid. ASSUMPTIONS: no survey covers lodging."
     population: "grid-connected guesthouses (about 8 rooms)"
@@ -371,6 +385,12 @@ derived:
     why: "MTF 2022 surveyed 148 health centres (and only 4 hospitals, 1 post); their median spending converts to
       2,734 kWh/month. The appliance-built health profile gives 366, so it stands for health posts and is scaled
       up for centres."
+  workshop_rural:
+    base: carpentry
+    factor: 1
+    why: "Owner's decision 2026-10-15 (P2): rural manufacturing other than mills (banana beer, bakeries, bricks,
+      crafts) uses lights and small tools; the carpentry workshop profile (13.5 kWh/month, checked against NREL
+      2018 at 18) stands for it. Assumption."
   hospital:
     base: health_centre
     factor: 10

@@ -12,10 +12,10 @@ census_growth:
   households_2012: 2424898   # RPHC4 2012, private households (NISR, Main Indicators Report, 2014)
   households_2022: 3312743   # RPHC5 2022 (validation_anchors/households_by_district_2022.csv)
 
-# Grid connection rolls back from EICV7 2024 (district) to EICV5 2016/17 (by setting): a logit shift per setting,
-# linear in time, reaching EICV5's share in 2017. Projections hold connection at its 2024 level (the potential is
-# the universal-access case).
+# Grid connection rolls back from EICV7 2024 per district to EICV5 2016/17 and EICV4 2013/14 per district
+# (thematic reports, Table A.6; rtl.ingest.energy_statistics): a logit shift per district and anchor year, linear in
+# time between anchors. Projections hold connection at its 2024 level (the potential is the universal-access case).
 grid_history:
-  year: 2017
-  share: {urban: 0.755, rural: 0.152}   # eicv5:RWA2017:kwh:grid_lighting_{urban,rural}
-  base_year: 2024
+  file: validation_anchors/grid_lighting_by_district_history.csv
+  anchors: [2014, 2017]     # survey years used (EICV3 2011 is kept in the file for reference)
+  base_year: 2024           # EICV7: P(connected) is already raked to it (rtl.demand.calibrate)

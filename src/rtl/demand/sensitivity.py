@@ -27,7 +27,7 @@ from rtl.demand import allocate as al
 from rtl.settings import PROCESSED_DIR, REPO_ROOT, load_yaml
 
 DEEP_DIVES = {"Nyamirambo": "Nyarugenge", "Muhoza": "Musanze", "Nasho": "Kirehe"}
-PU = ["grain_mill", "welding_workshop", "tailoring", "carpentry"]
+PU = ["grain_mill", "workshop_rural", "welding_workshop", "tailoring", "carpentry"]
 SPACED = PU + ["guesthouse", "salon", "bar_restaurant", "kiosk_shop"]
 CAPS = {"x0.5": 0.5, "base": 1.0, "x2": 2.0, "x4": 4.0, "none": None}
 NOISE, RUNS = 0.5, 10

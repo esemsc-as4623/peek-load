@@ -140,6 +140,17 @@ decision,archetype,appliance,parameter,value,why
 ,bar_restaurant,sound_system,ownership_share,0.6,Music in most bars.
 ,bar_restaurant,sound_system,number,1,One system.
 ,bar_restaurant,sound_system,windows,"[[1080, 1410]]",Evening trade 18:00-23:30.
+,bar_rural,lights,ownership_share,1.0,All bars are lit.
+,bar_rural,lights,number,3,Inside and the doorway; smaller than a town bar.
+,bar_rural,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.
+,bar_rural,lights,windows,"[[1080, 1410]]",Evening trade 18:00-23:30.
+,bar_rural,fridge,number,1,One drinks fridge where there is one.
+,bar_rural,fridge,windows,"[[0, 1440]]",Plugged in all day (cycling appliance).
+,bar_rural,tv,number,1,One TV.
+,bar_rural,tv,windows,"[[600, 1410]]","10:00-23:30, busiest in the evening."
+,bar_rural,radio,number,1,Music in the evening.
+,bar_rural,radio,power,10.0,Mains radio 5-20 W; MTF puts radios in its very-low-load class (3-49 W).
+,bar_rural,radio,windows,"[[1080, 1410]]",Evening trade 18:00-23:30.
 ,guesthouse,lights,ownership_share,1.0,All rooms lit.
 ,guesthouse,lights,number,12,8 rooms plus corridors and reception.
 ,guesthouse,lights,power,15.0,Common CFL ratings are 11-20 W; no Rwanda-specific value in the corpus.

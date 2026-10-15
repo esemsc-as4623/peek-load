@@ -289,7 +289,8 @@ pixi run test                            # includes bundle formula and integrity
 - Building details: `allocation.establishment_share` (1/n of a facility compound), `allocation.upper_wealth`,
   `allocation.use_agreement`; `expected.annual_kwh` and `expected.annual_kwh_by_year` (2016-2023). Yearly values
   are presence-weighted expectations: a building detected later, or never detected, carries a fractional share.
-- `validation/checks.json`: `allocation_targets` (national sums of district targets), `calibration` (`grid` per
+- `validation/checks.json`: `benchmarks` (the model vs REG/RURA sales, customers and MoH counts; `pixi run
+  demand-benchmarks`), `allocation_targets` (national sums of district targets), `calibration` (`grid` per
   district, `household_energy` REG factors and the QSEL check), `cap_sensitivity`, `uncertainty`.
 - `national/demand_by_year.json`: `{note, rows: [{district, year, kind, potential_gwh, expected_gwh, growth_rate}]}`;
   `kind` is `backcast` (2016-2022), `base` (2023) or `projection` (2024-2030).

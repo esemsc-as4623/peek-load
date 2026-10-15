@@ -260,7 +260,8 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     for prof in cfg["order"]["productive_use"]:
         w = pu_cfg["candidate_score"]["town" if prof in pu.TOWN_TRADES else prof]
         score = pu.candidate_score(crit, w) / 100 * not_anc
-        pool = df.pu_eligible.astype(bool) & (df.setting == ("rural" if prof == "grain_mill" else "urban"))
+        rural = prof in pu_cfg["trade_mix"]["rural"]
+        pool = df.pu_eligible.astype(bool) & (df.setting == ("rural" if rural else "urban"))
         if prof in pu_cfg["eligibility"]["roadside_m"]:
             pool &= df.dist_road_any_m.fillna(1e9) <= pu_cfg["eligibility"]["roadside_m"][prof]
         place(f"pu:{prof}", prof, pool, score, "productive_use")
@@ -313,6 +314,9 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     use[home & (est == "kiosk_shop")] = "mixed_shop_house"
     use[home & use.isna()] = "residential"
     source[home & source.isna()] = "census"
+    # rural variants of profiles (P1: rural bars are lighter than town bars)
+    for prof, rural_prof in cfg.get("rural_profiles", {}).items():
+        est[(est == prof) & (df.setting == "rural")] = rural_prof
     # 6. the rest
     use[use.isna()], source[source.isna()] = "ancillary", "remainder"
     est_w[est.isna()] = np.nan

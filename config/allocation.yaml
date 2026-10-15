@@ -25,7 +25,7 @@ census:
   households: validation_anchors/households_by_district_2022.csv   # now a constraint, so no longer a validation
 
 order:
-  productive_use: [grain_mill, welding_workshop, tailoring, carpentry]   # targets from data/processed/pu_census_districts.csv
+  productive_use: [grain_mill, workshop_rural, welding_workshop, tailoring, carpentry]   # targets from data/processed/pu_census_districts.csv
   services: [guesthouse, salon, bar_restaurant]                         # targets from data/processed/svc_census_districts.csv
 
 eligibility:
@@ -78,6 +78,9 @@ registries:
 
 wealth: dhs_wealth_district.csv   # target upper share per district x setting (rtl.ingest.dhs_wealth)
 
+# Owner's decision 2026-10-15 (P1): bars and restaurants in rural settings use the lighter rural profile.
+rural_profiles: {bar_restaurant: bar_rural}
+
 uncensused:   # step 4: class -> profile, at the LLM's rate per setting (schools, health and worship come first)
   institutional: office
   industrial_warehouse: warehouse_light
@@ -87,6 +90,7 @@ uncensused:   # step 4: class -> profile, at the LLM's rate per setting (schools
 # district that can't meet its census count under the cap gets it doubled, step by step (reported in QA).
 spacing:
   grain_mill: {cell: h3_r8, cap: 1}        # a mill serves a catchment of several villages
+  workshop_rural: {cell: h3_r9, cap: 1}
   welding_workshop: {cell: h3_r9, cap: 1}
   tailoring: {cell: h3_r9, cap: 1}
   carpentry: {cell: h3_r9, cap: 1}

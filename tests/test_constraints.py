@@ -48,3 +48,14 @@ def test_black_marble_tiles_cover_rwanda():
 def test_slope_recovers_log_growth():
     years = np.arange(2016, 2024)
     assert abs(slope(years, 100 * np.exp(0.03 * (years - 2016))) - 0.03) < 1e-9
+
+
+def test_statistics_rows_take_the_table_not_the_contents_and_read_dashes_as_missing():
+    from rtl.ingest.energy_statistics import block, rows
+
+    t = ("Table 7.4: Electricity consumption ... 88 Other text Table 7.4: Electricity consumption (Kwh), 2021-2023 "
+         "Category 2021 2022 2023 Hotels 31,007,535.09 45,367,013.86 51,329,016.27 Health facilities "
+         "17,313,952.23 - 22,654,693.01 Source: REG")
+    r = rows(block(t, "Table 7.4: Electricity consumption", "Source: REG"), ["Hotels", "Health facilities"], 3)
+    assert r["Hotels"] == [31007535.09, 45367013.86, 51329016.27]
+    assert r["Health facilities"] == [17313952.23, None, 22654693.01]

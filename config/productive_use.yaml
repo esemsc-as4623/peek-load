@@ -37,11 +37,14 @@ located:  # trade tags -> PU profile; a point tag goes to the building containin
       overture: [carpenter, furniture_manufacturer, furniture_assembly, mattress_manufacturing]
 
 trade_mix:  # share of the setting's PU establishments by trade (owner's rule, 2026-10-12)
-  rural: {grain_mill: 1.0}
+  rural: {grain_mill: 0.25, workshop_rural: 0.75}
   urban: {tailoring: 0.34, welding_workshop: 0.33, carpentry: 0.33}
+  mill_share_range: [0.20, 0.30]   # reported as a range (status_report.md)
   why: >-
-    The census does not split manufacturing by trade. Owner's rule: mills only in rural, roadside settings;
-    tailors, welders and carpenters in towns. Equal shares among the town trades until a source says otherwise.
+    The census does not split manufacturing by trade (the public microdata is ISIC section only). Owner's rule:
+    mills only in rural, roadside settings; tailors, welders and carpenters in towns, in equal shares until a source
+    says otherwise. Owner's decision 2026-10-15 (P2): a quarter of rural manufacturing are electric mills (range
+    20-30%); the rest (banana beer, bakeries, bricks, crafts) are light rural workshops.
 
 eligibility:  # buildings that can host an unlocated PU establishment
   min_area_m2: 30            # smaller structures are latrines, kitchens and stores
@@ -52,6 +55,13 @@ eligibility:  # buildings that can host an unlocated PU establishment
 
 candidate_score:  # 100 x weighted mean of the criteria (formulas in rtl.demand.productive_use.criteria)
   town:  # tailoring, welding_workshop, carpentry
+    market_access: 0.30
+    demand_density: 0.25
+    grid_proximity: 0.20
+    ability_to_pay: 0.15
+    building_size: 0.10
+    agri_context: 0.0
+  workshop_rural:  # light rural workshops: customers and market access, like town trades
     market_access: 0.30
     demand_density: 0.25
     grid_proximity: 0.20

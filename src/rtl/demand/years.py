@@ -9,12 +9,14 @@ Back-cast, building by building:
   national rate equals census household growth 2012-2022. Never-detected buildings (mostly small ones) get the
   presence share that makes the district total equal I(d, y); if they all count and it is still short, later-
   detected buildings get a share too.
-- connection: households' P(connected) shifts on the logit scale per setting, linearly from 0 in 2024 to the
-  shift that reproduces EICV5's 2017 share; establishments keep p = 1.
+- connection: households' P(connected) shifts on the logit scale per district, linearly in time between the
+  shifts that reproduce EICV4 (2014) and EICV5 (2017) district grid-lighting shares and 0 in 2024 (EICV7, already
+  raked); establishments keep p = 1.
 Projection 2024-2030: each district's 2023 demand grows at g_d (a district multiplier on every building; new
 buildings cannot be placed), connection held at 2024.
 
-Outputs: data/processed/demand_by_year.csv (district x year), building_demand_by_year.parquet (bldg_id,
+Outputs: data/processed/demand_by_year.csv (district x year; potential, expected, households' expected GWh and
+connected households, for checks against REG sales and customers), building_demand_by_year.parquet (bldg_id,
 expected_kwh_<year> for the back-cast years; potential = expected with p = 1 is in building_demand_preview).
 """
 
@@ -53,21 +55,30 @@ def main() -> None:
     bp["kwh"] = bp.weight * bp.profile_id.map(lib) * 365
     hh = bp.profile_id.str.startswith("household_").to_numpy()
 
-    # connection by year: logit shift per setting, 0 in 2024, EICV5 share in 2017, linear in between
+    # connection by year: logit shift per district reproducing each survey's district share, 0 in 2024
     g = cfg["grid_history"]
-    shift_hist = {s: shift_to_mean(bp.p_grid[hh & (bp.setting == s)].to_numpy(),
-                                   bp.units[hh & (bp.setting == s)].to_numpy(), share)
-                  for s, share in g["share"].items()}
+    hist = pd.read_csv(PROCESSED_DIR / g["file"]).pivot_table(index="district", columns="year", values="grid_share")
+    shifts = pd.DataFrame({a: {d: shift_to_mean(bp.p_grid[hh & (bp.district == d)].to_numpy(),
+                                                bp.units[hh & (bp.district == d)].to_numpy(), float(hist.at[d, a]))
+                               for d in hist.index} for a in g["anchors"]})
+    shifts[g["base_year"]] = 0.0
     z = logit(bp.p_grid.to_numpy())
 
     def p_in(year: int) -> np.ndarray:
-        t = max(0, g["base_year"] - year) / (g["base_year"] - g["year"])  # 0 in 2024, 1 in 2017, extrapolated before
-        s = bp.setting.map(shift_hist).to_numpy() * t
+        cols = sorted(shifts.columns)
+        s_d = shifts.apply(lambda r: float(np.interp(year, cols, r[cols].to_numpy())), axis=1)
+        s = bp.district.map(s_d).to_numpy()
         return np.where(hh, 1 / (1 + np.exp(-(z + s))), 1.0)
 
     # per-building demand (all profiles summed) at each year's connection
-    exp_y = {y: (bp.kwh * p_in(y)).groupby(bp.bldg_id).sum() for y in years}
+    exp_y, hh_y, conn_y = {}, {}, {}
+    for y in years:
+        p = p_in(y)
+        exp_y[y] = (bp.kwh * p).groupby(bp.bldg_id).sum()
+        hh_y[y] = (bp.kwh * p * hh).groupby(bp.bldg_id).sum()      # households' part (REG "residential")
+        conn_y[y] = (bp.units * p * hh).groupby(bp.bldg_id).sum()  # connected households
     b = pd.DataFrame(exp_y).rename(columns=lambda y: f"expected_kwh_{y}")
+    side = {y: pd.DataFrame({"hh": hh_y[y], "conn": conn_y[y]}).reindex(b.index) for y in years}
     pot = bp.groupby("bldg_id").kwh.sum()
     b = b.join(use.set_index("bldg_id").district).join(pot.rename("potential_kwh"))
     b = b.join(first_detected(years, cfg["presence_threshold"]).set_index("bldg_id").first_y.astype(float))
@@ -98,23 +109,31 @@ def main() -> None:
             w = np.where(seen, 1.0, np.where(never, r_never, r_later)) if y < base else np.ones(len(grp))
             b.loc[grp.index, f"expected_kwh_{y}"] = (e * w).astype("float32")
             pot_y = float((grp.potential_kwh * w).sum())
+            sd = side[y].loc[grp.index]
             rows.append({"district": d, "year": y, "kind": "base" if y == base else "backcast",
                          "potential_gwh": pot_y / 1e6, "expected_gwh": float((e * w).sum()) / 1e6,
+                         "expected_household_gwh": float((sd.hh * w).sum()) / 1e6,
+                         "connected_households": float((sd.conn * w).sum()),
                          "stock_index": float(idx[grp.index].iloc[0]), "growth_rate": float(g_d[d]),
                          "presence_weight_undetected": float(r_never)})
     for y in range(base + 1, cfg["project_to"] + 1):
         for d, grp in b.groupby("district"):
             f = float(np.exp(g_d[d] * (y - base)))
+            sd = side[base].loc[grp.index]
             rows.append({"district": d, "year": y, "kind": "projection",
                          "potential_gwh": float(grp.potential_kwh.sum()) * f / 1e6,
                          "expected_gwh": float(grp[f"expected_kwh_{min(base, y)}"].sum()) * f / 1e6,
+                         "expected_household_gwh": float(sd.hh.sum()) * f / 1e6,
+                         "connected_households": float(sd.conn.sum()) * f,
                          "stock_index": f, "growth_rate": float(g_d[d]), "presence_weight_undetected": np.nan})
     out = pd.DataFrame(rows)
     out.round(4).to_csv(OUT, index=False)
     b.drop(columns=["district", "potential_kwh", "first_y"]).reset_index().to_parquet(OUT_B, index=False)
-    nat_y = out.groupby("year")[["potential_gwh", "expected_gwh"]].sum().round(0)
+    nat_y = out.groupby("year")[["potential_gwh", "expected_gwh", "expected_household_gwh",
+                                 "connected_households"]].sum().round(0)
     print(f"growth: presence {slope(np.array(years), nat):.3f}/yr nationally, census {g_census:.3f}/yr -> x{k:.2f}; "
-          f"districts {g_d.min():.3f} to {g_d.max():.3f}/yr; EICV5 logit shift {shift_hist}")
+          f"districts {g_d.min():.3f} to {g_d.max():.3f}/yr; logit shifts 2014 {shifts[2014].min():.2f} to "
+          f"{shifts[2014].max():.2f}, 2017 {shifts[2017].min():.2f} to {shifts[2017].max():.2f}")
     print(nat_y.to_string())
 
 
