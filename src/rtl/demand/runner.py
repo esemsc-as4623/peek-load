@@ -80,12 +80,12 @@ def building_preview(lib: pd.DataFrame) -> None:
     covered = bp[bp.profile_id.isin(have)].merge(lib[["profile_id", "daily_kwh_mean", "status"]], on="profile_id")
     covered["daily_kwh"] = covered.weight * covered.daily_kwh_mean
     out = covered.groupby("bldg_id").agg(daily_kwh=("daily_kwh", "sum")).reset_index()
-    share = bp.assign(ok=bp.profile_id.isin(have)).groupby("bldg_id").apply(
-        lambda g: (g.weight * g.ok).sum() / g.weight.sum() if g.weight.sum() else 0.0, include_groups=False)
+    g = bp.assign(ok_w=bp.weight * bp.profile_id.isin(have)).groupby("bldg_id")[["ok_w", "weight"]].sum()
+    share = (g.ok_w / g.weight.where(g.weight > 0)).fillna(0.0)
     out = out.merge(share.rename("profile_weight_covered").reset_index(), on="bldg_id", how="right").fillna(
         {"daily_kwh": 0.0})
     out["annual_kwh"] = out.daily_kwh * 365
-    out["note"] = "PREVIEW: draft archetypes; demand from profiles without an archetype JSON is missing"
+    out["note"] = "demand from profiles without an archetype JSON is missing"
     out.to_parquet(PREVIEW, index=False)
     print(f"preview for {len(out):,} buildings; {out.profile_weight_covered.mean():.0%} of profile weight has an "
           f"archetype. Missing archetypes (expected units):\n{missing.round(0).astype(int).to_string()}")

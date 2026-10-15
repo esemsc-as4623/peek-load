@@ -170,57 +170,27 @@ def deep_dive(con, dd: dict, classes: list[str], bbox: list[float] | None) -> pd
     return df.drop(columns="probs_json")
 
 
-def pu_area_summary(dd: dict, lib: pd.DataFrame, df: pd.DataFrame) -> dict:
-    """Productive use for a deep-dive sector, by value kind: reported (census, district), building_sum (tagged
-    buildings in the sector), unlocated (census amount spread to this sector, not tied to buildings)."""
-    areas = pd.read_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet")
-    census = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv")
-    un = areas[(areas.level == "sector") & (areas.area_id == dd["sector"]) & (areas.district == dd["district"])]
-    units = un.groupby("profile_id").units.sum().reindex(lib.index, fill_value=0.0)
-    hourly = units.to_numpy() @ curves(lib)
-    located = df.pu_located.dropna().value_counts()
+def establishment_summary(dd: dict, lib: pd.DataFrame, df: pd.DataFrame, kind: str) -> dict:
+    """Productive use (kind "pu") or services ("svc") in a deep-dive sector: the census figure reported for the
+    whole district, and the establishments placed on buildings in the sector (tagged or census-allocated). Every
+    establishment sits on a building; their demand is already in the building totals."""
+    census = pd.read_csv(PROCESSED_DIR / f"{kind}_census_districts.csv")
+    col = "pu_census" if kind == "pu" else "census"
+    profiles = set(census.profile_id)
+    e = df[df.establishment.isin(profiles)]
+    units = e.establishment.value_counts()
     d = census[census.district == dd["district"]]
     return {
-        "reported": {"district": dd["district"], "establishments_census": rnd(d.pu_census.sum(), 0),
-                     "by_setting": d.groupby("setting").pu_census.sum().round(0).to_dict(),
-                     "source": "NISR Establishment Census 2023 (manufacturing establishments, district level)"},
-        "building_sum": {"located_buildings": int(located.sum()), "units_by_profile": located.to_dict(),
-                         "annual_mwh": rnd(sum(located.get(p, 0) * lib.at[p, "daily_kwh_mean"] for p in located.index)
+        "reported": {"district": dd["district"], "establishments_census": rnd(d[col].sum(), 0),
+                     "by_profile": d.groupby("profile_id")[col].sum().round(0).to_dict(),
+                     "source": "NISR Establishment Census 2023 (district level)"},
+        "building_sum": {"buildings": int(len(e)), "tagged": int((e.use_source == "tag").sum()),
+                         "census_allocated": int((e.use_source == "census").sum()),
+                         "units_by_profile": units.to_dict(),
+                         "annual_mwh": rnd(sum(units.get(p, 0) * lib.at[p, "daily_kwh_mean"] for p in units.index)
                                            * 365 / 1000, 1)},
-        "unlocated": {"units_by_profile": {p: rnd(v, 1) for p, v in units.items() if v > 0},
-                      "units": rnd(units.sum(), 1),
-                      "annual_mwh": rnd(units.to_numpy() @ lib.daily_kwh_mean.to_numpy() * 365 / 1000, 1),
-                      "peak_kw": rnd(hourly.max() / 1000, 1),
-                      "hourly_kw": [rnd(v / 1000, 2) for v in hourly]},
-        "candidates_in_view": int(df.pu_candidate.notna().sum()),
-        "note": ("Unlocated productive use is an area amount: census establishments not tied to a building. "
-                 "Candidates are buildings worth checking, not identified workshops."),
-    }
-
-
-def svc_area_summary(dd: dict, lib: pd.DataFrame, df: pd.DataFrame) -> dict:
-    """Services (bars/restaurants, guesthouses, salons) for a sector, by value kind, as pu_area_summary."""
-    areas = pd.read_parquet(PROCESSED_DIR / "svc_unlocated_areas.parquet")
-    census = pd.read_csv(PROCESSED_DIR / "svc_census_districts.csv")
-    un = areas[(areas.level == "sector") & (areas.area_id == dd["sector"]) & (areas.district == dd["district"])]
-    units = un.groupby("profile_id").units.sum().reindex(lib.index, fill_value=0.0)
-    hourly = units.to_numpy() @ curves(lib)
-    located = df.svc_located.dropna().value_counts()
-    d = census[census.district == dd["district"]]
-    return {
-        "reported": {"district": dd["district"], "establishments_census": rnd(d.census.sum(), 0),
-                     "by_profile": d.groupby("profile_id").census.sum().round(0).to_dict(),
-                     "source": "NISR Establishment Census 2023 (sections I and S x assumed shares, district level)"},
-        "building_sum": {"located_buildings": int(located.sum()), "units_by_profile": located.to_dict(),
-                         "annual_mwh": rnd(sum(located.get(p, 0) * lib.at[p, "daily_kwh_mean"] for p in located.index)
-                                           * 365 / 1000, 1)},
-        "unlocated": {"units_by_profile": {p: rnd(v, 1) for p, v in units.items() if v > 0},
-                      "units": rnd(units.sum(), 1),
-                      "annual_mwh": rnd(units.to_numpy() @ lib.daily_kwh_mean.to_numpy() * 365 / 1000, 1),
-                      "peak_kw": rnd(hourly.max() / 1000, 1),
-                      "hourly_kw": [rnd(v / 1000, 2) for v in hourly]},
-        "note": ("Unlocated services are census bars/restaurants, guesthouses and salons tied to no building, spread "
-                 "by population density within the district."),
+        "note": ("Every census establishment is placed on a building: tagged ones first, then the best candidates "
+                 "(rtl.demand.allocate). Their demand is part of the building totals."),
     }
 
 
@@ -233,7 +203,7 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
     dem, load = building_demand(weights, lib)
     df = df.join(dem)
     df["modelled"] = df.index.isin(dem.index)
-    # "top class only" alternative: all probability on the top label (ancillary -> no load)
+    # "top class only" mode is kept for the schema: uses are now allocated discretely, so both modes are the same
     weights_top = wtop[wtop.bldg_id.isin(df.index)]
     dem_top, _ = building_demand(weights_top, lib) if len(weights_top) else (pd.DataFrame(), None)
     top = dem_top.reindex(df.index)[["annual_kwh", "peak_w", "peak_hour"]] if len(dem_top) else pd.DataFrame(
@@ -242,19 +212,17 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
     df = df.join(top.add_suffix("_top"))
     pu_cfg = load_yaml("productive_use.yaml")
     comp, df["pu_score"], df["pu_category"] = pu_scores(df, pu_cfg, cfg["productive_use"])
-    loc = pd.read_parquet(PROCESSED_DIR / "pu_located.parquet").set_index("bldg_id")
-    cand = pd.read_parquet(PROCESSED_DIR / "pu_candidates.parquet").set_index("bldg_id")
-    df["pu_located"] = loc.profile_id.reindex(df.index)
-    sloc = pd.read_parquet(PROCESSED_DIR / "svc_located.parquet").set_index("bldg_id")
-    df["svc_located"] = sloc.profile_id.reindex(df.index)
-    df["pu_candidate"] = cand.profile_id.reindex(df.index)
-    df["pu_candidate_rank"] = cand["rank"].reindex(df.index)
+    bu = con.sql(f"SELECT bldg_id, use, establishment, households, source AS use_source FROM "
+                 f"'{PROCESSED_DIR}/building_use.parquet' WHERE bldg_id IN (SELECT unnest(?::VARCHAR[]))",
+                 params=[list(df.index)]).df().set_index("bldg_id")
+    df = df.join(bu)
     gc = con.sql(f"SELECT bldg_id, p_connected FROM '{PROCESSED_DIR}/grid_connection.parquet' WHERE bldg_id IN "
                  "(SELECT unnest(?::VARCHAR[]))", params=[list(df.index)]).df().set_index("bldg_id")
     df["p_connected"] = gc.p_connected.reindex(df.index)
 
     map_cols = ["label", "confidence", "modelled", "annual_kwh", "peak_w", "peak_hour", "annual_kwh_top",
-                "peak_w_top", "cooling_class", "pu_score", "pu_category", "pu_located", "pu_candidate", "svc_located",
+                "peak_w_top", "cooling_class", "pu_score", "pu_category", "use", "establishment", "households",
+                "use_source",
                 "p_connected",
                 "height_m", "est_floors", "first_seen_year", "source", "area_m2"]
     props = []
@@ -287,6 +255,8 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
             "use": {"label": r.label, "confidence": rnd(r.confidence, 2), "probs": r.probs, "cues": r.cues,
                     "tags": {k: r[k] for k in ("osm_building", "osm_amenity", "osm_shop", "overture_category",
                                                "facility_type") if isinstance(r[k], str)}},
+            "allocation": {"use": r.use, "establishment": r.establishment if isinstance(r.establishment, str) else None,
+                           "households": None if pd.isna(r.households) else int(r.households), "source": r.use_source},
             "profiles": wmap.get(b),
             "profiles_top_class": wmap_top.get(b, {} if r.modelled else None),
             "demand": None if not r.modelled else {k: (int(r[k]) if k == "peak_hour" else r[k]) for k in (
@@ -300,9 +270,7 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
                         "cdd22_per_year": rnd(r.cdd22_per_year),
                         "t2m_mean_c": rnd(r.t2m_mean_c)},
             "pu": {"eligible": bool(r.pu_eligible), "group": r.pu_group, "score": r.pu_score,
-                   "category": r.pu_category, "located": r.pu_located if isinstance(r.pu_located, str) else None,
-                   "candidate": r.pu_candidate if isinstance(r.pu_candidate, str) else None,
-                   "candidate_rank": None if pd.isna(r.pu_candidate_rank) else int(r.pu_candidate_rank),
+                   "category": r.pu_category,
                    "criteria": {k: rnd(v, 2) for k, v in comp.loc[b].items()}},
             "context": {"dist_road_major_m": rnd(r.dist_road_major_m, 0), "dist_road_any_m": rnd(r.dist_road_any_m, 0),
                         "dist_powerline_m": rnd(r.dist_powerline_m, 0), "poi_count_50m": r.poi_count_50m,
@@ -357,8 +325,9 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
                                         strict=True)) if len(labelled) else {}),
         "cooling_mix": df.cooling_class.value_counts().to_dict(),
         "pu_mix": df.pu_category.value_counts().to_dict(),
-        "productive_use": pu_area_summary(dd, lib, df),
-        "services": svc_area_summary(dd, lib, df),
+        "use_mix": df.use.value_counts().to_dict(), "households": int(df.households.fillna(0).sum()),
+        "productive_use": establishment_summary(dd, lib, df, "pu"),
+        "services": establishment_summary(dd, lib, df, "svc"),
         "units_by_profile": units.round(1).to_dict(),
         "metrics": {"annual_mwh": rnd(mod.annual_kwh.sum() / 1000, 1),
                     "annual_mwh_p10": rnd(mod.annual_kwh_p10.sum() / 1000, 1),
@@ -386,44 +355,29 @@ def export_deep_dive(con, out, dd_id: str, dd: dict, cfg: dict, lib: pd.DataFram
 
 
 # ------------------------------------------------------------------------------------------------ national/admin
-PU_FIELD_KINDS = {"svc_census_reported": "reported", "svc_units_located": "building_sum",
-                  "svc_units_unlocated": "unlocated", "svc_mwh_unlocated": "unlocated",
-                  "pu_census_reported": "reported", "pu_units_located": "building_sum",
-                  "annual_mwh_modelled": "building_sum", "pu_units_unlocated": "unlocated",
-                  "pu_mwh_unlocated": "unlocated", "pu_candidates": "building_sum"}
+PU_FIELD_KINDS = {"pu_census_reported": "reported", "svc_census_reported": "reported",
+                  "households_census_reported": "reported", "pu_buildings": "building_sum",
+                  "svc_buildings": "building_sum", "households": "building_sum", "annual_mwh_modelled": "building_sum"}
 
 
 def pu_by_area(lib: pd.DataFrame) -> dict[str, pd.DataFrame]:
-    """Productive-use fields per H3 r7 cell, sector (district, sector) and district."""
-    areas = pd.read_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet")
-    kwh = lib.daily_kwh_mean.reindex(areas.profile_id).to_numpy() * 365 / 1000
-    areas = areas.assign(mwh=areas.units.to_numpy() * kwh)
-    loc = pd.read_parquet(PROCESSED_DIR / "pu_located.parquet")
-    cand = pd.read_parquet(PROCESSED_DIR / "pu_candidates.parquet")
-    census = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv")
-    svc = pd.read_parquet(PROCESSED_DIR / "svc_unlocated_areas.parquet")
-    svc = svc.assign(mwh=svc.units.to_numpy() * lib.daily_kwh_mean.reindex(svc.profile_id).to_numpy() * 365 / 1000)
-    sloc = pd.read_parquet(PROCESSED_DIR / "svc_located.parquet")
-    scen = pd.read_csv(PROCESSED_DIR / "svc_census_districts.csv")
+    """Allocated uses per H3 r7 cell, sector (district, sector) and district: productive-use and service buildings,
+    households (sums over buildings); districts add the census figures they reproduce (reported)."""
+    u = pd.read_parquet(PROCESSED_DIR / "building_use.parquet")
+    pu_p = set(pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv").profile_id)
+    svc_p = set(pd.read_csv(PROCESSED_DIR / "svc_census_districts.csv").profile_id)
+    u = u.assign(pu=u.establishment.isin(pu_p).astype(int), svc=u.establishment.isin(svc_p).astype(int))
+    pc = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv").groupby("district").pu_census.sum()
+    sc = pd.read_csv(PROCESSED_DIR / "svc_census_districts.csv").groupby("district").census.sum()
+    hh = pd.read_csv(PROCESSED_DIR / "validation_anchors" / "households_by_district_2022.csv").set_index(
+        "district").households_total
     out = {}
-    for level, keys, lk in [("h3_r7", ["h3_r7"], ["h3_r7"]), ("sector", ["district", "sector"], ["district", "sector"]),
-                            ("district", ["district"], ["district"])]:
-        a = areas[areas.level == level]
-        a = a.drop(columns="area_id") if level == "district" else a.rename(columns={"area_id": keys[-1]})
-        g = a.groupby(keys)[["units", "mwh"]].sum().rename(columns={"units": "pu_units_unlocated",
-                                                                    "mwh": "pu_mwh_unlocated"})
-        g = g.join(loc.groupby(lk).size().rename("pu_units_located"), how="outer")
-        g = g.join(cand.groupby(lk).size().rename("pu_candidates"), how="outer")
+    for level, keys in [("h3_r7", ["h3_r7"]), ("sector", ["district", "sector"]), ("district", ["district"])]:
+        g = u.groupby(keys).agg(pu_buildings=("pu", "sum"), svc_buildings=("svc", "sum"),
+                                households=("households", "sum"))
         if level == "district":
-            g = g.join(census.groupby("district").pu_census.sum().rename("pu_census_reported"), how="outer")
-        # services: the same three kinds (no candidates)
-        sa = svc[svc.level == level]
-        sa = sa.drop(columns="area_id") if level == "district" else sa.rename(columns={"area_id": keys[-1]})
-        g = g.join(sa.groupby(keys)[["units", "mwh"]].sum().rename(columns={"units": "svc_units_unlocated",
-                                                                             "mwh": "svc_mwh_unlocated"}), how="outer")
-        g = g.join(sloc.groupby(lk).size().rename("svc_units_located"), how="outer")
-        if level == "district":
-            g = g.join(scen.groupby("district").census.sum().rename("svc_census_reported"), how="outer")
+            g = g.join(pc.rename("pu_census_reported")).join(sc.rename("svc_census_reported")).join(
+                hh.rename("households_census_reported"))
         out[level] = g.reset_index()
     return out
 
@@ -460,8 +414,7 @@ def national(con, out, lib: pd.DataFrame) -> None:
         hexes = hexes.merge(con.sql(f"""SELECT g.h3_r7, avg(g.p_connected) AS p_connected_mean FROM '{gc}' g
             JOIN '{INTERIM_DIR}/buildings_base.parquet' b USING (bldg_id) WHERE b.area_m2 >= 20 GROUP BY 1""").df(),
                             on="h3_r7", how="left")
-    keep += ["pu_units_located", "pu_units_unlocated", "pu_mwh_unlocated", "pu_candidates", "p_connected_mean",
-             "svc_units_located", "svc_units_unlocated", "svc_mwh_unlocated"]
+    keep += ["pu_buildings", "svc_buildings", "households", "p_connected_mean"]
     keep = [k for k in keep if k in hexes.columns]
     props = [{k: (rnd(r[k], 2) if isinstance(r[k], float) else r[k]) for k in keep} for _, r in hexes.iterrows()]
     for p in props:
@@ -711,9 +664,7 @@ def main() -> None:
     out.mkdir(parents=True)
     con = connect()
     lib = library()
-    from rtl.demand.mapping import weights_table
-
-    wtop = weights_table(top_class=True)
+    wtop = pd.read_parquet(PROCESSED_DIR / "building_profiles.parquet")  # allocation is discrete: same weights
     national(con, out, lib)
     summaries = {}
     for dd_id, dd in cfg["deep_dives"].items():

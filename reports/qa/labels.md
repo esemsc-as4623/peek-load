@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `labels.parquet`
-- checked: 2026-10-13 10:55 UTC
+- checked: 2026-10-15 11:54 UTC
 - rows: 48,556
 - schema: PASS (all rows)
 

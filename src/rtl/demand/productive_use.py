@@ -1,19 +1,17 @@
-"""B3: productive-use (PU) demand, located on tagged buildings plus an area-level "unlocated" amount.
+"""B3: productive-use (PU) census targets and tagged buildings, for the census-constrained allocation.
 
     pixi run pu-demand
 
 Rules and assumptions live in config/productive_use.yaml. Steps:
-1. Census: manufacturing establishments per district and setting (NISR Establishment Census 2023 tables).
+1. Census: manufacturing establishments per district and setting (NISR Establishment Census 2023 tables), split
+   into trades by setting (mills rural, tailors / welders / carpenters in towns).
 2. Located: buildings carrying a trade tag (OSM / Overture) get that trade's RAMP profile.
-3. Unlocated: per district, setting and trade, census count x trade share - located, spread over eligible
-   buildings in proportion to their candidate score, then summed per H3 r7 cell, sector and district.
-   It is reported per area only; the top-scoring buildings in each cell are flagged as candidates.
+The rest of each district's count is placed on individual buildings by rtl.demand.allocate (best candidates by the
+viability criteria below); nothing stays as an area amount.
 
 Outputs (data/processed/):
   pu_located.parquet            bldg_id, profile_id, tag, h3_r7, district, sector, setting
-  pu_unlocated_areas.parquet    level (h3_r7 | sector | district), area_id, district, profile_id, units
-  pu_candidates.parquet         bldg_id, profile_id, h3_r7, district, sector, score, rank, criteria
-  pu_census_districts.csv       published district table: census count, located, unlocated by trade
+  pu_census_districts.csv       published district table: census count and tagged buildings by trade and setting
 """
 
 from __future__ import annotations
@@ -162,57 +160,14 @@ def located(con, cfg: dict) -> pd.DataFrame:
                              b.sector, b.setting FROM hits h JOIN b USING (bldg_id)""").df()
 
 
-# ------------------------------------------------------------------------------------------------ 3. unlocated
-def allocate(cand: pd.DataFrame, n_units: float) -> np.ndarray:
-    """Spread n_units over buildings in proportion to their score (a small floor keeps zero scores eligible)."""
-    s = cand.score.to_numpy(float) + 1.0
-    return n_units * s / s.sum()
-
-
-def unlocated(con, cfg: dict, census: pd.DataFrame, loc: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame,
-                                                                                 pd.DataFrame]:
-    road = cfg["eligibility"]["roadside_m"]
+def district_targets(census: pd.DataFrame, loc: pd.DataFrame, cfg: dict) -> pd.DataFrame:
+    """(district, setting, profile_id, pu_census, located): census establishments by trade (trade_mix by setting)."""
     loc_n = loc.groupby(["district", "setting", "profile_id"]).size()
-    per_building, district_rows, cand_rows = [], [], []
-    for (district, setting), g in census.groupby(["district", "setting"]):
-        n_pu = g.pu_census.sum()
-        df = con.sql("SELECT * FROM b WHERE eligible AND district = ? AND setting = ? AND bldg_id NOT IN "
-                     "(SELECT bldg_id FROM pu_loc)", params=[district, setting]).df().set_index("bldg_id")
-        crit = criteria(df)
-        for pid, share in cfg["trade_mix"][setting].items():
-            n_located = int(loc_n.get((district, setting, pid), 0))
-            n_unloc = max(0.0, n_pu * share - n_located)
-            keep = df.dist_road_any_m.fillna(1e9) <= road[pid] if pid in road else pd.Series(True, index=df.index)
-            weights = cfg["candidate_score"]["town" if pid in TOWN_TRADES else pid]
-            cand = df[keep][["h3_r7", "sector"]].assign(score=candidate_score(crit[keep], weights))
-            district_rows.append({"district": district, "setting": setting, "profile_id": pid,
-                                  "pu_census": round(n_pu * share, 1), "located": n_located,
-                                  "unlocated": round(n_unloc, 1), "eligible_buildings": len(cand),
-                                  "not_allocated": round(n_unloc, 1) if not len(cand) else 0.0})
-            if not len(cand) or n_unloc <= 0:
-                continue
-            cand["units"] = allocate(cand, n_unloc)
-            cand["profile_id"], cand["district"] = pid, district
-            per_building.append(cand.reset_index())
-    alloc = pd.concat(per_building, ignore_index=True)
-    # candidates: in each H3 r7 cell and trade, the top round(units) buildings by score, each building at most once
-    for _, cell in alloc.groupby("h3_r7"):
-        taken: set[str] = set()
-        for _, g in cell.groupby("profile_id"):
-            n = int(round(g.units.sum()))
-            top = g[~g.bldg_id.isin(taken)].sort_values(["score", "bldg_id"], ascending=[False, True]).head(n)
-            if len(top):
-                taken.update(top.bldg_id)
-                cand_rows.append(top.assign(rank=np.arange(1, len(top) + 1)))
-    cands = pd.concat(cand_rows, ignore_index=True) if cand_rows else pd.DataFrame()
-    areas = pd.concat([
-        alloc.groupby(["h3_r7", "district", "profile_id"]).units.sum().reset_index()
-             .rename(columns={"h3_r7": "area_id"}).assign(level="h3_r7"),
-        alloc.groupby(["sector", "district", "profile_id"]).units.sum().reset_index()
-             .rename(columns={"sector": "area_id"}).assign(level="sector"),
-        alloc.groupby(["district", "profile_id"]).units.sum().reset_index()
-             .assign(area_id=lambda d: d.district, level="district")], ignore_index=True)
-    return areas[["level", "area_id", "district", "profile_id", "units"]], pd.DataFrame(district_rows), cands
+    rows = [{"district": r.district, "setting": r.setting, "profile_id": pid,
+             "pu_census": round(r.pu_census * share, 1),
+             "located": int(loc_n.get((r.district, r.setting, pid), 0))}
+            for r in census.itertuples(index=False) for pid, share in cfg["trade_mix"][r.setting].items()]
+    return pd.DataFrame(rows)
 
 
 def main() -> None:
@@ -221,22 +176,13 @@ def main() -> None:
     con = connect()
     building_table(con, map_cfg, cfg)
     loc = located(con, cfg)
-    con.register("pu_loc", loc)
-    areas, districts, cands = unlocated(con, cfg, census, loc)
-    if len(cands):
-        crit = criteria(con.sql("SELECT * FROM b WHERE bldg_id IN (SELECT unnest(?::VARCHAR[]))",
-                                params=[list(cands.bldg_id)]).df().set_index("bldg_id"))
-        cands = cands.join(crit.round(3), on="bldg_id")
-        cands["score"], cands["units"] = cands.score.round(1), cands.units.round(6)
+    districts = district_targets(census, loc, cfg)
     loc.to_parquet(PROCESSED_DIR / "pu_located.parquet", index=False)
-    areas.assign(units=areas.units.round(4)).to_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet", index=False)
-    cands.to_parquet(PROCESSED_DIR / "pu_candidates.parquet", index=False)
     districts.to_csv(PROCESSED_DIR / "pu_census_districts.csv", index=False)
-    tot = districts.groupby("profile_id")[["pu_census", "located", "unlocated", "not_allocated"]].sum().round(0)
     print(f"census PU establishments {census.pu_census.sum():,.0f} "
           f"(urban share {census.pu_share[census.setting == 'urban'].iloc[0]:.1%}, "
-          f"rural {census.pu_share[census.setting == 'rural'].iloc[0]:.1%}); located {len(loc)}; "
-          f"candidates flagged {len(cands):,}\n{tot.to_string()}")
+          f"rural {census.pu_share[census.setting == 'rural'].iloc[0]:.1%}); located {len(loc)}\n"
+          f"{districts.groupby('profile_id')[['pu_census', 'located']].sum().round(0).to_string()}")
 
 
 if __name__ == "__main__":

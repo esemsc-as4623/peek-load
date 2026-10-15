@@ -1,0 +1,50 @@
+# Census-constrained allocation of uses to buildings (`pixi run allocate`): every unit of demand sits on a building.
+# Owner's direction (2026-10-15): all demand at building level; place the rarest uses first, using the best
+# candidates, and label the others from what is left. Status: draft.
+#
+# Order (each step only sees buildings not taken by an earlier one):
+#   0. tags are kept: a tagged school stays a school, a tagged bar a bar, a tagged house a house candidate
+#   1. productive use (census manufacturing per district x setting): best candidates by viability x not-ancillary
+#   2. services, rarest first (guesthouse, salon, bar/restaurant): best by P(commercial or shop-house) x density
+#   3. retail shops (census wholesale/retail per district): best by P(commercial or shop-house); a shop may share its
+#      building with a household (a shop-house)
+#   4. institutions, places of worship, stores/warehouses (no census count): the LLM's rate per setting in the deep
+#      dives x the district's urban / rural buildings (tags count towards it), the most likely buildings first. The
+#      classifier's own expected counts drift with geography (e.g. 5.8% institutional in Nyabihu), so it only ranks
+#   5. households (2022 census households per district): the most likely homes first, one household per floor at most
+#   6. everything left is ancillary (kitchens, latrines, stores, sheds): no load
+
+census:
+  retail_section: "Whole sale and retail trade; repair of motor vehicles and motorcycles"
+  households: validation_anchors/households_by_district_2022.csv   # now a constraint, so no longer a validation
+
+order:
+  productive_use: [grain_mill, welding_workshop, tailoring, carpentry]   # targets from data/processed/pu_census_districts.csv
+  services: [guesthouse, salon, bar_restaurant]                         # targets from data/processed/svc_census_districts.csv
+
+eligibility:
+  establishment_min_area_m2: 15     # kiosks can be small; productive use keeps its own 30 m2 (config/productive_use.yaml)
+  household_min_area_m2: 10
+
+# Classifier calibration: model B was trained on tags that over-represent institutions (24% of tagged buildings), so
+# its class shares are rescaled to the LLM's class mix in the deep dives (every building labelled, a representative
+# sample) before probabilities are used as expected counts. Only rankings are used for census-constrained uses.
+calibrate_to: llm_deep_dive_mix
+
+uncensused:   # step 4: class -> profile (facility tags choose school / health facility)
+  institutional: office
+  religious: church
+  industrial_warehouse: warehouse_light
+
+# Spacing: at most `cap` establishments of a kind per H3 cell (r8 ~0.7 km2; r9 ~0.1 km2, a block). Without it the
+# best-scoring buildings cluster (all of Kirehe's mills landed on one roadside strip near the Nasho scheme). A
+# district that can't meet its census count under the cap gets it doubled, step by step (reported in QA).
+spacing:
+  grain_mill: {cell: h3_r8, cap: 1}        # a mill serves a catchment of several villages
+  welding_workshop: {cell: h3_r9, cap: 1}
+  tailoring: {cell: h3_r9, cap: 1}
+  carpentry: {cell: h3_r9, cap: 1}
+  guesthouse: {cell: h3_r9, cap: 1}
+  salon: {cell: h3_r9, cap: 2}
+  bar_restaurant: {cell: h3_r9, cap: 3}
+  kiosk_shop: {cell: h3_r9, cap: 6}

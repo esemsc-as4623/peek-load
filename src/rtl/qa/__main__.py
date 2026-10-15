@@ -15,7 +15,6 @@ from pathlib import Path
 
 import duckdb
 import geopandas as gpd
-import numpy as np
 import pandas as pd
 import pandera.errors as pe
 
@@ -100,6 +99,67 @@ def _mapping_ids(rules: dict) -> set[str]:
     return {pid for rs in rules["classes"].values() for r in rs for pid in r["profiles"] if not pid.startswith("@")}
 
 
+def allocation_checks(con: duckdb.DuckDBPyConnection) -> list[tuple[str, bool, str]]:
+    """Census-constrained allocation (rtl.demand.allocate) and the use classifier (rtl.demand.use_model)."""
+    from rtl.demand.allocate import TARGETS_PATH, USE_PATH
+
+    P, I = PROCESSED_DIR, INTERIM_DIR  # noqa: E741, N806
+    out = []
+    t = pd.read_csv(TARGETS_PATH)
+    est = t[t.item != "households"]
+    met = est.tagged.clip(upper=est.target) + est.assigned + est.shortfall
+    out.append(("allocation: every district's establishments = census target (tagged + assigned + shortfall)",
+                bool(((met == est.target) | (est.tagged > est.target)).all()),
+                f"{len(est)} district x item rows; shortfall {int(est.shortfall.sum()):,}; tags above target in "
+                f"{int((est.tagged > est.target).sum())} rows"))
+    hh = t[t.item == "households"]
+    out.append(("allocation: households per district = 2022 census (or shortfall reported)",
+                bool((hh.assigned + hh.shortfall == hh.target).all()),
+                f"{int(hh.assigned.sum()):,} of {int(hh.target.sum()):,}; shortfall {int(hh.shortfall.sum()):,}"))
+    n_use, n_ids, n_bldg = con.sql(f"SELECT count(*), count(DISTINCT bldg_id), (SELECT count(*) FROM "
+                                   f"'{I}/building_context.parquet' WHERE adm2_name IS NOT NULL) "
+                                   f"FROM '{USE_PATH}'").fetchone()
+    out.append(("allocation: one use per building, every building with a district",
+                n_use == n_ids == n_bldg, f"{n_use:,} rows, {n_ids:,} ids, {n_bldg:,} buildings"))
+    bad_w = con.sql(f"""WITH w AS (SELECT bldg_id, sum(weight) w FROM '{P}/building_profiles.parquet' GROUP BY 1)
+        SELECT count(*) FROM '{USE_PATH}' u FULL JOIN w USING (bldg_id)
+        WHERE abs(coalesce(w.w, 0) - (coalesce(u.households, 0) + (u.establishment IS NOT NULL)::INT)) > 1e-9"""
+                   ).fetchone()[0]
+    out.append(("allocation: profile weights = households + establishment, building by building", bad_w == 0,
+                f"{bad_w} mismatches"))
+    fid = con.sql(f"""SELECT count(*) FILTER (WHERE p.tag_label IN ('institutional', 'religious',
+                             'industrial_warehouse',
+                             'ancillary') AND u.use <> p.tag_label), count(*) FILTER (WHERE p.tag_label IS NOT NULL)
+                      FROM '{USE_PATH}' u JOIN '{P}/use_probs.parquet' p USING (bldg_id)""").fetchone()
+    out.append(("allocation: tagged institutions, worship, stores and ancillary keep their tag", fid[0] == 0,
+                f"{fid[0]} changed of {fid[1]:,} tagged buildings"))
+    loaded = con.sql(f"SELECT avg((households > 0 OR establishment IS NOT NULL)::INT) FROM '{USE_PATH}'").fetchone()[0]
+    out.append(("allocation: share of buildings carrying demand is plausible (40-75%)", 0.40 <= loaded <= 0.75,
+                f"{loaded:.1%} (census: 0.52 households per building)"))
+    from rtl.settings import load_yaml
+
+    con.sql("INSTALL h3 FROM community; LOAD h3")
+    sp = load_yaml("allocation.yaml")["spacing"]
+    over, tot = 0, 0
+    for prof, c in sp.items():
+        cell = "h3_cell_to_parent(b.h3_r9, 8)" if c["cell"] == "h3_r8" else "b.h3_r9"
+        o, t2 = con.sql(f"""WITH k AS (SELECT {cell} AS cell, count(*) n FROM '{USE_PATH}' u
+                JOIN '{I}/buildings_base.parquet' b USING (bldg_id)
+                WHERE u.establishment = '{prof}' AND u.source = 'census' GROUP BY 1)
+                SELECT coalesce(sum(greatest(n - {c["cap"]}, 0)), 0), coalesce(sum(n), 0) FROM k""").fetchone()
+        over, tot = over + o, tot + t2
+    out.append(("allocation: establishments respect the spacing caps (relaxed caps used for <= 10%)",
+                tot > 0 and over / tot <= 0.10, f"{int(over):,} of {int(tot):,} census-placed establishments sit above "
+                f"their cell's base cap ({over / max(tot, 1):.1%})"))
+    sc = pd.read_csv(P / "use_model" / "scores.csv")
+    b = sc[(sc.model == "B tags+llm")].set_index("test")
+    auc_tags = b.at["tags (held-out districts)", "macro_auc"]
+    auc_anc = b.at["LLM labels (held-out sector)", "auc_ancillary"]
+    out.append(("use classifier B ranks held-out uses (macro AUC >= 0.70 on tags; ancillary AUC >= 0.70 by sector)",
+                bool(auc_tags >= 0.70 and auc_anc >= 0.70), f"{auc_tags:.3f}; {auc_anc:.3f}"))
+    return out
+
+
 def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
     """Phase-2 consistency: one set of profile ids across recipes, mapping, archetype JSON, library, weights and
     dashboard config; sane weights and library values; archetype status matching data/gold/approvals.yaml."""
@@ -147,22 +207,7 @@ def check_demand(con: duckdb.DuckDBPyConnection) -> tuple[bool, str]:
     checks = [("weights non-negative and present", w[0] == 0, f"{w[0]} bad of {w[1]:,}"),
               ("library daily kWh > 0", bool((lib.daily_kwh_mean > 0).all()), f"{len(lib)} profiles"),
               ("archetype status matches approvals", statuses == want, f"{sorted(statuses)} vs {sorted(want)}")]
-    # productive use: census establishments are either located, unlocated (spread over areas) or reported as
-    # not allocated; the three area levels hold the same total
-    dist = pd.read_csv(PROCESSED_DIR / "pu_census_districts.csv")
-    areas = pd.read_parquet(PROCESSED_DIR / "pu_unlocated_areas.parquet")
-    lv = areas.groupby("level").units.sum()
-    unloc = float((dist.unlocated - dist.not_allocated).sum())
-    checks.append(("productive use: area levels add up to the allocated census amount",
-                   bool(np.allclose(lv.to_numpy(), unloc, rtol=1e-4))
-                   and set(lv.index) == {"h3_r7", "sector", "district"},
-                   f"{lv.round(0).to_dict()} vs {unloc:,.0f}"))
-    sd = pd.read_csv(PROCESSED_DIR / "svc_census_districts.csv")
-    sl = pd.read_parquet(PROCESSED_DIR / "svc_unlocated_areas.parquet").groupby("level").units.sum()
-    sunloc = float((sd.unlocated - sd.not_allocated).sum())
-    checks.append(("services: area levels add up to the allocated census amount",
-                   bool(np.allclose(sl.to_numpy(), sunloc, rtol=1e-4)) and len(sl) == 3,
-                   f"{sl.round(0).to_dict()} vs {sunloc:,.0f}"))
+    checks += allocation_checks(con)
     gc = PROCESSED_DIR / "grid_connection.parquet"
     if gc.exists():
         g = con.sql(f"SELECT count(*), count(*) FILTER (WHERE p_connected BETWEEN 0 AND 1) FROM '{gc}'").fetchone()

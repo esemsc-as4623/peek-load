@@ -114,6 +114,7 @@ eda-01 = "python notebooks/01_footprints.py"
 cooling-check = "python notebooks/03_cooling_check.py"
 report-figures = "python notebooks/02_report_figures.py"
 status-figures = "python notebooks/04_status_figures.py"
+use-figures = "python notebooks/05_use_allocation_figures.py"
 curate-evidence = "python -m rtl.ingest.curate_evidence"
 evidence-review = "python -m rtl.demand.review"
 validate-evidence = "python -m rtl.demand.validate"
@@ -122,13 +123,15 @@ eicv5-electricity = "python -m rtl.ingest.eicv5_electricity"
 mtf-appliances = "python -m rtl.ingest.mtf_appliances"
 pu-demand = "python -m rtl.demand.productive_use"  # B3: located + unlocated productive use (before profile-mapping)
 svc-demand = "python -m rtl.demand.services"  # B3s: bars/restaurants, guesthouses, salons (after pu-demand)
+use-model = "python -m rtl.demand.use_model"  # B2a: building-use classifier (tags; tags+LLM), applied nationally
+allocate = "python -m rtl.demand.allocate"  # B2b: census counts -> buildings, rarest first (after use-model, pu-demand, svc-demand)
 profile-mapping = "python -m rtl.demand.mapping"
 grid-model = "python -m rtl.demand.grid_connection"  # B4: grid-connection model (DHS 2025 label; restricted inputs stay local)
 profile-library = "python -m rtl.demand.runner"
 profile-checks = "python -m rtl.demand.checks"
 dashboard-data = "python -m rtl.dashboard.export"
 # the whole demand phase, in order (inputs: labels, context, climate, evidence, MTF/EICV5 aggregates)
-demand = """python -m rtl.demand.validate && python -m rtl.demand.productive_use && python -m rtl.demand.services && python -m rtl.demand.mapping && python -m rtl.demand.build_archetypes \
+demand = """python -m rtl.demand.validate && python -m rtl.demand.productive_use && python -m rtl.demand.services && python -m rtl.demand.use_model && python -m rtl.demand.allocate && python -m rtl.demand.build_archetypes \
   && python -m rtl.demand.runner --buildings && python -m rtl.demand.checks && python -m rtl.demand.grid_connection \
   && python -m rtl.dashboard.export --sample && python -m rtl.dashboard.export && python -m rtl.qa"""
 docs-sources = "python -m rtl.docs_sources"

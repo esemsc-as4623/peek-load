@@ -53,10 +53,22 @@ gold_labels:
     vegetation and roof shape (flat or pitched); roof shape may have swayed some decisions but matters little.
     Agreement with them measures consistency between two uncertain readers, not accuracy.
 
+building_level_allocation:
+  decision: approved
+  scope: all demand on individual buildings; a classical use classifier (tags; tags + LLM labels); census counts placed
+    on the best candidates, rarest first (productive use first)
+  date: 2026-10-15
+  by: repo owner
+  note: >-
+    The owner's direction. The implementation choices in config/use_model.yaml and config/allocation.yaml (features,
+    class weights, allocation order and scores, spacing caps, LLM rates for uncensused uses) await sign-off. Census
+    households per district are now an allocation constraint, so they no longer serve as validation.
+
 # Not yet approved (recorded so nothing is mistaken for a sign-off):
 # - evidence rows added after ee90948 (11 curated Power Africa Rwanda values): covered by the automated checks only
 # - config/productive_use.yaml: equal town-trade shares, 100% mills in rural areas, eligibility (>= 30 m2, roadside
 #   100 m for mills) and candidate weights
 # - the grid-connection model (rtl.demand.grid_connection): built for review, not yet applied to demand
+# - config/use_model.yaml and config/allocation.yaml (2026-10-15): see building_level_allocation
 # - config/services.yaml (2026-10-13): section I split 97% bars/restaurants / 3% accommodation, section S 60% salons,
 #   allocation by population density; the bar/restaurant profile is used for rural cabarets too (decisions.md A2)

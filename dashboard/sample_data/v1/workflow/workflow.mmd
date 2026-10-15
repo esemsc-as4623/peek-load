@@ -59,12 +59,15 @@ flowchart LR
     builder["B1 archetype builder"]
     signoff{{"Archetype sign-off (human, 2026-10-12)"}}
     t_archetypes[("17 archetypes (signed off)")]
-    mapping_approval{{"Mapping approval (human)"}}
-    mapping["B2 building to profile mapping"]
-    pu_demand["B3 productive use: tagged + unlocated"]
-    t_pu[("pu_located / pu_unlocated_areas / pu_candidates")]
-    svc_demand["B3s services: tagged + unlocated"]
-    t_svc[("svc_located / svc_unlocated_areas")]
+    mapping_approval{{"Allocation rules (human)"}}
+    use_model["B2a use classifier (tags; tags + LLM)"]
+    t_useprobs[("use_probs (8 class probabilities per building)")]
+    pu_demand["B3 productive-use census targets + tags"]
+    t_pu[("pu_census_districts / pu_located")]
+    svc_demand["B3s services census targets + tags"]
+    allocate["B2b census-constrained allocation"]
+    t_use[("building_use (one use per building)")]
+    t_svc[("svc_census_districts / svc_located")]
     grid_model["B4 grid-connection model (restricted)"]
     t_grid[("grid_connection (P per building)")]
     t_weights[("building_profiles")]
@@ -104,13 +107,11 @@ flowchart LR
   manifest --> pu_demand
   t_context --> pu_demand
   pu_demand --> t_pu
-  t_pu --> mapping
+  t_pu --> allocate
   manifest --> svc_demand
   t_context --> svc_demand
   svc_demand --> t_svc
-  t_svc --> mapping
-  t_svc --> aggregation
-  t_pu --> aggregation
+  t_svc --> allocate
   manifest --> grid_model
   t_context --> grid_model
   grid_model --> t_grid
@@ -148,10 +149,14 @@ flowchart LR
   t_anchors --> builder
   builder --> t_archetypes
   signoff --> t_archetypes
-  t_labels --> mapping
-  t_context --> mapping
-  mapping_approval --> mapping
-  mapping --> t_weights
+  t_labels --> use_model
+  t_context --> use_model
+  t_height --> use_model
+  use_model --> t_useprobs
+  t_useprobs --> allocate
+  mapping_approval --> allocate
+  allocate --> t_use
+  t_use --> t_weights
   t_archetypes --> ramp
   ramp --> t_library
   t_weights --> aggregation

@@ -159,13 +159,45 @@ def test_ramp_runs_are_reproducible_and_peak_window_follows_the_users():
     assert 1000 < np.mean(peak) < 1440  # around the evening lights, not anywhere in the day
 
 
-def test_unlocated_allocation_conserves_units_and_follows_score():
-    from rtl.demand.productive_use import allocate
+def test_tag_rules_first_match_and_overture_patterns():
+    from rtl.demand.use_model import tag_rule
+    from rtl.settings import load_yaml
 
-    cand = pd.DataFrame({"score": [0.0, 50.0, 100.0]})
-    units = allocate(cand, 10.0)
-    assert units.sum() == pytest.approx(10.0)  # nothing created or lost when spreading the census amount
-    assert units[0] < units[1] < units[2] and units[0] > 0  # a zero score still gets a small share
+    rules = load_yaml("use_model.yaml")["tags"]
+    assert tag_rule({"facility_type": "health:health_post", "osm_amenity": "bar"}, rules) == "institutional"
+    assert tag_rule({"osm_shop": "hairdresser"}, rules) == "commercial"
+    assert tag_rule({"osm_building": "residential"}, rules) == "residential"
+    assert tag_rule({"osm_building": "shed"}, rules) == "ancillary"
+    assert tag_rule({"overture_category": "christian_place_of_worship"}, rules) == "religious"
+    assert tag_rule({"osm_building": "yes"}, rules) is None
+
+
+def test_take_top_picks_the_best_per_district_from_the_pool():
+    from rtl.demand.allocate import take_top
+
+    df = pd.DataFrame({"district": ["a"] * 4 + ["b"] * 3})
+    pool = pd.Series([True, True, False, True, True, True, True])
+    score = pd.Series([0.1, 0.9, 1.0, 0.5, 0.3, 0.2, 0.8])
+    pick = take_top(df, pool, score, pd.Series({"a": 2, "b": 1}))
+    assert list(pick) == [False, True, False, True, False, False, True]  # the out-of-pool 1.0 is never taken
+
+
+def test_fill_households_meets_the_census_count_and_respects_floors():
+    from rtl.demand.allocate import fill_households
+
+    df = pd.DataFrame({"district": ["a"] * 4, "est_floors": [3, 1, 1, np.nan]})
+    pool = pd.Series([True, True, True, False])
+    hh = fill_households(df, pool, pd.Series([0.9, 0.8, 0.1, 1.0]), pd.Series({"a": 4}))
+    assert hh.sum() == 4 and list(hh) == [3, 1, 0, 0]  # 3 floors take 3 households; the excluded building none
+
+
+def test_calibrated_probabilities_are_rescaled_and_normalised():
+    from rtl.demand.allocate import CLASSES, calibrated
+
+    probs = pd.DataFrame([[0.5] + [0.5 / 7] * 7], columns=[f"p_{c}" for c in CLASSES])
+    out = calibrated(probs, pd.Series([2.0] + [1.0] * 7, index=CLASSES))
+    assert out.sum(axis=1).iloc[0] == pytest.approx(1.0)
+    assert out.residential.iloc[0] == pytest.approx(1.0 / 1.5)
 
 
 def test_census_parsing_on_a_planted_workbook(tmp_path, monkeypatch):
