@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Load profiles · RAMP archetype library</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="profiles" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 860px;">
+      <div style="display: flex; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: rgb(82, 81, 78)">Load profiles</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
+      </div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">17 appliance-level demand profiles to attach to buildings</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Each profile is a RAMP user type: appliances, how many households or businesses own them, their power, hours and usage windows. Click any number in the appliance table to see whether it comes from the World Bank MTF 2022 survey, a cited document, a measurement, or a written assumption.</p>
+    </header>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center;">
+      <div role="group" aria-label="Profile group" style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <sc-for list="{{groupButtons}}" as="b" hint-placeholder-count="5">
+          <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 14px; cursor: pointer;">{{b.label}}</button>
+        </sc-for>
+      </div>
+      <div role="group" aria-label="Day type" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+        <span style="font-size: 13px; color: #52514e;">Curves for</span>
+        <sc-for list="{{dayButtons}}" as="b" hint-placeholder-count="3">
+          <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 13px; cursor: pointer;">{{b.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 40px; border-radius: 12px; background: #f4f3ef; color: #52514e; font-size: 15px; text-align: center;">Loading the profile library…</div>
+    </sc-if>
+
+    <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+      <section aria-label="Profiles" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px;">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="12">
+          <button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 10px; border-radius: 12px; background: #ffffff; border: {{c.border}}; font: inherit; text-align: left; color: #0b0b0b; cursor: pointer;">
+            <span style="display: flex; justify-content: space-between; gap: 6px; align-items: baseline; width: 100%;">
+              <span style="font-size: 15px; font-weight: 700; line-height: 20px;">{{c.name}}</span>
+              <span style="font-size: 12px; color: #52514e;">{{c.group}}</span>
+            </span>
+            <svg viewBox="0 0 240 64" role="img" aria-label="{{c.aria}}" style="width: 100%; height: auto; display: block;">
+              <rect x="{{c.bandX}}" y="0" width="{{c.bandW}}" height="56" fill="#f4f3ef"></rect>
+              <path d="{{c.area}}" fill="{{c.fill}}"></path>
+              <path d="{{c.line}}" fill="none" stroke="{{c.stroke}}" style="stroke-width: 1.8;"></path>
+              <circle cx="{{c.px}}" cy="{{c.py}}" r="3" fill="#0b0b0b"></circle>
+            </svg>
+            <span style="display: flex; justify-content: space-between; width: 100%; font-size: 13px; line-height: 18px;">
+              <span><strong>{{c.daily}}</strong> kWh/day</span>
+              <span style="color: #52514e;">peak {{c.peak}} W at {{c.peakHour}}</span>
+            </span>
+          </button>
+        </sc-for>
+      </section>
+
+      <section aria-label="Profile detail" style="display: flex; flex-direction: column; gap: 16px; padding: 22px 24px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; align-items: flex-start;">
+          <div style="display: flex; flex-direction: column; gap: 4px; max-width: 760px;">
+            <h2 style="margin: 0; font-size: 24px; line-height: 30px;">{{p.name}}</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 22px; color: #3d3c39;">{{p.description}}</p>
+            <div style="font-size: 13px; line-height: 18px; color: #52514e;">Represents: {{p.population}} · simulated as {{p.units}} units × {{p.days}} days in RAMP 0.5.2</div>
+          </div>
+          <dl style="margin: 0; display: grid; grid-template-columns: auto auto; gap: 4px 14px; font-size: 14px; line-height: 19px;">
+            <dt style="color: #52514e;">Daily energy</dt><dd style="margin: 0; font-weight: 600; text-align: right;">{{p.daily}}</dd>
+            <dt style="color: #52514e;">Annual energy</dt><dd style="margin: 0; font-weight: 600; text-align: right;">{{p.annual}}</dd>
+            <dt style="color: #52514e;">Coincident peak (per unit)</dt><dd style="margin: 0; font-weight: 600; text-align: right;">{{p.coinc}}</dd>
+            <dt style="color: #52514e;">Shape</dt><dd style="margin: 0; font-weight: 600; text-align: right;">{{p.shape}}</dd>
+          </dl>
+        </div>
+
+        <div style="position: relative; width: 100%;"><svg viewBox="0 0 900 230" role="img" aria-label="{{p.chartAria}}" style="width: 100%; height: auto; display: block;">
+          <rect x="{{p.chart.bandX}}" y="10" width="{{p.chart.bandW}}" height="180" fill="#f4f3ef"></rect>
+          <sc-for list="{{p.chart.ticks}}" as="t" hint-placeholder-count="3">
+            <line x1="56" x2="892" y1="{{t.y}}" y2="{{t.y}}" stroke="#e4e3df"></line>
+            
+          </sc-for>
+          <path d="{{p.chart.area}}" fill="{{p.fill}}"></path>
+          <path d="{{p.chart.line}}" fill="none" stroke="{{p.stroke}}" style="stroke-width: 2.2;"></path>
+          <circle cx="{{p.chart.px}}" cy="{{p.chart.py}}" r="4.5" fill="#0b0b0b"></circle>
+          
+          <sc-for list="{{p.chart.hours}}" as="hr" hint-placeholder-count="9">
+            
+          </sc-for>
+          <text x="56" y="230" style="font-size: 12px; fill: #52514e;">W per unit · hourly means of minute-level RAMP output · shaded: evening 18:00–23:00</text>
+        </svg>
+<sc-for list="{{p.chart.ticks}}" as="t" hint-placeholder-count="3"><div aria-hidden="true" style="position: absolute; left: calc(50 * 100% / 900); top: calc({{t.ty}} * 100% / 230); transform: translate(-100%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 12px; color: #52514e;">{{t.label}}</div></sc-for>
+<div aria-hidden="true" style="position: absolute; left: calc({{p.chart.tx}} * 100% / 900); top: calc({{p.chart.ty}} * 100% / 230); transform: translate(0, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 13px; font-weight: 600; color: #0b0b0b;">{{p.chart.peakLabel}}</div>
+<sc-for list="{{p.chart.hours}}" as="hr" hint-placeholder-count="9"><div aria-hidden="true" style="position: absolute; left: calc({{hr.x}} * 100% / 900); top: calc(214 * 100% / 230); transform: translate(-50%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 12px; color: #52514e;">{{hr.label}}</div></sc-for>
+</div>
+
+        <sc-if value="{{p.isHousehold}}" hint-placeholder-val="{{false}}">
+          <p style="margin: 0; padding: 10px 14px; border-radius: 8px; background: #f4f3ef; font-size: 14px; line-height: 20px; color: #3d3c39;"><strong style="color: #0b0b0b;">One calibration.</strong> Lighting on-time is scaled so the simulated energy matches what the same group of MTF 2022 households spend on electricity, converted to kWh with the RURA tariff in force (2020 decision) plus 18% VAT. MTF asks hours of use per bulb type, which overstates use when a home has 4–7 bulbs. {{p.calibration}}</p>
+        </sc-if>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+            <h3 style="margin: 0; font-size: 17px;">Appliances</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px;">
+              <span style="padding: 1px 8px; border-radius: 999px; background: #e8f1fc; color: #1e4f8f; font-weight: 600;">Survey: MTF 2022</span>
+              <span style="padding: 1px 8px; border-radius: 999px; background: #effaf5; color: #0b6e4f; font-weight: 600;">Evidence: document + page</span>
+              <span style="padding: 1px 8px; border-radius: 999px; background: #f1eefa; color: #4a3aa7; font-weight: 600;">Measured: QSEL</span>
+              <span style="padding: 1px 8px; border-radius: 999px; background: #fff4d6; color: #6b4a00; font-weight: 600;">Assumption: rationale given</span>
+            </div>
+          </div>
+          <div style="overflow-x: auto;">
+            <div role="table" aria-label="Appliances in this profile" style="min-width: 860px; display: grid; grid-template-columns: 1.5fr 1fr 0.8fr 0.9fr 0.9fr 1.7fr; font-size: 14px; line-height: 19px;">
+              <div role="row" style="display: contents;">
+                <div role="columnheader" style="padding: 8px 10px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Appliance</div>
+                <div role="columnheader" style="padding: 8px 10px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Share owning</div>
+                <div role="columnheader" style="padding: 8px 10px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Number</div>
+                <div role="columnheader" style="padding: 8px 10px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Power</div>
+                <div role="columnheader" style="padding: 8px 10px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Hours/day</div>
+                <div role="columnheader" style="padding: 8px 10px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Usage windows</div>
+              </div>
+              <sc-for list="{{p.appliances}}" as="a" hint-placeholder-count="8">
+                <div role="row" style="display: contents;">
+                  <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{a.name}}</div>
+                  <sc-for list="{{a.cells}}" as="cell" hint-placeholder-count="5">
+                    <div role="cell" style="padding: 6px 10px; border-bottom: 1px solid #efeee9;">
+                      <button type="button" onClick="{{cell.pick}}" aria-label="{{cell.aria}}" style="display: inline-flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 4px 6px; border-radius: 6px; border: 1px solid {{cell.bd}}; background: #ffffff; font: inherit; font-size: 14px; color: #0b0b0b; cursor: pointer; text-align: left;">
+                        <span>{{cell.value}}</span>
+                        <span style="padding: 0 6px; border-radius: 999px; background: {{cell.chipBg}}; color: {{cell.chipFg}}; font-size: 11px; font-weight: 600;">{{cell.chip}}</span>
+                      </button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div aria-live="polite" style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 10px; background: #f7f6f2; border: 1px solid #e4e3df;">
+          <sc-if value="{{noProv}}" hint-placeholder-val="{{true}}">
+            <p style="margin: 0; font-size: 14px; line-height: 20px; color: #52514e;">Click a number in the table to see where it comes from.</p>
+          </sc-if>
+          <sc-if value="{{hasProv}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+              <h4 style="margin: 0; font-size: 15px;">{{prov.title}}</h4>
+              <span style="padding: 0 8px; border-radius: 999px; background: {{prov.chipBg}}; color: {{prov.chipFg}}; font-size: 12px; font-weight: 600;">{{prov.type}}</span>
+            </div>
+            <sc-if value="{{prov.hasDerivation}}" hint-placeholder-val="{{false}}">
+              <p style="margin: 0; font-size: 14px; line-height: 20px;"><strong>How it was derived:</strong> {{prov.derivation}}</p>
+            </sc-if>
+            <sc-if value="{{prov.hasRationale}}" hint-placeholder-val="{{false}}">
+              <p style="margin: 0; font-size: 14px; line-height: 20px;"><strong>Rationale:</strong> {{prov.rationale}}</p>
+            </sc-if>
+            <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 19px; color: #3d3c39;">
+              <sc-for list="{{prov.refs}}" as="ref" hint-placeholder-count="2">
+                <li><strong style="color: #0b0b0b;">{{ref.head}}</strong> {{ref.body}}</li>
+              </sc-for>
+            </ul>
+          </sc-if>
+        </div>
+      </section>
+
+      <section aria-label="How RAMP works" style="display: flex; flex-wrap: wrap; gap: 16px;">
+        <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 16px;">1 · Usage windows and switch-ons</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Each appliance may only run inside its usage windows. RAMP draws random switch-on events there until the day's on-time is used, each lasting at least the appliance's minimum cycle.</p>
+        </div>
+        <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 16px;">2 · Concurrent usage</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">A home's several bulbs are not all on at once: inside the peak window RAMP switches on about half of them, fewer off-peak. This makes simulated energy below share × number × power × hours.</p>
+        </div>
+        <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 16px;">3 · Many units, many days</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Each profile is simulated for 200 units over 28 days (weekdays and weekends) with a fixed seed; hourly means per unit feed every building and area curve in this dashboard.</p>
+        </div>
+        <p style="flex: 1 1 100%; margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">Lombardi, F., Balderrama, S., Quoilin, S., Colombo, E. (2019). Generating high-resolution multi-energy load profiles for remote areas with an open-source stochastic model. Energy 177, 433–444. doi:10.1016/j.energy.2019.04.097 · RAMP (rampdemand 0.5.2), EUPL-1.2. We initialise RAMP after its users are added, so runs are reproducible and the peak window follows the load.</p>
+      </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { prof: null, group: 'all', day: 'all', sel: 'household_urban_upper', prov: null };
+    this.C = {
+      URL: '@data/profiles.json',
+      GROUPS: { household: ['Households', '#2a78d6', '#cde2fb'], commerce: ['Shops and services', '#eb6834', '#fde8dc'], institution: ['Institutions', '#1baf7a', '#d6f2e6'], productive: ['Productive use', '#b07800', '#fbeac2'] },
+      CHIPS: { survey: ['Survey', '#e8f1fc', '#1e4f8f'], evidence: ['Evidence', '#effaf5', '#0b6e4f'], measured: ['Measured', '#f1eefa', '#4a3aa7'], assumption: ['Assumption', '#fff4d6', '#6b4a00'] }
+    };
+  }
+
+  componentDidMount() {
+    fetch(this.C.URL).then(r => r.json()).then(prof => this.setState({ prof })).catch(() => {});
+  }
+
+  fmt(v, dp) {
+    if (v === null || v === undefined || isNaN(v)) return '–';
+    const s = Number(v).toFixed(dp || 0);
+    const p = s.split('.');
+    const a = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return p[1] ? a + '.' + p[1] : a;
+  }
+
+  hh(h) { return (h < 10 ? '0' : '') + h + ':00'; }
+  hm(m) { const h = Math.floor(m / 60), mm = m % 60; return (h < 10 ? '0' : '') + h + ':' + (mm < 10 ? '0' : '') + mm; }
+  btn(on) { return { bd: on ? '#0b0b0b' : '#d6d5d0', bg: on ? '#0b0b0b' : '#ffffff', fg: on ? '#ffffff' : '#0b0b0b', pressed: on ? 'true' : 'false' }; }
+
+  niceMax(m) {
+    if (!(m > 0)) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(m)));
+    const steps = [1, 2, 2.5, 5, 10];
+    for (let i = 0; i < steps.length; i++) if (steps[i] * p >= m) return steps[i] * p;
+    return 10 * p;
+  }
+
+  spark(vals, W, H) {
+    const max = Math.max.apply(null, vals) || 1;
+    const pts = vals.map((v, i) => [(i + 0.5) * W / 24, H - (v / max) * (H - 6)]);
+    const line = 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+    let pi = 0;
+    vals.forEach((v, i) => { if (v > vals[pi]) pi = i; });
+    return { line, area: line + 'L' + pts[23][0].toFixed(1) + ' ' + H + 'L' + pts[0][0].toFixed(1) + ' ' + H + 'Z', px: pts[pi][0], py: pts[pi][1], pi };
+  }
+
+  bigChart(vals) {
+    const W = 900, padL = 56, padR = 8, top = 10, base = 190;
+    const nice = this.niceMax(Math.max.apply(null, vals));
+    const step = (W - padL - padR) / 24;
+    const x = i => padL + (i + 0.5) * step;
+    const y = v => base - (v / nice) * (base - top);
+    const line = 'M' + vals.map((v, i) => x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join('L');
+    let pi = 0;
+    vals.forEach((v, i) => { if (v > vals[pi]) pi = i; });
+    const f = v => this.fmt(v, v < 10 ? 1 : 0) + ' W';
+    return {
+      line, area: line + 'L' + x(23).toFixed(1) + ' ' + base + 'L' + x(0).toFixed(1) + ' ' + base + 'Z',
+      bandX: padL + 18 * step, bandW: 5 * step,
+      ticks: [0, 0.5, 1].map(k => ({ y: y(nice * k), ty: y(nice * k) + 4, label: f(nice * k) })),
+      hours: [0, 3, 6, 9, 12, 15, 18, 21, 23].map(h => ({ x: x(h), label: (h < 10 ? '0' : '') + h })),
+      px: x(pi), py: y(vals[pi]), tx: x(pi) > 700 ? x(pi) - 170 : x(pi) + 10, ty: Math.max(y(vals[pi]) - 8, 24),
+      peakLabel: 'peak ' + f(vals[pi]) + ' at ' + this.hh(pi)
+    };
+  }
+
+  provenance(prof, appliance, field, pv, valueText) {
+    const C = this.C, chip = C.CHIPS[pv.type] || C.CHIPS.assumption;
+    const ev = prof.evidence || {};
+    const refs = (pv.ids || []).slice(0, 8).map(id => {
+      const e = ev[id];
+      if (!e) return { head: id, body: '' };
+      if (e.type === 'evidence') return { head: e.doc_id + ', p. ' + e.page + ':', body: '“' + (e.quote || '').replace(/\s+/g, ' ').trim() + '” (' + this.fmt(e.value, 2) + ' ' + (e.unit || '') + ')' };
+      if (e.type === 'survey') return { head: 'MTF 2022 aggregate:', body: id.replace('mtf:RWA2022:', '') + ' (weighted, restricted microdata; aggregates only)' };
+      if (e.type === 'measured') return { head: e.doc_id + ', p. ' + e.page + ':', body: 'measured ' + (e.parameter || '').replace(/_/g, ' ') };
+      return { head: id, body: '' };
+    });
+    return {
+      title: appliance + ' · ' + field + ' = ' + valueText, type: chip[0], chipBg: chip[1], chipFg: chip[2],
+      derivation: pv.derivation || '', hasDerivation: !!pv.derivation, rationale: pv.rationale || '', hasRationale: !!pv.rationale, refs
+    };
+  }
+
+  renderVals() {
+    const C = this.C, s = this.state, prof = s.prof;
+    const groupButtons = [['all', 'All 17'], ['household', 'Households'], ['commerce', 'Shops and services'], ['institution', 'Institutions'], ['productive', 'Productive use']]
+      .map(g => Object.assign({ label: g[1], pick: () => this.setState({ group: g[0] }) }, this.btn(g[0] === s.group)));
+    const dayButtons = [['all', 'All days'], ['weekday', 'Weekdays'], ['weekend', 'Weekends']]
+      .map(g => Object.assign({ label: g[1], pick: () => this.setState({ day: g[0] }) }, this.btn(g[0] === s.day)));
+    const out = { groupButtons, dayButtons, loading: !prof, ready: !!prof, cards: [], p: { chart: { ticks: [], hours: [] }, appliances: [] }, noProv: true, hasProv: false, prov: { refs: [] } };
+    if (!prof) return out;
+    const curve = p => p.hourly_w[s.day] || p.hourly_w.all;
+    out.cards = prof.profiles.filter(p => s.group === 'all' || p.group === s.group).map(p => {
+      const g = C.GROUPS[p.group] || C.GROUPS.household;
+      const sp = this.spark(curve(p), 240, 56);
+      const on = p.profile_id === s.sel;
+      return {
+        name: p.name, group: g[0], daily: this.fmt(p.daily_kwh, p.daily_kwh < 1 ? 2 : 1), peak: this.fmt(Math.max.apply(null, curve(p)), 0), peakHour: this.hh(sp.pi),
+        line: sp.line, area: sp.area, px: sp.px, py: sp.py, fill: g[2], stroke: g[1], bandX: 18 * 10, bandW: 5 * 10,
+        dataW: 80 * (p.share_from_data || 0), dataPct: Math.round(100 * (p.share_from_data || 0)) + '%',
+        aria: p.name + ': ' + this.fmt(p.daily_kwh, 2) + ' kWh per day, peaking at ' + this.hh(sp.pi),
+        pressed: on ? 'true' : 'false', border: on ? '2px solid #0b0b0b' : '1px solid #e4e3df',
+        pick: () => this.setState({ sel: p.profile_id, prov: null })
+      };
+    });
+    const p = prof.profiles.find(x => x.profile_id === s.sel) || prof.profiles[0];
+    const g = C.GROUPS[p.group] || C.GROUPS.household;
+    const cal = p.appliances.map(a => a.provenance.minutes_per_day.derivation || '').find(t => t.indexOf('lighting calibration factor') >= 0) || '';
+    const calMatch = cal.match(/x ([0-9.]+) lighting calibration factor/);
+    const fields = [['ownership_share', 'share owning'], ['number', 'number'], ['power_w', 'power'], ['minutes_per_day', 'hours/day'], ['windows_min', 'usage windows']];
+    out.p = {
+      name: p.name, description: p.description, population: p.population, units: p.simulated_units, days: p.simulated_days,
+      daily: this.fmt(p.daily_kwh, 2) + ' kWh (p10–p90 ' + this.fmt(p.daily_kwh_p10, 2) + '–' + this.fmt(p.daily_kwh_p90, 2) + ')',
+      annual: this.fmt(p.annual_kwh, 0) + ' kWh/yr', coinc: this.fmt(p.coincident_peak_w_p50, 0) + ' W (p90 ' + this.fmt(p.coincident_peak_w_p90, 0) + ' W)',
+      shape: p.characteristics.shape + ' · LF ' + this.fmt(p.characteristics.load_factor, 2),
+      chart: this.bigChart(curve(p)), fill: g[2], stroke: g[1],
+      chartAria: p.name + ' 24-hour load curve',
+      isHousehold: p.group === 'household',
+      calibration: calMatch ? 'For this profile the factor is ×' + Number(calMatch[1]).toFixed(2) + '.' : '',
+      appliances: p.appliances.map(a => {
+        const vals = {
+          ownership_share: this.fmt(100 * a.ownership_share, a.ownership_share < 0.1 ? 1 : 0) + '%',
+          number: this.fmt(a.number, 0),
+          power_w: this.fmt(a.power_w, a.power_w < 10 ? 1 : 0) + ' W',
+          minutes_per_day: this.fmt(a.hours_per_day, a.hours_per_day < 1 ? 2 : 1) + ' h',
+          windows_min: (a.windows_min || []).map(w => this.hm(w[0]) + '–' + this.hm(w[1])).join(', ')
+        };
+        const nice = a.name.replace(/_/g, ' ');
+        return {
+          name: nice,
+          cells: fields.map(f => {
+            const pv = a.provenance[f[0]] || { type: 'assumption' };
+            const chip = C.CHIPS[pv.type] || C.CHIPS.assumption;
+            const on = s.prov && s.prov.a === a.name && s.prov.f === f[0];
+            return { value: vals[f[0]], chip: chip[0], chipBg: chip[1], chipFg: chip[2], bd: on ? '#0b0b0b' : '#e4e3df',
+              aria: nice + ' ' + f[1] + ' ' + vals[f[0]] + ', source: ' + chip[0],
+              pick: () => this.setState({ prov: { a: a.name, f: f[0] } }) };
+          })
+        };
+      })
+    };
+    if (s.prov) {
+      const a = p.appliances.find(x => x.name === s.prov.a);
+      if (a) {
+        const f = fields.find(x => x[0] === s.prov.f);
+        const vals = out.p.appliances.find(x => x.name === a.name.replace(/_/g, ' '));
+        const idx = fields.indexOf(f);
+        out.prov = this.provenance(prof, a.name.replace(/_/g, ' '), f[1], a.provenance[f[0]] || { type: 'assumption' }, vals ? vals.cells[idx].value : '');
+        out.noProv = false;
+        out.hasProv = true;
+      }
+    }
+    return out;
+  }
+}
+</script>
+</body>
+</html>

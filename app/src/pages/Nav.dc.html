@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Navigation</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<nav aria-label="Dashboard pages" style="box-sizing: border-box; width: 100%; height: 100%; padding: 24px 14px 28px; display: flex; flex-direction: column; gap: 22px; background: #f4f3ef; border-right: 1px solid #e4e3df; font-family: 'Source Sans 3', system-ui, sans-serif; color: #0b0b0b;">
+  <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 10px;">
+    <div style="font-size: 19px; font-weight: 700; line-height: 24px;">Rooftops → Load Curves</div>
+    <div style="font-size: 13px; line-height: 18px; color: #52514e;">Building-level electricity demand for Rwanda · OSEAS26 / EnAccess</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 2px;">
+    <sc-for list="{{items}}" as="item" hint-placeholder-count="10">
+      <sc-if value="{{item.active}}" hint-placeholder-val="{{false}}">
+        <a href="{{item.href}}" aria-current="page" style="display: flex; align-items: center; gap: 10px; min-height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; background: #ffffff; border: 1px solid #d6d5d0; color: #0b0b0b; font-size: 15px; font-weight: 600; text-decoration: none;"><span style="width: 18px; font-size: 12px; color: #52514e; font-variant-numeric: tabular-nums;">{{item.n}}</span>{{item.label}}<span title="{{item.dotTitle}}" aria-label="{{item.dotTitle}}" style="margin-left: auto; width: 9px; height: 9px; border-radius: 50%; background: {{item.dot}};"></span></a>
+      </sc-if>
+      <sc-if value="{{item.inactive}}" hint-placeholder-val="{{true}}">
+        <a href="{{item.href}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; border: 1px solid transparent; color: #3d3c39; font-size: 15px; font-weight: 400; text-decoration: none;"><span style="width: 18px; font-size: 12px; color: #6b6a66; font-variant-numeric: tabular-nums;">{{item.n}}</span>{{item.label}}<span title="{{item.dotTitle}}" aria-label="{{item.dotTitle}}" style="margin-left: auto; width: 9px; height: 9px; border-radius: 50%; background: {{item.dot}};"></span></a>
+      </sc-if>
+    </sc-for>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 10px 0; border-top: 1px solid #e4e3df;">
+    <div style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Status legend</div>
+    <div role="list" style="display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 10px; align-items: center; font-size: 13px; line-height: 17px; color: #3d3c39;">
+      <div role="listitem" style="display: contents;"><span style="justify-self: start; padding: 1px 8px; border-radius: 999px; border: 1px solid #1baf7a; background: #effaf5; color: #0b6e4f; font-size: 12px; font-weight: 600;">Built</span><span>validated with external sources</span></div>
+      <div role="listitem" style="display: contents;"><span style="justify-self: start; padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span><span>no validation method yet</span></div>
+      <div role="listitem" style="display: contents;"><span style="justify-self: start; padding: 1px 8px; border-radius: 999px; border: 1px solid #6da7ec; background: #e8f1fc; color: #1e4f8f; font-size: 12px; font-weight: 600;">In progress</span><span>data is being acquired or processed</span></div>
+      <div role="listitem" style="display: contents;"><span style="justify-self: start; padding: 1px 8px; border-radius: 999px; border: 1px dashed #8a8984; color: #52514e; font-size: 12px; font-weight: 600;">Planned</span><span>future work and opportunities</span></div>
+    </div>
+  </div>
+  <div style="margin-top: auto; padding: 0 10px; font-size: 12px; line-height: 16px; color: #52514e;">Data bundle v1 · potential and expected demand on every building in Rwanda</div>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"active":{"editor":"enum","options":["overview","sector","profiles","climate","productive","validation","workflow","sources","about","design"],"default":"overview"},"$preview":{"width":260,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const active = this.props.active ?? 'overview';
+    const pages = [
+      ['about', 'The Challenge', 'About.dc.html', 'draft'],
+      ['profiles', 'Load profiles', 'Profiles.dc.html', 'draft'],
+      ['overview', 'Overview', 'Main.dc.html', 'draft'],
+      ['sector', 'Sub-district deep dive', 'Sector.dc.html', 'draft'],
+      ['climate', 'Climate & cooling', 'Climate.dc.html', 'built'],
+      ['productive', 'Productive use', 'Productive.dc.html', 'draft'],
+      ['workflow', 'Workflow in depth', 'Workflow.dc.html', 'in_progress'],
+      ['sources', 'Sources & citations', 'Sources.dc.html', 'in_progress'],
+      ['validation', 'Validation & quality', 'Validation.dc.html', 'in_progress']
+    ];
+    const ST = { built: ['#1baf7a', 'solid', 'Built'], draft: ['#eda100', 'solid', 'Draft'], in_progress: ['#6da7ec', 'solid', 'In progress'], planned: ['#8a8984', 'dashed', 'Planned'] };
+    const items = pages.map((p, i) => { const st = ST[p[3]]; return { n: i + 1, id: p[0], label: p[1], href: p[2], active: p[0] === active, inactive: p[0] !== active,
+      dot: st ? st[0] : 'transparent', dotTitle: st ? 'Status: ' + st[2] : '' }; });
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

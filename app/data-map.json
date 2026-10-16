@@ -1,0 +1,9 @@
+{
+  "_comment": "Canvas upload id -> file name on the data host. Add a line when the canvas uploads a new data file; figures are named from their alt text automatically.",
+  "2ebd33cf94c38482dcd39757b6e14461": "national.json",
+  "d6a969ee1db43e36decc24e33a14684e": "site.json",
+  "468a9992f4659c299fb821a208c699ce": "subdistrict_nyamirambo.json",
+  "80f456fa30a99fcc6a0e508b329aa570": "subdistrict_muhoza.json",
+  "c637d73b060bf3199f980f866a4d41c9": "subdistrict_nasho.json",
+  "e9e65342f626905f12746ee12a197704": "profiles.json"
+}

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Challenge</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="about" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 900px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">The Challenge · about, methods and limitations</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span></div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Rooftops → Load Curves</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">An entry to the OSEAS26 hackathon, EnAccess challenge "From building footprints to energy demand", set in Rwanda: an end-to-end, reproducible GIS workflow and the building-level dataset it produces.</p>
+    </header>
+
+    <section aria-label="The challenge" style="display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <h2 style="margin: 0; font-size: 20px; line-height: 26px;">The challenge</h2>
+      <blockquote style="margin: 0; padding: 4px 0 4px 18px; border-left: 3px solid #b5b4af; font-size: 16px; line-height: 25px; color: #3d3c39;">This end-to-end workflow leverages existing building footprint datasets to generate high-resolution, spatially explicit energy demand intelligence. We integrate complementary geospatial and contextual information to classify structures by use type and model appliance-level load profiles for each building category using RAMP (Remote Appliance Load Profiles). We produce temporally resolved demand profile estimates based on climate conditions, appliance ownership data, and behavioral assumptions that capture daily and seasonal variations in energy use.</blockquote>
+    </section>
+
+    <section aria-label="The five outputs" style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 style="margin: 0; font-size: 22px; line-height: 28px;">The five outputs</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+        <article style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 17px;">1 · Estimated Peak Load</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;"><b>Building (expected coincident peak, W)</b>: the building's expected draw at its busiest hour (the highest hourly mean of Σ weight × profile curve).<br process-adn="1792101120117"><b>Area peak (kW)</b>: the highest hour of the summed curve (smaller than the sum of building peaks).<br process-adn="1792101121147"><br process-adn="1792101120117"><i>Planned: Single-building instantaneous peaks</i></p>
+        </article>
+        <article style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 17px;">2 · Annual Energy Consumption</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Σ weight × simulated daily kWh × 365, in kWh/yr<br process-adn="1792079450519">with a p10–p90 band from day-to-day variation.<br process-adn="1792079450519">Potential demand if grid-connected, at 2022 appliance ownership (World Bank MTF), with household energy scaled to REG consumption; expected demand weights households by their probability of a connection. Back-cast to 2016 and projected to 2030.</p>
+        </article>
+        <article style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 17px;">3 · Cooling Demand Category</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">From the building's climate cell: Low when tmax p95 is below 26 °C, Medium at 26–29 °C, High at 29 °C or more.<br process-adn="1792079521436">Uses cooling degree-days above 22 °C as a cross-check.<br process-adn="1792079521436"><i><br process-adn="1792079523065">Note: this is a relative indicator. Air-conditioning demand is marginal in most of Rwanda.</i></p>
+        </article>
+        <article style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 17px;">4 · Load Profile Characteristics</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">From the 24-hour curve: peak hour, load factor (mean ÷ peak), evening share (18:00–23:00), daytime share (08:00–17:00), night base (00:00–05:00), weekday/weekend ratio and a shape label.<br process-adn="1792101118464"><br process-adn="1792101117018"><i>Planned: Seasonal variation.</i></p>
+        </article>
+        <article style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h3 style="margin: 0; font-size: 17px;">5 · Productive-Use Viability</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Census counts are distributed to buildings: tagged first, then the best-scoring.<br process-adn="1792101175849">Candidate score: weighted mean of market access, customers nearby, grid proximity, ability to pay, agricultural context and building size, with weights for town trades or mills.<br process-adn="1792101175849">Low below 33, Medium below 67, High above.</p>
+        </article>
+        
+      </div>
+    </section>
+
+    <section aria-label="Glossary" style="display: flex; flex-direction: column; gap: 12px; padding: 20px 24px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Glossary</h2>
+      <dl style="margin: 0; display: grid; grid-template-columns: minmax(160px, 220px) minmax(0, 1fr); gap: 10px 20px; font-size: 15px; line-height: 22px;">
+        <dt style="font-weight: 700;">RAMP</dt><dd style="margin: 0; color: #3d3c39;">Remote Appliance Model for load Profiles: an open-source stochastic model that turns appliance lists, power, hours and usage windows into minute-level load curves (Lombardi et al. 2019).</dd>
+        <dt style="font-weight: 700;">MTF tiers</dt><dd style="margin: 0; color: #3d3c39;">The World Bank Multi-Tier Framework grades electricity access from Tier 0 to Tier 5; by daily energy, Tier 2 starts at 200 Wh/day and Tier 3 at 1 kWh/day.</dd>
+        <dt style="font-weight: 700;">Cooling degree-days (CDD22)</dt><dd style="margin: 0; color: #3d3c39;">The sum over a year of how far the daily mean temperature exceeds 22 °C, a standard proxy for cooling need.</dd>
+        <dt style="font-weight: 700;">Coincident peak</dt><dd style="margin: 0; color: #3d3c39;">The highest load of a group of buildings at the same moment. Buildings do not all peak together, so it is below the sum of their individual peaks.</dd>
+        <dt style="font-weight: 700;">Load factor</dt><dd style="margin: 0; color: #3d3c39;">Average load ÷ peak load. Low values mean a sharp peak, typical of evening lighting.</dd>
+        <dt style="font-weight: 700;">H3</dt><dd style="margin: 0; color: #3d3c39;">Uber's hexagonal grid. Resolution 7 cells are about 5 km²; resolution 9 about 0.1 km².</dd>
+        <dt style="font-weight: 700;">RWI</dt><dd style="margin: 0; color: #3d3c39;">Meta's Relative Wealth Index, an area-level wealth estimate (~2.4 km tiles). Within each district and setting, the highest-RWI homes get the upper household profile until they hold DHS 2025's share for that district.</dd>
+        <dt style="font-weight: 700;">Ubudehe</dt><dd style="margin: 0; color: #3d3c39;">Rwanda's official household socio-economic categories. MTF 2022 households are split into categories 1–2 and 3–4 to build the lower and upper household profiles.</dd>
+        <dt style="font-weight: 700;">Potential demand</dt><dd style="margin: 0; color: #3d3c39;">What a building would draw if it were grid-connected, at today's appliance ownership, with household energy scaled to REG's mean consumption by region.</dd>
+        <dt style="font-weight: 700;">Expected demand</dt><dd style="margin: 0; color: #3d3c39;">Potential demand × the probability that the household is connected (DHS 2025 model, matched to EICV7 2024 grid shares per district). Establishments count as connected.</dd>
+        <dt style="font-weight: 700;">Class probabilities</dt><dd style="margin: 0; color: #3d3c39;">The LLM labeller's (deep dives) or the classifier's probability for each use class. They rank buildings for the allocation; the census decides how many of each use a district gets.</dd>
+        <dt style="font-weight: 700;">Census-constrained allocation</dt><dd style="margin: 0; color: #3d3c39;">Census and registry counts (urban and rural households, shops, services, workshops, MINEDUC schools, places of worship) placed on the buildings the classifier finds most likely, rarest use first, so every district reproduces its totals and every unit of demand sits on a building.</dd>
+        <dt style="font-weight: 700;">Use classifier</dt><dd style="margin: 0; color: #3d3c39;">A gradient-boosting model that gives every building use probabilities from its shape, size, height and surroundings; trained on tags (model A) or tags plus LLM labels (model B).</dd>
+      </dl>
+    </section>
+
+    <section style="display: flex; flex-wrap: wrap; gap: 16px;">
+      <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Planned next</h2>
+        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px; color: #3d3c39;">
+          <li>Seasonal and weekly shape: climate-coupled profiles from the monthly Copernicus climate (fans by cooling category), school and religious calendars, harvest seasons for mills.</li>
+          <li>REG village-level customers and consumption, and feeder loads, as constraints and validation.</li>
+          <li>NISR activity detail (ISIC4) to replace the assumed trade and service splits; night lights as a model feature.</li>
+          <li>The productive-use trade mix by setting from a census or survey source (now the owner's rule), and field checks of candidates.</li>
+          <li>Single-building instantaneous peaks; a floor-count regression; off-grid and solar variants.</li>
+          <li>GeoParquet / PostGIS release and national vector tiles (PMTiles).</li>
+        </ul>
+      </div>
+      <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Team, AI use and contact</h2>
+        <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Built by Peek Load.<br process-adn="1792079773658"><i>With assistance from AI. Refer to the AI use declaration in our repository.<br process-adn="1792079784766"></i><a href="https://github.com/esemsc-as4623/peek-load"><br process-adn="1792079777789">github.com/esemsc-as4623/peek-load</a> · contact: as4623@ic.ac.uk</p>
+        
+      </div>
+    </section>
+
+    <section aria-label="Known limitations" style="display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Known limitations</h2>
+      <ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 22px; color: #3d3c39;">
+        <li>Google 2.5D heights are compressed: single-storey buildings read ~4–5 m, so floors above 2 are unreliable.</li>
+        <li>First-seen year has artefacts (jumps in 2019 and 2023); it is experimental.</li>
+        <li>Use labels come from open vector data only and agree with human labels ~40% of the time; the human labels are themselves uncertain (the imagery showed little beyond vegetation and roof shape).</li>
+        <li>Microsoft footprints omit structures under ~15 m².</li>
+        <li>Cooling demand is marginal in most of Rwanda; the category is a relative proxy.</li>
+        <li>Labels cover the three deep dives (Muhoza partly) and a national sample.</li>
+        <li>Several business and institution profiles rest on assumptions (signed off by the owner); health facilities run above REG's sales (hospitals and health centres pending a decision; see Validation).</li>
+        <li>A quarter of rural manufacturing establishments are electric grain mills (owner's decision, range 20–30%); the rest are light rural workshops. Which building holds which use is a plausible placement that reproduces the census, not an observation.</li>
+        <li>Rural households in the two wealth halves spend almost the same (~10 kWh/month).</li>
+        <li>Census households are placed on the most likely homes, up to one per floor; which building holds a household is a plausible placement, not an observation.</li>
+        <li>Rural bars use a lighter profile (fridge, TV and radio at MTF's shares for grid household shops); bars in towns keep the bar/restaurant profile.</li>
+      </ol>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Overview · Rwanda building energy demand</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="overview" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 28px;">
+
+    <header style="display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column; gap: 6px; max-width: 760px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Overview · national view</span>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span></div>
+        <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Where Rwanda's buildings are, and what they would draw from the grid</h1>
+        <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">6.4 million open building footprints, classified by use and matched to appliance-level RAMP load profiles. Climate, context and demand cover every building in the country; three contrasting sub-districts get a deep dive.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+        <span style="font-size: 13px; color: #52514e;">Area</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <span aria-current="true" style="display: inline-flex; align-items: center; min-height: 40px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; background: #0b0b0b; color: #ffffff; font-size: 14px; font-weight: 600;">Rwanda (national)</span>
+          <a href="Sector.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; box-sizing: border-box; padding: 0 14px; border-radius: 8px; border: 1px solid #d6d5d0; background: #ffffff; color: #0b0b0b; font-size: 14px; text-decoration: none;">Sub-district deep dives →</a>
+        </div>
+      </div>
+    </header>
+
+    <section aria-label="How to read this" style="display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 16px 20px; border-radius: 12px; background: #f4f3ef; border: 1px solid #e4e3df; font-size: 15px; line-height: 22px; color: #3d3c39;">
+      <div style="flex: 1 1 260px;"><strong style="color: #0b0b0b;">What this estimates.</strong> For each building: use type, a 24-hour load curve, peak load, annual energy, cooling category and a productive-use score.</div>
+      <div style="flex: 1 1 260px;"><strong style="color: rgb(11, 11, 11)">Potential and expected demand.</strong> Potential: every building grid-connected, at 2022 appliance ownership (World Bank MTF), with household energy scaled to REG consumption. Expected: households × their probability of a grid connection, matched to EICV7 2024 per district.</div>
+      <div style="flex: 1 1 260px;"><strong style="color: #0b0b0b;">How sure.</strong> Each page and section carries a status: Built = validated with external sources; Draft = no validation method yet; In progress = data being acquired or processed; Planned = future work. Most of the model is Draft until the Validation page is rebuilt.</div>
+    </section>
+
+    <section aria-label="National map" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+      <div style="flex: 3 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">{{layerTitle}}</h2>
+          <span style="font-size: 13px; color: #52514e;">H3 resolution-7 cells (~5 km²) · click a cell for its values</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <sc-for list="{{layerGroups}}" as="g" hint-placeholder-count="4">
+            <div role="group" aria-label="{{g.label}}" style="display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 8px; align-items: start;">
+              <span style="padding-top: 9px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">{{g.label}}</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <sc-for list="{{g.buttons}}" as="b" hint-placeholder-count="5">
+                  <button type="button" aria-pressed="{{b.pressed}}" title="{{b.originText}}" onClick="{{b.pick}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 14px; cursor: pointer;"><svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="{{b.dot}}" stroke="{{b.fg}}" stroke-width="1.4"></circle></svg>{{b.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; line-height: 17px; color: #52514e;">
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="none" stroke="#3d3c39" stroke-width="1.4"></circle></svg>Source data: as published, only averaged or summed to the cell or district</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="#3d3c39" stroke="#3d3c39" stroke-width="1.4"></circle></svg><span>Our output: derived or modelled in this project</span></span>
+          </div>
+        </div>
+        <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+          <div style="height: 520px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #f4f3ef; color: #52514e; font-size: 15px;">Loading the national data…</div>
+        </sc-if>
+        <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+          <div style="position: relative;">
+            <svg viewBox="{{vb}}" role="img" aria-label="{{mapAria}}" style="width: 100%; height: auto; display: block;">
+              <sc-for list="{{emptyHexes}}" as="eh" hint-placeholder-count="0">
+                <path d="{{eh.d}}" fill="#f4f3ef" stroke="#f4f3ef" style="stroke-width: 0.4; pointer-events: none;"></path>
+              </sc-for>
+              <sc-for list="{{hexes}}" as="hx" hint-placeholder-count="0">
+                <path d="{{hx.d}}" fill="{{hx.fill}}" stroke="{{hx.fill}}" onClick="{{hx.pick}}" style="stroke-width: 0.4; cursor: pointer;"></path>
+              </sc-for>
+              <sc-for list="{{districts}}" as="dd" hint-placeholder-count="0">
+                <path d="{{dd.d}}" fill="none" stroke="#ffffff" style="stroke-width: 1.4; pointer-events: none;"></path>
+              </sc-for>
+              <sc-for list="{{selPath}}" as="sp" hint-placeholder-count="0">
+                <path d="{{sp.d}}" fill="none" stroke="#0b0b0b" style="stroke-width: 2.4; pointer-events: none;"></path>
+              </sc-for>
+            </svg>
+            <sc-if value="{{plannedLayer}}" hint-placeholder-val="{{false}}">
+              <div style="position: absolute; left: 16px; top: 16px; max-width: 340px; padding: 12px 14px; border-radius: 10px; background: #ffffff; border: 1px dashed #8a8984; font-size: 14px; line-height: 20px; color: #3d3c39;">
+                <span style="display: inline-block; margin-bottom: 4px; padding: 1px 8px; border-radius: 999px; border: 1px dashed #8a8984; color: #52514e; font-size: 12px; font-weight: 600;">Planned</span>
+                <div><strong style="color: #0b0b0b;">National roll-out pending.</strong> Demand is currently estimated for the three deep-dive sub-districts only; their cells are coloured, all others are left grey.</div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; color: #3d3c39;">
+            <span style="font-weight: 600;">{{legendTitle}}</span>
+            <sc-for list="{{legend}}" as="lg" hint-placeholder-count="7">
+              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="{{lg.color}}"></rect></svg>{{lg.label}}</span>
+            </sc-for>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#ecebe7"></rect></svg>no data</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#f4f3ef" stroke="#d6d5d0"></rect></svg>no buildings mapped</span>
+          </div>
+          <sc-if value="{{hasVk}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 8px 12px; border-radius: 8px; background: #f7f6f2; font-size: 13px; line-height: 18px; color: #3d3c39;"><span style="padding: 1px 8px; border-radius: 999px; border: 2px solid {{vkColour}}; color: #0b0b0b; font-size: 12px; font-weight: 700">{{vkLabel}}</span>
+              <span>{{vkNote}}. Every unit of demand is attached to a building: blue = a sum over the cell's buildings, purple = a census figure reported for the district, which the allocation reproduces.</span>
+            </div>
+          </sc-if>
+          <div style="font-size: 12px; line-height: 17px; color: #52514e;">{{layerSource}} · fixed legend limits (values beyond the ends are clamped)</div>
+        </sc-if>
+      </div>
+
+      <aside aria-label="Selected cell" style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Selected cell</h2>
+        <sc-if value="{{noSel}}" hint-placeholder-val="{{true}}">
+          <p style="margin: 0; font-size: 15px; line-height: 22px; color: #52514e;">Click any hexagon on the map to see its building stock, context and climate.</p>
+        </sc-if>
+        <sc-if value="{{hasSel}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <div style="font-size: 20px; font-weight: 700;">{{selTitle}}</div>
+            <div style="font-size: 13px; color: #52514e;">cell {{selId}}</div>
+          </div>
+          <sc-for list="{{selGroups}}" as="sg" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid #efeee9;">
+              <h3 style="margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">{{sg.label}}</h3>
+              <dl style="margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; font-size: 14px; line-height: 20px;">
+                <sc-for list="{{sg.rows}}" as="row" hint-placeholder-count="4">
+                  <dt style="display: flex; align-items: center; gap: 6px; color: #52514e;"><svg width="8" height="8" aria-hidden="true" style="flex: none;"><circle cx="4" cy="4" r="3" fill="{{row.dot}}" stroke="#3d3c39" stroke-width="1.2"></circle></svg>{{row.k}}</dt>
+                  <dd style="margin: 0; text-align: right; font-weight: 600;">{{row.v}}</dd>
+                </sc-for>
+              </dl>
+            </div>
+          </sc-for>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 13px; color: #52514e;">Environment · mean temperature by hour (°C, local time)</div>
+            <div style="position: relative; width: 100%;"><svg viewBox="0 0 260 90" role="img" aria-label="Diurnal temperature curve of the selected cell" style="width: 100%; height: auto; display: block;">
+              <line x1="0" y1="80" x2="260" y2="80" stroke="#e4e3df"></line>
+              <path d="{{selCurve}}" fill="none" stroke="#eb6834" style="stroke-width: 2.4;"></path>
+              
+              
+              <text x="0" y="90" style="font-size: 10px; fill: #52514e;">00</text>
+              <text x="122" y="90" style="font-size: 10px; fill: #52514e;">12</text>
+              <text x="246" y="90" style="font-size: 10px; fill: #52514e;">23</text>
+            </svg>
+<div aria-hidden="true" style="position: absolute; left: calc(0 * 100% / 260); top: calc(12 * 100% / 90); transform: translate(0, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 11px; color: #52514e;">{{selMax}}</div>
+<div aria-hidden="true" style="position: absolute; left: calc(0 * 100% / 260); top: calc(76 * 100% / 90); transform: translate(0, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 11px; color: #52514e;">{{selMin}}</div>
+</div>
+          </div>
+        </sc-if>
+      </aside>
+    </section>
+
+    <section aria-label="Deep-dive sub-districts" style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+        <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Three deep-dive sub-districts: the five headline outputs</h2>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <div role="table" aria-label="Deep-dive sub-districts compared" style="min-width: 860px; display: grid; grid-template-columns: 220px repeat(3, minmax(0, 1fr));">
+          <div role="row" style="display: contents;">
+            <div role="columnheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; border-bottom-color: #d6d5d0;"></div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3">
+              <div role="columnheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; border-bottom-color: #d6d5d0; display: flex; flex-direction: column; gap: 4px; text-align: left;">
+                <span style="font-size: 20px; line-height: 26px; font-weight: 700;">{{c.sector}} <span style="font-weight: 400; color: #52514e; font-size: 15px;">· {{c.district}}</span></span>
+                <span style="font-size: 13px; line-height: 19px; font-weight: 400; color: #3d3c39;">{{c.description}}</span>
+                <span style="font-size: 12px; font-weight: 400; color: #52514e;">{{c.counts}}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">Load curve<br><span style="font-weight: 400; font-size: 12px; color: #52514e;">kW by hour, all buildings; evening shaded</span></div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3">
+              <div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9;">
+                <svg viewBox="0 0 280 72" role="img" aria-label="{{c.aria}}" style="width: 100%; max-width: 320px; height: auto; display: block;">
+                  <rect x="{{c.bandX}}" y="0" width="{{c.bandW}}" height="64" fill="#f4f3ef"></rect>
+                  <path d="{{c.area}}" fill="#cde2fb"></path>
+                  <path d="{{c.line}}" fill="none" stroke="#256abf" style="stroke-width: 2;"></path>
+                  <circle cx="{{c.peakX}}" cy="{{c.peakY}}" r="3.5" fill="#0b0b0b"></circle>
+                  <text x="0" y="72" style="font-size: 10px; fill: #52514e;">00:00</text>
+                  <text x="244" y="72" style="font-size: 10px; fill: #52514e;">23:00</text>
+                </svg>
+              </div>
+            </sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">1 · Estimated Peak Load</div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3"><div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; font-size: 14px; font-weight: 600;">{{c.peak}}</div></sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">2 · Annual Energy Consumption</div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3"><div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; font-size: 14px; font-weight: 600;">{{c.energy}}<br><span style="font-weight: 400; color: #52514e;">{{c.energyExp}}</span></div></sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">3 · Cooling Demand Category</div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3"><div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; font-size: 14px; font-weight: 600;">{{c.cooling}}</div></sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">4 · Load Profile Characteristics</div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3"><div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; font-size: 14px; font-weight: 600;">{{c.shape}}</div></sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">5 · Productive-Use Viability</div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3"><div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; font-size: 14px; font-weight: 600;">{{c.pu}}</div></sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; color: #3d3c39; font-weight: 600; font-size: 14px;">Building use mix<br><span style="font-weight: 400; font-size: 12px; color: #52514e;">share of buildings by assigned use</span></div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3">
+              <div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; display: flex; flex-direction: column; gap: 6px;">
+                <svg viewBox="0 0 100 14" preserveAspectRatio="none" role="img" aria-label="{{c.mixAria}}" style="width: 100%; height: 18px; display: block; border-radius: 4px;">
+                  <sc-for list="{{c.mix}}" as="mx" hint-placeholder-count="4"><rect x="{{mx.x}}" y="0" width="{{mx.w}}" height="14" fill="{{mx.color}}"><title>{{mx.title}}</title></rect></sc-for>
+                </svg>
+                <span style="font-size: 12px; line-height: 16px; color: #52514e;">{{c.mixText}}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div role="row" style="display: contents;">
+            <div role="rowheader" style="padding: 10px 12px; border-bottom: 1px solid #efeee9;"></div>
+            <sc-for list="{{ddCards}}" as="c" hint-placeholder-count="3">
+              <div role="cell" style="padding: 10px 12px; border-bottom: 1px solid #efeee9; border-bottom: 0;"><a href="Sector.dc.html" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid #d6d5d0; color: #0b0b0b; text-decoration: none; font-size: 14px; font-weight: 600;">Open {{c.sector}} →</a></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; color: #3d3c39;">
+        <span style="font-weight: 600;">Use</span>
+        <sc-for list="{{useLegend}}" as="ul" hint-placeholder-count="8">
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="{{ul.color}}"></rect></svg>{{ul.label}}</span>
+        </sc-for>
+      </div>
+      <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">Every figure is for the whole sub-district: all its buildings and all their uses, after census and registry counts are placed on buildings. Energy is potential (if every building were connected), with expected below it.</p>
+    </section>
+
+    <section aria-label="National demand" style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+        <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Rwanda: demand on every building, 2016–2030</h2>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft · census- and registry-constrained</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px;">
+        <sc-for list="{{natCards}}" as="nc" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+            <span style="font-size: 13px; color: #52514e;">{{nc.k}}</span>
+            <span style="font-size: 26px; line-height: 30px; font-weight: 700;">{{nc.v}}</span>
+            <span style="font-size: 13px; line-height: 18px; color: #52514e;">{{nc.sub}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+        <div style="flex: 3 1 520px; display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+          <h3 style="margin: 0; font-size: 17px;">National annual energy by year (GWh/yr)</h3>
+          <div style="position: relative; width: 100%;"><svg viewBox="0 0 680 240" role="img" aria-label="{{natChart.aria}}" style="width: 100%; height: auto; display: block;">
+            <rect x="{{natChart.projX}}" y="12" width="{{natChart.projW}}" height="188" fill="#f4f3ef"></rect>
+            <text x="{{natChart.projTx}}" y="26" style="font-size: 11px; fill: #52514e;">projection</text>
+            <text x="56" y="26" style="font-size: 11px; fill: #52514e;">back-cast from building presence</text>
+            <sc-for list="{{natChart.ticks}}" as="t" hint-placeholder-count="4">
+              <line x1="52" x2="672" y1="{{t.y}}" y2="{{t.y}}" stroke="#e4e3df"></line>
+              
+            </sc-for>
+            <line x1="{{natChart.baseX}}" x2="{{natChart.baseX}}" y1="12" y2="200" stroke="#8a8984" stroke-dasharray="3 3"></line>
+            <path d="{{natChart.pot}}" fill="none" stroke="#8a8984" stroke-dasharray="6 4" style="stroke-width: 2;"></path>
+            <path d="{{natChart.exp}}" fill="none" stroke="#256abf" style="stroke-width: 2.6;"></path>
+            <sc-for list="{{natChart.labels}}" as="l" hint-placeholder-count="6">
+              <circle cx="{{l.x}}" cy="{{l.y}}" r="3.5" fill="{{l.c}}"></circle>
+              
+            </sc-for>
+            <sc-for list="{{natChart.years}}" as="y" hint-placeholder-count="8">
+              
+            </sc-for>
+          </svg>
+<sc-for list="{{natChart.ticks}}" as="t" hint-placeholder-count="4"><div aria-hidden="true" style="position: absolute; left: calc(46 * 100% / 680); top: calc({{t.ty}} * 100% / 240); transform: translate(-100%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 11px; color: #52514e;">{{t.label}}</div></sc-for>
+<sc-for list="{{natChart.labels}}" as="l" hint-placeholder-count="6"><div aria-hidden="true" style="position: absolute; left: calc({{l.tx}} * 100% / 680); top: calc({{l.ty}} * 100% / 240); transform: translate(-50%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 12px; font-weight: 600; color: {{l.c}};">{{l.v}}</div></sc-for>
+<sc-for list="{{natChart.years}}" as="y" hint-placeholder-count="8"><div aria-hidden="true" style="position: absolute; left: calc({{y.x}} * 100% / 680); top: calc(220 * 100% / 240); transform: translate(-50%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 11px; color: #52514e;">{{y.label}}</div></sc-for>
+</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: #3d3c39;">
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#256abf" stroke-width="3"></line></svg>expected (× probability of a connection)</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#8a8984" stroke-width="2" stroke-dasharray="6 4"></line></svg>potential (all connected)</span>
+            <span style="color: #52514e;">2023 is the base year; earlier years scale buildings by their presence in imagery, later years follow district growth.</span>
+          </div>
+        </div>
+        <div style="flex: 2 1 320px; display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+          <h3 style="margin: 0; font-size: 17px;">Establishments placed on buildings</h3>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 13px; line-height: 18px;">
+            <sc-for list="{{estRows}}" as="er" hint-placeholder-count="12">
+              <span>{{er.name}}</span><span style="text-align: right; font-weight: 600;">{{er.n}}</span>
+            </sc-for>
+          </div>
+          <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">Whole facilities. Counts come from the Establishment Census 2023, MINEDUC (5 904 schools) and the health registries, placed on the most likely buildings; a school or health compound's demand is shared across its buildings.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Districts" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+        <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Districts</h2>
+        <span style="font-size: 13px; color: #52514e;">Click a column to sort · 30 districts</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <div role="table" aria-label="Districts of Rwanda" style="min-width: 1220px; display: grid; grid-template-columns: 1.1fr 0.8fr 0.9fr 1fr 0.9fr 0.8fr 140px 0.8fr 0.6fr 1.2fr 1.6fr; font-size: 14px; line-height: 20px;">
+          <div role="row" style="display: contents;">
+            <sc-for list="{{cols}}" as="col" hint-placeholder-count="11">
+              <div role="columnheader" style="border-bottom: 1px solid #d6d5d0;"><button type="button" onClick="{{col.pick}}" style="width: 100%; min-height: 40px; padding: 0 10px; border: 0; background: transparent; font: inherit; font-size: 13px; font-weight: 600; color: #3d3c39; text-align: left; cursor: pointer;">{{col.label}} {{col.arrow}}</button></div>
+            </sc-for>
+          </div>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+            <div role="row" style="display: contents;">
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{r.name}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; color: #52514e;">{{r.province}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.n}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.land}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.fp}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.pop}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9;"><svg width="120" height="14" role="img" aria-label="{{r.coolAria}}"><rect x="0" y="0" width="{{r.wl}}" height="14" fill="#f9c3a3"></rect><rect x="{{r.xm}}" y="0" width="{{r.wm}}" height="14" fill="#eb6834"></rect><rect x="{{r.xh}}" y="0" width="{{r.wh}}" height="14" fill="#9a3a14"></rect></svg></div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.grid}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.rwi}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{r.pu}}</div>
+              <div role="cell" style="padding: 8px 10px; border-bottom: 1px solid #efeee9; text-align: right; color: #52514e;">{{r.demand}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="font-size: 12px; line-height: 17px; color: #52514e;">Land area: district polygon (geoBoundaries). Building footprint: total roof area of mapped buildings, with its share of the land. Cooling bar: share of buildings in Low · Medium · High cooling cells. Productive use: manufacturing establishments in the 2023 Establishment Census (grain mills and light workshops in rural areas; carpentry, welding and tailoring in towns), all placed on buildings, with their annual energy. Demand: every building (potential if grid-connected; uses placed from the census).</div>
+    </section>
+
+    <section aria-label="District constraints" style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+        <h2 style="margin: 0; font-size: 22px; line-height: 28px;">What each district is held to</h2>
+        <span style="font-size: 13px; color: #52514e;">Sorted by expected demand in 2030</span>
+      </div>
+      <p style="margin: 0; font-size: 14px; line-height: 20px; color: #3d3c39;">Each district's allocation reproduces its census urban-household share, its DHS 2025 upper-wealth share and its registry counts; the grid model is shifted until its connection probability equals the EICV7 2024 grid share. Night lights (Black Marble, mean radiance over lit cells with buildings) are shown for comparison, not used as a target.</p>
+      <div style="overflow-x: auto;">
+        <div role="table" aria-label="District constraints" style="min-width: 1080px; display: grid; grid-template-columns: 1.1fr 0.8fr 0.8fr 0.7fr 0.6fr 0.7fr 1.1fr 0.6fr 1.1fr 1fr; font-size: 13px; line-height: 18px;">
+          <div role="row" style="display: contents;">
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39;">District</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Urban households</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Upper wealth</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Schools</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Health</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Worship</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">P(connected) / EICV7</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Growth</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Expected GWh 2016 → 2030</div>
+            <div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Night lights 2016 → 2024</div>
+          </div>
+          <sc-for list="{{conRows}}" as="c" hint-placeholder-count="10">
+            <div role="row" style="display: contents;">
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{c.name}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.urb}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.upper}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.schools}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.health}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.worship}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.pg}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.growth}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.e}}</div>
+              <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.ntl}}</div>
+            </div>
+          </sc-for>
+          <div role="row" style="display: contents;">
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; font-weight: 700;">Rwanda</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.urb}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.upper}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.schools}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.health}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.worship}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.pg}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;"></div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 700;">{{conTot.e}}</div>
+            <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;"></div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 12px; line-height: 17px; color: #52514e;">Shares are of households; P(connected) is the household-weighted probability after calibration, beside EICV7 2024 grid lighting (they match by construction). Night lights in nW/cm²/sr. Rwanda row: household-weighted shares and sums.</div>
+    </section>
+
+
+    <footer style="font-size: 12px; line-height: 18px; color: #52514e; border-top: 1px solid #e4e3df; padding-top: 14px;">© OpenStreetMap contributors · Google Open Buildings · Microsoft Building Footprints · Overture Maps Foundation · GHSL (EC JRC) · WorldPop · Meta Data for Good · Copernicus · NASA POWER · Gridfinder. Meta RWI is CC-BY-NC-4.0: non-commercial use.</footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { nat: null, site: null, layer: 'cool', sel: null, sortKey: 'n', sortDir: -1, err: null };
+    const BLUE = ['#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'];
+    const ORANGE = ['#fde8dc', '#f9c3a3', '#f39a6b', '#eb6834', '#c94f1f', '#9a3a14', '#6b270c'];
+    const PURPLE = ['#efe8f8', '#d9c9ef', '#bfa5e3', '#a07fd4', '#7a4fb5', '#5c3592', '#3f226a'];
+    const AMBER = ['#fff4d6', '#fde2a0', '#f8c75d', '#eda100', '#c48500', '#8f6100', '#5e4000'];
+    const TEAL = ['#e0f5ee', '#b5e6d4', '#7fd1b4', '#3fb68f', '#1b9670', '#0f7354', '#08513b'];
+    this.C = {
+      BLUE, ORANGE, NULL: '#ecebe7',
+      LAYERS: {
+        cool: { label: 'Cooling category', title: 'Cooling Demand Category', kind: 'cat', field: 'cool', colors: { low: '#f9c3a3', medium: '#eb6834', high: '#9a3a14' }, names: { low: 'Low (tmax p95 < 26 °C)', medium: 'Medium (26–29 °C)', high: 'High (≥ 29 °C)' }, source: 'Copernicus ERA5-Land 2020–2025, downscaled to cell elevation' },
+        n: { label: 'Buildings', title: 'Buildings per cell', kind: 'num', field: 'n', t: [10, 50, 200, 500, 1000, 3000], ramp: BLUE, unit: '', source: 'VIDA footprints (Google + Microsoft + OSM)' },
+        t2m: { label: 'Mean temperature', title: 'Mean 2 m temperature (°C)', kind: 'num', field: 't2m', t: [12, 14, 16, 18, 20, 22], ramp: ORANGE, unit: ' °C', source: 'Copernicus ERA5-Land 2020–2025' },
+        tmax: { label: 'Hot days', title: '95th-percentile daily maximum (°C)', kind: 'num', field: 'tmax', t: [20, 23, 26, 27.5, 29, 31], ramp: ORANGE, unit: ' °C', source: 'Copernicus ERA5-Land 2020–2025' },
+        cdd22: { label: 'Cooling degree-days', title: 'Cooling degree-days above 22 °C (per year)', kind: 'num', field: 'cdd22', t: [1, 10, 25, 50, 100, 200], ramp: ORANGE, unit: '', source: 'Copernicus ERA5-Land 2020–2025' },
+        ghi: { label: 'Solar (GHI)', title: 'Global horizontal irradiance (kWh/m²/day)', kind: 'num', field: 'ghi', t: [4.78, 4.82, 4.86, 4.9, 4.94, 4.98], ramp: BLUE, unit: '', source: 'Copernicus ERA5-Land solar radiation 2020–2025' },
+        pop: { label: 'Population density', title: 'Population density (people/km²)', kind: 'num', field: 'pop', t: [50, 200, 500, 1000, 2500, 5000], ramp: BLUE, unit: '', source: 'WorldPop 2023' },
+        rwi: { label: 'Relative wealth', title: 'Meta Relative Wealth Index', kind: 'num', field: 'rwi', t: [-0.5, -0.25, 0, 0.25, 0.5, 1], ramp: BLUE, unit: '', source: 'Meta RWI (CC-BY-NC-4.0)' },
+        grid: { label: 'Distance to grid', title: 'Median distance to predicted MV line (m)', kind: 'num', field: 'grid', t: [250, 500, 1000, 2000, 5000, 10000], ramp: BLUE, unit: ' m', source: 'Gridfinder (Arderne et al. 2020)' },
+        rh: { label: 'Humidity', title: 'Mean relative humidity (%)', kind: 'num', field: 'rh', t: [64, 67, 69, 71, 73, 76], ramp: BLUE, unit: '%', source: 'Copernicus ERA5-Land 2020–2025 (dewpoint, Magnus formula)' },
+        rain: { label: 'Rainfall', title: 'Annual rainfall (mm/yr, indicative)', kind: 'num', field: 'rain', t: [800, 1000, 1200, 1500, 2000, 3000], ramp: BLUE, unit: '', source: 'Copernicus ERA5-Land 2020–2025 (known to run wet over mountains)' },
+        demand: { label: 'Potential demand', title: 'Annual Energy Consumption (MWh/yr, all buildings; potential if grid-connected)', kind: 'demand', field: 'mwh', t: [10, 50, 100, 250, 500, 1000], ramp: BLUE, unit: '', vk: 'building_sum', source: 'RAMP profiles × building weights; household energy scaled to REG means' },
+        demandE: { label: 'Expected demand', title: 'Expected annual energy (MWh/yr): households × P(connected), matched to EICV7 2024 per district', kind: 'demand', field: 'mwhE', t: [10, 50, 100, 250, 500, 1000], ramp: BLUE, unit: '', vk: 'building_sum', source: 'Potential × grid-connection probability (DHS 2025 model raked to EICV7 2024)' },
+        puR: { label: 'PU census (district)', title: 'Productive-use establishments reported per district', kind: 'district', field: 'puR', t: [300, 400, 500, 700, 1000, 1400], ramp: PURPLE, unit: '', vk: 'reported', source: 'NISR Establishment Census 2023 (manufacturing establishments; district × urban/rural)' },
+        puL: { label: 'PU buildings', title: 'Productive-use buildings per cell (tagged or placed from the census)', kind: 'num', field: 'puB', t: [1, 2, 4, 6, 10, 20], ramp: BLUE, unit: '', vk: 'building_sum', source: 'Trade tags + NISR Establishment Census 2023 placed on the best candidates (one mill per ~0.7 km² cell)' },
+        svL: { label: 'Service buildings', title: 'Bars/restaurants, guesthouses and salons per cell', kind: 'num', field: 'svB', t: [2, 5, 10, 20, 40, 80], ramp: BLUE, unit: '', vk: 'building_sum', source: 'Service tags + Establishment Census sections I and S placed on the most likely buildings' },
+        hh: { label: 'Households', title: 'Census households placed per cell', kind: 'num', field: 'hh', t: [50, 150, 300, 600, 1200, 2500], ramp: BLUE, unit: '', vk: 'building_sum', source: '2022 census households per district placed on the most likely homes' },
+        svR: { label: 'Services census (district)', title: 'Service establishments reported per district (bars/restaurants, guesthouses, salons)', kind: 'district', field: 'svR', t: [1500, 2000, 2500, 3000, 4000, 6000], ramp: PURPLE, unit: '', vk: 'reported', source: 'NISR Establishment Census 2023, sections I and S × assumed splits' },
+        ntl: { label: 'Night lights 2024', title: 'Night-time radiance 2024 (nW/cm²/sr, mean over H3 r8 cells)', kind: 'num', field: 'ntl24', t: [0.05, 0.2, 0.5, 1, 3, 10], ramp: TEAL, unit: '', source: 'NASA VIIRS Black Marble VNP46A4 (annual, snow-free composite)' },
+        growth: { label: 'Growth (district)', title: 'Demand growth per district (%/yr): building presence 2016–2023, pinned to census household growth', kind: 'district', field: 'growth', t: [2.6, 2.9, 3.2, 3.5, 3.8, 4.2], ramp: BLUE, unit: '%', source: 'Google 2.5D Temporal presence + 2012/2022 censuses' },
+        e30: { label: 'Expected 2030 (district)', title: 'Expected demand projected to 2030 (GWh/yr per district)', kind: 'district', field: 'e30', t: [8, 12, 16, 20, 30, 50], ramp: BLUE, unit: '', source: 'Expected 2023 demand × district growth; connection held at 2024' },
+        urb: { label: 'Urban households (district)', title: 'Share of census households in urban areas (allocation reproduces the 2022 census)', kind: 'district', field: 'urb', t: [0.05, 0.1, 0.2, 0.3, 0.5, 0.8], ramp: BLUE, unit: '', vk: 'reported', source: '2022 census (RPHC5), households by district and residence' },
+        schools: { label: 'Schools (district)', title: 'Schools per district (primary, secondary, TVET), placed on buildings', kind: 'district', field: 'schools', t: [120, 150, 175, 200, 230, 260], ramp: PURPLE, unit: '', vk: 'reported', source: 'MINEDUC Education Statistical Yearbook 2020/21' },
+        pg: { label: 'Grid connection', title: 'Predicted probability of a grid connection (mean over buildings)', kind: 'num', field: 'pg', t: [0.2, 0.35, 0.5, 0.65, 0.8, 0.9], ramp: TEAL, unit: '', source: 'Logistic model trained on DHS 2025 households (draft)' }
+      },
+      GROUPS: [
+        ['Environment', ['t2m', 'tmax', 'cdd22', 'cool', 'ghi', 'rh', 'rain']],
+        ['Built & social', ['n', 'pop', 'hh', 'urb', 'schools']],
+        ['Economic', ['rwi', 'puR', 'puL', 'svR', 'svL']],
+        ['Energy & grid', ['grid', 'ntl', 'pg', 'demand', 'demandE', 'growth', 'e30']]
+      ],
+      OURS: { cool: 1, tmax: 1, cdd22: 1, hh: 1, puL: 1, svL: 1, pg: 1, demand: 1, demandE: 1, growth: 1, e30: 1 },
+      USE: { residential: '#2a78d6', mixed_shop_house: '#6250d6', commercial: '#eb6834', productive_use: '#eda100', institutional: '#1baf7a', religious: '#e87ba4', industrial_warehouse: '#008300', ancillary: '#c9c8c3', unknown: '#ecebe7' },
+      USE_NAMES: { residential: 'Home', mixed_shop_house: 'Shop-house', commercial: 'Shop / service', productive_use: 'Productive use', institutional: 'Institution', religious: 'Worship', industrial_warehouse: 'Store / warehouse', ancillary: 'Ancillary (no load)', unknown: 'Unknown' },
+      ORDER: ['cool', 'n', 't2m', 'tmax', 'cdd22', 'ghi', 'rh', 'rain', 'pop', 'rwi', 'grid', 'demand', 'demandE', 'e30', 'growth', 'ntl', 'pg', 'urb', 'schools', 'hh', 'puR', 'puL', 'svR', 'svL'],
+      VK: {
+        reported: { label: 'Reported for the area', colour: '#7a4fb5', note: 'published at area level by a source, here per district' },
+        building_sum: { label: 'Sum over buildings', colour: '#256abf', note: 'added up from individual buildings in the cell' },
+      }
+    };
+  }
+
+  componentDidMount() {
+    fetch('@data/national.json').then(r => r.json()).then(nat => this.setState({ nat })).catch(e => this.setState({ err: String(e) }));
+    fetch('@data/site.json').then(r => r.json()).then(site => this.setState({ site })).catch(e => this.setState({ err: String(e) }));
+  }
+
+  fmt(v, dp) {
+    if (v === null || v === undefined || isNaN(v)) return '–';
+    const s = Number(v).toFixed(dp || 0);
+    const parts = s.split('.');
+    const a = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return parts[1] ? a + '.' + parts[1] : a;
+  }
+
+  hh(h) { return (h < 10 ? '0' : '') + h + ':00'; }
+
+  colour(L, h) {
+    if (L.kind === 'cat') return L.colors[h[L.field]] || this.C.NULL;
+    if (L.kind === 'demand') {
+      if (!h.nmod) return '#f4f3ef';
+    }
+    const v = L.kind === 'district' ? (this.distBy[h.district] || {})[L.field] : h[L.field];
+    if (v === null || v === undefined) return this.C.NULL;
+    let i = 0;
+    while (i < L.t.length && v >= L.t[i]) i++;
+    return L.ramp[i];
+  }
+
+  legend(L) {
+    if (L.kind === 'cat') return Object.keys(L.colors).map(k => ({ color: L.colors[k], label: L.names[k] }));
+    const f = x => (Math.abs(x) >= 1000 ? this.fmt(x, 0) : String(x));
+    return L.ramp.map((c, i) => ({
+      color: c,
+      label: i === 0 ? '< ' + f(L.t[0]) : i === L.t.length ? '≥ ' + f(L.t[L.t.length - 1]) : f(L.t[i - 1]) + '–' + f(L.t[i])
+    }));
+  }
+
+  spark(vals, W, H) {
+    const max = Math.max.apply(null, vals) || 1;
+    const pts = vals.map((v, i) => [i * W / 23, H - (v / max) * (H - 6)]);
+    const line = 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L');
+    const area = line + 'L' + W + ' ' + H + 'L0 ' + H + 'Z';
+    let pi = 0;
+    vals.forEach((v, i) => { if (v > vals[pi]) pi = i; });
+    return { line, area, peakX: pts[pi][0], peakY: pts[pi][1] };
+  }
+
+  renderVals() {
+    const C = this.C, s = this.state, nat = s.nat, site = s.site;
+    const L = C.LAYERS[s.layer];
+    const ready = !!nat;
+    const layerGroups = C.GROUPS.map(g => ({ label: g[0], buttons: g[1].map(k => {
+      const on = k === s.layer, ours = !!C.OURS[k], fg = on ? '#ffffff' : '#0b0b0b';
+      return { label: C.LAYERS[k].label, pressed: on ? 'true' : 'false', pick: () => this.setState({ layer: k }),
+        dot: ours ? fg : 'none', originText: (ours ? 'Our output' : 'Source data') + ' · ' + C.LAYERS[k].source,
+        bd: on ? '#0b0b0b' : '#d6d5d0', bg: on ? '#0b0b0b' : '#ffffff', fg };
+    }) }));
+    const yrs = nat && nat.years ? nat.years : null;
+    const yAt = y => (yrs || []).find(r => r.year === y) || {};
+    const yearsValue = yrs ? this.fmt(yAt(2016).exp, 0) + ' → ' + this.fmt(yAt(2023).exp, 0) + ' → ' + this.fmt(yAt(2030).exp, 0) : '–';
+    const yearsSub = 'GWh/yr expected in 2016, 2023 and 2030 (potential ' + (yrs ? this.fmt(yAt(2016).pot, 0) + ' → ' + this.fmt(yAt(2030).pot, 0) : '–') + '): back-cast from building presence, projected by district growth';
+    let hexes = [], emptyHexes = [], districts = [], selGroups = [], vb = '0 0 1000 882', selRows = [], selPath = [], selTitle = '', selCurve = '', selMin = '', selMax = '', rows = [];
+    if (nat) {
+      vb = nat.viewBox.join(' ');
+      if (!this.distBy) { this.distBy = {}; nat.districts.forEach(d => { this.distBy[d.name] = d; }); }
+      hexes = nat.hexes.map(h => ({ d: h.d, fill: this.colour(L, h), pick: () => this.setState({ sel: h.h }) }));
+      districts = nat.districts.map(d => ({ d: d.d }));
+      emptyHexes = (nat.hexes_empty || []).map(h => ({ d: h.d }));
+      const h = s.sel ? nat.hexes.find(x => x.h === s.sel) : null;
+      if (h) {
+        selPath = [{ d: h.d }];
+        selTitle = (h.district || 'Unassigned') + ' district';
+        const dist = this.distBy[h.district] || {};
+        const nv = v => v === null || v === undefined;
+        const R = (k, v, ours) => ({ k, v, dot: ours ? '#3d3c39' : 'none' });
+        selGroups = [
+          { label: 'Environment', rows: [
+            R('Mean temperature', this.fmt(h.t2m, 1) + ' °C'),
+            R('Hot days (tmax p95)', this.fmt(h.tmax, 1) + ' °C', 1),
+            R('Cooling degree-days (22 °C)', this.fmt(h.cdd22, 0) + ' /yr', 1),
+            R('Cooling category', h.cool ? h.cool.charAt(0).toUpperCase() + h.cool.slice(1) : '–', 1),
+            R('Solar GHI', this.fmt(h.ghi, 2) + ' kWh/m²/day'),
+            R('Humidity · rainfall', this.fmt(h.rh, 0) + '% · ' + this.fmt(h.rain, 0) + ' mm/yr'),
+            R('Elevation', this.fmt(h.elev, 0) + ' m') ] },
+          { label: 'Built & social', rows: [
+            R('Buildings', this.fmt(h.n, 0)),
+            R('Population density', this.fmt(h.pop, 0) + ' /km²'),
+            R('Households placed', this.fmt(h.hh || 0, 0), 1),
+            R('Households · district census', this.fmt(dist.hhR, 0)) ] },
+          { label: 'Economic', rows: [
+            R('Relative wealth (RWI)', this.fmt(h.rwi, 2)),
+            R('Productive-use buildings', this.fmt(h.puB || 0, 0), 1),
+            R('Productive use · district census', this.fmt(dist.puR, 0) + ' establishments'),
+            R('Service buildings', this.fmt(h.svB || 0, 0), 1) ] },
+          { label: 'Energy & grid', rows: [
+            R('Distance to MV grid', this.fmt(h.grid, 0) + ' m'),
+            R('Night lights 2016 → 2024', nv(h.ntl24) ? '–' : this.fmt(h.ntl16, 2) + ' → ' + this.fmt(h.ntl24, 2) + ' nW/cm²/sr (' + this.fmt(100 * (h.lit24 || 0), 0) + '% lit)'),
+            R('Grid connection (model)', nv(h.pg) ? '–' : this.fmt(h.pg * 100, 0) + '% of buildings', 1),
+            R('Potential demand', h.nmod ? this.fmt(h.mwh, 0) + ' MWh/yr (' + this.fmt(h.nmod, 0) + ' buildings)' : '–', 1),
+            R('Expected demand', nv(h.mwhE) ? '–' : this.fmt(h.mwhE, 0) + ' MWh/yr', 1) ] }
+        ];
+        if (h.t) {
+          const mn = Math.min.apply(null, h.t), mx = Math.max.apply(null, h.t);
+          const span = (mx - mn) || 1;
+          selCurve = 'M' + h.t.map((v, i) => (20 + i * 240 / 23).toFixed(1) + ' ' + (76 - (v - mn) / span * 62).toFixed(1)).join('L');
+          selMin = this.fmt(mn, 1) + ' °C';
+          selMax = this.fmt(mx, 1) + ' °C';
+        }
+      }
+      const keyMap = { name: d => d.name, province: d => d.province, n: d => d.n, land: d => d.land_km2, fp: d => d.footprint_km2, pop: d => d.pop, high: d => d.high, grid: d => d.grid, rwi: d => d.rwi, pu: d => d.puR || 0, demand: d => d.mwh || 0 };
+      const kf = keyMap[s.sortKey] || keyMap.n;
+      const sorted = nat.districts.slice().sort((a, b) => { const x = kf(a), y = kf(b); return (x > y ? 1 : x < y ? -1 : 0) * s.sortDir; });
+      rows = sorted.map(d => {
+        const wl = Math.round((d.low || 0) * 120), wm = Math.round((d.medium || 0) * 120), wh = Math.max(0, 120 - wl - wm);
+        return { name: d.name, province: (d.province || '').replace(' Province', '').replace(' City', ''), n: this.fmt(d.n, 0), land: this.fmt(d.land_km2, 0) + ' km²', fp: this.fmt(d.footprint_km2, 1) + ' km² (' + this.fmt(100 * d.footprint_km2 / (d.land_km2 || 1), 1) + '%)',
+          pu: this.fmt(d.puR, 0) + ' establishments',
+          pop: this.fmt(d.pop, 0), wl, wm, wh: (d.high || 0) > 0 ? wh : 0, xm: wl, xh: wl + wm,
+          coolAria: 'Low ' + Math.round((d.low || 0) * 100) + '%, medium ' + Math.round((d.medium || 0) * 100) + '%, high ' + Math.round((d.high || 0) * 100) + '%',
+          grid: this.fmt(d.grid, 0) + ' m', rwi: this.fmt(d.rwi, 2), demand: d.nmod ? this.fmt(d.mwh, 0) + ' MWh/yr (' + this.fmt(d.nmod, 0) + ' bldgs)' : 'Planned' };
+      });
+    }
+    const colDefs = [['name', 'District'], ['province', 'Province'], ['n', 'Buildings'], ['land', 'Land area'], ['fp', 'Building footprint'], ['pop', 'People/km²'], ['high', 'Cooling mix'], ['grid', 'To MV grid'], ['rwi', 'RWI'], ['pu', 'Productive use'], ['demand', 'Potential demand']];
+    const cols = colDefs.map(c => ({ label: c[1], arrow: s.sortKey === c[0] ? (s.sortDir > 0 ? '↑' : '↓') : '',
+      pick: () => this.setState({ sortKey: c[0], sortDir: s.sortKey === c[0] ? -s.sortDir : (c[0] === 'name' || c[0] === 'province' ? 1 : -1) }) }));
+
+    let ddCards = [];
+    if (site && site.full_summaries) {
+      const order = ['nyamirambo', 'muhoza', 'nasho'];
+      ddCards = order.filter(k => site.full_summaries[k]).map(k => {
+        const f = site.full_summaries[k], m = f.metrics, lp = m.load_profile;
+        const sp = this.spark(f.hourly_kw.all, 280, 64);
+        const cm = f.cooling_mix || {}, tot = Object.values(cm).reduce((a, b) => a + b, 0) || 1;
+        const dom = Object.keys(cm).sort((a, b) => cm[b] - cm[a])[0] || '–';
+        const pm = f.pu_mix || {};
+        const um = f.use_mix || {}, ut = Object.values(um).reduce((a, b) => a + b, 0) || 1;
+        let ux = 0;
+        const mix = Object.keys(C.USE).filter(u => um[u]).map(u => { const w = 100 * um[u] / ut, r = { x: ux, w, color: C.USE[u], title: C.USE_NAMES[u] + ': ' + this.fmt(um[u], 0) + ' (' + this.fmt(w, 1) + '%)' }; ux += w; return r; });
+        const mixText = Object.keys(um).sort((a, b) => um[b] - um[a]).slice(0, 3).map(u => C.USE_NAMES[u] + ' ' + Math.round(100 * um[u] / ut) + '%').join(' · ');
+        return {
+          sector: f.sector, district: f.district, description: f.description,
+          counts: this.fmt(f.n_buildings, 0) + ' buildings · ' + this.fmt(f.n_modelled, 0) + ' modelled',
+          line: sp.line, area: sp.area, peakX: sp.peakX, peakY: sp.peakY, bandX: 18 * 280 / 23, bandW: 5 * 280 / 23,
+          aria: 'Sub-district load curve over 24 hours; peak ' + this.fmt(m.area_peak_kw, 0) + ' kW at ' + this.hh(m.area_peak_hour),
+          peak: this.fmt(m.area_peak_kw, 0) + ' kW at ' + this.hh(m.area_peak_hour),
+          energy: this.fmt(m.annual_mwh / 1000, 2) + ' GWh/yr potential',
+          energyExp: this.fmt((m.annual_mwh_expected || 0) / 1000, 2) + ' GWh/yr expected (× P connected)',
+          cooling: dom.charAt(0).toUpperCase() + dom.slice(1) + ' (' + Math.round(100 * (cm[dom] || 0) / tot) + '%)',
+          shape: lp.shape + ' · LF ' + this.fmt(lp.load_factor, 2),
+          pu: this.fmt(pm.high || 0, 0) + ' high · ' + this.fmt(pm.medium || 0, 0) + ' medium',
+          mix, mixAria: 'Building use mix: ' + mixText, mixText
+        };
+      });
+    }
+    // ---- national section and district constraints (bundle 2026-10-15)
+    let natCards = [], estRows = [], natChart = { ticks: [], labels: [], years: [], pot: '', exp: '' }, conRows = [], conTot = {};
+    if (site && site.meta && site.meta.national) {
+      const nn = site.meta.national;
+      natCards = [
+        { k: 'Buildings with demand', v: this.fmt(nn.buildings_with_demand, 0), sub: 'of ' + this.fmt(nn.buildings, 0) + ' footprints; the rest are ancillary' },
+        { k: 'Potential demand (2023)', v: this.fmt(nn.potential_gwh, 0) + ' GWh/yr', sub: 'if every building were connected' },
+        { k: 'Expected demand (2023)', v: this.fmt(nn.expected_gwh, 0) + ' GWh/yr', sub: 'households × probability of a connection' },
+        { k: 'Households placed', v: this.fmt(nn.households, 0), sub: 'census 2022, one per floor at most' }
+      ];
+      const names = site.meta.profiles || {};
+      const ebp = nn.establishments_by_profile || {};
+      estRows = Object.keys(ebp).sort((a, b) => ebp[b] - ebp[a]).map(k => ({ name: (names[k] && names[k].name) || k.replace(/_/g, ' '), n: this.fmt(ebp[k], 0) }));
+      const by = (nn.by_year || []).slice().sort((a, b) => a.year - b.year);
+      if (by.length) {
+        const y0 = by[0].year, y1 = by[by.length - 1].year;
+        const mx = Math.max.apply(null, by.map(r => r.potential_gwh));
+        const top = Math.ceil(mx / 100) * 100;
+        const X = y => 52 + (y - y0) / (y1 - y0) * 620, Y = v => 200 - v / top * 176;
+        const path = k => 'M' + by.map(r => X(r.year).toFixed(1) + ' ' + Y(r[k]).toFixed(1)).join('L');
+        const pick = [y0, 2023, y1].filter((v, i, a) => a.indexOf(v) === i);
+        const labels = [];
+        pick.forEach(yr => { const r = by.find(q => q.year === yr); if (!r) return;
+          labels.push({ x: X(yr), y: Y(r.expected_gwh), tx: X(yr), ty: Y(r.expected_gwh) + 18, v: this.fmt(r.expected_gwh, 0), c: '#256abf' });
+          labels.push({ x: X(yr), y: Y(r.potential_gwh), tx: X(yr), ty: Y(r.potential_gwh) - 9, v: this.fmt(r.potential_gwh, 0), c: '#52514e' }); });
+        natChart = { pot: path('potential_gwh'), exp: path('expected_gwh'), labels,
+          ticks: [0, 0.25, 0.5, 0.75, 1].map(f => ({ y: Y(top * f), ty: Y(top * f) + 4, label: this.fmt(top * f, 0) })),
+          years: by.filter(r => (r.year - y0) % 2 === 0 || r.year === 2023).map(r => ({ x: X(r.year), label: String(r.year) })),
+          baseX: X(2023), projX: X(2023), projW: X(y1) - X(2023), projTx: X(2023) + 8,
+          aria: 'Expected demand ' + this.fmt(by[0].expected_gwh, 0) + ' GWh in ' + y0 + ' rising to ' + this.fmt(by[by.length - 1].expected_gwh, 0) + ' in ' + y1 + '; potential ' + this.fmt(by[0].potential_gwh, 0) + ' to ' + this.fmt(by[by.length - 1].potential_gwh, 0) };
+      }
+    }
+    if (nat) {
+      const ds = nat.districts.slice().sort((a, b) => (b.e30 || 0) - (a.e30 || 0));
+      const pct = v => v === null || v === undefined ? '–' : Math.round(100 * v) + '%';
+      conRows = ds.map(d => ({ name: d.name, urb: pct(d.urb), upper: pct(d.upper), schools: this.fmt(d.schools, 0), health: this.fmt(d.health, 0), worship: this.fmt(d.worship, 0),
+        pg: pct(d.pgH) + ' / ' + pct(d.eicv7), growth: (d.growth === null || d.growth === undefined) ? '–' : this.fmt(d.growth, 1) + '%/yr',
+        e: this.fmt(d.e16, 1) + ' → ' + this.fmt(d.e30, 1), ntl: this.fmt(d.ntl16, 2) + ' → ' + this.fmt(d.ntl24, 2) }));
+      const H = ds.reduce((a, d) => a + (d.hh || 0), 0) || 1;
+      const wavg = k => ds.reduce((a, d) => a + (d[k] || 0) * (d.hh || 0), 0) / H;
+      const sum = k => ds.reduce((a, d) => a + (d[k] || 0), 0);
+      conTot = { urb: pct(wavg('urb')), upper: pct(wavg('upper')), schools: this.fmt(sum('schools'), 0), health: this.fmt(sum('health'), 0), worship: this.fmt(sum('worship'), 0),
+        pg: pct(wavg('pgH')) + ' / ' + pct(wavg('eicv7')), e: this.fmt(sum('e16'), 0) + ' → ' + this.fmt(sum('e30'), 0) };
+    }
+    return {
+      natCards, estRows, natChart, conRows, conTot,
+      yearsValue, yearsSub,
+      layerGroups, useLegend: Object.keys(C.USE).filter(u => u !== 'unknown').map(u => ({ color: C.USE[u], label: C.USE_NAMES[u] })), layerTitle: L.title, legendTitle: L.title, legend: this.legend(L), layerSource: 'Source: ' + L.source,
+      hasVk: !!L.vk, vkLabel: L.vk ? C.VK[L.vk].label : '', vkColour: L.vk ? C.VK[L.vk].colour : '#ffffff', vkNote: L.vk ? C.VK[L.vk].note : '',
+      plannedLayer: false, loading: !ready, ready, vb, hexes, emptyHexes, districts, selPath,
+      mapAria: 'Map of Rwanda coloured by ' + L.title,
+      noSel: !s.sel, hasSel: !!s.sel, selTitle, selId: s.sel || '', selGroups, selCurve, selMin, selMax,
+      cols, rows, ddCards
+    };
+  }
+}
+</script>
+</body>
+</html>

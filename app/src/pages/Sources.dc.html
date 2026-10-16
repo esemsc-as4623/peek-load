@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Data sources and citations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="sources" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 900px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Data sources and citations</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #6da7ec; background: #e8f1fc; color: #1e4f8f; font-size: 12px; font-weight: 600;">In progress</span></div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Input data sources, usage, licence</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Every dataset is declared before it is used and every download is recorded with its checksum and licence. Role says how a source is used: as a model input (feature), as labelling evidence (weak label), as evidence for appliance profiles, or only to check results (validation).</p>
+    </header>
+
+    <section aria-label="Restricted data notice" style="display: flex; gap: 12px; padding: 14px 18px; border-radius: 12px; background: #fdecec; border: 1px solid #e34948; font-size: 15px; line-height: 22px; color: #3d3c39;">
+      <svg width="18" height="20" viewBox="0 0 14 16" aria-hidden="true" style="flex: none; margin-top: 2px;"><rect x="2" y="7" width="10" height="8" rx="1.5" fill="none" stroke="#a3211f" stroke-width="1.6"></rect><path d="M4.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#a3211f" stroke-width="1.6"></path></svg>
+      <div><strong style="color: #0b0b0b;">Restricted survey data.</strong> {{restricted}}</div>
+    </section>
+
+    <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 40px; border-radius: 12px; background: #f4f3ef; color: #52514e; font-size: 15px; text-align: center;">Loading sources…</div>
+    </sc-if>
+
+    <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+      <section aria-label="Datasets" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Datasets · {{nShown}} shown</h2>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label for="src-search" style="font-size: 13px; color: #52514e;">Search name or licence</label>
+            <input id="src-search" type="search" value="{{q}}" onChange="{{setQ}}" placeholder="e.g. ODbL, climate, WorldPop" style="min-height: 40px; min-width: 260px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; border: 1px solid #b5b4af; font: inherit; font-size: 14px;">
+          </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px 20px;">
+          <div role="group" aria-label="Role" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+            <span style="font-size: 13px; color: #52514e;">Role</span>
+            <sc-for list="{{roleButtons}}" as="b" hint-placeholder-count="5">
+              <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 34px; padding: 0 10px; border-radius: 999px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 13px; cursor: pointer;">{{b.label}}</button>
+            </sc-for>
+          </div>
+          <div role="group" aria-label="Access" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+            <span style="font-size: 13px; color: #52514e;">Access</span>
+            <sc-for list="{{accessButtons}}" as="b" hint-placeholder-count="4">
+              <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 34px; padding: 0 10px; border-radius: 999px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 13px; cursor: pointer;">{{b.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <div role="table" aria-label="Datasets" style="min-width: 980px; display: grid; grid-template-columns: 2.4fr 0.8fr 0.8fr 1.8fr 0.7fr 0.7fr; font-size: 14px; line-height: 19px;">
+            <div role="row" style="display: contents;">
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Dataset and how to cite it</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Role</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Access</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Licence</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Status</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Files</div>
+            </div>
+            <sc-for list="{{datasets}}" as="d" hint-placeholder-count="10">
+              <div role="row" style="display: contents;">
+                <div role="cell" style="padding: 10px 8px; border-bottom: 1px solid #efeee9; display: flex; flex-direction: column; gap: 4px;">
+                  <span style="font-weight: 600;">{{d.name}}</span>
+                  <span style="font-size: 12px; line-height: 17px; color: #3d3c39;">{{d.cite}}</span>
+                  <sc-if value="{{d.hasUrl}}" hint-placeholder-val="{{false}}"><a href="{{d.url}}" style="font-size: 12px; overflow-wrap: anywhere;">{{d.urlText}}</a></sc-if>
+                </div>
+                <div role="cell" style="padding: 10px 8px; border-bottom: 1px solid #efeee9;"><span style="padding: 1px 8px; border-radius: 999px; background: #f4f3ef; font-size: 12px; font-weight: 600;">{{d.role}}</span></div>
+                <div role="cell" style="padding: 10px 8px; border-bottom: 1px solid #efeee9;"><span style="padding: 1px 8px; border-radius: 999px; border: 1px solid {{d.accBd}}; background: {{d.accBg}}; color: {{d.accFg}}; font-size: 12px; font-weight: 600;">{{d.access}}</span></div>
+                <div role="cell" style="padding: 10px 8px; border-bottom: 1px solid #efeee9; font-size: 13px;">{{d.licence}}</div>
+                <div role="cell" style="padding: 10px 8px; border-bottom: 1px solid #efeee9; font-size: 13px;">{{d.status}}</div>
+                <div role="cell" style="padding: 10px 8px; border-bottom: 1px solid #efeee9; font-size: 13px;">{{d.files}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Evidence documents" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Evidence documents · {{nDocs}} reports</h2>
+        <p style="margin: 0; font-size: 14px; line-height: 20px; color: #3d3c39;">Read for appliance ownership, power, hours, tariffs and consumption. Every value taken from them carries its page and a quote verified verbatim in code; the Load profiles page shows the quote behind each number.</p>
+        <div style="overflow-x: auto;">
+          <div role="table" aria-label="Evidence documents" style="min-width: 900px; display: grid; grid-template-columns: 2.6fr 1.2fr 0.5fr 1.2fr 0.7fr; font-size: 14px; line-height: 19px;">
+            <div role="row" style="display: contents;">
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Title</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Publisher</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Year</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Licence</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Status</div>
+            </div>
+            <sc-for list="{{docs}}" as="d" hint-placeholder-count="10">
+              <div role="row" style="display: contents;">
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9;"><a href="{{d.url}}">{{d.title}}</a></div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9; font-size: 13px;">{{d.publisher}}</div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9; font-size: 13px;">{{d.year}}</div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9; font-size: 13px;">{{d.licence}}</div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9; font-size: 13px; color: {{d.statusFg}};">{{d.status}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <section style="display: flex; flex-wrap: wrap; gap: 16px;">
+      <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Licences in brief</h2>
+        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px; color: #3d3c39;">
+          <li><strong style="color: #0b0b0b;">Footprints and OSM data: ODbL-1.0.</strong> Derived databases must stay share-alike and credit OpenStreetMap contributors.</li>
+          <li><strong style="color: #0b0b0b;">Meta Relative Wealth Index: CC-BY-NC-4.0.</strong> The combined product is for non-commercial use unless the RWI fields are removed.</li>
+          <li><strong style="color: #0b0b0b;">Copernicus (ERA5-Land, DEM):</strong> free including commercial use, with attribution to the Copernicus programme.</li>
+          <li><strong style="color: #0b0b0b;">CC-BY-4.0</strong> for GHSL, WorldPop, Gridfinder, geoBoundaries, ESA WorldCover and Open-Meteo; CDLA-Permissive-2.0 for Overture.</li>
+          <li><strong style="color: #0b0b0b;">Survey microdata</strong> (DHS, World Bank MTF, NISR EICV5) and the Establishment Census tables are used under the providers' terms and never redistributed; the grid model publishes predictions, not cluster locations.</li>
+        </ul>
+      </div>
+      <div style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Cite this dataset</h2>
+        <p style="margin: 0; padding: 12px 14px; border-radius: 8px; background: #f7f6f2; font-size: 14px; line-height: 21px; color: #0b0b0b;">Peek Load (2026). Rooftops → Load Curves: building-level electricity demand for Rwanda, data bundle v1. OSEAS26 hackathon, EnAccess challenge. https://github.com/esemsc-as4623/peek-load</p>
+        <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">Please also cite the underlying sources listed above, in particular the footprint, climate and RAMP references.</p>
+      </div>
+    </section>
+
+    <section aria-label="Full citations" style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Full citations</h2>
+      <ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px; color: #3d3c39;">
+        <sc-for list="{{citations}}" as="c" hint-placeholder-count="10"><li>{{c}}</li></sc-for>
+      </ol>
+    </section>
+
+    <footer style="font-size: 12px; line-height: 18px; color: #52514e; border-top: 1px solid #e4e3df; padding-top: 14px;">Map attribution: © OpenStreetMap contributors · Google Open Buildings · Microsoft Building Footprints · Overture Maps Foundation · GHSL (EC JRC) · WorldPop · Meta Data for Good · Copernicus · NASA POWER · Gridfinder.</footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { site: null, role: 'all', access: 'all', q: '' };
+    this.C = { URL: '@data/site.json',
+      ACC: { open: ['#1baf7a', '#effaf5', '#0b6e4f'], login: ['#6da7ec', '#e8f1fc', '#1e4f8f'], restricted: ['#e34948', '#fdecec', '#a3211f'] } };
+  }
+
+  componentDidMount() {
+    fetch(this.C.URL).then(r => r.json()).then(site => this.setState({ site })).catch(() => {});
+  }
+
+  btn(on) { return { bd: on ? '#0b0b0b' : '#d6d5d0', bg: on ? '#0b0b0b' : '#ffffff', fg: on ? '#ffffff' : '#0b0b0b', pressed: on ? 'true' : 'false' }; }
+
+  renderVals() {
+    const C = this.C, s = this.state, site = s.site;
+    const roleButtons = [['all', 'All'], ['feature', 'Feature'], ['weak_label', 'Weak label'], ['evidence', 'Evidence'], ['validation', 'Validation']].map(r => Object.assign({ label: r[1], pick: () => this.setState({ role: r[0] }) }, this.btn(r[0] === s.role)));
+    const accessButtons = [['all', 'All'], ['open', 'Open'], ['login', 'Login'], ['restricted', 'Restricted']].map(r => Object.assign({ label: r[1], pick: () => this.setState({ access: r[0] }) }, this.btn(r[0] === s.access)));
+    const out = { loading: !site, ready: !!site, roleButtons, accessButtons, q: s.q, setQ: e => this.setState({ q: e.target.value }),
+      datasets: [], docs: [], citations: [], nShown: 0, nDocs: 0,
+      restricted: 'Derived from restricted survey microdata under the providers’ terms; only weighted aggregates are shown, and cells with fewer than 10 respondents are suppressed.' };
+    if (!site) return out;
+    const src = site.sources;
+    out.restricted = src.restricted_notice || out.restricted;
+    const q = s.q.trim().toLowerCase();
+    const rows = src.datasets.filter(d => (s.role === 'all' || d.role === s.role) && (s.access === 'all' || d.access === s.access)
+      && (!q || ((d.name || '') + ' ' + (d.licence || '') + ' ' + (d.id || '')).toLowerCase().indexOf(q) >= 0));
+    out.datasets = rows.map(d => {
+      const a = C.ACC[d.access] || C.ACC.login;
+      return { name: d.name || d.id, cite: (d.citations || []).join(' '), hasUrl: !!d.url, url: d.url || '', urlText: d.url ? d.url.replace(/^https?:\/\//, '').slice(0, 70) : '',
+        role: (d.role || '').replace('_', ' '), access: d.access, accBd: a[0], accBg: a[1], accFg: a[2], licence: d.licence || 'to verify',
+        status: (d.status || '').replace('_', ' '), files: d.files ? d.files + ' · ' + d.megabytes + ' MB' : '–' };
+    });
+    out.nShown = out.datasets.length;
+    const docs = src.evidence_documents.filter(d => d.status === 'verified');
+    out.docs = docs.map(d => ({ title: d.title, url: d.url, publisher: d.publisher, year: d.year || '–', licence: d.licence || 'to verify', status: d.status, statusFg: d.status === 'verified' ? '#0b6e4f' : '#52514e' }));
+    out.nDocs = out.docs.length;
+    out.citations = Object.values(src.citations || {});
+    return out;
+  }
+}
+</script>
+</body>
+</html>

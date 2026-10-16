@@ -1,0 +1,97 @@
+{
+  "figures/allocated-use-of-every-building-in.png": {
+    "canvas_id": "492fd0fe059a7e47509c264b96ad6657",
+    "bytes": 571940,
+    "sha256": "52a4da287ae47df3e85f90c03ffc2dd9a4038a7b3d0debeb95db4974b778b261"
+  },
+  "figures/calibration-on-held-out-districts-predicted.png": {
+    "canvas_id": "fcb910bb1c225b6b7f02354d5d093b88",
+    "bytes": 282232,
+    "sha256": "715d244093448e91f3eed7945fa6013d7bf7239de81024c0d2d553092668d5e5"
+  },
+  "figures/comparison-of-hourly-temperatures-from-nasa.png": {
+    "canvas_id": "16979497a3c9ccceac62a5d4919343d0",
+    "bytes": 145906,
+    "sha256": "ee2c4d70cdfa19058b8cf685612193261789378909da5c6c8a4cf9c9ae8f340e"
+  },
+  "figures/confusion-matrix-of-the-chosen-labeller.png": {
+    "canvas_id": "eddb787629e713cff0401eb4d0854b42",
+    "bytes": 117419,
+    "sha256": "71b27fb27315de2b1c988b14256ad41c4011b6d1ce824b462a9e1a3eee0dad84"
+  },
+  "figures/households-per-district-one-per-residential.png": {
+    "canvas_id": "e9f97d094cba880ddbf444a29767807a",
+    "bytes": 95161,
+    "sha256": "4d122a0acbd125085f60639a3a7e005e20c281a529a47a41896426d5437c4908"
+  },
+  "figures/left-households-expected-demand-by-year.png": {
+    "canvas_id": "0bbd28b8359b92c3a1d4833a415d01b3",
+    "bytes": 121982,
+    "sha256": "8224778f4af803d679e0a2804dc138b7fecf5040809df240e7b4c10e8e787fce"
+  },
+  "figures/map-of-predicted-connection-probability-per.png": {
+    "canvas_id": "b76023693bd0994b52c5eb76ded3128d",
+    "bytes": 374317,
+    "sha256": "c574c7a74361f5eba7c06a619493bb594c82494c9c51d6eaacfaf9225072229f"
+  },
+  "figures/maps-of-potential-and-expected-annual.png": {
+    "canvas_id": "ecf254e70bd473583f6e9a0896a82107",
+    "bytes": 699162,
+    "sha256": "d1f4d93fac59de57928f4b445d70f14239149fb54cccb686d57770a4faf608c1"
+  },
+  "figures/national-demand-by-year-potential-rises.png": {
+    "canvas_id": "347fdcbfb09e4028014695671ef0fbe1",
+    "bytes": 95325,
+    "sha256": "ea822a377e3357e212d2f2a030de4e64aec090a9f613d7582727b8f156f6bfdd"
+  },
+  "figures/ranking-quality-auc-per-use-class.png": {
+    "canvas_id": "95997d31f9a481efcaf3d4915e7c99cb",
+    "bytes": 167881,
+    "sha256": "caf4e24efbecd364b2587858e4fee2f8de4d4fd4e3c18ba376b17c372ed018aa"
+  },
+  "figures/the-label-share-of-dhs-2025.png": {
+    "canvas_id": "ad761fbb2d531807993b3cbe23f591dd",
+    "bytes": 194465,
+    "sha256": "501e783c87ed9c26cf7b6e41b526066af799ee01f6fcd8aae7dacc832167a353"
+  },
+  "figures/uncertainty-bands-for-the-three-deep.png": {
+    "canvas_id": "22abbe1934f9b785a100c91cb1555db5",
+    "bytes": 82732,
+    "sha256": "abb42d8f9187ca7bcbb185345bac80126bf3a17fbb734a1839f553be3fe1180e"
+  },
+  "figures/use-mix-in-the-three-deep.png": {
+    "canvas_id": "70dd91108dfd58fa27a3d949843a5150",
+    "bytes": 139757,
+    "sha256": "d669721f52c80496f405ebb80798f65152afdb9bc0dfdef9bdfab38fea624ba4"
+  },
+  "national.json": {
+    "canvas_id": "2ebd33cf94c38482dcd39757b6e14461",
+    "bytes": 2883502,
+    "sha256": "b1ae43674eca4e25f29dca2553189ca1c51fb7752694792ca6a54230efac4359"
+  },
+  "profiles.json": {
+    "canvas_id": "e9e65342f626905f12746ee12a197704",
+    "bytes": 258063,
+    "sha256": "3b39590b52a71052b1afcb0688a02636932f4fb2b20184b421d7881cdf1be8e6"
+  },
+  "site.json": {
+    "canvas_id": "d6a969ee1db43e36decc24e33a14684e",
+    "bytes": 106174,
+    "sha256": "10f646d8afdf156f2bd7a75258f4f1becd9a9fa4dda11289ec2bc0bc296b9322"
+  },
+  "subdistrict_muhoza.json": {
+    "canvas_id": "80f456fa30a99fcc6a0e508b329aa570",
+    "bytes": 2141647,
+    "sha256": "a1fd69e4129ced6124880e4ed39cbb87a2b4948878841f3cbf5243acdfd23094"
+  },
+  "subdistrict_nasho.json": {
+    "canvas_id": "c637d73b060bf3199f980f866a4d41c9",
+    "bytes": 1458944,
+    "sha256": "ec41edc9864001e0a82ab62b548f09a6d85a65a27879730a8fb8271dc1e856ed"
+  },
+  "subdistrict_nyamirambo.json": {
+    "canvas_id": "468a9992f4659c299fb821a208c699ce",
+    "bytes": 3542770,
+    "sha256": "1bbd2fcfeb0c7f6b5bcdf2f15139d46958c291c9edd63471dd44f5e6994285f3"
+  }
+}

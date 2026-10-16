@@ -34,7 +34,7 @@ Current state (2026-10-15):
   r = 0.93 (27 branches outside Kigali). Two gaps: health facilities (model 55 GWh vs REG 22.7) and businesses
   (non-residential: model 78 vs REG 257 GWh).
 - Uncertainty bands per sector and a spacing-cap sensitivity are reported (section 4).
-- A static dashboard bundle and a design prototype exist.
+- A static dashboard bundle and a design prototype exist. The prototype's pages now run as a static site in `app/` (Vite + Preact), with the data hosted beside it on our server (`docs/hosting.md`).
 
 **How to read the numbers.** Most of our "ground truth" is aggregated: district census counts, survey clusters,
 national averages. Building-level values are a *plausible allocation* that reproduces those totals. They are not

@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Validation and quality</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="validation" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 880px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Validation and quality</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #6da7ec; background: #e8f1fc; color: #1e4f8f; font-size: 12px; font-weight: 600;">In progress</span></div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Independent validation with external data sources</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Simulated demand against independent meter data and surveys, the accuracy of the use labels, the checks on every evidence value, and what is still weak. Verdict: ok within 1.5× of an anchor (or inside its p25–p75), check within 3×, fail beyond.</p>
+    </header>
+
+    <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 40px; border-radius: 12px; background: #f4f3ef; color: #52514e; font-size: 15px; text-align: center;">Loading validation results…</div>
+    </sc-if>
+
+    <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+      <section aria-label="Household demand checks" style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">How household profiles compare with meter data and surveys</h2>
+          <p style="margin: 0; flex-basis: 100%; font-size: 14px; line-height: 21px; color: #3d3c39;">Each row is either a benchmark (◆): the mean monthly use of connected households from REG meter data (QSEL) or the EICV5 survey; or one of our simulated household profiles (●), lower and upper wealth, with the median implied by MTF 2022 spending (orange tick). Rural rows sit above urban rows.</p>
+          
+        </div>
+        <div style="position: relative; width: 100%;"><svg viewBox="0 0 980 {{dot.h}}" role="img" aria-label="Dot plot of simulated household consumption against independent anchors, in kWh per month" style="width: 100%; height: auto; display: block;">
+          <sc-for list="{{dot.grid}}" as="g" hint-placeholder-count="8">
+            <line x1="{{g.x}}" x2="{{g.x}}" y1="6" y2="{{dot.axisY}}" stroke="#efeee9"></line>
+            
+          </sc-for>
+          <sc-for list="{{dot.rows}}" as="r" hint-placeholder-count="9">
+            <g>
+              
+              <sc-if value="{{r.isAnchor}}" hint-placeholder-val="{{true}}">
+                <rect x="{{r.mx}}" y="{{r.my}}" width="11" height="11" fill="#52514e" transform="{{r.rot}}"></rect>
+              </sc-if>
+              <sc-if value="{{r.isSim}}" hint-placeholder-val="{{false}}">
+                <g>
+                  <line x1="{{r.medX}}" x2="{{r.medX}}" y1="{{r.t1}}" y2="{{r.t2}}" stroke="#eb6834" style="stroke-width: 3;"></line>
+                  <circle cx="{{r.x}}" cy="{{r.y}}" r="7" fill="#256abf"></circle>
+                </g>
+              </sc-if>
+            </g>
+          </sc-for>
+          <text x="660" y="{{dot.unitY}}" style="font-size: 12px; fill: #52514e; text-anchor: middle;">kWh per household per month</text>
+        </svg>
+<sc-for list="{{dot.grid}}" as="g" hint-placeholder-count="8"><div aria-hidden="true" style="position: absolute; left: calc({{g.x}} * 100% / 980); top: calc({{dot.labelY}} * 100% / {{dot.h}}); transform: translate(-50%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 12px; color: #52514e;">{{g.label}}</div></sc-for>
+<sc-for list="{{dot.rows}}" as="r" hint-placeholder-count="9"><div aria-hidden="true" style="position: absolute; left: calc(372 * 100% / 980); top: calc({{r.ty}} * 100% / {{dot.h}}); transform: translate(-100%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 13px; color: #3d3c39;">{{r.label}}</div></sc-for>
+<sc-for list="{{dot.groups}}" as="gr" hint-placeholder-count="2"><div aria-hidden="true" style="position: absolute; left: calc(372 * 100% / 980); top: calc({{gr.ty}} * 100% / {{dot.h}}); transform: translate(-100%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 13px; font-weight: 700; color: #0b0b0b;">{{gr.label}}</div></sc-for>
+<div aria-hidden="true" style="position: absolute; left: 9px; top: calc({{dot.midY}} * 100% / {{dot.h}}); transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; pointer-events: none; font-size: 12px; font-weight: 600; color: #52514e;">Benchmark (◆) or our profile (●)</div>
+</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: #3d3c39;">
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="6" fill="#256abf"></circle></svg>simulated (RAMP), calibrated to MTF 2022 spending of the same group</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><line x1="7" y1="1" x2="7" y2="13" stroke="#eb6834" stroke-width="3"></line></svg>MTF spending-derived median</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect x="3" y="3" width="8" height="8" fill="#52514e" transform="rotate(45 7 7)"></rect></svg>independent anchor (mean)</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <div role="table" aria-label="Household anchors" style="min-width: 760px; display: grid; grid-template-columns: 0.6fr 0.8fr 2.4fr 0.8fr 0.6fr 0.6fr; font-size: 14px; line-height: 19px;">
+            <div role="row" style="display: contents;">
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Setting</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Our mix</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Anchor</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Anchor value</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Ratio</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Verdict</div>
+            </div>
+            <sc-for list="{{anchors}}" as="a" hint-placeholder-count="5">
+              <div role="row" style="display: contents;">
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{a.setting}}</div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9;">{{a.ours}}</div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9;">{{a.anchor}} <span style="color: #52514e; font-size: 12px;">({{a.source}})</span></div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9;">{{a.value}}</div>
+                <div role="cell" style="padding: 8px; border-bottom: 1px solid #efeee9;">{{a.ratio}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;"><span style="padding: 1px 8px; border-radius: 999px; border: 1px solid {{a.vbd}}; background: {{a.vbg}}; color: {{a.vfg}}; font-size: 12px; font-weight: 600;">{{a.verdict}}</span></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Calibration and MTF energy tier</h2>
+          <div role="table" aria-label="Household calibration and tiers" style="display: grid; grid-template-columns: 1.6fr 0.8fr 0.8fr 0.8fr 0.7fr; font-size: 13px; line-height: 18px;">
+            <div role="row" style="display: contents;">
+              <div role="columnheader" style="padding: 6px; border-bottom: 1px solid #d6d5d0; font-weight: 600; color: #3d3c39;">Profile</div>
+              <div role="columnheader" style="padding: 6px; border-bottom: 1px solid #d6d5d0; font-weight: 600; color: #3d3c39;">Simulated</div>
+              <div role="columnheader" style="padding: 6px; border-bottom: 1px solid #d6d5d0; font-weight: 600; color: #3d3c39;">Target (mean)</div>
+              <div role="columnheader" style="padding: 6px; border-bottom: 1px solid #d6d5d0; font-weight: 600; color: #3d3c39;">MTF median</div>
+              <div role="columnheader" style="padding: 6px; border-bottom: 1px solid #d6d5d0; font-weight: 600; color: #3d3c39;">MTF tier</div>
+            </div>
+            <sc-for list="{{tiers}}" as="t" hint-placeholder-count="4">
+              <div role="row" style="display: contents;">
+                <div role="cell" style="padding: 6px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{t.name}}</div>
+                <div role="cell" style="padding: 6px; border-bottom: 1px solid #efeee9;">{{t.sim}}</div>
+                <div role="cell" style="padding: 6px; border-bottom: 1px solid #efeee9;">{{t.target}}</div>
+                <div role="cell" style="padding: 6px; border-bottom: 1px solid #efeee9;">{{t.median}}</div>
+                <div role="cell" style="padding: 6px; border-bottom: 1px solid #efeee9;">Tier {{t.tier}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">kWh per household per month. The target is a calibration, not a check: one lighting factor per profile is fitted to it. All four profiles land in MTF Tier 2 by daily energy (Bhatia &amp; Angelou 2015 thresholds), which is why the profiles are named by wealth half (lower, upper) rather than by tier.</p>
+        </div>
+        <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Businesses and institutions</h2>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <sc-for list="{{est}}" as="e" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #f7f6f2;">
+                <div style="display: flex; justify-content: space-between; gap: 8px; align-items: center;"><strong style="font-size: 15px">{{e.name}}</strong></div>
+                <div style="font-size: 14px;">{{e.sim}} vs {{e.anchor}}</div>
+                <div style="font-size: 12px; line-height: 16px; color: #52514e;">{{e.source}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">Health facilities are split by type: health posts use the appliance-built profile, health centres are scaled to MTF 2022 centres' spending (so that check passes by construction) and hospitals are 10 health centres. SEforALL's 2023 site surveys measured far less for centres (5–11 kWh/day), and REG sold 22.7 GWh to all health facilities in 2023 against the model's 55: a pending decision.</p>
+        </div>
+      </section>
+
+      <section aria-label="Use classifier and census allocation" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Every building gets a use: classifier, then census</h2>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: #3d3c39;">A gradient-boosting classifier gives all 6.4M buildings use probabilities from their shape, height and surroundings. Model A learns from tags alone, model B adds the LLM labels of the deep dives. Held out, B ranks uses better (AUC 0.78 by district on tags, 0.76 by sub-district on LLM labels) and, unlike A, learns ancillary structures (AUC 0.82). The census then decides how many: workshops, services, shops and 3.31M households are placed on the most likely buildings, rarest first, so every district reproduces its census exactly. One home per building the classifier calls residential would give 1.7× too many households.</p>
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px;">
+          <img src="@data/figures/ranking-quality-auc-per-use-class.png" alt="Ranking quality (AUC) per use class for models A and B on held-out tags, held-out LLM labels and human gold labels" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/use-mix-in-the-three-deep.png" alt="Use mix in the three deep dives and nationally for the LLM labels, models A and B, and the census-constrained allocation" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/households-per-district-one-per-residential.png" alt="Households per district: one per residential building versus the 2022 census, which the allocation matches" style="width: 100%; max-width: 760px; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/allocated-use-of-every-building-in.png" alt="Allocated use of every building in sample boxes of Nyamirambo and Nasho" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <figcaption style="font-size: 12px; color: #52514e;">QA checks every district's targets, one use per building, tags respected and spacing (at most one mill per ~0.7 km² cell). Gold labels are an uncertain reference; on them B (0.41) matches the LLM (0.39).</figcaption>
+        </figure>
+      </section>
+
+      <section style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+        <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <div style="display: flex; gap: 8px; align-items: center;"><h2 style="margin: 0; font-size: 18px; line-height: 24px;">Use-label quality</h2><span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px;">
+            <sc-for list="{{labelStats}}" as="ls" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #f7f6f2;"><span style="font-size: 12px; color: #52514e;">{{ls.k}}</span><span style="font-size: 20px; font-weight: 700;">{{ls.v}}</span></div>
+            </sc-for>
+          </div>
+          <p style="margin: 0; font-size: 14px; line-height: 20px; color: #3d3c39;">Accuracy is modest because the labeller only sees open vector data (footprint, height, tags, density, roads). The human labels are not ground truth either: the imagery showed little beyond vegetation and roof shape (flat or pitched), so agreement measures consistency between two uncertain readers.</p>
+          <figure style="margin: 0; display: flex; flex-direction: column; gap: 6px;">
+            <img src="@data/figures/confusion-matrix-of-the-chosen-labeller.png" alt="Confusion matrix of the chosen labeller against human gold labels across the nine building-use classes" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+            <figcaption style="font-size: 12px; color: #52514e;">Confusion matrix against 173 human gold labels (Claude Haiku 4.5, prompt v2).</figcaption>
+          </figure>
+        </div>
+        <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+            <div style="display: flex; gap: 8px; align-items: center;"><h2 style="margin: 0; font-size: 18px; line-height: 24px;">Evidence quality</h2><span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #1baf7a; background: #effaf5; color: #0b6e4f; font-size: 12px; font-weight: 600;">Built</span></div>
+            <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px; color: #3d3c39;">
+              <li><strong style="color: #0b0b0b;">{{ev.extracted}}</strong> parameters extracted from 26 public reports, each with document, page and quote; <strong style="color: #0b0b0b;">{{ev.verified}}</strong> of quotes found verbatim on the cited page.</li>
+              <li>Automated checks (units, physical ranges, agreement between sources) flag <strong style="color: #0b0b0b;">{{ev.flagged}}</strong> of {{ev.checked}} RAMP-relevant values; flagged values are left out of the profiles.</li>
+              <li>The owner approved the evidence set as a blanket approval backed by these checks (not row by row) and approved the building-to-profile mapping, and signed off the 17 profiles on 2026-10-12.</li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+            <div style="display: flex; gap: 8px; align-items: center;"><h2 style="margin: 0; font-size: 18px; line-height: 24px;">Table QA</h2><span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #1baf7a; background: #effaf5; color: #0b6e4f; font-size: 12px; font-weight: 600;">All pass</span></div>
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 14px; line-height: 20px;">
+              <span>buildings_base</span><span style="color: #0b6e4f; font-weight: 600;">pass · 6 434 247 rows</span>
+              <span>building_height</span><span style="color: #0b6e4f; font-weight: 600;">pass</span>
+              <span>context_vector · context_raster</span><span style="color: #0b6e4f; font-weight: 600;">pass</span>
+              <span>building_context</span><span style="color: #0b6e4f; font-weight: 600;">pass</span>
+              <span>climate_h3</span><span style="color: #0b6e4f; font-weight: 600;">pass · 4 034 cells</span>
+              <span>labels · evidence</span><span style="color: #0b6e4f; font-weight: 600;">pass</span>
+            </div>
+            <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">Every table is validated against a schema contract (pandera); the dashboard bundle has its own test that recomputes each sample building from these formulas.</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Grid-connection model" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Grid-connection model</h2>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #e34948; background: #fdecec; color: #a3211f; font-size: 12px; font-weight: 600;">Trained on restricted DHS data; no cluster locations shown</span>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: #3d3c39;">A logistic regression predicts whether a household is connected, from open neighbourhood features averaged over the DHS displacement radius (2 km urban, 5 km rural): population and building density, wealth, distance to the predicted MV line and roads, building size, settlement class, cropland. Held out by district it reaches AUC 0.75 (urban/rural rate alone: 0.68; a perfect neighbourhood model: 0.89) and, by district, tracks EICV7 2024 grid lighting closely (r = 0.93). It gives a neighbourhood's probability: two buildings side by side get the same value.</p>
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 6px;">
+          <img src="@data/figures/the-label-share-of-dhs-2025.png" alt="The label: share of DHS 2025 households with electricity per cluster, by district against EICV7 grid lighting, and falling with distance to the MV line" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/calibration-on-held-out-districts-predicted.png" alt="Calibration on held-out districts, predicted versus observed cluster shares, and permutation importance led by population density" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/map-of-predicted-connection-probability-per.png" alt="Map of predicted connection probability per H3 cell and the district check against EICV7 2024" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <figcaption style="font-size: 12px; color: #52514e;">DHS 2025: 14 427 households in 560 clusters ("has electricity"). Full scores in reports/demand/grid_model.md.</figcaption>
+        </figure>
+      </section>
+
+      <section aria-label="Demand by year and uncertainty" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Constraints, years and uncertainty</h2>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: #3d3c39;">Since 2026-10-15 every aggregate we hold is a constraint: census households per district (urban and rural), Establishment Census counts, MINEDUC schools, a national count of places of worship, DHS 2025 wealth by district, EICV7 2024 grid shares and REG consumption. They can no longer validate the model; instead we report how much the answer moves. Ten allocations with perturbed scores keep sub-district totals within a few percent, while which building holds a shop or church changes often (36% agreement). With a quarter of rural manufacturing as mills (2,271 nationally), Nasho gets 22 mills; without spacing caps it would get 26, with up to 39 mills in one block elsewhere. Back-cast: building presence 2016–2023 places growth, pinned to census household growth (3.1%/yr).</p>
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 6px;">
+          <img src="@data/figures/maps-of-potential-and-expected-annual.png" alt="Maps of potential and expected annual demand per H3 cell: 456 and 353 GWh per year" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/national-demand-by-year-potential-rises.png" alt="National demand by year: potential rises from 432 GWh in 2016 to 543 in 2023 and 676 projected for 2030; expected from 327 to 435 and 542" style="width: 100%; max-width: 1000px; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <img src="@data/figures/uncertainty-bands-for-the-three-deep.png" alt="Uncertainty bands for the three deep-dive sub-districts: allocation, profile and combined bands within about two percent of the base" style="width: 100%; max-width: 1000px; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <figcaption style="font-size: 12px; color: #52514e;">Details: status_report.md section 4 and reports/demand/cap_sensitivity.csv.</figcaption>
+        </figure>
+      </section>
+
+      <section aria-label="Totals the model is held to" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">The totals the model is held to, and how close it gets</h2>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+            <h3 style="margin: 0; font-size: 17px;">Allocation targets (national sums of district targets)</h3>
+            <div role="table" aria-label="Allocation targets" style="display: grid; grid-template-columns: 1.6fr 0.9fr 0.8fr 0.9fr 0.7fr; font-size: 13px; line-height: 18px;">
+              <div role="row" style="display: contents;"><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39;">Count</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Target</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">From tags</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Placed</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Short</div></div>
+              <sc-for list="{{targets}}" as="t" hint-placeholder-count="15">
+                <div role="row" style="display: contents;"><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9;"><strong>{{t.label}}</strong> <span style="color: #52514e;">{{t.src}}</span></div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{t.target}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{t.tagged}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{t.assigned}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right; color: {{t.shortFg}}; font-weight: 600;">{{t.short}}</div></div>
+              </sc-for>
+            </div>
+            <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">{{targetsNote}}</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+            <h3 style="margin: 0; font-size: 17px;">Grid calibration: connected households per district</h3>
+            <p style="margin: 0; font-size: 13px; line-height: 19px; color: #3d3c39;">The DHS-trained model's share of connected households, shifted per district (on the logit scale) until it equals EICV7 2024 grid lighting. Largest shifts first.</p>
+            <div style="max-height: 360px; overflow-y: auto;">
+              <div role="table" aria-label="Grid calibration by district" style="display: grid; grid-template-columns: 1.3fr 0.9fr 0.9fr 0.8fr; font-size: 13px; line-height: 18px;">
+                <div role="row" style="display: contents;"><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39;">District</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">EICV7 2024</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Model (raw)</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Shift</div></div>
+                <sc-for list="{{grid}}" as="g" hint-placeholder-count="10">
+                  <div role="row" style="display: contents;"><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{g.district}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{g.eicv7}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{g.model}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{g.shift}}</div></div>
+                </sc-for>
+              </div>
+            </div>
+            <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">{{gridNote}}</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+            <h3 style="margin: 0; font-size: 17px;">Household energy: scaled to REG, checked against QSEL</h3>
+            <div role="table" aria-label="Household energy calibration" style="display: grid; grid-template-columns: 1.6fr 0.9fr 0.9fr 0.7fr; font-size: 13px; line-height: 18px;">
+              <div role="row" style="display: contents;"><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39;">Scope</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Reference</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Model</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Factor</div></div>
+              <sc-for list="{{energy}}" as="e" hint-placeholder-count="3">
+                <div role="row" style="display: contents;"><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9;"><strong>{{e.scope}}</strong> <span style="color: #52514e;">{{e.kind}}</span></div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{e.target}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{e.before}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 600;">{{e.factor}}</div></div>
+              </sc-for>
+            </div>
+            <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">kWh per household per month. Kigali and the rest of the country are scaled to REG's mean residential consumption (QSEL 2024); the rural QSEL 2025 survey mean is kept as an independent check, not a target. "Model" is before scaling.</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+            <h3 style="margin: 0; font-size: 17px;">Uncertainty bands (potential demand)</h3>
+            <div role="table" aria-label="Uncertainty bands" style="display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; font-size: 13px; line-height: 18px;">
+              <div role="row" style="display: contents;"><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39;">Area</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Allocation p10–p90</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Profile p10–p90</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Combined</div></div>
+              <sc-for list="{{bands}}" as="b" hint-placeholder-count="4">
+                <div role="row" style="display: contents;"><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9;"><strong>{{b.area}}</strong> <span style="color: #52514e;">{{b.base}}</span></div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{b.alloc}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{b.profile}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right; font-weight: 600;">{{b.combined}}</div></div>
+              </sc-for>
+            </div>
+            <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">{{bandsNote}}</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; min-width: 0;">
+            <h3 style="margin: 0; font-size: 17px;">Spacing-cap sensitivity: grain mills</h3>
+            <div role="table" aria-label="Spacing cap sensitivity for grain mills" style="display: grid; grid-template-columns: 0.8fr 1fr 1fr 0.8fr 0.8fr 1fr; font-size: 13px; line-height: 18px;">
+              <div role="row" style="display: contents;"><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39;">Caps</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Max per cell</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Above base cap</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Muhoza</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Nasho</div><div role="columnheader" style="padding: 6px 8px; border-bottom: 1px solid #d6d5d0; font-size: 12px; font-weight: 600; color: #3d3c39; text-align: right;">Nasho MWh/yr</div></div>
+              <sc-for list="{{caps}}" as="c" hint-placeholder-count="5">
+                <div role="row" style="display: contents;"><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; font-weight: 600;">{{c.caps}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.max}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.above}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.muhoza}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.nasho}}</div><div role="cell" style="padding: 5px 8px; border-bottom: 1px solid #efeee9; text-align: right;">{{c.nashoMwh}}</div></div>
+              </sc-for>
+            </div>
+            <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">{{capsNote}} Without a cap, mills crowd into the best-scoring cells: Nasho's mill energy rises more than threefold, though every district total is unchanged.</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Benchmarks against REG and the Ministry of Health" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Against REG sales, customers and health-facility counts</h2>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #1baf7a; background: #effaf5; color: #0b6e4f; font-size: 12px; font-weight: 600;">Independent check</span>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: #3d3c39;">From the NISR Statistical Yearbook 2024 (REG tables), RURA's Q2 2024 electricity statistics and the EICV3–5 thematic reports. Households' expected demand is 178 / 193 / 208 GWh in 2021 / 2022 / 2023 against REG residential sales of 154 / 179 / 211 GWh, and connected households per REG branch correlate at r = 0.93 across the 27 branches outside Kigali. Two gaps stand out: health facilities (55 GWh modelled vs 22.7 sold; SEforALL's 2023 site surveys point to lower health-centre use) and businesses (78 GWh modelled vs 257 sold to non-residential and small-industry customers; large hotels are missing).</p>
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 6px;">
+          <img src="@data/figures/left-households-expected-demand-by-year.png" alt="Left: households' expected demand by year against REG residential sales, close in 2022 and 2023. Right: model versus REG sales by customer category: residential 0.94x, non-residential 0.30x, hotels 0.05x, health facilities 2.43x" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+          <figcaption style="font-size: 12px; color: #52514e;">Full table: reports/demand/benchmarks.md (and checks.json → benchmarks in the data bundle).</figcaption>
+        </figure>
+      </section>
+
+      <section aria-label="Known limitations" style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Known limitations</h2>
+        <ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 22px; color: #3d3c39;">
+          <li>Google 2.5D heights are compressed: single-storey buildings read ~4–5 m, so floors above 2 are unreliable.</li>
+          <li>First-seen year has artefacts (jumps in 2019 and 2023); it is experimental.</li>
+          <li>Use labels come from open vector data only and agree with human labels ~40% of the time; the human labels are themselves uncertain.</li>
+          <li>Microsoft footprints omit structures under ~15 m².</li>
+          <li>Cooling demand is marginal in most of Rwanda; the category is a relative proxy.</li>
+          <li>Labels cover the three deep dives (Muhoza partly) and a national sample.</li>
+          <li>Several business and institution profiles rest on assumptions (signed off); health facilities total 55 GWh/yr against REG's 22.7 GWh: health centres are scaled to MTF spending (far above SEforALL's measured 5–11 kWh/day) and 127 tagged hospitals are twice MoH's 63 (pending).</li>
+          <li>Businesses are under-counted: modelled establishments use about 30% of REG's non-residential and small-industry sales, and large hotels are missing.</li>
+          <li>Household energy is scaled to REG means; outside Kigali this puts rural households at 4.4 kWh/month, below QSEL's rural survey (8.1): the two sources disagree.</li>
+          <li>Rural households in the two wealth halves spend almost the same (~10 kWh/month). The upper share follows DHS 2025 per district (36% rural, 55% urban nationally).</li>
+        </ol>
+      </section>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { site: null };
+    this.C = { URL: '@data/site.json',
+      V: { ok: ['#1baf7a', '#effaf5', '#0b6e4f'], check: ['#eda100', '#fff4d6', '#6b4a00'], fail: ['#e34948', '#fdecec', '#a3211f'] } };
+  }
+
+  componentDidMount() {
+    fetch(this.C.URL).then(r => r.json()).then(site => this.setState({ site })).catch(() => {});
+  }
+
+  fmt(v, dp) {
+    if (v === null || v === undefined || isNaN(v)) return '–';
+    const s = Number(v).toFixed(dp || 0);
+    const p = s.split('.');
+    const a = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return p[1] ? a + '.' + p[1] : a;
+  }
+
+  verdict(v) { const c = this.C.V[v] || this.C.V.check; return { verdict: v, vbd: c[0], vbg: c[1], vfg: c[2] }; }
+
+  renderVals() {
+    const s = this.state, site = s.site;
+    const out = { loading: !site, ready: !!site, dot: { h: 300, grid: [], rows: [], groups: [], midY: 150 }, anchors: [], tiers: [], est: [], modes: [], labelStats: [], ev: {}, targets: [], grid: [], energy: [], bands: [], caps: [], targetsNote: '', gridNote: '', bandsNote: '', capsNote: '' };
+    if (!site) return out;
+    const ck = site.checks, names = site.meta.profiles;
+    const nm = id => (names[id] && names[id].name) || id;
+    const x = v => 380 + Math.min(v, 35) / 35 * 580;
+    const rows = [], groups = [];
+    let yy = 24;
+    ['rural', 'urban'].forEach((setting, si) => {
+      groups.push({ label: setting === 'rural' ? 'Rural households' : 'Urban households', ty: yy + 4 });
+      yy += 28;
+      ck.household_anchors.filter(a => a.setting === setting).forEach(a => {
+        rows.push({ label: a.anchor, isAnchor: true, isSim: false, mx: x(a.anchor_kwh_month) - 5.5, my: yy - 5.5, rot: 'rotate(45 ' + x(a.anchor_kwh_month).toFixed(1) + ' ' + yy + ')', ty: yy + 4 });
+        yy += 30;
+      });
+      const ids = setting === 'rural' ? ['household_rural_lower', 'household_rural_upper'] : ['household_urban_lower', 'household_urban_upper'];
+      ids.forEach(id => {
+        const t = ck.household_tiers.find(r => r.archetype === id);
+        if (!t) return;
+        rows.push({ label: nm(id) + ' (simulated)', isAnchor: false, isSim: true, x: x(t.simulated_kwh_month), y: yy, medX: x(t.mtf_spend_median), t1: yy - 11, t2: yy + 11, ty: yy + 4 });
+        yy += 30;
+      });
+      if (si === 0) yy += 14;
+    });
+    const axisY = yy, labelY = yy + 16;
+    out.dot = { h: yy + 42, axisY, labelY, unitY: yy + 36, rows, groups, midY: (axisY / 2).toFixed(1), grid: [0, 5, 10, 15, 20, 25, 30, 35].map(v => ({ x: x(v), label: String(v) })) };
+    out.anchors = ck.household_anchors.map(a => Object.assign({ setting: a.setting.charAt(0).toUpperCase() + a.setting.slice(1), ours: this.fmt(a.archetype_mix_kwh_month, 1),
+      anchor: a.anchor, source: a.source, value: this.fmt(a.anchor_kwh_month, 1), ratio: this.fmt(a.ratio, 2) + '×' }, this.verdict(a.verdict)));
+    out.tiers = ck.household_tiers.map(t => ({ name: nm(t.archetype), sim: this.fmt(t.simulated_kwh_month, 1), target: this.fmt(t.calibrated_to_mtf_spend_mean, 1), median: this.fmt(t.mtf_spend_median, 1), tier: t.mtf_energy_tier }));
+    out.est = ck.establishments.map(e => Object.assign({ name: nm(e.archetype), sim: this.fmt(e.simulated, 1) + ' ' + e.unit, anchor: e.anchor_value + ' ' + e.unit + ' · ' + e.anchor, source: e.source }, this.verdict(e.verdict)));
+    out.modes = ['nyamirambo', 'muhoza', 'nasho'].filter(k => site.full_summaries[k]).map(k => {
+      const f = site.full_summaries[k], m = f.metrics, mt = f.metrics_top_class;
+      return { sector: f.sector + (k === 'muhoza' ? ' (labelled part)' : ''), prob: this.fmt(m.annual_mwh / 1000, 2) + ' GWh/yr', top: this.fmt(mt.annual_mwh / 1000, 2) + ' GWh/yr',
+        diff: '+' + Math.round(100 * (m.annual_mwh / mt.annual_mwh - 1)) + '%', peak: this.fmt(m.area_peak_kw, 0) + ' / ' + this.fmt(mt.area_peak_kw, 0) + ' kW' };
+    });
+    const lb = ck.labels;
+    out.labelStats = [{ k: 'Gold labels', v: this.fmt(lb.n_gold, 0) }, { k: 'Agreement', v: '39–43%' }, { k: 'Macro-F1', v: this.fmt(lb.macro_f1, 2) }, { k: 'Cost / 1 000 bldgs', v: '$' + this.fmt(lb.usd_per_1k_buildings, 2) }];
+    const e = ck.evidence;
+    out.ev = { extracted: this.fmt(e.extracted_parameters, 0), verified: Math.round(100 * e.quotes_verified_share) + '%', flagged: this.fmt(e.values_flagged, 0), checked: this.fmt(e.values_checked, 0) };
+    const lbl = { households: ['Households', 'census 2022'], households_rural: ['Rural households', 'census'], households_urban: ['Urban households', 'census'] };
+    const tg = ck.allocation_targets || { rows: [] };
+    out.targets = tg.rows.map(r => {
+      const parts = r.item.split(':');
+      const src = { pu: 'Establishment Census', svc: 'Establishment Census', retail: 'Establishment Census', registry: 'registry', model: 'LLM rate' };
+      const lab = lbl[r.item] || [nm(parts[1] || parts[0]), src[parts[0]] || ''];
+      return { label: lab[0], src: lab[1], target: this.fmt(r.target, 0), tagged: this.fmt(r.tagged, 0), assigned: this.fmt(r.assigned, 0),
+        short: this.fmt(r.shortfall, 0), shortFg: r.shortfall ? '#a3211f' : '#0b6e4f' };
+    });
+    out.targetsNote = (tg.note || '') + '. Every target is met (shortfall 0); tagged buildings are placed first.';
+    const cal = ck.calibration || { grid: { rows: [] }, household_energy: [] };
+    out.grid = cal.grid.rows.slice().sort((a, b) => Math.abs(b.logit_shift) - Math.abs(a.logit_shift)).map(g => ({
+      district: g.district, eicv7: Math.round(100 * g.eicv7_share) + '%', model: Math.round(100 * g.model_share) + '%', shift: (g.logit_shift > 0 ? '+' : '') + this.fmt(g.logit_shift, 2) }));
+    out.gridNote = cal.grid.note || '';
+    out.energy = (cal.household_energy || []).map(e => ({ scope: e.scope === 'kigali' ? 'Kigali' : e.scope === 'rest' ? 'Rest of Rwanda' : 'Rural (QSEL)',
+      kind: e.factor === null || e.factor === undefined ? 'check' : 'target', target: this.fmt(e.target_kwh_month, 2), before: this.fmt(e.before_kwh_month, 2),
+      factor: e.factor === null || e.factor === undefined ? 'check' : '×' + this.fmt(e.factor, 2) }));
+    const un = ck.uncertainty || {};
+    const band = (u, div, dp) => [this.fmt(u.alloc_p10 / div, dp) + '–' + this.fmt(u.alloc_p90 / div, dp), this.fmt(u.profile_p10 / div, dp) + '–' + this.fmt(u.profile_p90 / div, dp), this.fmt(u.combined_p10 / div, dp) + '–' + this.fmt(u.combined_p90 / div, dp)];
+    out.bands = [];
+    if (un.national_gwh) { const b = band(un.national_gwh, 1, 0); out.bands.push({ area: 'Rwanda', base: this.fmt(un.national_gwh.base, 0) + ' GWh/yr', alloc: b[0], profile: b[1], combined: b[2] }); }
+    ['nyamirambo', 'muhoza', 'nasho'].forEach(k => {
+      const f = site.full_summaries[k], u = f && f.metrics.uncertainty;
+      if (!u) return;
+      const b = band(u, 1, 0);
+      out.bands.push({ area: f.sector, base: this.fmt(u.base, 0) + ' MWh/yr', alloc: b[0], profile: b[1], combined: b[2] });
+    });
+    out.bandsNote = (un.note || '') + (un.sector_band_width_median ? '. Median sub-district band width: ' + Math.round(100 * un.sector_band_width_median) + '% of the base.' : '');
+    const cs = ck.cap_sensitivity || { rows: [] };
+    out.caps = cs.rows.filter(r => r.profile_id === 'grain_mill').map(r => ({ caps: r.caps, max: this.fmt(r.max_per_r9_cell, 0), above: Math.round(100 * r.share_above_base_cap) + '%',
+      muhoza: this.fmt(r.Muhoza_n, 0), nasho: this.fmt(r.Nasho_n, 0), nashoMwh: this.fmt(r.Nasho_mwh, 0) }));
+    out.capsNote = (cs.note || '') + '.';
+    return out;
+  }
+}
+</script>
+</body>
+</html>

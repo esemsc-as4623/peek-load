@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workflow in depth · data architecture</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="workflow" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 900px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e; font-size: 13px;">Workflow in depth</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #6da7ec; background: #e8f1fc; color: #1e4f8f; font-size: 12px; font-weight: 600;">In progress</span></div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Rooftops to load curves</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">The pipeline is split into the same steps as the code (A1–A6 for the data, B1–B7 for demand; see docs/workstreams.md). The master diagram shows how they connect. Pick a step to see the datasets it reads and the tables it writes, drawn from the pipeline's own workflow file.</p>
+    </header>
+
+    <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 40px; border-radius: 12px; background: #f4f3ef; color: #52514e; font-size: 15px; text-align: center;">Loading the workflow…</div>
+    </sc-if>
+
+    <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+      <section aria-label="Master diagram" style="display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px;">The big picture: 13 steps in two phases</h2>
+          <span style="font-size: 13px; color: #52514e;">Click a step · arrows show what the selected step reads (blue) and feeds (purple)</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <div style="position: relative; width: 100%; min-width: 900px; aspect-ratio: {{master.ar}}; font-family: 'Source Sans 3', system-ui, sans-serif;">
+            <svg viewBox="{{master.vb}}" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;">
+              <defs>
+                <marker id="arIn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3987e5"></path></marker>
+                <marker id="arOut" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7a4fb5"></path></marker>
+              </defs>
+              <sc-for list="{{master.phases}}" as="ph" hint-placeholder-count="2">
+                <rect x="0" y="{{ph.y}}" width="{{master.w}}" height="{{ph.h}}" rx="10" fill="#f6f5f1"></rect>
+              </sc-for>
+              <sc-for list="{{master.edges}}" as="e" hint-placeholder-count="0">
+                <path d="{{e.d}}" fill="none" stroke="{{e.stroke}}" stroke-width="2" marker-end="url(#{{e.marker}})" vector-effect="non-scaling-stroke"></path>
+              </sc-for>
+            </svg>
+            <sc-for list="{{master.phases}}" as="ph" hint-placeholder-count="2">
+              <div style="position: absolute; box-sizing: border-box; left: 1.2%; top: {{ph.tp}}%; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #52514e;">{{ph.label}}</div>
+            </sc-for>
+            <sc-for list="{{master.boxes}}" as="b" hint-placeholder-count="13">
+              <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="position: absolute; box-sizing: border-box; left: {{b.lp}}%; top: {{b.tp}}%; width: {{b.wp}}%; height: {{b.hp}}%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 6px 10px; border-radius: 8px; border: {{b.sw}}px solid {{b.stroke}}; background: {{b.fill}}; color: {{b.ink}}; font: inherit; text-align: left; cursor: pointer;">
+                <span style="position: absolute; top: 7px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: {{b.dot}};"></span>
+                <span style="font-size: 15px; line-height: 18px; font-weight: 700;">{{b.code}}</span>
+                <span style="font-size: 12px; line-height: 15px;">{{b.l1}} {{b.l2}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-size: 12px; line-height: 17px; color: #52514e;">Dot colour = status: green built (validated with external sources) · amber draft (no validation method yet) · blue in progress (data being acquired or processed) · grey planned.</div>
+      </section>
+
+      <section aria-label="Selected step" style="display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">{{step.phase}}</span>
+            <h2 style="margin: 0; font-size: 24px; line-height: 30px;">{{step.code}} · {{step.title}}</h2>
+          </div>
+          <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid {{step.chipBd}}; background: {{step.chipBg}}; color: {{step.chipFg}}; font-size: 12px; font-weight: 600;">{{step.status}}</span>
+        </div>
+        <p style="margin: 0; max-width: 980px; font-size: 15px; line-height: 23px; color: #3d3c39;">{{step.text}}</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; font-size: 13px; color: #3d3c39;">
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="26" height="16" aria-hidden="true"><rect x="1" y="1" width="24" height="14" rx="3" fill="#ffffff" stroke="#8a8984"></rect></svg>source dataset</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="26" height="16" aria-hidden="true"><rect x="1" y="1" width="24" height="14" rx="3" fill="#effaf5" stroke="#1baf7a"></rect></svg>table (with the step that makes it)</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="26" height="16" aria-hidden="true"><rect x="1" y="1" width="24" height="14" rx="3" fill="#eef4fd" stroke="#3987e5"></rect></svg>another step</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="26" height="16" aria-hidden="true"><rect x="1" y="1" width="24" height="14" rx="7" fill="#f1eefa" stroke="#4a3aa7"></rect></svg>final output</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="26" height="16" aria-hidden="true"><rect x="1" y="1" width="24" height="14" rx="3" fill="#fff4d6" stroke="#b07800"></rect></svg>human decision</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <div role="img" aria-label="{{detail.aria}}" style="position: relative; width: 100%; min-width: 900px; aspect-ratio: {{detail.ar}}; font-family: 'Source Sans 3', system-ui, sans-serif;">
+            <svg viewBox="{{detail.vb}}" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block;">
+              <sc-for list="{{detail.links}}" as="l" hint-placeholder-count="0">
+                <path d="{{l.d}}" fill="none" stroke="#b5b4af" stroke-width="1.4" vector-effect="non-scaling-stroke"></path>
+              </sc-for>
+            </svg>
+            <div style="position: absolute; box-sizing: border-box; left: 0; top: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #52514e;">INPUT DATA</div>
+            <div style="position: absolute; box-sizing: border-box; left: {{detail.midLp}}%; top: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #52514e;">STEP</div>
+            <div style="position: absolute; box-sizing: border-box; left: {{detail.outLp}}%; top: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #52514e;">OUTPUT DATA / RESULT</div>
+            <div style="position: absolute; box-sizing: border-box; left: {{detail.midLp}}%; top: {{detail.midTp}}%; width: {{detail.midWp}}%; height: {{detail.midHp}}%; display: flex; flex-direction: column; justify-content: center; gap: 3px; padding: 8px 14px; border-radius: 10px; border: 2px solid #0b0b0b; background: #eef4fd;">
+              <span style="font-size: 16px; line-height: 20px; font-weight: 700; color: #0b0b0b;">{{step.code}} · {{step.title}}</span>
+              <sc-for list="{{detail.inner}}" as="t" hint-placeholder-count="3">
+                <span style="font-size: 12.5px; line-height: 16px; color: {{t.fill}};">{{t.t}}</span>
+              </sc-for>
+            </div>
+            <sc-for list="{{detail.nodes}}" as="n" hint-placeholder-count="0">
+              <button type="button" onClick="{{n.pick}}" title="{{n.full}}" style="position: absolute; box-sizing: border-box; left: {{n.lp}}%; top: {{n.tp}}%; width: {{n.wp}}%; height: {{n.hp}}%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 10px; border-radius: {{n.rx}}px; border: 1.2px solid {{n.stroke}}; background: {{n.fill}}; color: #0b0b0b; font: inherit; font-size: 12.5px; text-align: left; cursor: {{n.cursor}};">
+                <span style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{n.label}}</span>
+                <span style="flex: none; font-size: 11px; font-weight: 700; color: #3d3c39;">{{n.tag}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+          <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Run it</span>
+            <sc-for list="{{step.commands}}" as="c" hint-placeholder-count="2">
+              <code style="padding: 6px 10px; border-radius: 6px; background: #f4f3ef; font-family: 'Source Code Pro', monospace; font-size: 13px;">{{c}}</code>
+            </sc-for>
+          </div>
+          <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Code</span>
+            <code style="padding: 6px 10px; border-radius: 6px; background: #f4f3ef; font-family: 'Source Code Pro', monospace; font-size: 13px; overflow-wrap: anywhere;">{{step.code_paths}}</code>
+          </div>
+        </div>
+        <sc-if value="{{step.hasCitations}}" hint-placeholder-val="{{false}}">
+          <details style="font-size: 13px; line-height: 19px; color: #3d3c39;">
+            <summary style="cursor: pointer; font-weight: 600; min-height: 32px;">Cite the input sources ({{step.nCitations}})</summary>
+            <ul style="margin: 6px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px;">
+              <sc-for list="{{step.citations}}" as="c" hint-placeholder-count="2"><li>{{c}}</li></sc-for>
+            </ul>
+          </details>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <section aria-label="Steps" style="display: flex; flex-direction: column; gap: 12px;">
+      <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Every step, as in the code</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+        <sc-for list="{{steps}}" as="st" hint-placeholder-count="13">
+          <article style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 12px; background: #ffffff; border: 1px solid {{st.bd}};">
+            <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline;">
+              <h3 style="margin: 0; font-size: 16px; line-height: 22px;">{{st.code}} · {{st.title}}</h3>
+              <button type="button" onClick="{{st.pick}}" style="flex: none; min-height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #d6d5d0; background: #ffffff; font: inherit; font-size: 12px; cursor: pointer;">Show on diagram</button>
+            </div>
+            <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">{{st.text}}</p>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-label="Reproducibility and engineering" style="display: flex; flex-wrap: wrap; gap: 16px;">
+      <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Reproducibility</h2>
+        <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 5px; font-size: 14px; line-height: 20px; color: #3d3c39;">
+          <li>One environment (pixi), one command per step; DuckDB over GeoParquet for the 6.4M-row tables.</li>
+          <li>Every download recorded in a content-addressed manifest: URL, sha256, size, licence, retrieval time.</li>
+          <li>Every table validated against a schema contract (pandera) before it is used; QA reports per table.</li>
+          <li>93+ automated tests, including one that recomputes the dashboard's numbers from its own formulas.</li>
+          <li>RAMP runs seeded and initialised after users are added, so rebuilds are byte-identical.</li>
+        </ul>
+      </div>
+      <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <h2 style="margin: 0; font-size: 18px; line-height: 24px;">AI use, disclosed</h2>
+        <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">"AI is your assistant, not your author." Claude labelled building use (measured against human labels), extracted cited evidence (quotes verified in code) and helped write the pipeline. Every API call is cached and costed (about $157 in total, under a hard cap). Humans own the gates: the codebook, the gold labels, the evidence and mapping approvals, archetype sign-off and the licence review.</p>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { site: null, sel: 'B2b' };
+    this.C = {
+      URL: '@data/site.json',
+      KIND: { source: ['#ffffff', '#8a8984', 4], process: ['#eef4fd', '#3987e5', 4], table: ['#effaf5', '#1baf7a', 4], gate: ['#fff4d6', '#b07800', 4], output: ['#f1eefa', '#4a3aa7', 13] },
+      STATUS: { built: ['Built', '#1baf7a', '#effaf5', '#0b6e4f'], draft: ['Draft', '#eda100', '#fff4d6', '#6b4a00'], in_progress: ['In progress', '#6da7ec', '#e8f1fc', '#1e4f8f'], planned: ['Planned', '#8a8984', '#ffffff', '#52514e'] },
+      // [code, title, short title (2 lines), phase, workflow nodes, code paths, status, text]
+      STEPS: [
+        ['A1', 'Footprints and heights', ['Footprints', '& heights'], 1, ['conform', 'heights'], 'ingest/{vida,open_buildings_25d}.py, conform/', 'draft', 'The VIDA layer merges Google Open Buildings V3, Microsoft and OSM footprints: 6 434 247 buildings. Geometries are repaired; overlaps and slivers are flagged, not dropped; shape metrics are computed in UTM 35S. Google 2.5D Temporal gives a height for 4.6M buildings and yearly presence 2016–2023; floors come from cut-points fitted on OSM building:levels.'],
+        ['A2v', 'Context: vector', ['Context:', 'vector'], 1, ['ctx_vector'], 'ingest/{osm,overture,admin,facilities,gridfinder}.py, join/vector.py', 'draft', 'Distances to major roads, any road and predicted MV lines; points of interest within 50, 100 and 250 m; land use, tags and health facilities; admin names down to village.'],
+        ['A2r', 'Context: raster', ['Context:', 'raster'], 1, ['ctx_raster'], 'ingest/{ghsl,worldpop,rwi}.py, join/raster.py', 'draft', 'GHSL settlement class and non-residential share, WorldPop 2023 density, Meta Relative Wealth Index, Copernicus DEM elevation and ESA WorldCover cropland, sampled at each building.'],
+        ['A3', 'Climate and DEM', ['Climate', '& DEM'], 1, ['climate', 'power_check'], 'ingest/{dem,openmeteo,power,era5_land_cds}.py, climate/', 'built', 'ERA5-Land hourly data from the Copernicus Climate Data Store (0.1°, 2020–2025) interpolated to H3 r7 cells and corrected to cell elevation (−6.16 K/km), in local time, plus humidity, rainfall and solar radiation. NASA POWER at four towns is an independent check. Gives the cooling category.'],
+        ['A4', 'Evidence and anchors', ['Evidence', '& anchors'], 1, ['extraction', 'curation', 'plausibility', 'evidence_approval', 'microdata_agg'], 'ingest/{dhs_api,local,evidence_docs}.py, llm/{evidence,productive_use}.py', 'built', '26 public reports; every value extracted with document, page and a quote verified verbatim in code, then checked for units, ranges and agreement. Restricted survey microdata (DHS 2025, MTF 2022, EICV5) becomes weighted aggregates only. A person approves the evidence.'],
+        ['A5', 'Building-use labels', ['Building-use', 'labels'], 1, ['codebook', 'cards', 'labeller', 'gold', 'label_eval'], 'llm/{sample,cards,label,evaluate}.py, label_app.py', 'draft', 'A text card per building from open vector data only; Claude Haiku 4.5 returns probabilities over nine classes and the cues it used, every call cached and costed. Compared with 173 human gold labels, which are themselves uncertain.'],
+        ['A6', 'EDA and documentation', ['EDA &', 'docs'], 1, ['docs'], 'notebooks/, docs/', 'in_progress', 'Exploratory figures, the datasheet, data-source register, QA reports and the status report that records every decision.'],
+        ['B1', 'Appliance profiles', ['Appliance', 'profiles'], 2, ['builder', 'signoff', 'checks'], 'demand/{build_archetypes,checks}.py, config/archetypes.yaml', 'draft', '17 RAMP archetypes built from recipes; every number cites survey data, evidence or a measurement, or carries a written assumption. Household lighting is calibrated to MTF spending. Signed off by the owner on 2026-10-12, then checked against QSEL meter data, EICV5, MTF and NREL.'],
+        ['B2a', 'Use classifier', ['Use', 'classifier'], 2, ['use_model'], 'demand/use_model.py, config/use_model.yaml', 'draft', 'Gradient boosting on footprint, height, context and neighbourhood features. Model A learns from 36 000 tagged buildings, model B adds 44 000 LLM labels; held out, B ranks uses with AUC 0.78 (tags, by district) and 0.76 (LLM labels, by sub-district). Gives use probabilities for all 6.4M buildings.'],
+        ['B2b', 'Census-constrained allocation', ['Census', 'allocation'], 2, ['mapping_approval', 'pu_demand', 'svc_demand', 'allocate'], 'demand/{allocate,productive_use,services}.py, config/allocation.yaml', 'draft', 'Every census and registry count goes to a building, rarest first: facility compounds, workshops on the best viability scores (one mill per ~0.7 km²), services and shops on the most likely commercial buildings, then 3.31M census households on the most likely homes (up to one per floor), split urban/rural and by DHS wealth. Rules signed off 2026-10-15.'],
+        ['B2c', 'Registries and aggregates', ['Registries &', 'aggregates'], 2, ['registries', 'ntl'], 'ingest/{schools,dhs_wealth,blackmarble}.py', 'draft', 'MINEDUC schools per district (5 904), a national worship count, DHS 2025 wealth shares per district and setting, and NASA Black Marble night lights per H3 r8 cell and year (2016–2024).'],
+        ['B3', 'RAMP runner', ['RAMP', 'runner'], 2, ['ramp', 'aggregation'], 'demand/runner.py', 'draft', 'RAMP 0.5.2 simulates 200 units × 28 days per profile (seeded, byte-identical rebuilds). Building and area metrics are weights × profile curves; area peaks are coincident.'],
+        ['B4', 'Grid connection and calibration', ['Grid &', 'calibration'], 2, ['grid_model', 'calibrate'], 'demand/{grid_connection,calibrate}.py', 'draft', 'A logistic model of household grid connection trained on DHS 2025 (restricted, stays local), shifted per district until it matches EICV7 2024 grid shares; household energy scaled to REG mean consumption. Gives expected demand next to potential demand.'],
+        ['B5', 'Demand by year', ['Demand', 'by year'], 2, ['years'], 'demand/years.py, config/years.yaml', 'draft', 'Back-cast 2016–2023 from each building’s detected presence in imagery, pinned to census household growth; projected to 2030 per district.'],
+        ['B6', 'Uncertainty and sensitivity', ['Uncertainty &', 'sensitivity'], 2, ['sensitivity'], 'demand/sensitivity.py', 'draft', 'Ten allocations with perturbed class probabilities give p10/p50/p90 bands per sub-district and how often each building keeps its use; the spacing-cap sensitivity shows how much mill placement depends on the cap.'],
+        ['B7', 'Deliverable', ['Deliverable', ''], 2, ['qa', 'licence_review', 'dataset', 'bundle'], 'dashboard/, rtl/dashboard/export.py', 'in_progress', 'Every table validated against its schema contract, then the static dashboard bundle (this site) and the final GeoParquet / PostGIS release, after a human licence review.']
+      ]
+    };
+  }
+
+  componentDidMount() {
+    fetch(this.C.URL).then(r => r.json()).then(site => this.setState({ site })).catch(() => {});
+  }
+
+  short(t, n) { return t.length > n ? t.slice(0, n - 1) + '…' : t; }
+
+  renderVals() {
+    const C = this.C, s = this.state, site = s.site;
+    const steps = C.STEPS.map(st => ({ code: st[0], title: st[1], text: st[7], bd: st[0] === s.sel ? '#0b0b0b' : '#e4e3df', pick: () => this.setState({ sel: st[0] }) }));
+    const out = { loading: !site, ready: !!site, steps, master: { vb: '0 0 100 100', w: 100, phases: [], edges: [], boxes: [] }, detail: { vb: '0 0 100 100', links: [], nodes: [], inner: [] }, step: { commands: [], citations: [] } };
+    if (!site) return out;
+    const wf = site.workflow, byId = {};
+    wf.nodes.forEach(n => { byId[n.id] = n; });
+    const stepOf = {};
+    C.STEPS.forEach(st => st[4].forEach(id => { stepOf[id] = st[0]; }));
+    // tables and outputs belong to the step whose node writes them
+    wf.edges.forEach(e => { const k = (byId[e.to] || {}).kind; if ((k === 'table' || k === 'output') && stepOf[e.from] && !stepOf[e.to]) stepOf[e.to] = stepOf[e.from]; });
+    // step-level graph
+    const deps = {};
+    wf.edges.forEach(e => {
+      const a = stepOf[e.from], b = stepOf[e.to];
+      if (a && b && a !== b) deps[a + '>' + b] = [a, b];
+    });
+    // ---- master diagram
+    const W = 1120, rows = { 1: C.STEPS.filter(x => x[3] === 1), 2: C.STEPS.filter(x => x[3] === 2) };
+    const boxH = 66, rowY = { 1: 72, 2: 240 }, pos = {};
+    [1, 2].forEach(r => {
+      const list = rows[r], gap = 14, bw = (W - 28 - gap * (list.length - 1)) / list.length;
+      list.forEach((st, i) => { pos[st[0]] = { x: 14 + i * (bw + gap), y: rowY[r], w: bw, h: boxH }; });
+    });
+    const sel = s.sel;
+    const ins = {}, outs = {};
+    Object.values(deps).forEach(d => { if (d[1] === sel) ins[d[0]] = true; if (d[0] === sel) outs[d[1]] = true; });
+    const edges = [];
+    Object.values(deps).forEach(d => {
+      if (d[0] !== sel && d[1] !== sel) return;
+      const a = pos[d[0]], b = pos[d[1]];
+      const into = d[1] === sel;
+      let p;
+      if (a.y === b.y) {
+        const x0 = a.x + a.w / 2, x1 = b.x + b.w / 2, y = a.y, lift = 18 + Math.min(26, Math.abs(x1 - x0) / 12);
+        p = 'M' + x0 + ' ' + y + 'C' + x0 + ' ' + (y - lift) + ' ' + x1 + ' ' + (y - lift) + ' ' + x1 + ' ' + (y - 2);
+      } else {
+        const up = a.y < b.y;
+        const x0 = a.x + a.w / 2, y0 = up ? a.y + a.h : a.y, x1 = b.x + b.w / 2, y1 = up ? b.y - 2 : b.y + b.h + 2, my = (y0 + y1) / 2;
+        p = 'M' + x0 + ' ' + y0 + 'C' + x0 + ' ' + my + ' ' + x1 + ' ' + my + ' ' + x1 + ' ' + y1;
+      }
+      edges.push({ d: p, stroke: into ? '#3987e5' : '#7a4fb5', marker: into ? 'arIn' : 'arOut' });
+    });
+    const MH = 330;
+    const boxes = C.STEPS.map(st => {
+      const p = pos[st[0]], on = st[0] === sel, stc = C.STATUS[st[6]] || C.STATUS.built;
+      const fill = on ? '#0b0b0b' : ins[st[0]] ? '#e8f1fc' : outs[st[0]] ? '#f1eefa' : '#ffffff';
+      return { x: p.x, y: p.y, w: p.w, h: p.h, fill, stroke: on ? '#0b0b0b' : ins[st[0]] ? '#3987e5' : outs[st[0]] ? '#7a4fb5' : '#c9c8c3', sw: on || ins[st[0]] || outs[st[0]] ? 2 : 1,
+        ink: on ? '#ffffff' : '#0b0b0b', code: st[0], l1: st[2][0], l2: st[2][1], tx: p.x + 10, ty1: p.y + 22, ty2: p.y + 40, ty3: p.y + 55,
+        dx: p.x + p.w - 12, dy: p.y + 12, dot: stc[1], pressed: on ? 'true' : 'false', pick: () => this.setState({ sel: st[0] }),
+        lp: 100 * p.x / W, tp: 100 * p.y / MH, wp: 100 * p.w / W, hp: 100 * p.h / MH };
+    });
+    out.master = { vb: '0 0 ' + W + ' ' + MH, ar: W + ' / ' + MH, w: W, edges, boxes,
+      phases: [{ y: 0, h: 154, ty: 20, tp: 100 * 8 / MH, label: 'PHASE 1 · DATA (A)', bg: '#f6f5f1' }, { y: 168, h: 160, ty: 188, tp: 100 * 176 / MH, label: 'PHASE 2 · DEMAND (B)', bg: '#f6f5f1' }] };
+    // ---- selected step detail
+    const st = C.STEPS.find(x => x[0] === sel) || C.STEPS[0];
+    const innerAll = st[4].map(id => byId[id]).filter(Boolean);
+    const inner = innerAll.filter(n => n.kind !== 'output');
+    const innerSet = {}; st[4].forEach(id => { innerSet[id] = true; });
+    const inList = [], outList = [], seenIn = {}, seenOut = {};
+    wf.edges.forEach(e => {
+      if (innerSet[e.to] && !innerSet[e.from] && !seenIn[e.from] && byId[e.from]) { seenIn[e.from] = 1; inList.push(byId[e.from]); }
+      if (innerSet[e.from] && !innerSet[e.to] && !seenOut[e.to] && byId[e.to]) { seenOut[e.to] = 1; outList.push(byId[e.to]); }
+    });
+    innerAll.filter(n => n.kind === 'output').forEach(n => { if (!seenOut[n.id]) { seenOut[n.id] = 1; outList.push(n); } });
+    const rank = n => ({ source: 0, table: 1, process: 2, gate: 3, output: 4 })[n.kind] || 5;
+    inList.sort((a, b) => rank(a) - rank(b)); outList.sort((a, b) => rank(a) - rank(b));
+    const DW = 1120, colW = 330, midX = 400, midW = 320, outX = DW - colW, rowH = 34, top = 30;
+    const nRows = Math.max(inList.length, outList.length, inner.length + 2, 3);
+    const H = top + nRows * rowH + 10;
+    const midH = Math.max(80, 60 + inner.length * 22), midY = top + (nRows * rowH - midH) / 2;
+    const place = (list, x, isOut) => list.map((n, i) => {
+      const off = (nRows - list.length) * rowH / 2;
+      const y = top + off + i * rowH + 4, k = C.KIND[n.kind] || C.KIND.process, other = stepOf[n.id];
+      const target = n.kind === 'process' || n.kind === 'gate' ? stepOf[n.id] : null;
+      const jump = other && other !== st[0] && !(isOut && n.kind === 'table') ? other : null;
+      const rec = n.kind === 'table' && n.records !== undefined && n.records !== null ? ' · ' + String(n.records).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
+      return { x, y, w: colW, h: rowH - 8, rx: k[2], fill: k[0], stroke: k[1], tx: x + 10, ty: y + 17, cx: x + colW - 10,
+        label: n.label + rec, full: n.label + rec, tag: jump || (n.restricted ? 'restricted' : ''), cursor: jump ? 'pointer' : 'default',
+        pick: () => { if (jump) this.setState({ sel: jump }); }, my: y + (rowH - 8) / 2,
+        lp: 100 * x / DW, tp: 100 * y / H, wp: 100 * colW / DW, hp: 100 * (rowH - 8) / H };
+    });
+    const inN = place(inList, 0, false), outN = place(outList, outX, true);
+    const links = [];
+    inN.forEach(n => { const x0 = n.x + colW, x1 = midX, ym = midY + midH / 2, mx = (x0 + x1) / 2; links.push({ d: 'M' + x0 + ' ' + n.my + 'C' + mx + ' ' + n.my + ' ' + mx + ' ' + ym + ' ' + x1 + ' ' + ym }); });
+    outN.forEach(n => { const x0 = midX + midW, x1 = n.x, ym = midY + midH / 2, mx = (x0 + x1) / 2; links.push({ d: 'M' + x0 + ' ' + ym + 'C' + mx + ' ' + ym + ' ' + mx + ' ' + n.my + ' ' + x1 + ' ' + n.my }); });
+    const innerT = inner.map((n, i) => ({ x: midX + 14, y: midY + 48 + i * 18, t: '· ' + n.label + (n.kind === 'gate' ? ' (human)' : ''), fill: n.kind === 'gate' ? '#6b4a00' : '#3d3c39' }));
+    out.detail = { vb: '0 0 ' + DW + ' ' + H, ar: DW + ' / ' + H, midLp: 100 * midX / DW, outLp: 100 * outX / DW, midTp: 100 * midY / H, midWp: 100 * midW / DW, midHp: 100 * midH / H, links, nodes: inN.concat(outN), inner: innerT, midX, midY, midW, midH, midTx: midX + 14, midTy: midY + 26, outX,
+      aria: st[0] + ' reads ' + inList.map(n => n.label).join(', ') + '; writes ' + outList.map(n => n.label).join(', ') };
+    const stc = C.STATUS[st[6]] || C.STATUS.built;
+    const cmds = innerAll.map(n => n.command).filter(Boolean).filter((c, i, a) => a.indexOf(c) === i);
+    const cites = [];
+    inList.forEach(n => (n.citations || []).forEach(c => { if (cites.indexOf(c) < 0) cites.push(c); }));
+    out.step = { code: st[0], title: st[1], phase: st[3] === 1 ? 'Phase 1 · data' : 'Phase 2 · demand', text: st[7], code_paths: st[5],
+      status: stc[0], chipBd: stc[1], chipBg: stc[2], chipFg: stc[3],
+      commands: cmds.length ? cmds : ['decided by a person (no command)'], citations: cites, hasCitations: cites.length > 0, nCitations: cites.length };
+    return out;
+  }
+}
+</script>
+</body>
+</html>

@@ -35,3 +35,7 @@ reports/status/*.log
 
 # editor backups
 *.save
+
+# dashboard app (its data lives in data/dashboard/app_v1, never committed)
+app/node_modules/
+app/dist/

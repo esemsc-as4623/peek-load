@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Productive-use viability</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="productive" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 880px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: rgb(82, 81, 78)">Productive-use viability</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid rgb(237, 161, 0); background: rgb(255, 244, 214); color: rgb(107, 74, 0); font-size: 12px; font-weight: 600">Draft</span>
+      </div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Identifying productive use building candidates</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Every productive-use establishment sits tagged to buildings: labelled trades first, then each district’s census count placed on the best-scoring buildings (mills rural and roadside, at most one per ~0.7 km²; tailors, welders and carpenters in towns). Candidate buildings are ranked by score = 100 × weighted mean of six criteria, with one set of weights for town trades (tailor, welder, carpenter) and one for rural mills. Move the weights to see how the ranking changes.</p>
+    </header>
+
+    <section aria-label="Caveat" style="display: flex; gap: 12px; padding: 14px 18px; border-radius: 12px; background: #fff4d6; border: 1px solid #eda100; font-size: 15px; line-height: 22px; color: #3d3c39;">
+      <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M10 2l8.5 15h-17z" fill="none" stroke="#6b4a00" stroke-width="1.6" stroke-linejoin="round"></path><path d="M10 8v4M10 14.5v.5" stroke="#6b4a00" stroke-width="1.8" stroke-linecap="round"></path></svg>
+      <div><strong style="color: #0b0b0b;">A plausible placement, not an observation.</strong> The census fixes how many workshops each district has; open data locates only a few dozen. The rest go to the buildings that score highest on the criteria below, so the district totals are right and the pattern is plausible, but any single building should be checked in the field before it is treated as a workshop.</div>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center;">
+      <div role="group" aria-label="Sub-district" style="display: flex; flex-wrap: wrap; gap: 6px;">
+        <sc-for list="{{sectorButtons}}" as="b" hint-placeholder-count="3">
+          <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 40px; padding: 0 14px; border-radius: 8px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">{{b.label}}</button>
+        </sc-for>
+      </div>
+      <span style="font-size: 13px; color: #52514e;">{{sampleNote}}</span>
+    </div>
+
+    <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+      <section aria-label="Productive use in the sub-district" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+        <sc-for list="{{tiles}}" as="pt" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df; border-top: 4px solid {{pt.colour}};">
+            <span style="font-size: 12px; font-weight: 700; color: {{pt.ink}}; text-transform: uppercase; letter-spacing: 0.03em;">{{pt.kind}}</span>
+            <span style="font-size: 20px; line-height: 26px; font-weight: 700;">{{pt.value}}</span>
+            <span style="font-size: 13px; line-height: 18px; color: #3d3c39;">{{pt.sub}}</span>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 40px; border-radius: 12px; background: #f4f3ef; color: #52514e; font-size: 15px; text-align: center;">Loading the sub-district…</div>
+    </sc-if>
+
+    <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+      <section style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+        <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline;">
+            <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Weights of the criteria</h2>
+            <button type="button" onClick="{{reset}}" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #d6d5d0; background: #ffffff; font: inherit; font-size: 13px; cursor: pointer;">Reset to defaults</button>
+          </div>
+          <div role="group" aria-label="Weight set" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{groupButtons}}" as="b" hint-placeholder-count="2">
+              <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 13px; cursor: pointer;">{{b.label}}</button>
+            </sc-for>
+          </div>
+          <sc-for list="{{sliders}}" as="sl" hint-placeholder-count="6">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px;">
+                <label for="{{sl.id}}" style="font-weight: 600;">{{sl.label}}</label>
+                <span style="color: #3d3c39;">{{sl.text}}</span>
+              </div>
+              <input id="{{sl.id}}" type="range" min="0" max="1" step="0.05" value="{{sl.value}}" onChange="{{sl.change}}" style="width: 100%; accent-color: #0b0b0b;">
+              <div style="font-size: 12px; line-height: 16px; color: #52514e;">{{sl.formula}}</div>
+            </div>
+          </sc-for>
+          <div style="font-size: 12px; line-height: 17px; color: #52514e;">Urban buildings are scored with the town weights, rural buildings with the mill weights. Buildings under 30 m², ancillary, religious or institutional ones and facilities are not eligible.</div>
+        </div>
+
+        <div style="flex: 2 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; align-items: baseline;">
+            <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Candidate score by building</h2>
+            <span style="font-size: 13px; color: #52514e;">{{mixText}}</span>
+          </div>
+          <svg viewBox="{{vb}}" role="img" aria-label="Map of buildings coloured by prototype productive-use score" style="width: 100%; height: auto; display: block; background: #f7f6f2; border-radius: 8px;">
+            <sc-for list="{{buildings}}" as="bl" hint-placeholder-count="0">
+              <path d="{{bl.d}}" fill="{{bl.fill}}" stroke="{{bl.stroke}}" onClick="{{bl.pick}}" style="stroke-width: {{bl.sw}}; stroke-dasharray: {{bl.dash}}; cursor: pointer;"></path>
+            </sc-for>
+          </svg>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: #3d3c39;">
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#efe9dc"></rect></svg>Low (&lt; 33)</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#eda100"></rect></svg>Medium (33–67)</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#7a5200"></rect></svg>High (≥ 67)</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#ecebe7"></rect></svg>not eligible</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="3" fill="#ffffff" stroke="#256abf" stroke-width="2.4"></rect></svg>tagged trade</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="3" fill="#ffffff" stroke="#0b0b0b" stroke-width="1.6"></rect></svg>placed from the census</span>
+          </div>
+        </div>
+      </section>
+
+      <section aria-label="Ranked candidates" style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; align-items: baseline;">
+          <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Top 15 scores in the sample area</h2>
+          <span style="font-size: 13px; color: #52514e;">click a row to highlight it on the map</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <div role="table" aria-label="Ranked productive-use candidates" style="min-width: 900px; display: grid; grid-template-columns: 0.4fr 1.5fr 1.3fr 0.7fr 0.8fr 0.8fr 0.8fr 0.8fr 0.9fr; font-size: 14px; line-height: 19px;">
+            <div role="row" style="display: contents;">
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">#</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Building</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Status</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Score</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Weights</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Market</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Grid</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Cropland</div>
+              <div role="columnheader" style="padding: 8px; border-bottom: 1px solid #d6d5d0; font-size: 13px; font-weight: 600; color: #3d3c39;">Size</div>
+            </div>
+            <sc-for list="{{ranked}}" as="r" hint-placeholder-count="10">
+              <div role="row" style="display: contents;">
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; color: #52514e;">{{r.rank}}</div>
+                <div role="cell" style="padding: 2px 4px; border-bottom: 1px solid #efeee9;"><button type="button" onClick="{{r.pick}}" style="min-height: 36px; padding: 0 6px; border: 1px solid {{r.bd}}; border-radius: 6px; background: #ffffff; font: inherit; font-size: 13px; cursor: pointer; text-align: left;">{{r.id}}</button></div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;">{{r.label}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9; font-weight: 700;">{{r.score}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;">{{r.lik}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;">{{r.market}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;">{{r.grid}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;">{{r.poi}}</div>
+                <div role="cell" style="padding: 6px 8px; border-bottom: 1px solid #efeee9;">{{r.road}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <section aria-label="Productive-use appliance evidence" style="display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <h2 style="margin: 0; font-size: 18px; line-height: 24px;">What the productive-use profiles rest on</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; font-size: 14px; line-height: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f7f6f2;"><strong>Grain mill · 26 kWh/day</strong><span style="color: #3d3c39;">10 kW electric mill (median of grid mills), 2.6 h/day, weekdays 09:00–17:00.</span><span style="font-size: 12px; color: #52514e;">NREL 2018 pp. 6, 39 · Power Africa Rwanda catalogue 2020 pp. 29, 33 (solar mills 1.3–1.8 kW)</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f7f6f2;"><strong>Welding workshop · 5.4 kWh/day</strong><span style="color: #3d3c39;">5 kW welder, arc on a quarter of a 6 h working day, plus grinder and lights.</span><span style="font-size: 12px; color: #52514e;">Evidence table (metal workshops) · arc-time share is an assumption</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f7f6f2;"><strong>Tailor · 1.1 kWh/day</strong><span style="color: #3d3c39;">Two sewing machines (median 50 W) running half of an 8 h day, iron, lights.</span><span style="font-size: 12px; color: #52514e;">GIZ 2016 pp. 144–147 (DC machines)</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: #f7f6f2;"><strong>Carpentry · 0.45 kWh/day</strong><span style="color: #3d3c39;">Table saw, jigsaw and lathe sharing a measured workshop's energy.</span><span style="font-size: 12px; color: #52514e;">NREL 2018 p. 40: 18 kWh/month lathe workshop</span></div>
+      </div>
+      <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">Full appliance tables and quotes: Load profiles page. Sources: NREL / Energy 4 Impact (2018) Productive Use of Energy in African Micro-Grids; GIZ (2016) Photovoltaics for Productive Use Applications; USAID Power Africa (2020) Productive Use of Energy Catalog – Rwanda.</p>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.DEF = {
+      town: { market_access: 0.30, demand_density: 0.25, grid_proximity: 0.20, ability_to_pay: 0.15, agri_context: 0, building_size: 0.10 },
+      grain_mill: { market_access: 0.25, demand_density: 0.10, grid_proximity: 0.20, ability_to_pay: 0, agri_context: 0.30, building_size: 0.15 }
+    };
+    this.state = { sector: 'nyamirambo', data: {}, w: JSON.parse(JSON.stringify(this.DEF)), group: 'town', sel: null };
+    this.C = {
+      URLS: { nyamirambo: '@data/subdistrict_nyamirambo.json', muhoza: '@data/subdistrict_muhoza.json', nasho: '@data/subdistrict_nasho.json' },
+      NAMES: { nyamirambo: 'Nyamirambo', muhoza: 'Muhoza', nasho: 'Nasho' },
+      GROUPS: { town: 'Town trades (urban)', grain_mill: 'Mills (rural)' },
+      LABELS: { market_access: 'Market access', demand_density: 'Customers nearby', grid_proximity: 'Grid proximity', ability_to_pay: 'Ability to pay', agri_context: 'Agricultural context', building_size: 'Building size' },
+      FORMULAS: { market_access: '½ × POIs within 250 m (capped at 10) + ½ × closeness to a major road (0 beyond 2 km)', demand_density: 'log population density, capped at 15 000 /km²', grid_proximity: '1 − distance to predicted MV line / 5 km', ability_to_pay: 'Meta RWI scaled between the national 5th and 95th percentiles', agri_context: 'cropland share (ESA WorldCover 2021) within ~1.5 km', building_size: 'log footprint between 20 m² (0) and 500 m² (1)' },
+      TRADE: { grain_mill: 'Grain mill', tailoring: 'Tailor', welding_workshop: 'Welding / garage', carpentry: 'Carpentry' },
+      PU: { low: '#efe9dc', medium: '#eda100', high: '#7a5200' }
+    };
+  }
+
+  componentDidMount() { this.load('nyamirambo'); }
+
+  load(id) {
+    if (this.state.data[id]) return;
+    fetch(this.C.URLS[id]).then(r => r.json()).then(d => this.setState({ data: Object.assign({}, this.state.data, { [id]: d }) })).catch(() => {});
+  }
+
+  fmt(v, dp) {
+    if (v === null || v === undefined || isNaN(v)) return '–';
+    const s = Number(v).toFixed(dp || 0);
+    const p = s.split('.');
+    const a = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return p[1] ? a + '.' + p[1] : a;
+  }
+
+  btn(on) { return { bd: on ? '#0b0b0b' : '#d6d5d0', bg: on ? '#0b0b0b' : '#ffffff', fg: on ? '#ffffff' : '#0b0b0b', pressed: on ? 'true' : 'false' }; }
+
+  score(crit, order, group) {
+    const w = this.state.w[group] || {};
+    let num = 0, den = 0;
+    order.forEach((k, i) => { const x = w[k] || 0; if (x > 0 && crit[i] !== null && crit[i] !== undefined) { num += x * crit[i]; den += x; } });
+    return den ? 100 * num / den : null;
+  }
+
+  cat(sv) { return sv === null ? null : sv < 33.3 ? 'low' : sv < 66.7 ? 'medium' : 'high'; }
+
+  renderVals() {
+    const C = this.C, s = this.state, d = s.data[s.sector];
+    const g = s.group;
+    const out = {
+      sectorButtons: ['nyamirambo', 'muhoza', 'nasho'].map(k => Object.assign({ label: C.NAMES[k], pick: () => { this.load(k); this.setState({ sector: k, sel: null }); } }, this.btn(k === s.sector))),
+      groupButtons: Object.keys(C.GROUPS).map(k => Object.assign({ label: C.GROUPS[k], pick: () => this.setState({ group: k }) }, this.btn(k === g))),
+      sliders: Object.keys(C.LABELS).map(k => ({ id: 'w-' + k, label: C.LABELS[k], value: s.w[g][k], text: 'weight ' + this.fmt(s.w[g][k], 2), formula: C.FORMULAS[k],
+        change: e => { const v = parseFloat(e.target.value); const w = JSON.parse(JSON.stringify(this.state.w)); w[g][k] = isNaN(v) ? 0 : v; this.setState({ w }); } })),
+      reset: () => this.setState({ w: JSON.parse(JSON.stringify(this.DEF)) }),
+      loading: !d, ready: !!d, vb: '0 0 1000 1000', buildings: [], ranked: [], mixText: '', sampleNote: '', tiles: []
+    };
+    if (!d) return out;
+    const pu = d.summary_full.productive_use;
+    const tradeText = u => Object.keys(u || {}).filter(k => u[k] >= 0.5).map(k => (C.TRADE[k] || k) + ' ' + this.fmt(u[k], 0)).join(' · ') || 'none';
+    out.tiles = [
+      { kind: 'Reported for the area', colour: '#7a4fb5', ink: '#5c3592', value: this.fmt(pu.reported.establishments_census, 0) + ' establishments', sub: 'whole ' + pu.reported.district + ' district, NISR Establishment Census 2023 (manufacturing)' },
+      { kind: 'Sum over buildings', colour: '#256abf', ink: '#184f95', value: this.fmt(pu.building_sum.buildings, 0) + ' buildings in the sub-district', sub: pu.building_sum.tagged + ' tagged, ' + pu.building_sum.census_allocated + ' placed from the census · ' + this.fmt(pu.building_sum.annual_mwh, 1) + ' MWh/yr · ' + tradeText(pu.building_sum.units_by_profile) }
+    ];
+    out.vb = d.viewBox.join(' ');
+    out.sampleNote = 'Sample area: ' + this.fmt(d.buildings.length, 0) + ' of ' + this.fmt(d.summary_full.n_buildings, 0) + ' buildings · scores recomputed in the browser';
+    const scores = {};
+    const mix = { low: 0, medium: 0, high: 0 };
+    d.buildings.forEach(b => {
+      const crit = d.puc[b.id];
+      if (!crit) return;
+      const sv = this.score(crit, d.puOrder, d.puGroup[b.id]);
+      scores[b.id] = sv;
+      const c = this.cat(sv);
+      if (c) mix[c]++;
+    });
+    const isPu = b => !!C.TRADE[b.est];
+    const nCensus = d.buildings.filter(b => isPu(b) && b.usrc === 'census').length, nTag = d.buildings.filter(b => isPu(b) && b.usrc === 'tag').length;
+    out.mixText = mix.high + ' high · ' + mix.medium + ' medium · ' + mix.low + ' low · ' + nCensus + ' placed from the census · ' + nTag + ' tagged';
+    out.buildings = d.buildings.map(b => {
+      const sv = scores[b.id];
+      const c = sv === undefined ? null : this.cat(sv);
+      const on = s.sel === b.id;
+      const tag = isPu(b) && b.usrc === 'tag', placed = isPu(b) && b.usrc === 'census';
+      return { d: b.d, fill: c ? C.PU[c] : '#ecebe7', stroke: on ? '#0b0b0b' : tag ? '#256abf' : placed ? '#0b0b0b' : '#ffffff',
+        sw: on ? 2.6 : tag ? 2.4 : placed ? 1.6 : 0.3, dash: 'none', pick: () => this.setState({ sel: b.id }) };
+    });
+    const ids = Object.keys(scores).filter(k => scores[k] !== null).sort((a, b) => scores[b] - scores[a]).slice(0, 15);
+    const byId = {};
+    d.buildings.forEach(b => { byId[b.id] = b; });
+    out.ranked = ids.map((id, i) => {
+      const crit = d.puc[id], c = {};
+      d.puOrder.forEach((k, j) => { c[k] = crit[j]; });
+      const b = byId[id];
+      const on = s.sel === id;
+      return { rank: i + 1, id: id.replace('RWA-', '').slice(0, 10) + '…',
+        label: isPu(b) ? (b.usrc === 'tag' ? 'tagged: ' : 'census: ') + C.TRADE[b.est] : (b.use || '–').replace(/_/g, ' '), score: this.fmt(scores[id], 0),
+        lik: d.puGroup[id] === 'town' ? 'town' : 'mill', market: this.fmt(c.market_access, 2), grid: this.fmt(c.grid_proximity, 2),
+        poi: this.fmt(c.agri_context, 2), road: this.fmt(b.area, 0) + ' m²', bd: on ? '#0b0b0b' : '#e4e3df',
+        pick: () => this.setState({ sel: id }) };
+    });
+    return out;
+  }
+}
+</script>
+</body>
+</html>

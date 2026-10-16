@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Climate and cooling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#fcfcfb}
+a{color:#1e4f8f}a:hover{color:#0d366b}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-wrap: wrap; background: #fcfcfb; color: #0b0b0b; font-family: 'Source Sans 3', system-ui, sans-serif; font-variant-numeric: tabular-nums;">
+  <div style="flex: 1 1 240px; display: flex;">
+    <dc-import name="Nav" active="climate" hint-size="100%,960px"></dc-import>
+  </div>
+  <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
+    <header style="display: flex; flex-direction: column; gap: 6px; max-width: 860px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: rgb(82, 81, 78)">Climate and cooling</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid rgb(27, 175, 122); background: rgb(239, 250, 245); color: rgb(11, 110, 79); font-size: 12px; font-weight: 600">Built · Copernicus ERA5-Land 2020–2025</span>
+        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid rgb(109, 167, 236); background: rgb(232, 241, 252); color: rgb(30, 79, 143); font-size: 12px; font-weight: 600">In progress · 1991–2020 baseline</span>
+      </div>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Cooling demand is marginal in most of Rwanda</h1>
+      <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Hourly ERA5-Land data from the Copernicus Climate Data Store with temperature downscaled to each cell's elevation, plus humidity, rainfall and solar radiation. Sustained heat is in the eastern lowlands and the Rusizi/Bugarama valley; Kigali and the highlands rarely cross 26 °C.</p>
+    </header>
+
+    <section aria-label="Climate map" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+      <div style="flex: 3 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline;">
+          <h2 style="margin: 0; font-size: 20px; line-height: 26px;">{{layerTitle}}</h2>
+          <span style="font-size: 13px; color: #52514e;">click a cell for its 24-hour curve</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div role="group" aria-label="Main climate view" style="display: flex; flex-wrap: wrap; gap: 6px;">
+            <sc-for list="{{mainButtons}}" as="b" hint-placeholder-count="1">
+              <button type="button" aria-pressed="{{b.pressed}}" onClick="{{b.pick}}" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 14px; cursor: {{b.cursor}}; font-weight: 600;">{{b.label}}</button>
+            </sc-for>
+          </div>
+          <div role="group" aria-label="Other climate layers" style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+            
+            <sc-for list="{{layerButtons}}" as="b" hint-placeholder-count="6">
+              <button type="button" aria-pressed="{{b.pressed}}" aria-disabled="{{b.disabled}}" title="{{b.title}}" onClick="{{b.pick}}" style="min-height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid {{b.bd}}; background: {{b.bg}}; color: {{b.fg}}; font: inherit; font-size: 14px; cursor: {{b.cursor}};">{{b.label}}</button>
+            </sc-for>
+          </div>
+          <span style="font-size: 12px; line-height: 17px; color: #52514e;">Humidity and rainfall are not currently used by the model yet.</span>
+        </div>
+        <sc-if value="{{loading}}" hint-placeholder-val="{{false}}">
+          <div style="height: 520px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: #f4f3ef; color: #52514e; font-size: 15px;">Loading climate cells…</div>
+        </sc-if>
+        <sc-if value="{{ready}}" hint-placeholder-val="{{true}}">
+          <svg viewBox="{{vb}}" role="img" aria-label="{{mapAria}}" style="width: 100%; height: auto; display: block;">
+            <sc-for list="{{emptyHexes}}" as="eh" hint-placeholder-count="0">
+              <path d="{{eh.d}}" fill="#f4f3ef" stroke="#f4f3ef" style="stroke-width: 0.4; pointer-events: none;"></path>
+            </sc-for>
+            <sc-for list="{{hexes}}" as="hx" hint-placeholder-count="0">
+              <path d="{{hx.d}}" fill="{{hx.fill}}" stroke="{{hx.fill}}" onClick="{{hx.pick}}" style="stroke-width: 0.4; cursor: pointer;"></path>
+            </sc-for>
+            <sc-for list="{{districts}}" as="dd" hint-placeholder-count="0">
+              <path d="{{dd.d}}" fill="none" stroke="#ffffff" style="stroke-width: 1.2; pointer-events: none;"></path>
+            </sc-for>
+            <sc-for list="{{selPath}}" as="sp" hint-placeholder-count="0">
+              <path d="{{sp.d}}" fill="none" stroke="#0b0b0b" style="stroke-width: 2.4; pointer-events: none;"></path>
+            </sc-for>
+          </svg>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; color: #3d3c39;">
+            <span style="font-weight: 600;">{{legendTitle}}</span>
+            <sc-for list="{{legend}}" as="lg" hint-placeholder-count="7">
+              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="{{lg.color}}"></rect></svg>{{lg.label}}</span>
+            </sc-for>
+          </div>
+          <div style="font-size: 12px; line-height: 17px; color: #52514e;">{{source}}</div>
+        </sc-if>
+      </div>
+
+      <aside style="flex: 2 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h2 style="margin: 0; font-size: 18px; line-height: 24px;">The cooling-category rule</h2>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">From each cell's 95th percentile of daily maximum (tmax p95) 2 m temperature over 2020–2025:</p>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; line-height: 20px;">
+            <div style="display: flex; gap: 10px; align-items: center;"><svg width="16" height="16" aria-hidden="true"><rect width="16" height="16" rx="3" fill="#f9c3a3"></rect></svg><strong>Low</strong> <span>tmax p95 &lt; 26 °C</span></div>
+            <div style="display: flex; gap: 10px; align-items: center;"><svg width="16" height="16" aria-hidden="true"><rect width="16" height="16" rx="3" fill="#eb6834"></rect></svg><strong>Medium</strong> 26 to 29 °C</div>
+            <div style="display: flex; gap: 10px; align-items: center;"><svg width="16" height="16" aria-hidden="true"><rect width="16" height="16" rx="3" fill="#9a3a14"></rect></svg><strong>High</strong> 29 °C or more</div>
+          </div>
+          <p style="margin: 0; font-size: 13px; line-height: 19px; color: #52514e;">A relative indicator of where fans and cooling become likely. Cooling degree-days above 22 °C are shown as a magnitude cross-check: a cell can be Medium on hot afternoons yet accumulate few degree-days, because nights in Rwanda are cool.</p>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, auto); gap: 0; font-size: 13px; line-height: 18px;">
+            <span style="padding: 6px 10px 6px 0; border-bottom: 1px solid #d6d5d0; color: #52514e;">Category</span><span style="padding: 6px 10px; border-bottom: 1px solid #d6d5d0; color: #52514e; text-align: right;">Cells</span><span style="padding: 6px 10px; border-bottom: 1px solid #d6d5d0; color: #52514e; text-align: right;">tmax p95</span><span style="padding: 6px 0 6px 10px; border-bottom: 1px solid #d6d5d0; color: #52514e; text-align: right;">Mean CDD22</span>
+            <sc-for list="{{catRows}}" as="cr" hint-placeholder-count="3">
+              <span style="padding: 6px 10px 6px 0; border-bottom: 1px solid #efeee9; font-weight: 600;">{{cr.name}}</span><span style="padding: 6px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{cr.n}}</span><span style="padding: 6px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{cr.range}}</span><span style="padding: 6px 0 6px 10px; border-bottom: 1px solid #efeee9; text-align: right;">{{cr.cdd}}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+          <h2 style="margin: 0; font-size: 18px; line-height: 24px;">{{selTitle}}</h2>
+          <sc-if value="{{noSel}}" hint-placeholder-val="{{true}}">
+            <p style="margin: 0; font-size: 14px; line-height: 21px; color: #52514e;">Click a hexagon to compare its average day with the national median cell.</p>
+          </sc-if>
+          <sc-if value="{{hasSel}}" hint-placeholder-val="{{false}}">
+            <div style="position: relative; width: 100%;"><svg viewBox="0 0 420 220" role="img" aria-label="{{diurnal.aria}}" style="width: 100%; height: auto; display: block;">
+              <sc-for list="{{diurnal.ticks}}" as="t" hint-placeholder-count="4">
+                <line x1="40" x2="412" y1="{{t.y}}" y2="{{t.y}}" stroke="#e4e3df"></line>
+                
+              </sc-for>
+              <line x1="40" x2="412" y1="{{diurnal.y22}}" y2="{{diurnal.y22}}" stroke="#9a3a14" stroke-dasharray="4 3"></line>
+              <text x="410" y="{{diurnal.y22t}}" style="font-size: 11px; fill: #9a3a14; text-anchor: end;">22 °C</text>
+              <path d="{{diurnal.median}}" fill="none" stroke="#8a8984" stroke-dasharray="5 4" style="stroke-width: 2;"></path>
+              <path d="{{diurnal.cell}}" fill="none" stroke="#eb6834" style="stroke-width: 2.6;"></path>
+              <sc-for list="{{diurnal.hours}}" as="hr" hint-placeholder-count="5">
+                
+              </sc-for>
+            </svg>
+<sc-for list="{{diurnal.ticks}}" as="t" hint-placeholder-count="4"><div aria-hidden="true" style="position: absolute; left: calc(34 * 100% / 420); top: calc({{t.ty}} * 100% / 220); transform: translate(-100%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 11px; color: #52514e;">{{t.label}}</div></sc-for>
+<sc-for list="{{diurnal.hours}}" as="hr" hint-placeholder-count="5"><div aria-hidden="true" style="position: absolute; left: calc({{hr.x}} * 100% / 420); top: calc(212 * 100% / 220); transform: translate(-50%, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 11px; color: #52514e;">{{hr.label}}</div></sc-for>
+</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: #3d3c39;">
+              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#eb6834" stroke-width="3"></line></svg>this cell</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#8a8984" stroke-width="2" stroke-dasharray="5 4"></line></svg>national median cell</span>
+            </div>
+            <dl style="margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; font-size: 14px; line-height: 19px;">
+              <sc-for list="{{selRows}}" as="row" hint-placeholder-count="6">
+                <dt style="color: #52514e;">{{row.k}}</dt><dd style="margin: 0; text-align: right; font-weight: 600;">{{row.v}}</dd>
+              </sc-for>
+            </dl>
+          </sc-if>
+        </div>
+      </aside>
+    </section>
+
+    <section aria-label="Independent check" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
+      <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; gap: 8px; align-items: center;"><h2 style="margin: 0; font-size: 20px; line-height: 26px;">Independent validation: NASA POWER</h2><span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #1baf7a; background: #effaf5; color: #0b6e4f; font-size: 12px; font-weight: 600;">Built</span></div>
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: #3d3c39;">Hourly MERRA-2 temperatures from NASA POWER at four towns, against our ERA5-Land values (Copernicus, 2020–2025). Both agree that Kigali and Musanze have marginal cooling demand. The Rusizi/Bugarama valley is confirmed hot. In the eastern lowlands (11.6% of buildings sit in cells above 100 cooling degree-days a year) NASA POWER shows less heat, so that finding is provisional.</p>
+        <p style="margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">Sources: Muñoz-Sabater et al. (2021) ERA5-Land, Copernicus Climate Change Service; NASA Langley Research Center POWER Project.</p>
+      </div>
+      <figure style="flex: 2 1 420px; margin: 0; display: flex; flex-direction: column; gap: 6px;">
+        <img src="@data/figures/comparison-of-hourly-temperatures-from-nasa.png" alt="Comparison of hourly temperatures from NASA POWER and ERA5-Land at four Rwandan towns, with cooling degree-days at 22 °C" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e4e3df;">
+        <figcaption style="font-size: 12px; line-height: 17px; color: #52514e;">Figure A3_cooling_check (project report).</figcaption>
+      </figure>
+    </section>
+
+    
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { nat: null, layer: 'cool', sel: null };
+    const BLUE = ['#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'];
+    const ORANGE = ['#fde8dc', '#f9c3a3', '#f39a6b', '#eb6834', '#c94f1f', '#9a3a14', '#6b270c'];
+    this.C = {
+      URL: '@data/national.json',
+      LAYERS: {
+        cool: { label: 'Cooling category', title: 'Cooling Demand Category', kind: 'cat', field: 'cool', colors: { low: '#f9c3a3', medium: '#eb6834', high: '#9a3a14' }, names: { low: 'Low', medium: 'Medium', high: 'High' }, source: 'Copernicus ERA5-Land 2020–2025 · rule: tmax p95 < 26 / 26–29 / ≥ 29 °C' },
+        tmax: { label: 'Hot days', title: '95th-percentile daily maximum (°C)', kind: 'num', field: 'tmax', t: [20, 23, 26, 27.5, 29, 31], ramp: ORANGE, unit: ' °C', source: 'Copernicus ERA5-Land 2020–2025' },
+        t2m: { label: 'Mean temperature', title: 'Mean 2 m temperature (°C)', kind: 'num', field: 't2m', t: [12, 14, 16, 18, 20, 22], ramp: ORANGE, unit: ' °C', source: 'Copernicus ERA5-Land 2020–2025' },
+        cdd22: { label: 'Cooling degree-days', title: 'Cooling degree-days above 22 °C (°C·day per year)', kind: 'num', field: 'cdd22', t: [1, 10, 25, 50, 100, 200], ramp: ORANGE, unit: '', source: 'Copernicus ERA5-Land 2020–2025' },
+        ghi: { label: 'Solar (GHI)', title: 'Global horizontal irradiance (kWh/m²/day)', kind: 'num', field: 'ghi', t: [4.78, 4.82, 4.86, 4.9, 4.94, 4.98], ramp: BLUE, unit: '', source: 'Copernicus ERA5-Land solar radiation (de-accumulated), 2020–2025' },
+        rh: { label: 'Humidity', title: 'Mean relative humidity (%)', kind: 'num', field: 'rh', t: [64, 67, 69, 71, 73, 76], ramp: BLUE, unit: '%', source: 'Copernicus ERA5-Land dewpoint, Magnus formula, 2020–2025' },
+        rain: { label: 'Rainfall', title: 'Annual rainfall (mm/yr, indicative)', kind: 'num', field: 'rain', t: [800, 1000, 1200, 1500, 2000, 3000], ramp: BLUE, unit: '', source: 'Copernicus ERA5-Land 2020–2025; runs wet over mountains, so indicative' }
+      },
+      ORDER: ['cool', 'tmax', 't2m', 'cdd22', 'ghi', 'rh', 'rain']
+    };
+  }
+
+  componentDidMount() {
+    fetch(this.C.URL).then(r => r.json()).then(nat => this.setState({ nat })).catch(() => {});
+  }
+
+  fmt(v, dp) {
+    if (v === null || v === undefined || isNaN(v)) return '–';
+    const s = Number(v).toFixed(dp || 0);
+    const p = s.split('.');
+    const a = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return p[1] ? a + '.' + p[1] : a;
+  }
+
+  btn(on) { return { bd: on ? '#0b0b0b' : '#d6d5d0', bg: on ? '#0b0b0b' : '#ffffff', fg: on ? '#ffffff' : '#0b0b0b', pressed: on ? 'true' : 'false' }; }
+
+  colour(L, h) {
+    if (L.kind === 'cat') return L.colors[h[L.field]] || '#ecebe7';
+    const v = h[L.field];
+    if (v === null || v === undefined) return '#ecebe7';
+    let i = 0;
+    while (i < L.t.length && v >= L.t[i]) i++;
+    return L.ramp[i];
+  }
+
+  legend(L) {
+    if (L.kind === 'cat') return Object.keys(L.colors).map(k => ({ color: L.colors[k], label: L.names[k] }));
+    return L.ramp.map((c, i) => ({ color: c, label: i === 0 ? '< ' + L.t[0] + L.unit : i === L.t.length ? '≥ ' + L.t[L.t.length - 1] + L.unit : L.t[i - 1] + '–' + L.t[i] + L.unit }));
+  }
+
+  renderVals() {
+    const C = this.C, s = this.state, nat = s.nat, L = C.LAYERS[s.layer];
+    const out = {
+      mainButtons: ['cool'].map(k => Object.assign({ label: C.LAYERS[k].label, pick: () => this.setState({ layer: k }), cursor: 'pointer' }, this.btn(k === s.layer))),
+      layerButtons: C.ORDER.filter(k => k !== 'cool').map(k => {
+        const off = k === 'rh' || k === 'rain';
+        if (off) return { label: C.LAYERS[k].label, pick: () => {}, disabled: 'true', title: 'Not used by the model yet', pressed: 'false', bd: '#e4e3df', bg: '#f4f3ef', fg: '#a3a29d', cursor: 'not-allowed' };
+        return Object.assign({ label: C.LAYERS[k].label, pick: () => this.setState({ layer: k }), disabled: 'false', title: C.LAYERS[k].label, cursor: 'pointer' }, this.btn(k === s.layer));
+      }),
+      layerTitle: L.title, legendTitle: L.title, legend: this.legend(L), source: 'Source: ' + L.source,
+      loading: !nat, ready: !!nat, vb: '0 0 1000 882', hexes: [], emptyHexes: [], districts: [], selPath: [], catRows: [],
+      season: { bars: [], grid: [] },
+      noSel: !s.sel, hasSel: !!s.sel, selTitle: 'Average day in a cell', selRows: [], diurnal: { ticks: [], hours: [] },
+      mapAria: 'Map of Rwanda coloured by ' + L.title
+    };
+    if (!nat) return out;
+    out.vb = nat.viewBox.join(' ');
+    out.emptyHexes = (nat.hexes_empty || []).map(h => ({ d: h.d }));
+    out.hexes = nat.hexes.map(h => ({ d: h.d, fill: this.colour(L, h), pick: () => this.setState({ sel: h.h }) }));
+    out.districts = nat.districts.map(d => ({ d: d.d }));
+    out.catRows = ['low', 'medium', 'high'].map(k => {
+      const hs = nat.hexes.filter(h => h.cool === k);
+      const tx = hs.map(h => h.tmax).filter(v => v !== null);
+      const cd = hs.map(h => h.cdd22).filter(v => v !== null);
+      return { name: k.charAt(0).toUpperCase() + k.slice(1), n: this.fmt(hs.length, 0),
+        range: tx.length ? this.fmt(Math.min.apply(null, tx), 1) + '–' + this.fmt(Math.max.apply(null, tx), 1) + ' °C' : '–',
+        cdd: cd.length ? this.fmt(cd.reduce((a, b) => a + b, 0) / cd.length, 0) : '–' };
+    });
+    const sh = (s.sel ? nat.hexes.find(x => x.h === s.sel) : null);
+    const mt = sh && sh.tm ? sh.tm : nat.median_monthly_t2m, mp = sh && sh.pm ? sh.pm : nat.median_monthly_precip;
+    const medT = nat.median_monthly_t2m, medP = nat.median_monthly_precip;
+    const pMax = Math.max(50, Math.ceil(Math.max.apply(null, mp.concat(medP)) / 50) * 50);
+    const tLo = Math.floor(Math.min.apply(null, mt.concat(medT)) - 1), tHi = Math.ceil(Math.max.apply(null, mt.concat(medT)) + 1);
+    const colW = 788 / 12, yP = v => 226 - v / pMax * 200, yT = v => 226 - (v - tLo) / (tHi - tLo) * 200;
+    const mNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    out.season = {
+      title: sh ? (sh.district || 'cell') + ' district cell' : 'national median cell',
+      bars: mp.map((v, i) => ({ x: 56 + i * colW + colW * 0.5, y: yP(v), h: 226 - yP(v), w: colW * 0.36, mx: 56 + i * colW + colW * 0.12, my: yP(medP[i]), mh: 226 - yP(medP[i]), lx: 56 + (i + 0.5) * colW, label: mNames[i] })),
+      line: 'M' + mt.map((v, i) => (56 + (i + 0.5) * colW).toFixed(1) + ' ' + yT(v).toFixed(1)).join('L'),
+      medLine: 'M' + medT.map((v, i) => (56 + (i + 0.5) * colW).toFixed(1) + ' ' + yT(v).toFixed(1)).join('L'),
+      grid: [0, 0.5, 1].map(f => ({ y: 226 - f * 200, ty: 226 - f * 200 + 4, rain: this.fmt(pMax * f, 0), temp: (tLo + f * (tHi - tLo)).toFixed(0) + '°' })),
+      aria: 'Monthly rainfall and temperature: wettest month ' + mNames[mp.indexOf(Math.max.apply(null, mp))] + ' with ' + this.fmt(Math.max.apply(null, mp), 0) + ' mm'
+    };
+    const h = sh;
+    if (h && h.t) {
+      out.selPath = [{ d: h.d }];
+      out.selTitle = 'Average day · ' + (h.district || 'cell') + ' district';
+      const med = nat.median_hourly;
+      const all = h.t.concat(med).concat([22]);
+      const lo = Math.floor(Math.min.apply(null, all) - 1), hi = Math.ceil(Math.max.apply(null, all) + 1);
+      const step = 372 / 24, x = i => 40 + (i + 0.5) * step, y = v => 190 - (v - lo) / (hi - lo) * 176;
+      const path = arr => 'M' + arr.map((v, i) => x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join('L');
+      const ticks = [];
+      const tstep = (hi - lo) > 12 ? 4 : 2;
+      for (let v = Math.ceil(lo / tstep) * tstep; v <= hi; v += tstep) ticks.push({ y: y(v), ty: y(v) + 4, label: v + '°' });
+      let pi = 0;
+      h.t.forEach((v, i) => { if (v > h.t[pi]) pi = i; });
+      out.diurnal = { cell: path(h.t), median: path(med), y22: y(22), y22t: y(22) - 4, ticks,
+        hours: [0, 6, 12, 18, 23].map(k => ({ x: x(k), label: (k < 10 ? '0' : '') + k })),
+        aria: 'Hourly mean temperature: this cell peaks at ' + this.fmt(h.t[pi], 1) + ' °C at ' + pi + ':00' };
+      out.selRows = [
+        { k: 'Cooling category', v: h.cool ? h.cool.charAt(0).toUpperCase() + h.cool.slice(1) : '–' },
+        { k: 'tmax p95', v: this.fmt(h.tmax, 1) + ' °C' },
+        { k: 'Mean temperature', v: this.fmt(h.t2m, 1) + ' °C' },
+        { k: 'Warmest hour (mean)', v: this.fmt(h.t[pi], 1) + ' °C at ' + (pi < 10 ? '0' : '') + pi + ':00' },
+        { k: 'Cooling degree-days (22 °C)', v: this.fmt(h.cdd22, 0) + ' per year' },
+        { k: 'Solar GHI', v: this.fmt(h.ghi, 2) + ' kWh/m²/day' },
+        { k: 'Humidity (mean)', v: this.fmt(h.rh, 0) + '%' },
+        { k: 'Rainfall', v: this.fmt(h.rain, 0) + ' mm/yr' },
+        { k: 'Elevation', v: this.fmt(h.elev, 0) + ' m' }
+      ];
+    }
+    return out;
+  }
+}
+</script>
+</body>
+</html>
