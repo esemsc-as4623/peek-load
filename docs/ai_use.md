@@ -64,6 +64,11 @@ API spend: ~$157, under a hard cap enforced in code (`src/rtl/llm/budget.py`).
   share and kept the other recommendations. The coding assistant parsed the newly supplied reports (NISR yearbook,
   RURA, EICV thematic tables), found the SEforALL health-facility survey, wrote the benchmark comparison and proposed
   the options for the open health-facility and business items; the owner decides them.
+- **Decided 2026-10-16:** the owner chose SEforALL's measured health-facility consumption with MoH counts, only
+  the 63 named hospitals as hospitals, and the Nigerian per-bed figure for rural hospitals. The coding assistant
+  wrote the name rules that curate the healthsites points (aliases, units, private names, listed in
+  `config/health_facilities.yaml`), wired the counts and profiles, and built the Hugging Face release package and
+  dataset card; uploading and making it public are the owner's steps.
 - **Still to come:**
   - eligibility and candidate weights (`config/productive_use.yaml`);
   - the derived health profiles, the worship count and the REG-over-QSEL choice (`status_report.md` section 6);

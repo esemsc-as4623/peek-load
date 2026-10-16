@@ -27,7 +27,9 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
   P(connected) to EICV7 2024 per district and scales household energy to REG means (expected vs potential demand);
   `pixi run demand-years` back-casts 2016-2023 (connection per district from EICV4/5) and projects to 2030;
   `pixi run energy-statistics` parses REG/RURA/MoH/EICV reports and `pixi run demand-benchmarks` checks the model
-  against them (`reports/demand/benchmarks.md`); `pixi run demand-sensitivity` (~30 min) gives
+  against them (`reports/demand/benchmarks.md`); `pixi run hospitals` curates healthsites hospitals to MoH's 63
+  (`config/health_facilities.yaml`); `pixi run release-build` / `release-upload` package and (with `--push`)
+  upload the final dataset to Hugging Face; `pixi run demand-sensitivity` (~45 min) gives
   the cap sensitivity and uncertainty bands. QA (`reports/qa/demand.md`) checks every target and calibration.
   `pixi run grid-model` trains the grid-connection model on DHS 2025 (restricted: cluster locations stay in
   `data/restricted/`). Figures: `pixi run use-figures`.

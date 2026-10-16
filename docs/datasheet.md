@@ -84,7 +84,7 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 7. Rural manufacturing is all treated as electric mills (owner's rule), an upper bound; the allocation reproduces census and registry counts per district, but which building holds which use is a plausible placement, not an observation (see the per-building use agreement in `uncertainty/`).
 8. The grid-connection model predicts a neighbourhood rate (DHS clusters are displaced 2-5 km); neighbouring buildings share a value.
 9. LLM labels cover the three deep-dive sectors and a national sample; national use comes from the classifier and the allocation.
-10. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions. Health facilities total 55 GWh/yr against REG's 22.7 GWh: the health-centre profile (MTF spending) is far above SEforALL's measured 5–11 kWh/day, and the 127 tagged hospitals are twice MoH's 63 (pending decision P5). Profiles assume a grid connection.
+10. Appliance profiles are signed off by the owner (2026-10-12), but bars, guesthouses, offices, churches and stores rest on assumptions. Health facilities follow SEforALL's 2023 measurements and MoH's 2023 counts (63 hospitals curated from 127 healthsites points by name rules; 50 public found vs MoH's 52) and total 23.0 GWh/yr against REG's 22.7 GWh; rural hospitals use a per-bed figure from Nigerian hospitals, private clinics are assumed to use what a health centre does. Profiles assume a grid connection.
 11. Household energy is scaled to REG's mean consumption by region; outside Kigali this gives 4.4 kWh/month for rural households, below QSEL's rural survey mean (8.1): the two sources disagree.
 12. The back-cast pins district totals to census household growth (3.1%/yr); presence detection alone implies 7.5%/yr. Connection rolls back per district to EICV4/EICV5. Households' expected demand tracks REG residential sales in 2022–2023 but grows more slowly than REG since 2021. Projections scale existing buildings (new buildings can't be placed). Seasonal and weekly variation is not modelled.
 13. Businesses are under-counted: modelled establishments use about 30% of REG's non-residential and small-industry sales, and large hotels are missing (pending decision P10).
@@ -94,8 +94,9 @@ One row per building footprint, keyed by `bldg_id` (`RWA-` + 16 hex digits, a ha
 - **Not intended:** decisions about individual households or property; anything requiring certainty of a single building's use without field checks.
 
 ## Distribution and licences
+- **Release:** `pixi run release-build` packages the dataset for Hugging Face (GeoParquet buildings by district, profiles, weights, area tables, years, benchmarks, dataset card, ODbL licence, checksums); `pixi run release-upload --push` uploads it (private first).
 - **Data:** derived building data inherits **ODbL-1.0** (OSM / Microsoft / Google Open Buildings).
-- **Meta Relative Wealth Index (`rwi`):** CC-BY-NC-4.0, so release it separately or flag it for non-commercial use.
+- **Meta Relative Wealth Index (`rwi`):** CC-BY-NC-4.0, so its values are left out of the release; the `upper_wealth` flag (RWI-ranked within DHS district totals) is flagged for the licence review.
 - **Climate:** Copernicus ERA5-Land, free to use including commercially, with attribution to the Copernicus Climate Change Service. ERA5-Land rainfall runs wet over the mountains; treat it as indicative.
 - **Restricted microdata** (DHS, World Bank MTF, NISR) is never redistributed.
 

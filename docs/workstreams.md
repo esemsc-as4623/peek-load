@@ -28,7 +28,7 @@ and then nationally. Status notes: `reports/status/<id>.md`.
 | B5 | demand by year | `demand/years.py`, `config/years.yaml` | back-cast 2016-2023 per building; projection to 2030 per district | ✅ |
 | B4v | benchmarks | `ingest/energy_statistics.py`, `demand/benchmarks.py` | REG/RURA sales, customers per branch, MoH facility counts and EICV3–5 district grid shares; the model checked against them | ✅ |
 | B6 | uncertainty and sensitivity | `demand/sensitivity.py` | sector p10/p50/p90 bands, per-building use agreement, spacing-cap sensitivity | ✅ |
-| B7 | deliverable | `dashboard/`, `rtl/dashboard/export.py`, `app/` | static bundle; public site in `app/` (canvas pages on Preact, hosting in `docs/hosting.md`); final GeoParquet / PostGIS release | 🔄 |
+| B7 | deliverable | `dashboard/`, `rtl/dashboard/export.py`, `app/` | static bundle; public site in `app/` (canvas pages on Preact, hosting in `docs/hosting.md`); Hugging Face release package (`rtl/release/`: `pixi run release-build`, `release-upload`) | 🔄 site live · ✅ release package · ⏳ licence review, upload |
 
 Open items, decisions and opportunities: [`status_report.md`](../status_report.md) sections 5-8.
 

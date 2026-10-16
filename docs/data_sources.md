@@ -21,7 +21,7 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `gridfinder` | Gridfinder predicted MV grid lines (Arderne et al. 2020), global grid.gpkg v1.1.1 | A2 | feature | open | CC-BY-4.0 | verified | 1 (725 MB) |
 | `health_facilities` | Health facilities (healthsites.io export on HDX, dataset rwanda-healthsites; derived from OSM) | A2 | weak_label | open | ODbL-1.0 | verified | 1 (1 MB) |
 | `era5_arco` | ERA5 hourly 2 m temperature via ARCO-ERA5 public Zarr (0.25 deg) | A3 | feature | open | to_verify | to_verify | - |
-| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | verified | 107 (343 MB) |
+| `era5_land_cds` | ERA5-Land from Copernicus CDS - hourly 2019-2025 (t2m, d2m, ssrd, tp, u10, v10) + optional daily-statistics baseline 1991-2020 | A3 | feature | login | Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service) | verified | 110 (344 MB) |
 | `nasa_power` | NASA POWER hourly T2M (MERRA-2, cross-check at 4 towns) + daily GHI ALLSKY_SFC_SW_DWN (CERES SYN1deg, 1 deg) | A3 | feature | open | NASA open data (no restrictions; acknowledgement of the NASA LaRC POWER Project requested) | verified | 11 (6 MB) |
 | `openmeteo` | ERA5-Land hourly 2 m temperature (0.1 deg) via Open-Meteo Historical Weather API (no downscaling) | A3 | feature | open | CC-BY-4.0 (Open-Meteo) + Copernicus C3S licence (ERA5-Land) | verified | 33 (88 MB) |
 | `census_2022` | Rwanda 5th Population and Housing Census 2022 (households by sector), NISR | A4 | validation | open | to_verify | to_verify | - |
@@ -30,7 +30,7 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `dhs_2019` | Rwanda DHS 2019-20 (report public; microdata + GPS restricted) | A4 | evidence | restricted | DHS terms of use | to_verify | - |
 | `mtf_rwanda` | World Bank Multi-Tier Framework energy access survey, Rwanda ("Beyond Connections") | A4 | evidence | login | CC-BY-3.0-IGO (report) | to_verify | 24 (32 MB) |
 | `qsel_rwanda` | Columbia QSEL / REG Rwanda electricity consumption analyses | A4 | validation | open | to_verify | verified | - |
-| `evidence_docs` | Evidence corpus of public reports (DHS, MTF, EICV7, RPHC5, REG/RURA, QSEL, Efficiency for Access) | A4 | evidence | open | per document (config/evidence_docs.yaml); several to_verify (human licence review) | verified | 25 (168 MB) |
+| `evidence_docs` | Evidence corpus of public reports (DHS, MTF, EICV7, RPHC5, REG/RURA, QSEL, Efficiency for Access) | A4 | evidence | open | per document (config/evidence_docs.yaml); several to_verify (human licence review) | verified | 26 (168 MB) |
 | `eicv5` | NISR EICV5 2016-17 cross-sectional household survey (household, durable goods, expenditure, poverty files) | A4 | validation | restricted | NISR terms of use | verified | 106 (707 MB) |
 | `nisr_establishment_census_2023` | NISR Establishment Census 2023, tables report (establishments by district x urban/rural and by ISIC section) | A4 | feature | restricted | NISR terms of use | verified | - |
 | `mineduc_yearbook_2021` | MINEDUC Education Statistical Yearbook 2020/21 (school census; schools per district, Annexes 3-5) | A4 | feature | open | Government of Rwanda publication (public) | verified | 1 (3 MB) |
@@ -54,6 +54,7 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `eicv7_utilities_amenities` | EICV7 Thematic Report: Utilities and Amenities 2023/24 | NISR | 2025 | verified |
 | `mugyenyi_2025_post_connection` | Post-connection electricity demand and pricing in newly electrified households: Insights from a large-scale dataset in Rwanda | Energy Policy 198, 114449 (Mugyenyi, Muhwezi, Fobi, Massa, Taneja, Williams, Modi) | 2025 | unavailable |
 | `seforall_powering_healthcare_rwanda_2023` | Powering Healthcare in Rwanda: Market Assessment and Roadmap for Healthcare Facilities | Sustainable Energy for All (with Power Africa) | 2023 | verified |
+| `nwanya_2016_hospital_energy` | Energy Performance Indices for Hospital Buildings in Nigeria | International Journal of Technology 1, 15-25 (Nwanya, Sam-Amobi, Ekechukwu) | 2016 | verified |
 | `rphc5_main_indicators` | Fifth Rwanda Population and Housing Census 2022 (RPHC5) Main Indicators Report | NISR | 2023 | verified |
 | `rphc5_housing_households` | RPHC5 Thematic Report: Characteristics of Households and Housing | NISR | 2023 | verified |
 | `reg_tariffs_2025` | Electricity end-user tariffs effective 1 October 2025 (RURA decision, published by REG) | REG / RURA | 2025 | verified |
@@ -76,4 +77,4 @@ Role: **feature** = model input; **weak_label** = labelling evidence; **validati
 | `giz_pv_productive_use_catalogue_2016` | Photovoltaics for Productive Use Applications: A catalogue of DC-appliances | GIZ | 2016 | verified |
 | `esmap_minigrids_half_billion_2022` | Mini Grids for Half a Billion People: Market Outlook and Handbook for Decision Makers | ESMAP / World Bank | 2022 | verified |
 
-Manifest: 435 files, 6.0 GB in total.
+Manifest: 439 files, 6.0 GB in total.

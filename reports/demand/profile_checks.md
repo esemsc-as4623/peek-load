@@ -30,7 +30,7 @@ A setting's archetype mix weights lower and upper households by the allocated up
 | archetype | simulated | unit | anchor | anchor_value | verdict | source |
 |---|---|---|---|---|---|---|
 | school | 55.08 | kWh/month | MTF 2022 grid schools, spending-derived p25-p75 | 37-509 | ok | mtf:RWA2022:school:kwh_month_from_spend |
-| health_centre | 2,733.73 | kWh/month | MTF 2022 grid health centres, spending-derived p25-p75 (scaled to the median by construction; the appliance-built profile is used for health posts) | 1,367-4,101 | ok | mtf:RWA2022:health_facility:kwh_month_from_spend |
+| health_centre | 331.36 | kWh/month | MTF 2022 grid health centres, spending-derived p25-p75 (kept for the record: the profile follows SEforALL's 2023 measurements, 5.2-10.9 kWh/day, so it falls below) | 1,367-4,101 | fail | mtf:RWA2022:health_facility:kwh_month_from_spend |
 | grain_mill | 26 | kWh/day | NREL 2018 (Tanzania micro-grids): other.daily_kwh.grain_mill | 20 | ok | nrel_pue_microgrids_2018 p39 (ev-df872b5cb748) |
 | carpentry | 13.53 | kWh/month | NREL 2018 (Tanzania micro-grids): monthly_kwh.carpentry_tools.lathe_workshop | 18 | ok | nrel_pue_microgrids_2018 p40 (ev-66fe820e203d) |
 
