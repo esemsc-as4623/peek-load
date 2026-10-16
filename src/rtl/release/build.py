@@ -195,20 +195,47 @@ def docs(out: Path, cfg: dict, n: int, pot: float, exp: float) -> None:
     nat = pd.read_parquet(out / "data" / "demand_by_year.parquet").groupby("year")[["potential_gwh",
                                                                                      "expected_gwh"]].sum()
     card = card.format(version=cfg["version"], title=cfg["title"], pretty_name=cfg["pretty_name"], n_buildings=n,
-                       potential=pot, expected=exp,
+                       potential=pot, expected=exp, team=cfg["team"], repo=cfg["hf_repo"], year=2026,
                        exp2016=nat.at[2016, "expected_gwh"], exp2030=nat.at[2030, "expected_gwh"],
-                       licence_notes=" ".join(cfg["licence"]["notes"].split()))
+                       files_table=files_table(out), licence_notes=" ".join(cfg["licence"]["notes"].split()))
     (out / "README.md").write_text(card)
-    (out / "CITATION.cff").write_text(
-        "cff-version: 1.2.0\nmessage: If you use this dataset, please cite it and its underlying sources.\n"
-        f"title: \"{cfg['title']}\"\nversion: {cfg['version']}\ntype: dataset\n"
-        "authors:\n  - name: \"[TEAM NAME]\"\n"
-        "repository-code: https://github.com/esemsc-as4623/peek-load\nlicense: ODbL-1.0\n")
+    (out / "CITATION.cff").write_text(citation(cfg))
     (out / "LICENSE.md").write_text(
         "# Licence\n\nThis database is made available under the Open Database License (ODbL-1.0): "
         "https://opendatacommons.org/licenses/odbl/1-0/. Any rights in individual contents of the database are "
         "licensed under the Database Contents License: https://opendatacommons.org/licenses/dbcl/1-0/.\n\n"
         + " ".join(cfg["licence"]["notes"].split()) + "\n")
+
+
+def citation(cfg: dict) -> str:
+    return ("cff-version: 1.2.0\nmessage: If you use this dataset, please cite it and its underlying sources.\n"
+            f"title: \"{cfg['title']}\"\nversion: {cfg['version']}\ntype: dataset\n"
+            f"authors:\n  - name: \"{cfg['team']}\"\n"
+            f"url: https://huggingface.co/datasets/{cfg['hf_repo']}\n"
+            "repository-code: https://github.com/esemsc-as4623/peek-load\nlicense: ODbL-1.0\n")
+
+
+def files_table(out: Path) -> str:
+    """Markdown table of the data files with rows and sizes."""
+    desc = {"buildings": "one row per footprint (GeoParquet), one file per district + unassigned",
+            "building_profiles.parquet": "building x profile: units, energy weight, REG scale, P(connected)",
+            "profiles.parquet": "RAMP library: per-unit hourly W (all days, weekday, weekend), daily kWh p10/mean/p90",
+            "districts.parquet": "district totals and boundaries (GeoParquet)",
+            "sectors.parquet": "sector totals and boundaries (GeoParquet)",
+            "demand_by_year.parquet": "district x year, 2016-2030: potential and expected GWh, growth",
+            "benchmarks.parquet": "the model against REG / RURA sales, customers and MoH facility counts"}
+    rows = ["| Path | Rows | Size | What it holds |", "|---|---|---|---|"]
+    parts = sorted((out / "data" / "buildings").glob("*.parquet"))
+    n = sum(pq.ParquetFile(f).metadata.num_rows for f in parts)
+    mb = sum(f.stat().st_size for f in parts) / 1e6
+    rows.append(f"| `data/buildings/<district>.parquet` | {n:,} | {mb:,.0f} MB | {desc['buildings']} |")
+    for f in sorted((out / "data").glob("*.parquet")):
+        size = f.stat().st_size
+        human = f"{size / 1e6:,.1f} MB" if size >= 1e6 else f"{size / 1e3:,.0f} kB"
+        rows.append(f"| `data/{f.name}` | {pq.ParquetFile(f).metadata.num_rows:,} | {human} | {desc.get(f.name, '')} |")
+    rows.append("| `docs/` | | | datasheet, data sources, status report (decisions), data contract, codebook, "
+                "benchmarks, AI use |")
+    return "\n".join(rows)
 
 
 def checksums(out: Path) -> None:

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: If you use this dataset, please cite it and its underlying sources.
+title: "Rooftops to Load Curves: building-level electricity demand for Rwanda"
+version: v1.0.0
+type: dataset
+authors:
+  - name: "Peek Load"
+url: https://huggingface.co/datasets/arushisinha98/peek-load
+repository-code: https://github.com/esemsc-as4623/peek-load
+license: ODbL-1.0

@@ -71,7 +71,8 @@ def main() -> None:
 
     api = HfApi(token=token.get_secret_value())
     api.create_repo(cfg["hf_repo"], repo_type="dataset", private=cfg["private"], exist_ok=True)
-    api.upload_large_folder(repo_id=cfg["hf_repo"], repo_type="dataset", folder_path=str(out))
+    api.upload_folder(repo_id=cfg["hf_repo"], repo_type="dataset", folder_path=str(out),
+                      commit_message=f"Release {cfg['version']}: {cfg['title']}", ignore_patterns=[".cache/*"])
     print(f"uploaded: https://huggingface.co/datasets/{cfg['hf_repo']}")
 
 

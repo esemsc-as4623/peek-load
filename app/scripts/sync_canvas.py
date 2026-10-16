@@ -18,8 +18,6 @@ APP = Path(__file__).resolve().parents[1]
 SKIP = {"DesignSystem.dc.html"}  # the design sheet is for the canvas only
 # wording fixes that only apply to the public site
 FIXES = {
-    "Sources.dc.html": [("[TEAM NAME] (2026)", "Peek Load (2026)"),
-                        ("for Rwanda, sample data bundle v1.", "for Rwanda, data bundle v1.")],
     "Nav.dc.html": [("      ['design', 'Design system', 'DesignSystem.dc.html', '']\n", ""),
                     ("['validation', 'Validation & quality', 'Validation.dc.html', 'in_progress'],",
                      "['validation', 'Validation & quality', 'Validation.dc.html', 'in_progress']")],
