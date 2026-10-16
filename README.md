@@ -17,6 +17,10 @@ mapped building footprints but no label saying what each one is or what it consu
 Together they give each building's demand as a **distribution, not a number**: median and 90th-percentile peak,
 and annual kWh.
 
+## Deliverables
+1. The output dataset: https://huggingface.co/datasets/arushisinha98/peek-load
+2. Interactive frontend: https://peek-load-rwa.tailce5583.ts.net/#/challenge (active until 2026-11-10)
+
 ## Documentation
 - [`docs/datasheet.md`](docs/datasheet.md): what the dataset contains, how it was made, known limits, licences
 - [`docs/data_sources.md`](docs/data_sources.md): every source with role, licence and status (generated)
