@@ -1,0 +1,23 @@
+# Final dataset release (`pixi run release-build`, then `pixi run release-upload`; rtl.release).
+version: v1.0.0
+title: "Rooftops to Load Curves: building-level electricity demand for Rwanda"
+pretty_name: Rooftops to Load Curves (Rwanda)
+# Hugging Face dataset repository. The owner sets the namespace (user or organisation) before uploading.
+hf_repo: "[HF NAMESPACE]/rooftops-to-load-curves-rwanda"
+private: true            # upload private first; make public after the licence review (human gate)
+out_dir: data/release    # gitignored like the rest of data/
+
+licence:
+  id: odbl                # derived database of OpenStreetMap / Google / Microsoft footprints (ODbL-1.0)
+  # Meta's Relative Wealth Index is CC-BY-NC-4.0, so its values are not released. The upper/lower wealth flag is
+  # a model output that used RWI to rank homes within district totals set by DHS; flagged for the licence review.
+  excluded_columns: [rwi]
+  notes: >-
+    Footprints: VIDA combined Open Buildings (Google, Microsoft, OpenStreetMap), ODbL-1.0. Climate: Copernicus
+    ERA5-Land (Copernicus licence, attribution). Night lights: NASA Black Marble (open). Survey-derived values
+    (DHS 2025, World Bank MTF 2022, NISR EICV) enter only as model outputs and aggregates; no microdata, no DHS
+    cluster locations.
+
+# Building table: one row per footprint, partitioned by district (30 files)
+buildings_partition: district
+yearly_columns: true     # expected kWh 2016-2023 per building (back-cast)
