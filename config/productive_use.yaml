@@ -54,24 +54,25 @@ eligibility:  # buildings that can host an unlocated PU establishment
   roadside_m: {grain_mill: 100}  # "roadside": within this distance of any mapped road
 
 candidate_score:  # 100 x weighted mean of the criteria (formulas in rtl.demand.productive_use.criteria)
+  # Owner's decision 2026-10-16: building size weighs more (town and rural workshops 0.10 -> 0.25, mills 0.15 -> 0.30)
   town:  # tailoring, welding_workshop, carpentry
     market_access: 0.30
     demand_density: 0.25
     grid_proximity: 0.20
     ability_to_pay: 0.15
-    building_size: 0.10
+    building_size: 0.25
     agri_context: 0.0
   workshop_rural:  # light rural workshops: customers and market access, like town trades
     market_access: 0.30
     demand_density: 0.25
     grid_proximity: 0.20
     ability_to_pay: 0.15
-    building_size: 0.10
+    building_size: 0.25
     agri_context: 0.0
   grain_mill:
     agri_context: 0.30
     market_access: 0.25
     grid_proximity: 0.20
-    building_size: 0.15
+    building_size: 0.30
     demand_density: 0.10
     ability_to_pay: 0.0

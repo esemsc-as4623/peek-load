@@ -81,3 +81,12 @@ def test_hospital_curation_merges_units_aliases_and_fills_to_the_count():
     assert out.at["e", "role"] == "clinic"
     assert out.at["f", "role"] == "hospital" and out.at["g", "role"] == "clinic"   # one private place left: largest
     assert out[out.role == "hospital"].canonical_id.nunique() == 3
+
+
+def test_kept_llm_labels_are_confident_and_not_residential():
+    from rtl.demand.allocate import kept_labels
+    df = pd.DataFrame({"llm_label": ["religious", "religious", "residential", "commercial", None, "unknown"],
+                       "llm_conf": [0.82, 0.49, 0.95, 0.5, None, 0.9]})
+    cfg = {"llm_labels": {"min_confidence": 0.5, "keep": ["commercial", "religious", "institutional"]}}
+    assert kept_labels(df, cfg).tolist() == [True, False, False, True, False, False]
+    assert not kept_labels(df, {}).any()  # no rule configured: nothing is kept

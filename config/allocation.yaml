@@ -4,7 +4,11 @@
 # (data/gold/approvals.yaml); the registry, setting and wealth additions below follow the owner's requests that day.
 #
 # Order (each step only sees buildings not taken by an earlier one):
-#   0. tags are kept: a tagged school stays a school, a tagged bar a bar, a tagged house a house candidate
+#   0. tags are kept: a tagged school stays a school, a tagged bar a bar, a tagged house a house candidate.
+#      A confident LLM label that isn't residential is kept the same way and wins over the building's tags (the
+#      labeller saw the tags; e.g. building=church + amenity=bank is a church). Institutions, workshops and shops keep
+#      their class but rank first in the census steps, which choose the establishment (a bar, a salon, a shop).
+#      Owner's decision 2026-10-16.
 #   0b. facility compounds: buildings tagged with a school / health facility, and institution-like buildings within
 #      `facilities.radius_m` of one, share that facility's profile (weight 1/n each, so a compound = one facility)
 #   1. productive use (census manufacturing per district x setting): best candidates by viability x not-ancillary
@@ -27,6 +31,12 @@ census:
 order:
   productive_use: [grain_mill, workshop_rural, welding_workshop, tailoring, carpentry]   # targets from data/processed/pu_census_districts.csv
   services: [guesthouse, salon, bar_restaurant]                         # targets from data/processed/svc_census_districts.csv
+
+# Owner's decision 2026-10-16: LLM labels at or above this confidence and in these classes fix the building's use
+# (step 0, as a tag would) and rank first for their class; every other building is allocated from the classifier.
+llm_labels:
+  min_confidence: 0.5
+  keep: [commercial, mixed_shop_house, institutional, religious, productive_use, industrial_warehouse, ancillary]
 
 eligibility:
   establishment_min_area_m2: 15     # kiosks can be small; productive use keeps its own 30 m2 (config/productive_use.yaml)

@@ -54,6 +54,14 @@ def setting_rates(df: pd.DataFrame) -> pd.DataFrame:
     return pd.crosstab(m.setting, m.label, normalize="index").reindex(columns=CLASSES, fill_value=0.0)
 
 
+def kept_labels(df: pd.DataFrame, cfg: dict) -> pd.Series:
+    """Buildings whose LLM label fixes their use: confident enough and in a kept (non-residential) class."""
+    c = cfg.get("llm_labels")
+    if not c or "llm_label" not in df:
+        return pd.Series(False, index=df.index)
+    return (df.llm_conf >= c["min_confidence"]) & df.llm_label.isin(c["keep"])
+
+
 def calibrated(probs: pd.DataFrame, factors: pd.Series) -> pd.DataFrame:
     p = probs[[f"p_{c}" for c in CLASSES]].to_numpy() * factors.to_numpy()
     p = p / p.sum(1, keepdims=True).clip(min=1e-9)
@@ -159,6 +167,8 @@ def load_inputs(con, cfg: dict) -> pd.DataFrame:
         WHERE x.adm2_name IS NOT NULL""").df()
     probs = pd.read_parquet(P / "use_probs.parquet")
     df = df.merge(probs, on="bldg_id", how="left")
+    lab = con.sql(f"SELECT bldg_id, label AS llm_label, confidence AS llm_conf FROM '{P}/labels.parquet'").df()
+    df = df.merge(lab.drop_duplicates("bldg_id"), on="bldg_id", how="left")
     df = context_flags(df, map_cfg)  # adds urban / rich (superseded by the census setting and the DHS split)
     df = df.merge(facility_sites(con, cfg), on="bldg_id", how="left")
     # P5: curated hospitals (units join their hospital's compound; other tagged "hospitals" are clinics)
@@ -197,6 +207,11 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     """`noise` > 0 multiplies every class probability by exp(noise x N(0, 1)) (uncertainty runs); `cap_mult` scales
     the spacing caps (None: no caps), for the sensitivity report."""
     pcal = calibrated(df, factors)
+    keep = kept_labels(df, cfg)
+    if keep.any():  # a kept LLM label is certain of its class, so it ranks first wherever that class is placed
+        pcal.loc[keep] = 0.0
+        for cls in pcal.columns:
+            pcal.loc[keep & (df.llm_label == cls), cls] = 1.0
     if noise > 0:
         rng = np.random.default_rng(seed)
         pcal = pcal * np.exp(noise * rng.standard_normal(pcal.shape))
@@ -219,7 +234,12 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     # 0. tags: located trades and services, then tag classes
     pu_loc = pd.read_parquet(PROCESSED_DIR / "pu_located.parquet").set_index("bldg_id").profile_id
     svc_loc = pd.read_parquet(PROCESSED_DIR / "svc_located.parquet").set_index("bldg_id").profile_id
-    t = df.tag_label
+    # a kept LLM label acts as the building's tag; institutions, workshops and shops are left to the registry and
+    # census steps, which take them first (their class probability is 1) and keep whatever is left at the end, so the
+    # census still decides which kind of establishment a commercial building holds
+    placed_later = ["institutional", "productive_use", "commercial", "mixed_shop_house"]
+    as_tag = keep & ~df.llm_label.isin(placed_later)
+    t = df.tag_label.where(~as_tag, df.llm_label)
     # a facility / worship / warehouse / ancillary tag on the building itself beats a trade or service point matched
     # within 30 m (a hospital canteen, a church guesthouse); that establishment is then placed by the census step
     own = t.isin(["institutional", "religious", "industrial_warehouse", "ancillary"])
@@ -232,6 +252,7 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     shop_tag = (t == "commercial") & est.isna()
     est[shop_tag], use[shop_tag] = "kiosk_shop", "commercial"
     source[use.notna()] = "tag"
+    source[use.notna() & as_tag] = "llm"
     big = df.area_m2 >= cfg["eligibility"]["establishment_min_area_m2"]
     not_anc = 1 - pcal.ancillary
 
@@ -268,7 +289,7 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     # 1. productive use: mills rural and roadside, town trades urban; best viability x not-ancillary first
     for prof in cfg["order"]["productive_use"]:
         w = pu_cfg["candidate_score"]["town" if prof in pu.TOWN_TRADES else prof]
-        score = pu.candidate_score(crit, w) / 100 * not_anc
+        score = pu.candidate_score(crit, w) / 100 * not_anc + (keep & (df.llm_label == "productive_use"))
         rural = prof in pu_cfg["trade_mix"]["rural"]
         pool = df.pu_eligible.astype(bool) & (df.setting == ("rural" if rural else "urban"))
         if prof in pu_cfg["eligibility"]["roadside_m"]:
@@ -302,6 +323,15 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
             rows.append({"district": d, "item": f"model:{cls}", "target": int(expected[d] + tagged.get(d, 0)),
                          "tagged": int(tagged.get(d, 0)), "assigned": int(got.get(d, 0)),
                          "shortfall": int(max(0, expected[d] - got.get(d, 0)))})
+    # kept LLM institutions and workshops that no registry or census step took still keep their class
+    left = keep & use.isna() & est.isna()
+    inst = left & (df.llm_label == "institutional")
+    use[inst], est[inst], source[inst] = "institutional", cfg["uncensused"]["institutional"], "llm"
+    shop = left & df.llm_label.isin(["commercial", "mixed_shop_house"])  # a shop-house also takes a household
+    use[shop], est[shop], source[shop] = "commercial", "kiosk_shop", "llm"
+    work = left & (df.llm_label == "productive_use")
+    use[work], source[work] = "productive_use", "llm"
+    est[work] = np.where(df.setting[work] == "rural", "workshop_rural", "tailoring")
     # tagged facilities beyond reach of any facility point keep a profile by their type
     fac = df.facility_type.fillna("")
     est[(use == "institutional") & est.isna() & fac.str.startswith("education")] = "school"
