@@ -45,9 +45,11 @@ profiles:  # display names and groups for the 17 RAMP archetypes
   bar_restaurant: {name: "Bar / restaurant", group: commerce}
   guesthouse: {name: "Guesthouse", group: commerce}
   school: {name: "School", group: institution}
-  health_post: {name: "Health post", group: institution}
+  health_post: {name: "Health post / dispensary", group: institution}
+  clinic: {name: "Private clinic", group: institution}
   health_centre: {name: "Health centre", group: institution}
   hospital: {name: "Hospital", group: institution}
+  hospital_rural: {name: "Hospital (rural)", group: institution}
   bar_rural: {name: "Rural bar (cabaret)", group: commerce}
   workshop_rural: {name: "Rural workshop (light)", group: productive}
   office: {name: "Office", group: institution}

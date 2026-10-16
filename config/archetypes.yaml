@@ -379,20 +379,37 @@ establishments:
 # a scaled copy of a built archetype's per-unit curve. `scale_to` names a validation-anchor evidence id whose value is
 # kWh/month; `factor` is a plain multiplier with its reason.
 derived:
+  # health facilities (owner's decision P5, 2026-10-16): daily energy from config/health_facilities.yaml (SEforALL
+  # 2023 site surveys; Nwanya et al. 2016 per bed for rural hospitals); the hourly shape is the appliance-built
+  # health facility's. `signed_off` marks the owner's approval.
+  health_post:
+    base: health_post
+    daily_kwh_from: health_post
+    signed_off: 2026-10-16
+    why: "SEforALL (2023) effective daily demand of health posts; replaces the appliance-built level (12 kWh/day)."
   health_centre:
     base: health_post
-    scale_to: "mtf:RWA2022:health_facility:kwh_month_from_spend:median"
-    why: "MTF 2022 surveyed 148 health centres (and only 4 hospitals, 1 post); their median spending converts to
-      2,734 kWh/month. The appliance-built health profile gives 366, so it stands for health posts and is scaled
-      up for centres."
+    daily_kwh_from: health_centre
+    signed_off: 2026-10-16
+    why: "SEforALL (2023) effective daily demand of health centres (MTF 2022 spending implied ~17x more)."
+  hospital:
+    base: health_post
+    daily_kwh_from: hospital
+    signed_off: 2026-10-16
+    why: "SEforALL (2023) measured hospitals; used for hospitals in urban settings."
+  hospital_rural:
+    base: health_post
+    daily_kwh_from: hospital_rural
+    signed_off: 2026-10-16
+    why: "Nwanya et al. (2016) rural hospitals per bed space x the mean Rwandan district hospital's 207 beds."
+  clinic:
+    base: health_post
+    daily_kwh_from: clinic
+    why: "Assumption: a private clinic uses about what a health centre does."
   workshop_rural:
     base: carpentry
     factor: 1
+    signed_off: 2026-10-15
     why: "Owner's decision 2026-10-15 (P2): rural manufacturing other than mills (banana beer, bakeries, bricks,
       crafts) uses lights and small tools; the carpentry workshop profile (13.5 kWh/month, checked against NREL
       2018 at 18) stands for it. Assumption."
-  hospital:
-    base: health_centre
-    factor: 10
-    why: "Assumption: a district hospital (theatre, imaging, laboratory, wards, 24 h) uses about ten health centres'
-      energy. MTF's 4 hospitals are too few to publish. A metered source would replace this."

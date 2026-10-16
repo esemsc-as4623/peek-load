@@ -54,7 +54,7 @@ facilities:   # step 0b; facility type (config/facilities via rtl.ingest.facilit
     health:hospital: hospital
     health:health_centre: health_centre
     health:health_post: health_post
-    health:clinic: health_post
+    health:clinic: clinic
     health:unspecified: health_post
     health:dispensary: health_post
     health:laboratory: health_post
@@ -64,6 +64,11 @@ facilities:   # step 0b; facility type (config/facilities via rtl.ingest.facilit
 
 registries:
   schools: registries/schools_by_district_2021.csv   # MINEDUC yearbook 2020/21: primary + secondary + TVET
+  # health (P5): healthsites "hospital" points curated into MoH's 63 hospitals, clinics and units
+  # (rtl.ingest.hospitals); MoH 2023 counts of health centres, posts + dispensaries and private clinics are spread
+  # over districts by households (no district table is published), tagged facilities counting first
+  hospitals: registries/health_facilities.csv
+  health_min_area_m2: 30
   school_min_area_m2: 60
   worship:
     # No district registry is published. RGB inspected over 14,000 places of worship in 2024 and closed about 8,000
@@ -79,7 +84,8 @@ registries:
 wealth: dhs_wealth_district.csv   # target upper share per district x setting (rtl.ingest.dhs_wealth)
 
 # Owner's decision 2026-10-15 (P1): bars and restaurants in rural settings use the lighter rural profile.
-rural_profiles: {bar_restaurant: bar_rural}
+# Owner's decision 2026-10-16 (P5): hospitals in rural settings use the per-bed rural hospital profile.
+rural_profiles: {bar_restaurant: bar_rural, hospital: hospital_rural}
 
 uncensused:   # step 4: class -> profile, at the LLM's rate per setting (schools, health and worship come first)
   institutional: office
@@ -99,4 +105,7 @@ spacing:
   bar_restaurant: {cell: h3_r9, cap: 3}
   kiosk_shop: {cell: h3_r9, cap: 6}
   school: {cell: h3_r8, cap: 1}            # registry top-up schools only (compounds are placed by their tags)
+  health_centre: {cell: h3_r8, cap: 1}
+  health_post: {cell: h3_r8, cap: 1}
+  clinic: {cell: h3_r9, cap: 1}
   church: {cell: h3_r9, cap: 1}

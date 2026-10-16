@@ -438,6 +438,28 @@
     "year": 2001,
     "statistic": "daily_maximum"
   },
+  "data/raw/era5_land_cds/2026-10-10/era5land_daily_maximum_2002.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:derived-era5-land-daily-statistics",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_daily_maximum_2002.nc",
+    "bytes": 353606,
+    "sha256": "85f457b3e7813281fbb9f05af54120bfe7590691ae3d49d0c361a1a0ef770616",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-16T02:32:28+00:00",
+    "year": 2002,
+    "statistic": "daily_maximum"
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_daily_maximum_2003.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:derived-era5-land-daily-statistics",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_daily_maximum_2003.nc",
+    "bytes": 354846,
+    "sha256": "83184aed3c0254a993144f5e86f345f66568699e3072baa41ab746f78d59e804",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-16T11:09:58+00:00",
+    "year": 2003,
+    "statistic": "daily_maximum"
+  },
   "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_1991.nc": {
     "source_id": "era5_land_cds",
     "url": "cds:derived-era5-land-daily-statistics",
@@ -568,6 +590,17 @@
     "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
     "retrieved_at": "2026-10-15T21:47:25+00:00",
     "year": 2002,
+    "statistic": "daily_mean"
+  },
+  "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_2003.nc": {
+    "source_id": "era5_land_cds",
+    "url": "cds:derived-era5-land-daily-statistics",
+    "path": "data/raw/era5_land_cds/2026-10-10/era5land_daily_mean_2003.nc",
+    "bytes": 426010,
+    "sha256": "875000db3d0d486f389776a6c4f7dcc015b016a7062a8477311633e10bb66781",
+    "licence": "Copernicus licence (free incl. commercial use, attribution to Copernicus Climate Change Service)",
+    "retrieved_at": "2026-10-16T06:54:17+00:00",
+    "year": 2003,
     "statistic": "daily_mean"
   },
   "data/raw/era5_land_cds/2026-10-10/era5land_hourly_201901.nc": {
@@ -2436,6 +2469,16 @@
     "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
     "retrieved_at": "2026-10-11T11:06:17+00:00",
     "version": "2026-10-11"
+  },
+  "data/raw/evidence_docs/2026-10-16/nwanya_2016_hospital_energy.pdf": {
+    "source_id": "evidence_docs",
+    "url": "https://ijtech.eng.ui.ac.id/download/article/1569",
+    "path": "data/raw/evidence_docs/2026-10-16/nwanya_2016_hospital_energy.pdf",
+    "bytes": 579972,
+    "sha256": "c9908ed08bb1112c0872ef972224c9d0c760c36788fe89febfd24854ee66c36b",
+    "licence": "per document (config/evidence_docs.yaml); several to_verify (human licence review)",
+    "retrieved_at": "2026-10-16T09:51:00+00:00",
+    "version": "2026-10-16"
   },
   "data/raw/ghsl_built_c/2025-01-27/GHS_BUILT_C_FUN_E2018_GLOBE_R2023A_54009_10_V1_0_R10_C21.zip": {
     "source_id": "ghsl_built_c",

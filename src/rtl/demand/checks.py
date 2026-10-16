@@ -101,8 +101,8 @@ def establishment_rows(lib: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for aid, kind, label in [("school", "school", "MTF 2022 grid schools, spending-derived p25-p75"),
                              ("health_centre", "health_facility",
-                              "MTF 2022 grid health centres, spending-derived p25-p75 (scaled to the median by "
-                              "construction; the appliance-built profile is used for health posts)")]:
+                              "MTF 2022 grid health centres, spending-derived p25-p75 (kept for the record: the "
+                              "profile follows SEforALL's 2023 measurements, 5.2-10.9 kWh/day, so it falls below)")]:
         lo, hi = (fac.loc[(kind, "kwh_month_from_spend", s), "value"] for s in ("p25", "p75"))
         sim = kwh[aid] * DAYS_PER_MONTH
         rows.append({"archetype": aid, "simulated": sim, "unit": "kWh/month", "anchor": label,

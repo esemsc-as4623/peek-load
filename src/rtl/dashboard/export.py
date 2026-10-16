@@ -598,7 +598,7 @@ def profiles(out, cfg: dict, lib: pd.DataFrame) -> set[str]:
     derived = load_yaml("archetypes.yaml").get("derived", {})
     for pid, meta in cfg["profiles"].items():
         base_id = pid
-        while base_id in derived:  # a scaled copy: appliances of its base, energy and curve from the library
+        while base_id in derived and derived[base_id]["base"] != base_id:  # scaled copy: appliances of its base
             base_id = derived[base_id]["base"]
         arch = Archetype.load(PROCESSED_DIR / "archetypes" / f"{base_id}.json")
         r = lib.loc[pid]
@@ -618,7 +618,7 @@ def profiles(out, cfg: dict, lib: pd.DataFrame) -> set[str]:
                          "provenance": {k: provenance(v) for k, v in fields.items()}})
         is_derived = pid in derived
         items.append({"profile_id": pid, "name": meta["name"], "group": meta["group"],
-                      "status": "draft" if is_derived else arch.status,
+                      "status": (lib.at[pid, "status"] if is_derived else arch.status),
                       "description": " ".join(derived[pid]["why"].split()) + f" Appliances shown are {base_id}'s; "
                       "energy and curve are scaled." if is_derived else arch.description,
                       "population": arch.population, "year": arch.year,

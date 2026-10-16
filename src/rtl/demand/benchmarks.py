@@ -22,7 +22,7 @@ OUT = PROCESSED_DIR / "benchmarks.csv"
 REPORT = REPORTS_DIR / "demand" / "benchmarks.md"
 KIGALI = ("Nyarugenge", "Gasabo", "Kicukiro")
 RESIDENTIAL_SHARE_OF_CUSTOMERS = 0.88  # Mugyenyi et al. 2025 (REG billing 2013-2020): 88% of customers residential
-HEALTH = ("health_post", "health_centre", "hospital")
+HEALTH = ("health_post", "health_centre", "hospital", "hospital_rural", "clinic")
 
 
 def profile_energy() -> pd.DataFrame:
@@ -80,14 +80,16 @@ def main() -> None:
             f"{n_est.get(t, 0):,.0f} facilities")
     hospitals = fac23[["National Referral Hospitals", "Provincial Hospital", "District Hospitals",
                        "Private Hospital"]].sum()
-    add("Hospitals (count)", float(hospitals), float(n_est.get("hospital", 0)), "facilities",
-        "NISR Yearbook 2024, Table 3.10.2 (R-HMIS, 2023)", "the model's hospitals are healthsites.io 'hospital' tags")
+    add("Hospitals (count)", float(hospitals), float(n_est.get("hospital", 0) + n_est.get("hospital_rural", 0)),
+        "facilities", "NISR Yearbook 2024, Table 3.10.2 (R-HMIS, 2023)",
+        "healthsites 'hospital' points curated to MoH's count (rtl.ingest.hospitals); a constraint")
     add("Health centres (count)", float(fac23["Health Centers"]), float(n_est.get("health_centre", 0)), "facilities",
-        "NISR Yearbook 2024, Table 3.10.2", "tagged health centres only; the rest are untagged")
-    add("Health posts, clinics and dispensaries (count)", float(fac23[["Health Posts", "Private Clinics",
-                                                                        "Private Dispensaries",
-                                                                        "Prison Dispensaries"]].sum()),
-        float(n_est.get("health_post", 0)), "facilities", "NISR Yearbook 2024, Table 3.10.2", "tagged facilities only")
+        "NISR Yearbook 2024, Table 3.10.2", "tagged centres plus MoH's count spread by households; a constraint")
+    add("Health posts and dispensaries (count)", float(fac23[["Health Posts", "Private Dispensaries",
+                                                               "Prison Dispensaries"]].sum()),
+        float(n_est.get("health_post", 0)), "facilities", "NISR Yearbook 2024, Table 3.10.2", "a constraint")
+    add("Private clinics (count)", float(fac23["Private Clinics"]), float(n_est.get("clinic", 0)), "facilities",
+        "NISR Yearbook 2024, Table 3.10.2", "re-typed tagged 'hospitals' and clinics plus the MoH count; a constraint")
     add("Hotels electricity", float(yr.at["hotels", "2023"]), float(g.loc[["guesthouse"], "expected_gwh"].sum()),
         "GWh/yr", "NISR Yearbook 2024, Table 7.4 (REG)",
         "the model's guesthouses are small (8 rooms); REG's hotel tariff covers large hotels too")

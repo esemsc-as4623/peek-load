@@ -142,6 +142,18 @@ def allocation_checks(con: duckdb.DuckDBPyConnection) -> list[tuple[str, bool, s
     out.append(("allocation: upper-wealth household share per setting matches the DHS-based targets (+-0.02)",
                 all(abs(v - want[s]) <= 0.02 for s, v in wt),
                 "; ".join(f"{s} {v:.3f} vs {want[s]:.3f}" for s, v in sorted(wt))))
+    from rtl.settings import load_yaml as _ly
+
+    hcfg = _ly("health_facilities.yaml")
+    n_h = con.sql(f"""SELECT coalesce(sum(est_weight), 0) FROM '{USE_PATH}'
+                      WHERE establishment IN ('hospital', 'hospital_rural')""").fetchone()[0]
+    out.append(("allocation: hospitals = MoH 2023 count (curated healthsites points)",
+                abs(n_h - hcfg["counts_2023"]["hospitals"]) < 1e-6, f"{n_h:.0f} vs {hcfg['counts_2023']['hospitals']}"))
+    bm = P / "benchmarks.csv"
+    if bm.exists():
+        r = pd.read_csv(bm).set_index("item").at["Health facilities electricity", "ratio"]
+        out.append(("benchmark: health facilities' energy within 25% of REG's 2023 sales (owner's check, P5)",
+                    bool(0.75 <= r <= 1.25), f"model / REG = {r:.2f}"))
     cal = P / "calibration.csv"
     if cal.exists():
         c = pd.read_csv(cal)

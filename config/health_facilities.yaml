@@ -1,0 +1,54 @@
+# Health facilities (owner's decision P5, 2026-10-16): SEforALL's measured consumption per facility type, Ministry of
+# Health counts, only the named hospitals are hospitals, REG's sales to health facilities as the check.
+# `pixi run hospitals` (rtl.ingest.hospitals) curates the tagged "hospitals"; rtl.demand.allocate places the counts.
+
+# MoH counts, 2023 (NISR Statistical Yearbook 2024, Table 3.10.2, from R-HMIS)
+counts_2023:
+  hospitals: 63          # 15 national referral + 3 provincial + 34 district + 11 private
+  health_centres: 518
+  health_posts: 1408     # 1,282 health posts + 113 private and 13 prison dispensaries (same small-facility profile)
+  clinics: 232           # private clinics
+check:
+  reg_health_facilities_gwh_2023: 22.65   # REG electricity sold to health facilities, 2023 (Yearbook Table 7.4)
+
+# Curating the 127 healthsites.io "hospital" points into hospitals, clinics and units of a hospital
+hospitals:
+  unit_patterns: "laboratory|office|pediatrie|services|systems ltd|information centre|dialysis|isange|physiotherapy"
+  clinic_patterns: "\\beye\\b|\\bear\\b|dental|polyclinique|cancer|orthopedic|surgical cent|ophthalmolog|specialists hospital|maternity"
+  # private hospitals (company or founder names); every other place-named hospital is public: most "X Hospital"
+  # points are faith-based district hospitals (Kibogora, Mibirizi, Shyira, Munini, ...)
+  private_patterns: "international|legacy|dream medical|la croix|baho|adeline|kanimba|wiwo|\\bmbc\\b|omega|ibimera|\\bttp\\b|shalom|muslims|jesmo|kisangani|de dieu|palotti|karuruma"
+  merge_m: 400           # points closer than this are one hospital
+  # the same hospital under different names; merged whatever the distance (some points are misplaced, e.g.
+  # "Musanze Hospital" tagged in Kigali); the first name's point is the location
+  aliases:
+    - [University Teaching Hospital Of Kigali (CHUK), CHUK]
+    - [Rwamagana Hospital, Rwamagana Level Two Teaching Hospital]
+    - [Ndera Neuropsychiatric Teaching Hospital., Ndera Hospital., National Mental Hospital]
+    - [Rwanda Military Hospital, Military Hospital Kanombe, Kanombe Hospital]
+    - [Ruhengeri Referral Hospital, Ruhengeri Hospital, Musanze Hospital]
+    - [Rutongo Hospital, Hospital Rutongo]
+  # if public + private exceed the MoH count, private hospitals with the smallest building compound (footprint area
+  # within compound_m) become clinics; public ones are kept
+  compound_m: 150
+
+# Daily energy per facility (potential demand: grid-connected, suppressed demand included where measured)
+profiles:
+  hospital:
+    daily_kwh: 825
+    source: "SEforALL, Powering Healthcare in Rwanda (2023), p41: hospitals 825 kWh/day (site surveys of 7 hospitals)"
+  hospital_rural:
+    daily_kwh: 692.6     # 3.346 kWh per bed space per day x 207 beds
+    source: "Nwanya et al. (2016), Int. J. Technology 1:15-25, p15: rural hospitals 3.346 kWh/bed space/day (70 Nigerian
+      hospitals); x 207 beds, the mean Rwandan district hospital in 2023 (R-HMIS: 7,054 beds in 34 district hospitals)"
+  health_centre:
+    daily_kwh: 10.9
+    source: "SEforALL (2023), p43: effective daily demand of health centres 10.9 kWh including suppressed demand
+      (5.2 kWh observed)"
+  health_post:
+    daily_kwh: 2.9
+    source: "SEforALL (2023), p42: effective daily demand of health posts 2.9 kWh (2.1 observed)"
+  clinic:
+    daily_kwh: 10.9
+    source: "Assumption: a private clinic uses about what a health centre does (SEforALL's 10.9 kWh/day); no source
+      measures Rwandan clinics"

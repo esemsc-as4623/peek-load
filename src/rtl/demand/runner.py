@@ -73,20 +73,22 @@ def build_library() -> pd.DataFrame:
 
 
 def derived_profiles(lib: pd.DataFrame) -> pd.DataFrame:
-    """Append scaled copies of built profiles (config/archetypes.yaml `derived`): every energy and power column of
-    the base is multiplied by `factor`, or by the ratio that makes its monthly energy equal the `scale_to` anchor."""
+    """Scaled copies of built profiles (config/archetypes.yaml `derived`): every energy and power column of the
+    base is multiplied by `factor`, or by the ratio that gives `daily_kwh_from` (config/health_facilities.yaml).
+    A derived id equal to its base replaces it. Status: human_reviewed if `signed_off`, else draft."""
     from rtl.settings import load_yaml
 
     spec = load_yaml("archetypes.yaml").get("derived", {})
-    anchors = pd.read_csv(PROCESSED_DIR / "validation_anchors" / "mtf_facility_usage.csv").set_index("evidence_id")
+    health = load_yaml("health_facilities.yaml")["profiles"]
     cols = [c for c in lib.columns if c.startswith(("daily_kwh", "annual_kwh", "coincident_peak", "kwh_day", "w_"))]
     out = lib.set_index("profile_id")
+    built = out.copy()  # scale from the built profile even where a derived id replaces it
     for pid, d in spec.items():
-        base = out.loc[d["base"]].copy()
-        f = (float(anchors.at[d["scale_to"], "value"]) / (base.daily_kwh_mean * 30.4) if "scale_to" in d
+        base = built.loc[d["base"]].copy()
+        f = (float(health[d["daily_kwh_from"]]["daily_kwh"]) / base.daily_kwh_mean if "daily_kwh_from" in d
              else float(d["factor"]))
         base[cols] = base[cols].astype(float) * f
-        base["status"] = "draft"
+        base["status"] = "human_reviewed" if d.get("signed_off") else "draft"
         out.loc[pid] = base
         print(f"{pid}: derived from {d['base']} x {f:.2f} -> {base.daily_kwh_mean:.1f} kWh/day per unit")
     return out.reset_index()

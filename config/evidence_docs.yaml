@@ -80,6 +80,16 @@ documents:
     rwanda_specific: true
     role: evidence  # measured daily consumption of hospitals, health centres and health posts (site surveys, 2023)
     status: verified
+  - doc_id: nwanya_2016_hospital_energy
+    title: "Energy Performance Indices for Hospital Buildings in Nigeria"
+    publisher: International Journal of Technology 1, 15-25 (Nwanya, Sam-Amobi, Ekechukwu)
+    year: 2016
+    url: https://ijtech.eng.ui.ac.id/download/article/1569
+    licence: open-access journal article (cited, not redistributed)
+    topics: [consumption]
+    rwanda_specific: false
+    role: evidence  # 3.346 kWh per bed space per day in rural hospitals (70 hospitals surveyed): the rural hospital profile
+    status: verified
   - doc_id: rphc5_main_indicators
     title: Fifth Rwanda Population and Housing Census 2022 (RPHC5) Main Indicators Report
     publisher: NISR

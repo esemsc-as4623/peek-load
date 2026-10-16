@@ -102,10 +102,27 @@ pending_decisions_2026_10_15:
     Still open: P5 hospitals (and with it P9, the derived health-centre and hospital profiles). The bar_rural
     recipe and the workshop_rural mapping follow the owner's decision; their numbers are in config/archetypes.yaml.
 
+health_facilities:
+  decision: approved
+  date: 2026-10-16
+  by: repo owner
+  scope: >-
+    P5/P9: SEforALL's 2023 measured consumption per facility type (hospital 825, health centre 10.9, health post 2.9
+    kWh/day) with the Ministry of Health's 2023 counts; only the 63 named hospitals are hospitals (healthsites points
+    curated by config/health_facilities.yaml), other tagged "hospitals" re-typed as clinics; rural hospitals at
+    Nwanya et al. (2016)'s 3.346 kWh per bed per day; REG's 22.7 GWh sold to health facilities in 2023 as the check.
+  note: >-
+    The private-clinic profile (= a health centre) and the name rules are the assistant's implementation; the
+    derived health profiles are marked human_reviewed by `signed_off` in config/archetypes.yaml.
+
+release:
+  note: >-
+    2026-10-16: the owner asked for the final dataset to be prepared for Hugging Face. Upload private first; making
+    it public waits for the licence review below and the team name in CITATION.cff.
+
 # Not yet approved (recorded so nothing is mistaken for a sign-off):
 # - evidence rows added after ee90948 (11 curated Power Africa Rwanda values): covered by the automated checks only
 # - config/productive_use.yaml: eligibility (>= 30 m2, roadside 100 m for mills) and candidate weights
 # - the grid-connection model itself (rtl.demand.grid_connection: features, logistic); applied to demand by the owner's A9 decision
-# - derived profiles health_centre (scaled to MTF centres) and hospital (10 x a health centre, an assumption)
 # - config/services.yaml (2026-10-13): section I split 97% bars/restaurants / 3% accommodation, section S 60% salons
 #   (P1 decided only the rural bar profile; the splits await NISR activity detail)

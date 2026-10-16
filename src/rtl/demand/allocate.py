@@ -161,6 +161,12 @@ def load_inputs(con, cfg: dict) -> pd.DataFrame:
     df = df.merge(probs, on="bldg_id", how="left")
     df = context_flags(df, map_cfg)  # adds urban / rich (superseded by the census setting and the DHS split)
     df = df.merge(facility_sites(con, cfg), on="bldg_id", how="left")
+    # P5: curated hospitals (units join their hospital's compound; other tagged "hospitals" are clinics)
+    hc = pd.read_csv(PROCESSED_DIR / cfg["registries"]["hospitals"]).set_index("facility_id")
+    role = df.facility_id.map(hc.role)
+    df.loc[role == "clinic", "fac_profile"] = "clinic"
+    df.loc[role.isin(["hospital", "unit"]), "fac_profile"] = "hospital"
+    df["facility_id"] = df.facility_id.map(hc.canonical_id).fillna(df.facility_id)
     return df
 
 
@@ -180,6 +186,9 @@ def targets(cfg: dict) -> dict[str, pd.Series]:
     out["registry:school"] = sch.schools
     w = cfg["registries"]["worship"]
     out["registry:church"] = hh.households_total / hh.households_total.sum() * w["national"]
+    moh = load_yaml("health_facilities.yaml")["counts_2023"]
+    for prof, k in (("health_centre", "health_centres"), ("health_post", "health_posts"), ("clinic", "clinics")):
+        out[f"registry:{prof}"] = hh.households_total / hh.households_total.sum() * moh[k]
     return {k: v.round().astype(int) for k, v in out.items()}
 
 
@@ -275,6 +284,9 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     #    x the district's urban and rural buildings, minus tagged ones; the classifier picks the buildings
     inst_ok = big & (df.area_m2 >= cfg["registries"]["school_min_area_m2"])
     place("registry:school", "school", inst_ok, pcal.institutional, "institutional")
+    health_ok = big & (df.area_m2 >= cfg["registries"]["health_min_area_m2"])
+    for prof in ("health_centre", "clinic", "health_post"):
+        place(f"registry:{prof}", prof, health_ok, pcal.institutional, "institutional")
     place("registry:church", cfg["registries"]["worship"]["profile"], big, pcal.religious, "religious")
     rates = setting_rates(df)
     for cls, prof in cfg["uncensused"].items():
@@ -315,8 +327,13 @@ def allocate(df: pd.DataFrame, cfg: dict, tgt: dict[str, pd.Series], factors: pd
     use[home & use.isna()] = "residential"
     source[home & source.isna()] = "census"
     # rural variants of profiles (P1: rural bars are lighter than town bars)
+    # a facility compound takes the setting of most of its share, so it keeps one profile
+    rural = df.setting == "rural"
+    compound = df.facility_id.where(est_w < 1)
+    share = (est_w * rural).groupby(compound).sum() / est_w.groupby(compound).sum()
+    rural = rural.where(compound.isna(), compound.map(share) >= 0.5)
     for prof, rural_prof in cfg.get("rural_profiles", {}).items():
-        est[(est == prof) & (df.setting == "rural")] = rural_prof
+        est[(est == prof) & rural] = rural_prof
     # 6. the rest
     use[use.isna()], source[source.isna()] = "ancillary", "remainder"
     est_w[est.isna()] = np.nan

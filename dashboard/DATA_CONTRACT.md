@@ -298,5 +298,6 @@ pixi run test                            # includes bundle formula and integrity
   `profile_p10/p90`, `combined_p10/p90`, `base`) from `pixi run demand-sensitivity`.
 - Household energy in every weight is scaled to REG means by region (`building_profiles.scale`), so `annual_kwh` and
   the hourly curves already include it.
-- Profiles `health_centre` and `hospital` are scaled copies of `health_post` (draft); their appliance lists are the
-  base profile's.
+- Health profiles (`health_post`, `health_centre`, `hospital`, `hospital_rural`, `clinic`) are scaled copies of the
+  appliance-built health facility at SEforALL's measured daily energy (Nwanya et al. 2016 per bed for rural
+  hospitals); their appliance lists are the base profile's.

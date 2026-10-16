@@ -59,3 +59,25 @@ def test_statistics_rows_take_the_table_not_the_contents_and_read_dashes_as_miss
     r = rows(block(t, "Table 7.4: Electricity consumption", "Source: REG"), ["Hotels", "Health facilities"], 3)
     assert r["Hotels"] == [31007535.09, 45367013.86, 51329016.27]
     assert r["Health facilities"] == [17313952.23, None, 22654693.01]
+
+
+def test_hospital_curation_merges_units_aliases_and_fills_to_the_count():
+    import pandas as pd
+
+    from rtl.ingest.hospitals import curate
+
+    cfg = {"counts_2023": {"hospitals": 3}, "hospitals": {
+        "unit_patterns": "laboratory", "clinic_patterns": r"\beye\b", "private_patterns": "omega|legacy",
+        "merge_m": 400, "aliases": [["Ruhengeri Referral Hospital", "Musanze Hospital"]], "compound_m": 150}}
+    f = pd.DataFrame({"facility_id": list("abcdefg"),
+                      "name": ["Ruhengeri Referral Hospital", "Musanze Hospital", "Kibogora Hospital",
+                               "Kibogora Hospital Laboratory", "Kabgayi Eye Hospital", "Omega Hospital",
+                               "Legacy Hospital"],
+                      "lat": [-1.50, -1.97, -2.30, -2.3001, -2.1, -1.95, -1.96],
+                      "lon": [29.63, 30.16, 29.20, 29.2001, 29.75, 30.06, 30.10]})
+    out = curate(f, cfg, pd.Series({"f": 9000.0, "g": 5000.0})).set_index("facility_id")
+    assert out.at["b", "canonical_id"] == "a"            # misplaced alias joins the first name's hospital
+    assert out.at["d", "role"] == "unit" and out.at["d", "canonical_id"] == "c"
+    assert out.at["e", "role"] == "clinic"
+    assert out.at["f", "role"] == "hospital" and out.at["g", "role"] == "clinic"   # one private place left: largest
+    assert out[out.role == "hospital"].canonical_id.nunique() == 3
