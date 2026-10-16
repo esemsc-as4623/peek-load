@@ -3,8 +3,8 @@ version: v1.0.0
 title: "Rooftops to Load Curves: building-level electricity demand for Rwanda"
 pretty_name: Rooftops to Load Curves (Rwanda)
 # Hugging Face dataset repository. The owner sets the namespace (user or organisation) before uploading.
-hf_repo: "[HF NAMESPACE]/rooftops-to-load-curves-rwanda"
-private: true            # upload private first; make public after the licence review (human gate)
+hf_repo: "arushisinha98/peek-load"
+private: false
 out_dir: data/release    # gitignored like the rest of data/
 
 licence:
