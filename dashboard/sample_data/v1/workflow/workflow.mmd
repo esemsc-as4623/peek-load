@@ -62,9 +62,9 @@ flowchart LR
   end
   subgraph demand["Demand modelling"]
     builder["B1 archetype builder"]
-    signoff{{"Archetype sign-off (human, 2026-10-12)"}}
+    signoff{{"Archetype assumptions (human)"}}
     t_archetypes[("17 archetypes (signed off) + 2 derived health profiles (draft)")]
-    mapping_approval{{"Allocation rules (human, signed off 2026-10-15)"}}
+    mapping_approval{{"Allocation assumptions (human)"}}
     use_model["B2a use classifier (tags; tags + LLM)"]
     t_useprobs[("use_probs (8 class probabilities per building)")]
     pu_demand["B3 productive-use census targets + tags"]

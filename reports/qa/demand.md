@@ -1,7 +1,7 @@
 # QA: demand
 **PASS**
 
-- checked: 2026-10-16 12:17 UTC
+- checked: 2026-10-16 18:36 UTC
 - archetypes: 23
 
 | id set | ids | missing vs archetype JSON | extra |
@@ -17,7 +17,7 @@
 
 | check | result | detail |
 |---|---|---|
-| weights non-negative and present | PASS | 0 bad of 3,523,758 |
+| weights non-negative and present | PASS | 0 bad of 3,523,876 |
 | library daily kWh > 0 | PASS | 23 profiles |
 | archetype status matches approvals | PASS | ['human_reviewed'] vs ['human_reviewed'] |
 | allocation: every district's establishments = census target (tagged + assigned + shortfall) | PASS | 480 district x item rows; shortfall 0; tags above target in 12 rows |
@@ -33,6 +33,6 @@
 | calibration: households' mean P(connected) = EICV7 2024 grid share in every district (+-0.005) | PASS | largest gap 0.0000 |
 | allocation: tagged institutions, worship, stores and ancillary keep their tag (pharmacies are shops) | PASS | 0 changed of 36,048 tagged buildings |
 | allocation: share of buildings carrying demand is plausible (40-75%) | PASS | 54.2% (census: 0.52 households per building) |
-| allocation: establishments respect the spacing caps (relaxed caps used for <= 10%) | PASS | 14,903 of 208,823 census-placed establishments sit above their cell's base cap (7.1%) |
+| allocation: establishments respect the spacing caps (relaxed caps used for <= 10%) | PASS | 14,895 of 208,889 census-placed establishments sit above their cell's base cap (7.1%) |
 | use classifier B ranks held-out uses (macro AUC >= 0.70 on tags; ancillary AUC >= 0.70 by sector) | PASS | 0.778; 0.820 |
 | grid model: one probability in [0, 1] per building | PASS | 6,434,247 of 6,434,247 |

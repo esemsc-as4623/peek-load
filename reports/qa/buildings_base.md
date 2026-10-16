@@ -2,7 +2,7 @@
 **PASS**
 
 - file: `buildings_base.parquet`
-- checked: 2026-10-16 12:16 UTC
+- checked: 2026-10-16 18:36 UTC
 - rows: 6,434,247
 - duplicate `bldg_id`: 0
 - schema: PASS (random sample of 200,000)
