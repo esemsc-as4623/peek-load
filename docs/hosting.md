@@ -39,7 +39,7 @@ If the server runs a firewall: `sudo ufw allow 80,443/tcp`.
 Replace the contents of `/etc/caddy/Caddyfile` with (change the domain):
 
 ```caddy
-peekload.example.org {
+peekload.rwa.org {
 	encode zstd gzip
 
 	# data: no directory listings, long cache (the folder is versioned: v1, v2, ...)
@@ -89,20 +89,17 @@ server rewrite rules are needed.
 When the data changes in a way that old pages can't read, upload it as `data/v2/` and build with
 `VITE_DATA_BASE=/data/v2`, so cached copies never mix versions.
 
-## About "not downloadable"
+## Privacy & Distribution
 
 The site has no download links or exports, the server does not list directories, and the rule above refuses
-data files opened directly in the browser. That keeps casual downloading off the site. It cannot stop a
-determined visitor: anything a browser draws (the JSON behind the maps, the figures) has been sent to that
-browser and can be saved from its developer tools. Only publish what you are content for people to have,
-which is why the files hold aggregates and modelled values only (no survey microdata, no cluster locations,
-cells under 10 respondents suppressed).
+data files opened directly in the browser. Please do not try to save the data using developer tools. 
+We have chosen to publish what we are content for people to browse, which is why the files hold aggregates 
+and modelled values only (no survey microdata, no cluster locations, cells under 10 respondents suppressed).
 
 ## Licences on the public site
 
 The site is non-commercial, as Meta's Relative Wealth Index (CC-BY-NC-4.0) requires. The footers credit
-OpenStreetMap contributors (ODbL), the footprint providers, Copernicus and the other CC-BY sources; keep
-them when changing pages.
+OpenStreetMap contributors (ODbL), the footprint providers, Copernicus and the other CC-BY sources.
 
 ## nginx instead of Caddy
 
