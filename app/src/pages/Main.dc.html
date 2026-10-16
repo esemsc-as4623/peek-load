@@ -39,7 +39,6 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
     <section aria-label="How to read this" style="display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 16px 20px; border-radius: 12px; background: #f4f3ef; border: 1px solid #e4e3df; font-size: 15px; line-height: 22px; color: #3d3c39;">
       <div style="flex: 1 1 260px;"><strong style="color: #0b0b0b;">What this estimates.</strong> For each building: use type, a 24-hour load curve, peak load, annual energy, cooling category and a productive-use score.</div>
       <div style="flex: 1 1 260px;"><strong style="color: rgb(11, 11, 11)">Potential and expected demand.</strong> Potential: every building grid-connected, at 2022 appliance ownership (World Bank MTF), with household energy scaled to REG consumption. Expected: households × their probability of a grid connection, matched to EICV7 2024 per district.</div>
-      <div style="flex: 1 1 260px;"><strong style="color: #0b0b0b;">How sure.</strong> Each page and section carries a status: Built = validated with external sources; Draft = no validation method yet; In progress = data being acquired or processed; Planned = future work. Most of the model is Draft until the Validation page is rebuilt.</div>
     </section>
 
     <section aria-label="National map" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
@@ -129,7 +128,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
             </div>
           </sc-for>
           <div style="display: flex; flex-direction: column; gap: 6px;">
-            <div style="font-size: 13px; color: #52514e;">Environment · mean temperature by hour (°C, local time)</div>
+            <div style="font-size: 13px; color: #52514e;">Environmental · mean temperature by hour (°C, local time)</div>
             <div style="position: relative; width: 100%;"><svg viewBox="0 0 260 90" role="img" aria-label="Diurnal temperature curve of the selected cell" style="width: 100%; height: auto; display: block;">
               <line x1="0" y1="80" x2="260" y2="80" stroke="#e4e3df"></line>
               <path d="{{selCurve}}" fill="none" stroke="#eb6834" style="stroke-width: 2.4;"></path>
@@ -377,7 +376,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { nat: null, site: null, layer: 'cool', sel: null, sortKey: 'n', sortDir: -1, err: null };
+    this.state = { nat: null, site: null, layer: 'demandE', sel: null, sortKey: 'n', sortDir: -1, err: null };
     const BLUE = ['#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'];
     const ORANGE = ['#fde8dc', '#f9c3a3', '#f39a6b', '#eb6834', '#c94f1f', '#9a3a14', '#6b270c'];
     const PURPLE = ['#efe8f8', '#d9c9ef', '#bfa5e3', '#a07fd4', '#7a4fb5', '#5c3592', '#3f226a'];
@@ -412,10 +411,10 @@ class Component extends DCLogic {
         pg: { label: 'Grid connection', title: 'Predicted probability of a grid connection (mean over buildings)', kind: 'num', field: 'pg', t: [0.2, 0.35, 0.5, 0.65, 0.8, 0.9], ramp: TEAL, unit: '', source: 'Logistic model trained on DHS 2025 households (draft)' }
       },
       GROUPS: [
-        ['Environment', ['t2m', 'tmax', 'cdd22', 'cool', 'ghi', 'rh', 'rain']],
+        ['Energy & grid', ['demandE', 'demand', 'e30', 'growth', 'pg', 'ntl', 'grid']],
         ['Built & social', ['n', 'pop', 'hh', 'urb', 'schools']],
         ['Economic', ['rwi', 'puR', 'puL', 'svR', 'svL']],
-        ['Energy & grid', ['grid', 'ntl', 'pg', 'demand', 'demandE', 'growth', 'e30']]
+        ['Environmental', ['t2m', 'tmax', 'cdd22', 'cool', 'ghi', 'rh', 'rain']]
       ],
       OURS: { cool: 1, tmax: 1, cdd22: 1, hh: 1, puL: 1, svL: 1, pg: 1, demand: 1, demandE: 1, growth: 1, e30: 1 },
       USE: { residential: '#2a78d6', mixed_shop_house: '#6250d6', commercial: '#eb6834', productive_use: '#eda100', institutional: '#1baf7a', religious: '#e87ba4', industrial_warehouse: '#008300', ancillary: '#c9c8c3', unknown: '#ecebe7' },
@@ -503,14 +502,12 @@ class Component extends DCLogic {
         const nv = v => v === null || v === undefined;
         const R = (k, v, ours) => ({ k, v, dot: ours ? '#3d3c39' : 'none' });
         selGroups = [
-          { label: 'Environment', rows: [
-            R('Mean temperature', this.fmt(h.t2m, 1) + ' °C'),
-            R('Hot days (tmax p95)', this.fmt(h.tmax, 1) + ' °C', 1),
-            R('Cooling degree-days (22 °C)', this.fmt(h.cdd22, 0) + ' /yr', 1),
-            R('Cooling category', h.cool ? h.cool.charAt(0).toUpperCase() + h.cool.slice(1) : '–', 1),
-            R('Solar GHI', this.fmt(h.ghi, 2) + ' kWh/m²/day'),
-            R('Humidity · rainfall', this.fmt(h.rh, 0) + '% · ' + this.fmt(h.rain, 0) + ' mm/yr'),
-            R('Elevation', this.fmt(h.elev, 0) + ' m') ] },
+          { label: 'Energy & grid', rows: [
+            R('Distance to MV grid', this.fmt(h.grid, 0) + ' m'),
+            R('Night lights 2016 → 2024', nv(h.ntl24) ? '–' : this.fmt(h.ntl16, 2) + ' → ' + this.fmt(h.ntl24, 2) + ' nW/cm²/sr (' + this.fmt(100 * (h.lit24 || 0), 0) + '% lit)'),
+            R('Grid connection (model)', nv(h.pg) ? '–' : this.fmt(h.pg * 100, 0) + '% of buildings', 1),
+            R('Potential demand', h.nmod ? this.fmt(h.mwh, 0) + ' MWh/yr (' + this.fmt(h.nmod, 0) + ' buildings)' : '–', 1),
+            R('Expected demand', nv(h.mwhE) ? '–' : this.fmt(h.mwhE, 0) + ' MWh/yr', 1) ] },
           { label: 'Built & social', rows: [
             R('Buildings', this.fmt(h.n, 0)),
             R('Population density', this.fmt(h.pop, 0) + ' /km²'),
@@ -521,12 +518,14 @@ class Component extends DCLogic {
             R('Productive-use buildings', this.fmt(h.puB || 0, 0), 1),
             R('Productive use · district census', this.fmt(dist.puR, 0) + ' establishments'),
             R('Service buildings', this.fmt(h.svB || 0, 0), 1) ] },
-          { label: 'Energy & grid', rows: [
-            R('Distance to MV grid', this.fmt(h.grid, 0) + ' m'),
-            R('Night lights 2016 → 2024', nv(h.ntl24) ? '–' : this.fmt(h.ntl16, 2) + ' → ' + this.fmt(h.ntl24, 2) + ' nW/cm²/sr (' + this.fmt(100 * (h.lit24 || 0), 0) + '% lit)'),
-            R('Grid connection (model)', nv(h.pg) ? '–' : this.fmt(h.pg * 100, 0) + '% of buildings', 1),
-            R('Potential demand', h.nmod ? this.fmt(h.mwh, 0) + ' MWh/yr (' + this.fmt(h.nmod, 0) + ' buildings)' : '–', 1),
-            R('Expected demand', nv(h.mwhE) ? '–' : this.fmt(h.mwhE, 0) + ' MWh/yr', 1) ] }
+          { label: 'Environmental', rows: [
+            R('Mean temperature', this.fmt(h.t2m, 1) + ' °C'),
+            R('Hot days (tmax p95)', this.fmt(h.tmax, 1) + ' °C', 1),
+            R('Cooling degree-days (22 °C)', this.fmt(h.cdd22, 0) + ' /yr', 1),
+            R('Cooling category', h.cool ? h.cool.charAt(0).toUpperCase() + h.cool.slice(1) : '–', 1),
+            R('Solar GHI', this.fmt(h.ghi, 2) + ' kWh/m²/day'),
+            R('Humidity · rainfall', this.fmt(h.rh, 0) + '% · ' + this.fmt(h.rain, 0) + ' mm/yr'),
+            R('Elevation', this.fmt(h.elev, 0) + ' m') ] }
         ];
         if (h.t) {
           const mn = Math.min.apply(null, h.t), mx = Math.max.apply(null, h.t);

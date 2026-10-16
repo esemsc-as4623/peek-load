@@ -170,7 +170,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
           <div style="font-size: 12px; line-height: 17px; color: #52514e;">Footprints: VIDA (Google + Microsoft + OSM) · fixed legend limits · © OpenStreetMap contributors</div>
         </div>
 
-        <aside aria-label="Building or selection details" style="flex: 2 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+        <aside aria-label="Building or selection details" style="flex: 2 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain;">
           <sc-if value="{{noBuilding}}" hint-placeholder-val="{{true}}">
             <div style="display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
               <h2 style="margin: 0; font-size: 18px; line-height: 24px;">Building details</h2>
@@ -290,7 +290,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
 <sc-for list="{{bd.pu}}" as="p" hint-placeholder-count="6"><div aria-hidden="true" style="position: absolute; left: calc(0 * 100% / 400); top: calc({{p.ty}} * 100% / 176); transform: translate(0, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 12px; color: #3d3c39;">{{p.label}}</div></sc-for>
 <sc-for list="{{bd.pu}}" as="p" hint-placeholder-count="6"><div aria-hidden="true" style="position: absolute; left: calc(358 * 100% / 400); top: calc({{p.ty}} * 100% / 176); transform: translate(0, -80%); line-height: 1; white-space: nowrap; pointer-events: none; font-size: 12px; color: #0b0b0b; font-weight: 600;">{{p.v}}</div></sc-for>
 </div>
-                  <div style="font-size: 12px; line-height: 17px; color: #52514e;">score = 100 × √likelihood × weighted mean of the enabling conditions (market 0.30, customers 0.20, grid 0.30, ability to pay 0.15, agriculture 0.05; missing ones dropped).</div>
+                  <div style="font-size: 12px; line-height: 17px; color: #52514e;">score = 100 × weighted mean of the criteria (missing ones dropped). Town trades and rural workshops: market access 0.30, customers 0.25, grid 0.20, ability to pay 0.15, building size 0.25. Grain mills: agricultural context 0.30, market access 0.25, grid 0.20, building size 0.30, customers 0.10.</div>
                 </div>
               </sc-if>
 
@@ -298,9 +298,9 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
                 <sc-for list="{{bd.sections}}" as="sec" hint-placeholder-count="3">
                   <div style="display: flex; flex-direction: column; gap: 4px;">
                     <h3 style="margin: 0; font-size: 15px;">{{sec.title}}</h3>
-                    <dl style="margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; font-size: 13px; line-height: 18px;">
+                    <dl style="margin: 0; display: grid; grid-template-columns: minmax(130px, 0.9fr) minmax(0, 1.1fr); font-size: 13px; line-height: 18px;">
                       <sc-for list="{{sec.rows}}" as="row" hint-placeholder-count="8">
-                        <dt style="color: #52514e;">{{row.k}}</dt><dd style="margin: 0; text-align: right;">{{row.v}}</dd>
+                        <dt style="padding: 5px 10px 5px 0; border-bottom: 1px solid #efeee9; color: #52514e;">{{row.k}}</dt><dd style="margin: 0; padding: 5px 0; border-bottom: 1px solid #efeee9; text-align: right; overflow-wrap: anywhere;">{{row.v}}</dd>
                       </sc-for>
                     </dl>
                   </div>
@@ -349,7 +349,7 @@ class Component extends DCLogic {
       USE: { residential: '#2a78d6', commercial: '#eb6834', institutional: '#1baf7a', productive_use: '#eda100', religious: '#e87ba4', industrial_warehouse: '#008300', mixed_shop_house: '#6250d6', ancillary: '#c9c8c3' },
       USE_NAMES: { residential: 'Home', commercial: 'Shop / service', institutional: 'Institution', productive_use: 'Productive use', religious: 'Worship', industrial_warehouse: 'Store / warehouse', mixed_shop_house: 'Shop-house', ancillary: 'Ancillary (no load)' },
       SRC: { google: '#2a78d6', microsoft: '#eb6834', osm: '#1baf7a' },
-      COLOURS: [['use', 'Allocated use', 1], ['pk', 'Peak load', 1], ['kwh', 'Annual energy', 1], ['cool', 'Cooling category', 1], ['pu', 'PU candidate score', 1], ['label', 'LLM label', 1], ['conf', 'Label confidence', 1], ['h', 'Height', 0], ['yr', 'First seen', 0], ['src', 'Footprint source', 0]],
+      COLOURS: [['use', 'Allocated use', 1], ['pk', 'Peak load', 1], ['kwh', 'Annual energy', 1], ['cool', 'Cooling category', 1], ['pu', 'PU candidate score', 1], ['label', 'LLM label', 1], ['h', 'Height', 0], ['yr', 'First seen', 0], ['src', 'Footprint source', 0]],
       BINS: { kwh: [100, 200, 300, 400, 600, 1000], pk: [25, 50, 75, 100, 150, 300], conf: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8], h: [3, 4, 5, 6, 9, 12], yr: [2017, 2018, 2019, 2020, 2021, 2022] },
       UNITS: { kwh: ' kWh/yr', pk: ' W', conf: '', h: ' m', yr: '' }
     };
@@ -536,7 +536,7 @@ class Component extends DCLogic {
     out.vb = d.viewBox.join(' ');
     out.buildings = d.buildings.map(b => ({
       d: b.d, fill: this.colourFor(b), stroke: s.sel === b.id ? '#0b0b0b' : '#ffffff', sw: s.sel === b.id ? 1.8 : 0.3,
-      pick: () => this.setState({ sel: b.id })
+      pick: () => { const y = window.scrollY; this.setState({ sel: b.id }, () => window.scrollTo(0, y)); }
     }));
     const colourName = C.COLOURS.find(c => c[0] === s.colourBy)[1].toLowerCase();
     out.colourTitle = colourName;
@@ -605,9 +605,7 @@ class Component extends DCLogic {
           { k: 'First seen (exp.)', v: x.height.first_seen_year ?? '–' },
           { k: 'QA flags', v: x.footprint.qa_flags.length ? x.footprint.qa_flags.join(', ') : 'none' },
           { k: 'Household wealth group', v: !x.allocation || !x.allocation.households ? 'no households' : x.allocation.upper_wealth === true ? 'upper (DHS share for the district)' : x.allocation.upper_wealth === false ? 'lower' : '–' },
-          { k: 'Share of facility compound', v: x.allocation && x.allocation.establishment_share !== null && x.allocation.establishment_share !== undefined ? (x.allocation.establishment_share >= 0.999 ? 'whole facility' : '1/' + Math.round(1 / x.allocation.establishment_share) + ' of a compound') : '–' },
-          { k: 'Expected kWh/yr by year', v: (() => { const by = x.expected && x.expected.annual_kwh_by_year; if (!by) return '–'; const ks = Object.keys(by).sort(); const f = v => this.fmt(v, v < 10 ? 2 : 0); return ks.filter((k, i) => i === 0 || k === '2019' || i === ks.length - 1).map(k => k + ': ' + f(by[k])).join(' · '); })() },
-          { k: 'Early years', v: x.expected && x.expected.annual_kwh_by_year ? 'weighted by presence in imagery (fractions for later-built buildings)' : '–' }
+          { k: 'Expected kWh/yr by year', v: (() => { const by = x.expected && x.expected.annual_kwh_by_year; if (!by) return '–'; const ks = Object.keys(by).sort(); const f = v => this.fmt(v, v < 10 ? 2 : 0); return ks.filter((k, i) => i === 0 || k === '2019' || i === ks.length - 1).map(k => k + ': ' + f(by[k])).join(' · '); })() }
         ],
         context: [
           { k: 'To major road', v: this.fmt(x.context.dist_road_major_m, 0) + ' m' },

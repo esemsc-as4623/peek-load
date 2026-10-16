@@ -1,11 +1,12 @@
 """Copy the design canvas's pages into app/src/pages and lay out the data folder for the server.
 
 Usage:
-    python app/scripts/sync_canvas.py PAGES_DIR BLOBS_DIR [--data-out data/dashboard/app_v1]
+    python app/scripts/sync_canvas.py PAGES_DIR [BLOBS_DIR] [--data-out data/dashboard/app_v1]
 
-PAGES_DIR holds the canvas's project/*.dc.html files; BLOBS_DIR holds the canvas uploads as
-<id>.json / <id>.png (both come from reading the canvas). Upload links (/_blob/<id>) become
-'@data/<name>' links that the site resolves against VITE_DATA_BASE. Fails on an unknown data id.
+PAGES_DIR holds the canvas's project/*.dc.html files (read from the canvas). Upload links (/_blob/<id>) become
+'@data/<name>' links that the site resolves against VITE_DATA_BASE; it fails on an unknown data id.
+The data itself comes from the pipeline: `pixi run site-data` writes data/dashboard/app_v1. Pass BLOBS_DIR (the
+canvas uploads as <id>.json / <id>.png) only to copy the canvas's own data files there instead.
 """
 import argparse
 import hashlib
@@ -16,11 +17,11 @@ from pathlib import Path
 
 APP = Path(__file__).resolve().parents[1]
 SKIP = {"DesignSystem.dc.html"}  # the design sheet is for the canvas only
-# wording fixes that only apply to the public site
+# site-only edits: drop the canvas's Design system tab; fill the citation's team name if the canvas still has it
 FIXES = {
-    "Nav.dc.html": [("      ['design', 'Design system', 'DesignSystem.dc.html', '']\n", ""),
-                    ("['validation', 'Validation & quality', 'Validation.dc.html', 'in_progress'],",
-                     "['validation', 'Validation & quality', 'Validation.dc.html', 'in_progress']")],
+    "Nav.dc.html": [(r",\s*\['design', 'Design system', 'DesignSystem\.dc\.html', '[^']*'\]", "", True)],
+    "Sources.dc.html": [(r"\[TEAM NAME\] \(2026\)", "Peek Load (2026)", False),
+                        (r"for Rwanda, sample data bundle v1\.", "for Rwanda, data bundle v1.", False)],
 }
 
 
@@ -32,7 +33,7 @@ def slug(text, n=6):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("pages_dir", type=Path)
-    ap.add_argument("blobs_dir", type=Path)
+    ap.add_argument("blobs_dir", type=Path, nargs="?")
     ap.add_argument("--data-out", type=Path, default=APP.parent / "data/dashboard/app_v1")
     a = ap.parse_args()
     names = {k: v for k, v in json.loads((APP / "data-map.json").read_text()).items() if not k.startswith("_")}
@@ -58,12 +59,15 @@ def main():
             used[bid] = names[bid]
             return "@data/" + names[bid]
         s = re.sub(r"/_blob/([0-9a-f]{32})", other, s)
-        for old, new in FIXES.get(page.name, []):
-            if old not in s:
-                raise SystemExit(f"{page.name}: expected text not found: {old!r}")
-            s = s.replace(old, new)
+        for pattern, new, required in FIXES.get(page.name, []):
+            s, n = re.subn(pattern, new, s)
+            if required and not n:
+                raise SystemExit(f"{page.name}: expected text not found: {pattern!r}")
         (out_pages / page.name).write_text(s)
         print("page", page.name)
+    if a.blobs_dir is None:
+        print("pages only; site data comes from `pixi run site-data`")
+        return
     manifest = {}
     for bid, name in sorted(used.items(), key=lambda x: x[1]):
         src = next(a.blobs_dir.glob(bid + ".*"), None)

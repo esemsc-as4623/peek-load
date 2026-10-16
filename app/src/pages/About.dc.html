@@ -20,8 +20,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
   </div>
   <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
     <header style="display: flex; flex-direction: column; gap: 6px; max-width: 900px;">
-      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">The Challenge · about, methods and limitations</span>
-        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span></div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">The Challenge · about and methods</span></div>
       <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Rooftops → Load Curves</h1>
       <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">An entry to the OSEAS26 hackathon, EnAccess challenge "From building footprints to energy demand", set in Rwanda: an end-to-end, reproducible GIS workflow and the building-level dataset it produces.</p>
     </header>
@@ -86,6 +85,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
           <li>NISR activity detail (ISIC4) to replace the assumed trade and service splits; night lights as a model feature.</li>
           <li>The productive-use trade mix by setting from a census or survey source (now the owner's rule), and field checks of candidates.</li>
           <li>Single-building instantaneous peaks; a floor-count regression; off-grid and solar variants.</li>
+          <li>Appliance counts that scale with building footprint area (light bulbs, power outlets), so large homes, shops and institutions get realistic numbers.</li>
           <li>GeoParquet / PostGIS release and national vector tiles (PMTiles).</li>
         </ul>
       </div>
@@ -94,23 +94,6 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
         <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Built by Peek Load.<br process-adn="1792079773658"><i>With assistance from AI. Refer to the AI use declaration in our repository.<br process-adn="1792079784766"></i><a href="https://github.com/esemsc-as4623/peek-load"><br process-adn="1792079777789">github.com/esemsc-as4623/peek-load</a> · contact: as4623@ic.ac.uk</p>
         
       </div>
-    </section>
-
-    <section aria-label="Known limitations" style="display: flex; flex-direction: column; gap: 10px; padding: 20px 24px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
-      <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Known limitations</h2>
-      <ol style="margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 22px; color: #3d3c39;">
-        <li>Google 2.5D heights are compressed: single-storey buildings read ~4–5 m, so floors above 2 are unreliable.</li>
-        <li>First-seen year has artefacts (jumps in 2019 and 2023); it is experimental.</li>
-        <li>Use labels come from open vector data only and agree with human labels ~40% of the time; the human labels are themselves uncertain (the imagery showed little beyond vegetation and roof shape).</li>
-        <li>Microsoft footprints omit structures under ~15 m².</li>
-        <li>Cooling demand is marginal in most of Rwanda; the category is a relative proxy.</li>
-        <li>Labels cover the three deep dives (Muhoza partly) and a national sample.</li>
-        <li>Several business and institution profiles rest on assumptions (signed off by the owner); health facilities follow SEforALL's 2023 measurements and the Ministry of Health's counts (63 hospitals), and match REG's 2023 sales (see Validation).</li>
-        <li>A quarter of rural manufacturing establishments are electric grain mills (owner's decision, range 20–30%); the rest are light rural workshops. Which building holds which use is a plausible placement that reproduces the census, not an observation.</li>
-        <li>Rural households in the two wealth halves spend almost the same (~10 kWh/month).</li>
-        <li>Census households are placed on the most likely homes, up to one per floor; which building holds a household is a plausible placement, not an observation.</li>
-        <li>Rural bars use a lighter profile (fridge, TV and radio at MTF's shares for grid household shops); bars in towns keep the bar/restaurant profile.</li>
-      </ol>
     </section>
   </main>
 </div>

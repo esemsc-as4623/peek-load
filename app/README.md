@@ -15,7 +15,8 @@ npm run preview   # serve dist/ locally, with the local data
 ## Data
 
 The pages read their data from `VITE_DATA_BASE` (default `/data/v1`, i.e. the same server). The files are
-not committed; locally they live in `data/dashboard/app_v1/`:
+not committed; `pixi run site-data` (`rtl.dashboard.pack`) packs them from the pipeline's bundle into
+`data/dashboard/app_v1/`, after `pixi run dashboard-data` (full and `--sample`):
 
 | File | What it holds |
 |---|---|
@@ -25,20 +26,16 @@ not committed; locally they live in `data/dashboard/app_v1/`:
 | `profiles.json` | the RAMP profile library |
 | `figures/*.png` | report figures shown on Climate and Validation |
 
-`data-files.json` records the size and sha256 of each, and which canvas upload it came from.
+`data-files.json` records the size and sha256 of each (written by the packer).
 
-## Updating from the canvas
+## Updating
 
-Changes made on the canvas reach the site by copying the pages again:
-
-1. Read the canvas's `project/*.dc.html` files and any uploads they reference into two folders
-   (Claude can do this with the Artifact tool's `read` action).
-2. `python scripts/sync_canvas.py PAGES_DIR UPLOADS_DIR`: copies the pages, rewrites upload links to
-   readable names (`app/data-map.json`; figures are named from their alt text) and refreshes
-   `data/dashboard/app_v1/`. It stops on an upload id it doesn't know: add it to `data-map.json`.
-3. `npm test && npm run build`, then deploy (`docs/hosting.md`).
-
-`sync_canvas.py` also makes the site-only edits: it drops the canvas's Design system tab and fills in the
-citation's team name.
+- **Model or data changed:** rerun the pipeline steps, then `pixi run dashboard-data`,
+  `pixi run dashboard-data --sample` and `pixi run site-data`; `npm test && npm run build`; deploy.
+- **Pages changed on the canvas:** read the canvas's `project/*.dc.html` files into a folder (Claude can do this with
+  the Artifact tool's `read` action), then `python scripts/sync_canvas.py PAGES_DIR`. It copies the pages and rewrites
+  upload links to readable names (`app/data-map.json`; figures are named from their alt text, and
+  `config/dashboard.yaml` `site.figures` says which report figure each name is). It stops on an upload id it doesn't
+  know: add it to `data-map.json`. It also drops the canvas's Design system tab.
 
 Hosting: see [`docs/hosting.md`](../docs/hosting.md).

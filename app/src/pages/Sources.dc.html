@@ -20,8 +20,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
   </div>
   <main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 32px 40px 56px; display: flex; flex-direction: column; gap: 24px;">
     <header style="display: flex; flex-direction: column; gap: 6px; max-width: 900px;">
-      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Data sources and citations</span>
-        <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #6da7ec; background: #e8f1fc; color: #1e4f8f; font-size: 12px; font-weight: 600;">In progress</span></div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #52514e;">Data sources and citations</span></div>
       <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">Input data sources, usage, licence</h1>
       <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Every dataset is declared before it is used and every download is recorded with its checksum and licence. Role says how a source is used: as a model input (feature), as labelling evidence (weak label), as evidence for appliance profiles, or only to check results (validation).</p>
     </header>
@@ -88,7 +87,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
 
       <section aria-label="Evidence documents" style="display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
         <h2 style="margin: 0; font-size: 22px; line-height: 28px;">Evidence documents · {{nDocs}} reports</h2>
-        <p style="margin: 0; font-size: 14px; line-height: 20px; color: #3d3c39;">Read for appliance ownership, power, hours, tariffs and consumption. Every value taken from them carries its page and a quote verified verbatim in code; the Load profiles page shows the quote behind each number.</p>
+        <p style="margin: 0; font-size: 14px; line-height: 20px; color: #3d3c39;">Read for appliance ownership, power, hours, tariffs and consumption. Every value taken from a report carries its page and a quote verified verbatim in code; cited web pages come from the productive-use web research, and their quotes are the research's own sentences. The Load profiles page shows the quote behind each number.</p>
         <div style="overflow-x: auto;">
           <div role="table" aria-label="Evidence documents" style="min-width: 900px; display: grid; grid-template-columns: 2.6fr 1.2fr 0.5fr 1.2fr 0.7fr; font-size: 14px; line-height: 19px;">
             <div role="row" style="display: contents;">
@@ -176,8 +175,8 @@ class Component extends DCLogic {
         status: (d.status || '').replace('_', ' '), files: d.files ? d.files + ' · ' + d.megabytes + ' MB' : '–' };
     });
     out.nShown = out.datasets.length;
-    const docs = src.evidence_documents.filter(d => d.status === 'verified');
-    out.docs = docs.map(d => ({ title: d.title, url: d.url, publisher: d.publisher, year: d.year || '–', licence: d.licence || 'to verify', status: d.status, statusFg: d.status === 'verified' ? '#0b6e4f' : '#52514e' }));
+    const docs = src.evidence_documents.filter(d => d.status === 'verified' || d.status === 'web');
+    out.docs = docs.map(d => ({ title: d.title, url: d.url, publisher: d.publisher, year: d.year || '–', licence: d.licence || 'to verify', status: d.status === 'web' ? 'cited web page' : d.status, statusFg: d.status === 'verified' ? '#0b6e4f' : '#52514e' }));
     out.nDocs = out.docs.length;
     out.citations = Object.values(src.citations || {});
     return out;

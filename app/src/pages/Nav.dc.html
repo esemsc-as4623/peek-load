@@ -46,15 +46,15 @@ class Component extends DCLogic {
   renderVals() {
     const active = this.props.active ?? 'overview';
     const pages = [
-      ['about', 'The Challenge', 'About.dc.html', 'draft'],
+      ['about', 'The Challenge', 'About.dc.html', ''],
       ['profiles', 'Load profiles', 'Profiles.dc.html', 'draft'],
       ['overview', 'Overview', 'Main.dc.html', 'draft'],
       ['sector', 'Sub-district deep dive', 'Sector.dc.html', 'draft'],
       ['climate', 'Climate & cooling', 'Climate.dc.html', 'built'],
       ['productive', 'Productive use', 'Productive.dc.html', 'draft'],
-      ['workflow', 'Workflow in depth', 'Workflow.dc.html', 'in_progress'],
-      ['sources', 'Sources & citations', 'Sources.dc.html', 'in_progress'],
-      ['validation', 'Validation & quality', 'Validation.dc.html', 'in_progress']
+      ['workflow', 'Workflow in depth', 'Workflow.dc.html', ''],
+      ['sources', 'Sources & citations', 'Sources.dc.html', ''],
+      ['validation', 'Validation & quality', 'Validation.dc.html', '']
     ];
     const ST = { built: ['#1baf7a', 'solid', 'Built'], draft: ['#eda100', 'solid', 'Draft'], in_progress: ['#6da7ec', 'solid', 'In progress'], planned: ['#8a8984', 'dashed', 'Planned'] };
     const items = pages.map((p, i) => { const st = ST[p[3]]; return { n: i + 1, id: p[0], label: p[1], href: p[2], active: p[0] === active, inactive: p[0] !== active,

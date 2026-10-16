@@ -29,7 +29,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
 
     <section aria-label="Caveat" style="display: flex; gap: 12px; padding: 14px 18px; border-radius: 12px; background: #fff4d6; border: 1px solid #eda100; font-size: 15px; line-height: 22px; color: #3d3c39;">
       <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: none; margin-top: 2px;"><path d="M10 2l8.5 15h-17z" fill="none" stroke="#6b4a00" stroke-width="1.6" stroke-linejoin="round"></path><path d="M10 8v4M10 14.5v.5" stroke="#6b4a00" stroke-width="1.8" stroke-linecap="round"></path></svg>
-      <div><strong style="color: #0b0b0b;">A plausible placement, not an observation.</strong> The census fixes how many workshops each district has; open data locates only a few dozen. The rest go to the buildings that score highest on the criteria below, so the district totals are right and the pattern is plausible, but any single building should be checked in the field before it is treated as a workshop.</div>
+      <div><strong style="color: #0b0b0b;">A plausible placement, not an observation.</strong> The census fixes how many workshops each district has; open data locates only a few dozen. The rest go to the buildings that score highest on the criteria below, so the district totals are right and the pattern is plausible, but any single building should be checked in the field.</div>
     </section>
 
     <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center;">
@@ -88,8 +88,14 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
             <span style="font-size: 13px; color: #52514e;">{{mixText}}</span>
           </div>
           <svg viewBox="{{vb}}" role="img" aria-label="Map of buildings coloured by prototype productive-use score" style="width: 100%; height: auto; display: block; background: #f7f6f2; border-radius: 8px;">
+            <defs>
+              <pattern id="pu-census-hatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="4" height="4" fill="none"></rect><line x1="0" y1="0" x2="0" y2="4" stroke="#0b0b0b" stroke-width="1.4"></line></pattern>
+            </defs>
             <sc-for list="{{buildings}}" as="bl" hint-placeholder-count="0">
               <path d="{{bl.d}}" fill="{{bl.fill}}" stroke="{{bl.stroke}}" onClick="{{bl.pick}}" style="stroke-width: {{bl.sw}}; stroke-dasharray: {{bl.dash}}; cursor: pointer;"></path>
+            </sc-for>
+            <sc-for list="{{placedPaths}}" as="pp" hint-placeholder-count="0">
+              <path d="{{pp.d}}" fill="url(#pu-census-hatch)" stroke="none" style="pointer-events: none;"></path>
             </sc-for>
           </svg>
           <div style="display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: #3d3c39;">
@@ -98,7 +104,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
             <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#7a5200"></rect></svg>High (≥ 67)</span>
             <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect width="14" height="14" rx="3" fill="#ecebe7"></rect></svg>not eligible</span>
             <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="3" fill="#ffffff" stroke="#256abf" stroke-width="2.4"></rect></svg>tagged trade</span>
-            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><rect x="1" y="1" width="12" height="12" rx="3" fill="#ffffff" stroke="#0b0b0b" stroke-width="1.6"></rect></svg>placed from the census</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="14" height="14" aria-hidden="true"><defs><pattern id="pu-census-hatch-key" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="4" stroke="#0b0b0b" stroke-width="1.4"></line></pattern></defs><rect x="1" y="1" width="12" height="12" rx="3" fill="#eda100" stroke="#0b0b0b" stroke-width="1.6"></rect><rect x="1" y="1" width="12" height="12" rx="3" fill="url(#pu-census-hatch-key)"></rect></svg>placed from the census (hatched)</span>
           </div>
         </div>
       </section>
@@ -157,8 +163,8 @@ class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.DEF = {
-      town: { market_access: 0.30, demand_density: 0.25, grid_proximity: 0.20, ability_to_pay: 0.15, agri_context: 0, building_size: 0.10 },
-      grain_mill: { market_access: 0.25, demand_density: 0.10, grid_proximity: 0.20, ability_to_pay: 0, agri_context: 0.30, building_size: 0.15 }
+      town: { market_access: 0.30, demand_density: 0.25, grid_proximity: 0.20, ability_to_pay: 0.15, agri_context: 0, building_size: 0.25 },
+      grain_mill: { market_access: 0.25, demand_density: 0.10, grid_proximity: 0.20, ability_to_pay: 0, agri_context: 0.30, building_size: 0.30 }
     };
     this.state = { sector: 'nyamirambo', data: {}, w: JSON.parse(JSON.stringify(this.DEF)), group: 'town', sel: null };
     this.C = {
@@ -239,6 +245,7 @@ class Component extends DCLogic {
       return { d: b.d, fill: c ? C.PU[c] : '#ecebe7', stroke: on ? '#0b0b0b' : tag ? '#256abf' : placed ? '#0b0b0b' : '#ffffff',
         sw: on ? 2.6 : tag ? 2.4 : placed ? 1.6 : 0.3, dash: 'none', pick: () => this.setState({ sel: b.id }) };
     });
+    out.placedPaths = d.buildings.filter(b => isPu(b) && b.usrc === 'census').map(b => ({ d: b.d }));
     const ids = Object.keys(scores).filter(k => scores[k] !== null).sort((a, b) => scores[b] - scores[a]).slice(0, 15);
     const byId = {};
     d.buildings.forEach(b => { byId[b.id] = b; });

@@ -23,7 +23,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
       <div style="display: flex; gap: 10px; align-items: center;"><span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: rgb(82, 81, 78)">Load profiles</span>
         <span style="padding: 1px 8px; border-radius: 999px; border: 1px solid #eda100; background: #fff4d6; color: #6b4a00; font-size: 12px; font-weight: 600;">Draft</span>
       </div>
-      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">17 appliance-level demand profiles to attach to buildings</h1>
+      <h1 style="margin: 0; font-size: 34px; line-height: 40px; font-weight: 700;">23 appliance-level demand profiles to attach to buildings</h1>
       <p style="margin: 0; font-size: 17px; line-height: 25px; color: #3d3c39;">Each profile is a RAMP user type: appliances, how many households or businesses own them, their power, hours and usage windows. Click any number in the appliance table to see whether it comes from the World Bank MTF 2022 survey, a cited document, a measurement, or a written assumption.</p>
     </header>
 
@@ -160,7 +160,7 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
             </sc-if>
             <ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 19px; color: #3d3c39;">
               <sc-for list="{{prov.refs}}" as="ref" hint-placeholder-count="2">
-                <li><strong style="color: #0b0b0b;">{{ref.head}}</strong> {{ref.body}}</li>
+                <li><strong style="color: #0b0b0b;">{{ref.head}}</strong> {{ref.body}}<sc-if value="{{ref.hasUrl}}" hint-placeholder-val="{{false}}"> <a href="{{ref.url}}" target="_blank" rel="noopener" style="overflow-wrap: anywhere;">{{ref.urlText}}</a></sc-if></li>
               </sc-for>
             </ul>
           </sc-if>
@@ -179,6 +179,10 @@ a{color:#1e4f8f}a:hover{color:#0d366b}
         <div style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 12px; background: #ffffff; border: 1px solid #e4e3df;">
           <h3 style="margin: 0; font-size: 16px;">3 · Many units, many days</h3>
           <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Each profile is simulated for 200 units over 28 days (weekdays and weekends) with a fixed seed; hourly means per unit feed every building and area curve in this dashboard.</p>
+        </div>
+        <div style="flex: 1 1 100%; display: flex; flex-direction: column; gap: 6px; padding: 16px 20px; border-radius: 12px; background: #ffffff; border: 1px dashed #8a8984;">
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;"><h3 style="margin: 0; font-size: 16px;">Opportunity: appliances that scale with the building</h3><span style="padding: 1px 8px; border-radius: 999px; border: 1px dashed #8a8984; color: #52514e; font-size: 12px; font-weight: 600;">Planned</span></div>
+          <p style="margin: 0; font-size: 14px; line-height: 21px; color: #3d3c39;">Each profile has a fixed number of appliances per unit (for example, a home's light bulbs and sockets). Scaling the number of light bulbs, power outlets and similar fixtures with the building's footprint area (and floors) would give realistic counts for large homes, shops and institutions, instead of one typical unit for every building.</p>
         </div>
         <p style="flex: 1 1 100%; margin: 0; font-size: 12px; line-height: 17px; color: #52514e;">Lombardi, F., Balderrama, S., Quoilin, S., Colombo, E. (2019). Generating high-resolution multi-energy load profiles for remote areas with an open-source stochastic model. Energy 177, 433–444. doi:10.1016/j.energy.2019.04.097 · RAMP (rampdemand 0.5.2), EUPL-1.2. We initialise RAMP after its users are added, so runs are reproducible and the peak window follows the load.</p>
       </section>
@@ -257,7 +261,13 @@ class Component extends DCLogic {
     const refs = (pv.ids || []).slice(0, 8).map(id => {
       const e = ev[id];
       if (!e) return { head: id, body: '' };
-      if (e.type === 'evidence') return { head: e.doc_id + ', p. ' + e.page + ':', body: '“' + (e.quote || '').replace(/\s+/g, ' ').trim() + '” (' + this.fmt(e.value, 2) + ' ' + (e.unit || '') + ')' };
+      if (e.type === 'evidence') {
+        const amount = e.value !== null && e.value !== undefined ? this.fmt(e.value, 2)
+          : e.value_low !== null && e.value_low !== undefined ? this.fmt(e.value_low, 0) + (e.value_high !== null && e.value_high !== undefined ? '–' + this.fmt(e.value_high, 0) : '+') : '–';
+        const url = e.doc_url || '';
+        return { head: (e.doc_title || e.doc_id) + (e.page ? ', p. ' + e.page : '') + ':', body: '“' + (e.quote || '').replace(/\s+/g, ' ').trim() + '” (' + amount + ' ' + (e.unit || '') + ')',
+          hasUrl: !!url, url, urlText: url.replace(/^https?:\/\//, '').slice(0, 60) };
+      }
       if (e.type === 'survey') return { head: 'MTF 2022 aggregate:', body: id.replace('mtf:RWA2022:', '') + ' (weighted, restricted microdata; aggregates only)' };
       if (e.type === 'measured') return { head: e.doc_id + ', p. ' + e.page + ':', body: 'measured ' + (e.parameter || '').replace(/_/g, ' ') };
       return { head: id, body: '' };
@@ -270,7 +280,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const C = this.C, s = this.state, prof = s.prof;
-    const groupButtons = [['all', 'All 17'], ['household', 'Households'], ['commerce', 'Shops and services'], ['institution', 'Institutions'], ['productive', 'Productive use']]
+    const groupButtons = [['all', 'All ' + (prof ? prof.profiles.length : '')], ['household', 'Households'], ['commerce', 'Shops and services'], ['institution', 'Institutions'], ['productive', 'Productive use']]
       .map(g => Object.assign({ label: g[1], pick: () => this.setState({ group: g[0] }) }, this.btn(g[0] === s.group)));
     const dayButtons = [['all', 'All days'], ['weekday', 'Weekdays'], ['weekend', 'Weekends']]
       .map(g => Object.assign({ label: g[1], pick: () => this.setState({ day: g[0] }) }, this.btn(g[0] === s.day)));
