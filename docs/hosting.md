@@ -42,7 +42,8 @@ with Tailscale's certificate. Two Docker containers do it ([`infra/dashboard/com
 
 - `ts` joins the tailnet as `peek-load-rwa` and funnels HTTPS to the web server;
 - `web` is Caddy with [`infra/Caddyfile`](../infra/Caddyfile), on port 2004 (Jean de Dieu Nkundabera's
-  bronze at the Athens Paralympics, Rwanda's first Paralympic medal), inside the `ts` container's network.
+  bronze at the Athens Paralympics, Rwanda's first Paralympic medal). It publishes no ports: only the `ts`
+  container reaches it, over the compose network.
 
 So the host machine keeps its own name, opens no ports, and none of its other services are exposed. The files
 are served from:
@@ -58,7 +59,8 @@ are served from:
 - In the Tailscale admin console:
   - DNS → enable **MagicDNS** and **HTTPS Certificates**;
   - Access controls → allow Funnel (the default policy grants the `funnel` attribute to `autogroup:member`);
-  - Settings → Keys → **Generate auth key** (not reusable, not ephemeral).
+  - Settings → Keys → **Generate auth key** (not reusable, not ephemeral; tick **Pre-approved** if device
+    approval is on, otherwise approve `peek-load-rwa` under Machines when it appears).
 - Put the key in a local `.env` (git-ignored):
   ```bash
   cp infra/dashboard/.env.example infra/dashboard/.env   # then paste the key after TS_AUTHKEY=
@@ -83,7 +85,16 @@ issued). The site is **public**: anyone with the address can open it.
 - **Update:** rebuild and rerun the two `rsync` lines; the containers serve the new files at once.
 - **Take it offline:** `docker compose -f infra/dashboard/compose.yaml down` (`up -d` brings it back; the
   machine keeps its name, so the key is not needed again).
-- **Tailnet only, not public:** set `"AllowFunnel"` to `{}` in `infra/dashboard/serve.json` and run `up -d`.
+- **Tailnet only, not public:** set `"AllowFunnel"` to `{}` in `infra/dashboard/serve.json`, then
+  `docker compose -f infra/dashboard/compose.yaml restart ts` (the serve config is read when `ts` starts).
+- **Opening it from your own Tailscale devices:** those connect to `peek-load-rwa` directly over the tailnet,
+  so your access policy has to allow it; otherwise the `ts` log shows `Drop: TCP{… > …:443} no rules matched`
+  while the public address works. Add to the policy file:
+  ```json
+  "hosts": { "peek-load-rwa": "100.111.240.35" },
+  "acls":  [ { "action": "accept", "src": ["autogroup:member"], "dst": ["peek-load-rwa:443"] } ]
+  ```
+  (merge into the existing `hosts` and `acls`; the address is the machine's Tailscale IP from the admin console).
 - **Logs:** `docker compose -f infra/dashboard/compose.yaml logs ts web`. If the name comes up as
   `peek-load-rwa-1`, an older machine with that name exists: delete it in the admin console and restart.
 

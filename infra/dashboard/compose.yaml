@@ -22,8 +22,9 @@ services:
 
   web:
     image: caddy:2.8.4
-    network_mode: service:ts   # reachable only through the Tailscale machine above
-    depends_on: [ts]
+    # no published ports: only reachable from the ts container, over the compose network
+    environment:
+      CADDY_BIND: 0.0.0.0
     volumes:
       - ../Caddyfile:/etc/caddy/Caddyfile:ro
       - /srv/peek-load:/srv/peek-load:ro
