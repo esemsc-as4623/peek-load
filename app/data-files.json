@@ -1,97 +1,78 @@
 {
   "figures/allocated-use-of-every-building-in.png": {
-    "canvas_id": "492fd0fe059a7e47509c264b96ad6657",
-    "bytes": 571940,
-    "sha256": "52a4da287ae47df3e85f90c03ffc2dd9a4038a7b3d0debeb95db4974b778b261"
+    "bytes": 571792,
+    "sha256": "9d317ac0ea72467d5e56a932d32f8fc755132e7ac7d51f468356ef4f85214904"
   },
   "figures/calibration-on-held-out-districts-predicted.png": {
-    "canvas_id": "fcb910bb1c225b6b7f02354d5d093b88",
-    "bytes": 282232,
-    "sha256": "715d244093448e91f3eed7945fa6013d7bf7239de81024c0d2d553092668d5e5"
+    "bytes": 282606,
+    "sha256": "0c1d5beb8ccb08aa12784ca1d7dd84fe0b8679067f58bd9c811eae41464056a0"
   },
   "figures/comparison-of-hourly-temperatures-from-nasa.png": {
-    "canvas_id": "16979497a3c9ccceac62a5d4919343d0",
     "bytes": 145906,
     "sha256": "ee2c4d70cdfa19058b8cf685612193261789378909da5c6c8a4cf9c9ae8f340e"
   },
   "figures/confusion-matrix-of-the-chosen-labeller.png": {
-    "canvas_id": "eddb787629e713cff0401eb4d0854b42",
     "bytes": 117419,
     "sha256": "71b27fb27315de2b1c988b14256ad41c4011b6d1ce824b462a9e1a3eee0dad84"
   },
   "figures/households-per-district-one-per-residential.png": {
-    "canvas_id": "e9f97d094cba880ddbf444a29767807a",
     "bytes": 95161,
     "sha256": "4d122a0acbd125085f60639a3a7e005e20c281a529a47a41896426d5437c4908"
   },
   "figures/left-households-expected-demand-by-year.png": {
-    "canvas_id": "24f2c87d987f52ddef74461c75997a6a",
-    "bytes": 121460,
-    "sha256": "d574199177fb5c9e6dd63eb75144fe109dd279a79a06d1cb80e15f44a96b409d"
+    "bytes": 121490,
+    "sha256": "56d9d70a3ba91e66265e00bb90bae0c237d7a81635e9f68b9aeb71ecf895e00d"
   },
   "figures/map-of-predicted-connection-probability-per.png": {
-    "canvas_id": "b76023693bd0994b52c5eb76ded3128d",
     "bytes": 374317,
     "sha256": "c574c7a74361f5eba7c06a619493bb594c82494c9c51d6eaacfaf9225072229f"
   },
   "figures/maps-of-potential-and-expected-annual.png": {
-    "canvas_id": "256056b58b75b79de188434a3aba1122",
-    "bytes": 693872,
-    "sha256": "bb59c204547d1bfb1014cdd0d364a2a0bf46b367a4ded8137e0926bcd5a14310"
+    "bytes": 694421,
+    "sha256": "1be9e907d8ff4e2860c8ff9d6a7522a063889b2a458906978fdf16bdb459da5f"
   },
   "figures/national-demand-by-year-potential-rises.png": {
-    "canvas_id": "ff62ebdf96ebb1bb6691542f7aee5987",
-    "bytes": 93897,
-    "sha256": "bf65dd94c81cd9e4f917d339103d6806a0f0d5a2d8369e4f675e457811573c38"
+    "bytes": 94222,
+    "sha256": "6c9444eb71f79694714ddf1be828810741c75fc03b396f4c456ea46c48c6bdad"
   },
   "figures/ranking-quality-auc-per-use-class.png": {
-    "canvas_id": "95997d31f9a481efcaf3d4915e7c99cb",
     "bytes": 167881,
     "sha256": "caf4e24efbecd364b2587858e4fee2f8de4d4fd4e3c18ba376b17c372ed018aa"
   },
   "figures/the-label-share-of-dhs-2025.png": {
-    "canvas_id": "ad761fbb2d531807993b3cbe23f591dd",
     "bytes": 194465,
     "sha256": "501e783c87ed9c26cf7b6e41b526066af799ee01f6fcd8aae7dacc832167a353"
   },
   "figures/uncertainty-bands-for-the-three-deep.png": {
-    "canvas_id": "2192f1ebadfc68b433f49709e50da6fa",
-    "bytes": 82848,
-    "sha256": "5971ef9c769f5a5693191df3dac42942cce1f27b37070b27baa728543ceb3fed"
+    "bytes": 82864,
+    "sha256": "56ae9359e299e0967c77291338dd9aaaaa68852f8e3c5d6dea49fab9d7514aa8"
   },
   "figures/use-mix-in-the-three-deep.png": {
-    "canvas_id": "70dd91108dfd58fa27a3d949843a5150",
-    "bytes": 139757,
-    "sha256": "d669721f52c80496f405ebb80798f65152afdb9bc0dfdef9bdfab38fea624ba4"
+    "bytes": 139349,
+    "sha256": "e967057807e6e658b7dd027d1730347193369198fdeea703beaf2ee93eae8678"
   },
   "national.json": {
-    "canvas_id": "76723b967f6a8258e6c176b61401cad2",
-    "bytes": 2883374,
-    "sha256": "182c1168fad592647b64e9e9f5b987dabad3842084d1bc70b22e7ad752e5691a"
+    "bytes": 2888000,
+    "sha256": "621787ce24f76f42157fd230cb1212251f530bf00e27effd74254f613da6a68d"
   },
   "profiles.json": {
-    "canvas_id": "78ce58b0b9f459073549f6b9f6f40c39",
-    "bytes": 290191,
-    "sha256": "15797f3078c31bc04e6c798d7b39655dcf969edea4a480b15ce93ed458939581"
+    "bytes": 300492,
+    "sha256": "b326da84632024a3931c8adb964e79fbc51cdaa39f00628828a1124e9c503955"
   },
   "site.json": {
-    "canvas_id": "51df8947b0142a6ee209eef01227aadc",
-    "bytes": 107452,
-    "sha256": "b3693ffb990fc95067ea4805edb7a2c9bcc575cdfccbd84981f1631ac1cd79fc"
+    "bytes": 110146,
+    "sha256": "8f31ed1ed00af37687cebdb13c40e4cfaabf83d3f399a26d0513783d7b61b070"
   },
   "subdistrict_muhoza.json": {
-    "canvas_id": "5922913ce6152fb0c835b51959a2f5e2",
-    "bytes": 2145149,
-    "sha256": "eef55594885e15f95fa656181a1aff6bab0b5d837b482cb11c6d0c5cb908de3a"
+    "bytes": 2140907,
+    "sha256": "70acc18b33f80d1073d0bb1fefc131a28fc8e8ceae7667efd0682ea9b9caa38a"
   },
   "subdistrict_nasho.json": {
-    "canvas_id": "65fc9edf7e72285bce4d2d7d3bbf71a7",
-    "bytes": 1463670,
-    "sha256": "219e636cba3d0c93ebf6a731fc21b092e4eddb7f8dc8c1909a387afb7d106431"
+    "bytes": 1454914,
+    "sha256": "ef848f742afa706d64cda18dc1b18d216d0f5233f997600a592483c9a6fd305f"
   },
   "subdistrict_nyamirambo.json": {
-    "canvas_id": "2e639ee6fe7a56d75bbdcd3013885aec",
-    "bytes": 3557478,
-    "sha256": "1ba1bb789df0446138832bda5180353853959c8ae471322f4af0855e4cfa4a23"
+    "bytes": 3534750,
+    "sha256": "b2fdc9297175b90e163576d941abb6fd1492d811830fcfac41f3b75c95e719dd"
   }
 }

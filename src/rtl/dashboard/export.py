@@ -178,6 +178,8 @@ def establishment_summary(dd: dict, lib: pd.DataFrame, df: pd.DataFrame, kind: s
     census = pd.read_csv(PROCESSED_DIR / f"{kind}_census_districts.csv")
     col = "pu_census" if kind == "pu" else "census"
     profiles = set(census.profile_id)
+    rural = load_yaml("allocation.yaml").get("rural_profiles", {})  # e.g. rural bars use bar_rural (P1)
+    profiles |= {rural[p] for p in profiles if p in rural}
     e = df[df.establishment.isin(profiles)]
     units = e.establishment.value_counts()
     d = census[census.district == dd["district"]]
@@ -186,6 +188,7 @@ def establishment_summary(dd: dict, lib: pd.DataFrame, df: pd.DataFrame, kind: s
                      "by_profile": d.groupby("profile_id")[col].sum().round(0).to_dict(),
                      "source": "NISR Establishment Census 2023 (district level)"},
         "building_sum": {"buildings": int(len(e)), "tagged": int((e.use_source == "tag").sum()),
+                         "llm_labelled": int((e.use_source == "llm").sum()),
                          "census_allocated": int((e.use_source == "census").sum()),
                          "units_by_profile": units.to_dict(),
                          "annual_mwh": rnd(sum(units.get(p, 0) * lib.at[p, "daily_kwh_mean"] for p in units.index)
@@ -645,12 +648,16 @@ def evidence_index(out, cited: set[str]) -> None:
     from rtl.demand.review import load as load_evidence
 
     ev = load_evidence().set_index("evidence_id")
+    docs = {d["doc_id"]: d for d in load_yaml("evidence_docs.yaml")["documents"]}
     idx = {}
     for i in sorted(cited):
         if i in ev.index:
             r = ev.loc[i]
-            idx[i] = {"type": "evidence", "doc_id": r.doc_id, "page": r.page, "quote": r.quote, "value": r.value,
-                      "unit": r.unit, "appliance": r.appliance, "family": r.family}
+            doc = docs.get(r.doc_id, {})
+            url = doc.get("url") or (r.doc_id if str(r.doc_id).startswith("http") else None)
+            idx[i] = {"type": "evidence", "doc_id": r.doc_id, "doc_title": doc.get("title"), "doc_url": url,
+                      "page": r.page, "quote": r.quote, "value": r.value, "value_low": r.value_low,
+                      "value_high": r.value_high, "unit": r.unit, "appliance": r.appliance, "family": r.family}
         elif i.startswith("mtf:"):
             idx[i] = {"type": "survey", "source": "World Bank MTF Rwanda 2022 (weighted aggregate)",
                       "table": "validation_anchors/mtf_*.csv", "row": i}

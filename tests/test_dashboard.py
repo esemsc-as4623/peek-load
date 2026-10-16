@@ -95,3 +95,28 @@ def test_workflow_edges_point_at_nodes():
     ids = {n["id"] for n in wf["nodes"]}
     assert all(e["from"] in ids and e["to"] in ids for e in wf["edges"])
     assert {n["lane"] for n in wf["nodes"]} <= {lane["id"] for lane in wf["lanes"]}
+
+
+def test_site_frame_is_1000_wide_with_the_margin_and_keeps_shapes_square():
+    import math
+
+    import numpy as np
+
+    from rtl.dashboard.pack import Frame
+
+    f = Frame(np.array([[30.0, -2.0], [30.1, -1.9]]), 0.01)
+    x0, y0 = f.xy(29.99, -1.89)  # top-left corner of the margin
+    x1, y1 = f.xy(30.11, -2.01)
+    assert (round(x0, 6), round(y0, 6), round(x1, 6)) == (0, 0, 1000)
+    assert y1 == f.height or abs(y1 - f.height) < 0.05
+    # a degree of latitude is longer on the page than a degree of longitude by 1 / cos(latitude)
+    assert abs(f.ky / f.kx - 1 / math.cos(math.radians(-1.95))) < 1e-12
+    assert f.path([[[30.0, -2.0], [30.1, -2.0], [30.0, -2.0]]]).startswith("M83.3 917.2L916.7 917.2")
+
+
+def test_pick_rounds_scales_and_keeps_missing_values():
+    from rtl.dashboard.pack import pick
+
+    out = pick({"g": 0.031, "a": 12.3456, "s": "x"}, {"growth": ("g", 1, 100), "a": ("a", 1), "s": ("s", None),
+                                                       "none": (None, None)})
+    assert out == {"growth": 3.1, "a": 12.3, "s": "x", "none": None}

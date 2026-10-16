@@ -246,9 +246,9 @@ workflow:  # the data-architecture graph (workflow.json; workflow.mmd is generat
     - {id: t_anchors, lane: evidence, kind: table, label: "validation_anchors + MTF aggregates", file: data/processed/validation_anchors}
     - {id: builder, lane: demand, kind: process, label: "B1 archetype builder", command: "pixi run build-archetypes",
        description: "17 RAMP archetypes from recipes; every number cites survey data, evidence or measurements, or carries a written assumption; household lighting calibrated to MTF spending."}
-    - {id: signoff, lane: demand, kind: gate, label: "Archetype sign-off (human, 2026-10-12)"}
+    - {id: signoff, lane: demand, kind: gate, label: "Archetype assumptions (human)"}
     - {id: t_archetypes, lane: demand, kind: table, label: "17 archetypes (signed off) + 2 derived health profiles (draft)", file: data/processed/archetypes}
-    - {id: mapping_approval, lane: demand, kind: gate, label: "Allocation rules (human, signed off 2026-10-15)"}
+    - {id: mapping_approval, lane: demand, kind: gate, label: "Allocation assumptions (human)"}
     - {id: use_model, lane: demand, kind: process, status: draft, label: "B2a use classifier (tags; tags + LLM)", command: "pixi run use-model",
        description: "Gradient boosting on footprint, height, context and H3 r9/r10 neighbourhood features. Model A learns from 36k tagged buildings, model B adds 44k LLM labels; held-out ranking AUC 0.78 (tags by district) and 0.76 (LLM by sector). Applied to all 6.4M buildings."}
     - {id: t_useprobs, lane: demand, kind: table, label: "use_probs (8 class probabilities per building)", file: data/processed/use_probs.parquet}
@@ -401,3 +401,19 @@ workflow:  # the data-architecture graph (workflow.json; workflow.mmd is generat
     - [licence_review, dataset]
     - [checks, docs]
     - [qa, docs]
+
+site:  # the public site's data files (rtl.dashboard.pack -> data/dashboard/app_v1)
+  figures:  # file name on the site -> reports/figures/<file>
+    allocated-use-of-every-building-in.png: C3_allocation_maps.png
+    calibration-on-held-out-districts-predicted.png: B4_grid_model.png
+    comparison-of-hourly-temperatures-from-nasa.png: A3_cooling_check.png
+    confusion-matrix-of-the-chosen-labeller.png: labels_confusion.png
+    households-per-district-one-per-residential.png: C4_households_fit.png
+    left-households-expected-demand-by-year.png: C9_benchmarks.png
+    map-of-predicted-connection-probability-per.png: B4_grid_predictions.png
+    maps-of-potential-and-expected-annual.png: C6_national_demand.png
+    national-demand-by-year-potential-rises.png: C7_demand_by_year.png
+    ranking-quality-auc-per-use-class.png: C1_use_model_scores.png
+    the-label-share-of-dhs-2025.png: B4_grid_label.png
+    uncertainty-bands-for-the-three-deep.png: C8_uncertainty.png
+    use-mix-in-the-three-deep.png: C2_use_mix.png

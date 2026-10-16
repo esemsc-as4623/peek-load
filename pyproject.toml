@@ -141,6 +141,7 @@ demand-benchmarks = "python -m rtl.demand.benchmarks"  # B4v: model vs REG/RURA 
 demand-sensitivity = "python -m rtl.demand.sensitivity"  # A6 cap sensitivity + B6 uncertainty bands (~30 min)
 profile-checks = "python -m rtl.demand.checks"
 dashboard-data = "python -m rtl.dashboard.export"
+site-data = "python -m rtl.dashboard.pack"  # B7: bundle -> the public site's data files (data/dashboard/app_v1)
 # the whole demand phase, in order (inputs: labels, context, climate, evidence, MTF/EICV5 aggregates)
 demand = """python -m rtl.demand.validate && python -m rtl.demand.productive_use && python -m rtl.demand.services && python -m rtl.demand.use_model && python -m rtl.demand.allocate && python -m rtl.demand.build_archetypes \
   && python -m rtl.demand.runner && python -m rtl.demand.grid_connection && python -m rtl.demand.calibrate && python -m rtl.demand.years && python -m rtl.demand.benchmarks && python -m rtl.demand.checks \

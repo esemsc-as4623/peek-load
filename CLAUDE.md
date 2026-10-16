@@ -39,7 +39,7 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 - Order: `pixi run mtf-appliances` / `eicv5-electricity` (restricted microdata → published aggregates) →
   `validate-evidence` → `build-archetypes` (recipes in `config/archetypes.yaml`; `derived` profiles are scaled copies)
   → `profile-library` → `grid-model` → `calibrate` → `demand-years` → `profile-checks` (`reports/demand/profile_checks.md`) → `dashboard-data` (`--sample` for the committed sample;
-  contract in `dashboard/DATA_CONTRACT.md`).
+  contract in `dashboard/DATA_CONTRACT.md`) → `site-data` (the public site's files in `data/dashboard/app_v1`; `app/README.md`).
 - Archetype numbers must cite evidence ids or carry a `why`. An archetype is `draft` until
   `data/gold/approvals.yaml` records the owner's sign-off (signed off 2026-10-12); then the build marks it `human_reviewed`.
 
