@@ -12,17 +12,30 @@ from __future__ import annotations
 
 import pandas as pd
 
-from rtl.settings import PROCESSED_DIR, REPORTS_DIR
+from rtl.settings import PROCESSED_DIR, REPORTS_DIR, load_yaml
 
 FAMILIES = ["ownership_share", "rated_power_w", "hours_per_day", "usage_window", "monthly_kwh", "annual_kwh"]
 OUT = REPORTS_DIR / "review"
+
+
+def apply_sources(e: pd.DataFrame) -> pd.DataFrame:
+    """Name the document behind web-research rows stored as "unnamed", reword their sentences for the site and drop
+    rows the owner rejected (config/evidence_sources.yaml)."""
+    cfg = load_yaml("evidence_sources.yaml")
+    e = e[~e.evidence_id.isin(cfg.get("exclude", {}))].copy()
+    for eid, fix in (cfg.get("rows") or {}).items():
+        sel = e.evidence_id == eid
+        for col in ("doc_id", "quote"):
+            if col in fix:
+                e.loc[sel, col] = fix[col]
+    return e
 
 
 def load() -> pd.DataFrame:
     rep = pd.read_parquet(PROCESSED_DIR / "evidence.parquet").assign(origin="report")
     web = pd.read_parquet(PROCESSED_DIR / "evidence_productive_use.parquet").assign(origin="web research")
     cur = pd.read_parquet(PROCESSED_DIR / "evidence_curated.parquet").assign(origin="curated")
-    e = pd.concat([rep, web, cur], ignore_index=True)
+    e = apply_sources(pd.concat([rep, web, cur], ignore_index=True))
     parts = e.parameter.str.split(".", n=2, expand=True)
     e["family"], e["appliance"], e["population_key"] = parts[0], parts[1], parts[2]
     return e[e.family.isin(FAMILIES)]

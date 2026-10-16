@@ -28,15 +28,14 @@
     "human_reviewed": false
    },
    "power": {
-    "value": 50.0,
+    "value": 40.0,
     "evidence_ids": [
-     "ev-4a43beddf08c",
      "ev-d065449bb68a",
      "ev-7aa5d46ef496",
      "ev-7f7527cecf79"
     ],
     "assumption": null,
-    "derivation": "median of 4 approved rated_power_w values matching '^sewing_machine$'",
+    "derivation": "median of 3 approved rated_power_w values matching '^sewing_machine$'",
     "human_reviewed": false
    },
    "func_time": {

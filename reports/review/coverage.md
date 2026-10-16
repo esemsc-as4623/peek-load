@@ -1,6 +1,6 @@
 # Evidence coverage for RAMP parameters
 
-1,077 rows to review in `evidence_review.csv` (960 from reports, 83 from web research, 34 curated from productive-use reports). Fill `decision` with `approve`, `correct` (and `corrected_value`) or `reject`.
+1,076 rows to review in `evidence_review.csv` (960 from reports, 82 from web research, 34 curated from productive-use reports). Fill `decision` with `approve`, `correct` (and `corrected_value`) or `reject`.
 
 Appliances with both a rated power and a usage time: 8 of 154. Everything else needs more sources or an explicit, reviewed assumption.
 
@@ -24,9 +24,9 @@ Appliances with both a rated power and a usage time: 8 of 154. Everything else n
 | grain_mill |  | 6 | 6 | 2 |  |  |
 | gas_electric_cooker | 9 |  |  |  |  |  |
 | phone_charger | 6 | 1 |  |  |  |  |
-| sewing_machine | 1 | 5 | 1 |  |  |  |
 | satellite_dish | 7 |  |  |  |  |  |
 | electric_stove_main_cooking | 6 |  |  |  |  |  |
+| sewing_machine | 1 | 4 | 1 |  |  |  |
 | electric_pressure_cooker |  | 6 |  |  |  |  |
 | laundry_machine | 4 |  |  |  | 1 |  |
 | solar_panel |  | 5 |  |  |  |  |

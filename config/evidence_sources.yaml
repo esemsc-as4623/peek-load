@@ -1,0 +1,53 @@
+# Sources of the web-research evidence that archetypes cite (owner's request, 2026-10-16).
+# The productive-use research (rtl.llm.productive_use) sometimes answered with footnotes ([1], [B]) or named
+# sources in passing instead of linked citations, so those rows were stored with doc_id "unnamed". The source lists
+# in its cached answers name them; each cited row is mapped here to a document in evidence_docs.yaml
+# (status: web = a cited web page, not downloaded; quotes are the research's sentences, not checked against it).
+# `quote` rewords a row's sentence for the site; values are unchanged. rtl.demand.review applies this file.
+
+rows:
+  # Mercury Direct, Nigerian inverter seller (hair-salon research, source [3])
+  ev-2881467ff553: {doc_id: mercurydirect_barbershop_inverter,
+                    quote: "Nigerian vendor source: a sterilizer cabinet draws about 200 W, each fan about 80 W, LED lighting about 50 W in total, a TV and decoder about 150 W, and a sound system about 100 W."}
+  ev-8fb5c775affa: {doc_id: mercurydirect_barbershop_inverter,
+                    quote: "Nigerian vendor source: a sterilizer cabinet draws about 200 W, each fan about 80 W, LED lighting about 50 W in total, a TV and decoder about 150 W, and a sound system about 100 W."}
+  ev-5a63e322a24e: {doc_id: mercurydirect_barbershop_inverter,
+                    quote: "Nigerian inverter seller source: barbershop clipper draws about 15 W."}
+  # LBNL / USAID survey of women-run small businesses in Uganda (hair-salon research, source [1])
+  ev-536aa7d20bd6: {doc_id: lbnl_uganda_women_businesses_2024,
+                    quote: "Hair dryers in Ugandan salons are rated from 500 W to 3,000 W, and 1,100 W is the most common rating."}
+  ev-5b67076b3a64: {doc_id: lbnl_uganda_women_businesses_2024,
+                    quote: "In that Uganda survey, small hair dryers are 500 W, medium ones 1,100 W and large ones 3,000 W."}
+  ev-9cca48d610db: {doc_id: lbnl_uganda_women_businesses_2024,
+                    quote: "In that Uganda survey, small hair dryers are 500 W, medium ones 1,100 W and large ones 3,000 W."}
+  # KIU prototype phone-charging station, Uganda (phone-charging research)
+  ev-9bb1546605fe: {doc_id: kiu_phone_charging_2026}
+  # NREL / E4I, Productive Use of Energy in African Micro-Grids (carpentry [B], welding [1], grain-mill "NREL study")
+  ev-4837d07843b0: {doc_id: nrel_pue_microgrids_2018,
+                    quote: "In Kenya and Tanzania micro-grids, a table saw is rated 1,600–1,800 W on three-phase power, with start-up draw of 3,300–5,000 W."}
+  ev-b5672b8ce3dd: {doc_id: nrel_pue_microgrids_2018,
+                    quote: "In Kenya and Tanzania micro-grids, a jigsaw is rated 400–900 W on single-phase power, with start-up draw of 800–1,200 W."}
+  ev-a6f85f9e1fb7: {doc_id: nrel_pue_microgrids_2018,
+                    quote: "In Kenya and Tanzania micro-grids, a woodworking lathe is rated 225–750 W on single-phase power, with start-up draw of 675–2,250 W."}
+  ev-4f4b565e75b3: {doc_id: nrel_pue_microgrids_2018,
+                    quote: "In Kenya and Tanzania micro-grids, the illustrative \"carpentry tools\" business case uses 18 kWh per month."}
+  ev-2ddaf52856f3: {doc_id: nrel_pue_microgrids_2018}
+  ev-98ab56c96828: {doc_id: nrel_pue_microgrids_2018}
+  ev-aaec34ff4e44: {doc_id: nrel_pue_microgrids_2018}
+  ev-182cf1c309f7: {doc_id: nrel_pue_microgrids_2018}
+  ev-e2424ef63c73: {doc_id: nrel_pue_microgrids_2018}
+  # Hartvigsson & Ahlgren 2018, measured vs interview-based load profiles, Tanzania (welding research, source [2])
+  ev-7ae91741e901: {doc_id: hartvigsson_ahlgren_2018}
+  # FAO, Small mills in Africa (grain-mill research)
+  ev-f515f5e8dd47: {doc_id: fao_small_mills_africa}
+  ev-5feeb5be5ad7: {doc_id: fao_small_mills_africa}
+  # SVRG pilot of a 2.2 kW Agsol mill, northern Tanzania (grain-mill research)
+  ev-b1b138fdd3cc: {doc_id: e4sv_agsol_mill_pilot}
+  # NextBillion article on electric milling at Tanzanian mini-grids: the research did not record the article's
+  # address. Kept, unresolved, until the owner supplies the article or drops these two rows.
+  ev-b9d9f419967d: {doc_id: nextbillion_milling}
+  ev-6190d722ce47: {doc_id: nextbillion_milling}
+
+exclude:
+  # owner, 2026-10-16: a Quora answer that assumes 75 W as an example is not a source
+  ev-4a43beddf08c: "Quora answer: an assumed example, not a source"

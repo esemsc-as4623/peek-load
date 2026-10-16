@@ -307,3 +307,77 @@ documents:
     rwanda_specific: false
     role: evidence
     status: verified  # stored as text (no page numbers); not yet curated
+
+  # ------------------------------------------------------------------ web pages cited by the productive-use research
+  # status: web = cited by rtl.llm.productive_use and named in config/evidence_sources.yaml; not downloaded, and the
+  # quotes are the research's own sentences, not checked against the page.
+  - doc_id: lbnl_uganda_women_businesses_2024
+    title: "Survey on Efficient and Productive Use of Electricity in Women-Run Small Businesses in Uganda"
+    publisher: Lawrence Berkeley National Laboratory / USAID
+    year: 2024
+    url: https://eta-publications.lbl.gov/sites/default/files/eeea-final_survey_report.pdf
+    licence: US government work (public)
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: web
+  - doc_id: kiu_phone_charging_2026
+    title: "Solar-Powered Multi-Port Phone Charging for Rural Energy Access in Uganda (KJSET-162)"
+    publisher: Kampala International University Journal of Science, Engineering and Technology
+    year: 2026
+    url: https://doi.org/10.59568/KJSET-2026-5-1-28
+    licence: open access journal (terms to verify)
+    topics: [power, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: web
+  - doc_id: mercurydirect_barbershop_inverter
+    title: "The best inverter for a barbershop in Nigeria (vendor blog)"
+    publisher: Mercury Direct (Nigerian inverter seller)
+    year: ""
+    url: https://mercurydirect.com.ng/the-best-inverter-for-a-barbershop-in-nigeria/
+    licence: vendor web page (cited, not redistributed)
+    topics: [power, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: web
+  - doc_id: hartvigsson_ahlgren_2018
+    title: "Comparison of load profiles in a mini-grid: assessment of performance metrics using measured and interview-based data"
+    publisher: Energy for Sustainable Development (Elsevier)
+    year: 2018
+    url: https://www.sciencedirect.com/science/article/pii/S0973082617309675
+    licence: journal article (paywalled; cited only)
+    topics: [usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: web
+  - doc_id: fao_small_mills_africa
+    title: "Small mills in Africa: selection, installation and operation of equipment"
+    publisher: FAO
+    year: ""
+    url: https://www.fao.org/4/j8482e/j8482e.pdf
+    licence: FAO publication (free use with citation)
+    topics: [power, usage, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: web
+  - doc_id: e4sv_agsol_mill_pilot
+    title: "A solar-powered electric milling machine (2.2 kW Agsol mill pilot, northern Tanzania)"
+    publisher: Social Venture Research Group (e4sv.org)
+    year: 2020
+    url: https://e4sv.org/a-solar-powered-electric-milling-machine/
+    licence: web page (cited, not redistributed)
+    topics: [power, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: web
+  - doc_id: nextbillion_milling
+    title: "NextBillion article on electric grain milling at Tanzanian mini-grids (Efficiency for Access Innovation Lab)"
+    publisher: NextBillion
+    year: ""
+    url: https://nextbillion.net/
+    licence: web page (cited, not redistributed)
+    topics: [power, productive_use]
+    rwanda_specific: false
+    role: evidence
+    status: unavailable  # the research did not record the article's address; owner to supply or drop
