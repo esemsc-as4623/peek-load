@@ -107,13 +107,16 @@ Buildings, tags and labels: `reports/status/district_table.md` (`pixi run status
 
 | | Nyamirambo (Kigali) | Muhoza (Musanze) | Nasho (Kirehe) |
 |---|---|---|---|
-| Buildings / carrying demand | 21,126 / 14,515 | 32,538 / 16,241 | 17,374 / 9,257 |
-| Census households placed (urban share) | 14,210 (0.98) | 15,541 (0.89) | 9,053 (0.00) |
-| Productive use (of which mills) | 216 (0) | 294 (3) | 50 (22) |
-| Services / shops | 500 / 1,521 | 458 / 647 | 178 / 172 |
-| Health facilities (whole; of which hospitals) | 7.2 (1) | 9.4 (1) | 3 (0) |
-| **Potential / expected energy** | **6.00 / 5.93 GWh** | **3.00 / 2.68 GWh** | **0.73 / 0.50 GWh** |
-| Uncertainty, combined p10–p90 (potential) | 5.92–6.06 GWh (−1.4% / +1.0%) | 2.95–3.04 GWh (−1.7% / +1.4%) | 0.71–0.74 GWh (−2.3% / +1.8%) |
+| Buildings / carrying demand | 21,126 / 14,206 | 32,538 / 16,252 | 17,374 / 9,232 |
+| Census households placed (urban share) | 13,876 (0.98) | 15,516 (0.89) | 9,029 (0.00) |
+| Productive use (of which mills) | 216 (0) | 282 (3) | 50 (19) |
+| Services / shops | 496 / 1,496 | 457 / 649 | 178 / 163 |
+| Health facilities (whole; of which hospitals) | 15.3 (1) | 26.4 (1) | 6 (0) |
+| **Potential / expected energy** | **5.91 / 5.84 GWh** | **3.06 / 2.74 GWh** | **0.71 / 0.49 GWh** |
+| Uncertainty, combined p10–p90 (potential) | 5.82–5.97 GWh (−1.5% / +1.1%) | 3.00–3.11 GWh (−2.1% / +1.6%) | 0.69–0.73 GWh (−2.7% / +1.9%) |
+
+Since 2026-10-16 confident non-residential LLM labels fix a building's use (12,441 buildings nationally) and building
+size weighs more in the productive-use score; district totals are unchanged, buildings within districts move.
 
 ### National energy by profile (GWh/yr, potential / expected)
 
@@ -201,6 +204,10 @@ RAMP p10/p90 day (`data/processed/uncertainty/`, figure `C8_uncertainty.png`):
 | 2026-10-15 | Connection back-cast per district from EICV4/EICV5 (new data); REG/RURA/MoH figures added as benchmarks | owner (data supplied) | this file |
 | 2026-10-16 | **P5/P9:** health facilities from SEforALL's measurements with MoH counts; only the 63 named hospitals are hospitals, other tagged "hospitals" re-typed as clinics; rural hospitals per bed (Nwanya et al. 2016); REG's 22.7 GWh as the check | owner | `health_facilities` |
 | 2026-10-16 | Final dataset prepared for Hugging Face (private first; public after the licence review) | owner | this file |
+| 2026-10-16 | **LLM labels kept:** a confident (≥ 0.5) LLM label that isn't residential fixes the building's use, as a tag would, and wins over its tags; every other building is allocated from the classifier. 12,693 buildings take their use from it; all census and registry targets still met (no shortfall) | owner | `allocation.yaml` `llm_labels` |
+| 2026-10-16 | **Productive-use building size weighs more:** town trades and rural workshops 0.10 → 0.25, mills 0.15 → 0.30 (weighted mean, so the other criteria shrink in proportion) | owner | `productive_use.yaml` |
+| 2026-10-16 | **Evidence sources named:** 22 cited web-research rows mapped to their documents (LBNL Uganda survey, KIU phone-charging paper, NREL/E4I report, FAO small mills, Hartvigsson & Ahlgren, SVRG Agsol pilot, Mercury Direct vendor blog); the Quora answer dropped (sewing machine 50 → 40 W). Two NextBillion rows await the article's address | owner | `evidence_sources.yaml`, `evidence_docs.yaml` (status `web`) |
+| 2026-10-16 | Site data packed from the bundle in the repo (`pixi run site-data`), no longer from canvas uploads | owner | `rtl.dashboard.pack` |
 
 ## 6. Pending considerations
 
@@ -223,6 +230,7 @@ RAMP p10/p90 day (`data/processed/uncertainty/`, figure `C8_uncertainty.png`):
 | O8 | **Off-grid and solar profiles** | MTF solar tiers | expected demand for unconnected households | medium |
 | O9 | **Customers per district as a constraint** | REG customers per branch 2017–2023 (yearbook) | rake connected households per branch, or check the back-cast year by year | small |
 | O10 | **New-connection cohort effect** | Mugyenyi et al. 2025 (8–14 kWh/month for 2017+ connections) | lower use for households connected after 2024 in the projection | small |
+| O11 | **Appliance counts that scale with the building** | footprint area and floors for every building | scale light bulbs, power outlets and similar fixtures with footprint area (and floors), so large homes, shops and institutions get realistic counts instead of one typical unit | small |
 
 ## 8. Bookkeeping
 
@@ -265,7 +273,7 @@ reports and Mugyenyi et al. (2025). Fetched: SEforALL *Powering Healthcare in Rw
 | 1991–2020 climate baseline | 8 of 60 Copernicus requests done; fallback: compute from the hourly product |
 | Evidence rows added after the blanket approval (11 Power Africa values) | covered by automated checks only |
 | Low-confidence Google footprints (12.6%) | eligible like any other; consider down-weighting in the allocation scores |
-| Two tags on one building | the building's own facility/worship/store tag wins; the establishment is placed by the census step |
+| Two tags on one building | the building's own facility/worship/store tag wins; the establishment is placed by the census step; a confident non-residential LLM label wins over both (2026-10-16; e.g. building=church + amenity=bank is a church) |
 | API spend | ~$157 of the $170 cap; responses cached, so re-runs cost nothing. New documents are curated in the coding session |
 | Earthdata token | in `.env` as `EARTHDATA_TOKEN` (expires after 60 days; LAADS archive URLs need a browser login, so downloads use Earthdata Cloud) |
 
