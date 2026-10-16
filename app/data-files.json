@@ -25,9 +25,9 @@
     "sha256": "4d122a0acbd125085f60639a3a7e005e20c281a529a47a41896426d5437c4908"
   },
   "figures/left-households-expected-demand-by-year.png": {
-    "canvas_id": "0bbd28b8359b92c3a1d4833a415d01b3",
-    "bytes": 121982,
-    "sha256": "8224778f4af803d679e0a2804dc138b7fecf5040809df240e7b4c10e8e787fce"
+    "canvas_id": "24f2c87d987f52ddef74461c75997a6a",
+    "bytes": 121460,
+    "sha256": "d574199177fb5c9e6dd63eb75144fe109dd279a79a06d1cb80e15f44a96b409d"
   },
   "figures/map-of-predicted-connection-probability-per.png": {
     "canvas_id": "b76023693bd0994b52c5eb76ded3128d",
@@ -35,14 +35,14 @@
     "sha256": "c574c7a74361f5eba7c06a619493bb594c82494c9c51d6eaacfaf9225072229f"
   },
   "figures/maps-of-potential-and-expected-annual.png": {
-    "canvas_id": "ecf254e70bd473583f6e9a0896a82107",
-    "bytes": 699162,
-    "sha256": "d1f4d93fac59de57928f4b445d70f14239149fb54cccb686d57770a4faf608c1"
+    "canvas_id": "256056b58b75b79de188434a3aba1122",
+    "bytes": 693872,
+    "sha256": "bb59c204547d1bfb1014cdd0d364a2a0bf46b367a4ded8137e0926bcd5a14310"
   },
   "figures/national-demand-by-year-potential-rises.png": {
-    "canvas_id": "347fdcbfb09e4028014695671ef0fbe1",
-    "bytes": 95325,
-    "sha256": "ea822a377e3357e212d2f2a030de4e64aec090a9f613d7582727b8f156f6bfdd"
+    "canvas_id": "ff62ebdf96ebb1bb6691542f7aee5987",
+    "bytes": 93897,
+    "sha256": "bf65dd94c81cd9e4f917d339103d6806a0f0d5a2d8369e4f675e457811573c38"
   },
   "figures/ranking-quality-auc-per-use-class.png": {
     "canvas_id": "95997d31f9a481efcaf3d4915e7c99cb",
@@ -55,9 +55,9 @@
     "sha256": "501e783c87ed9c26cf7b6e41b526066af799ee01f6fcd8aae7dacc832167a353"
   },
   "figures/uncertainty-bands-for-the-three-deep.png": {
-    "canvas_id": "22abbe1934f9b785a100c91cb1555db5",
-    "bytes": 82732,
-    "sha256": "abb42d8f9187ca7bcbb185345bac80126bf3a17fbb734a1839f553be3fe1180e"
+    "canvas_id": "2192f1ebadfc68b433f49709e50da6fa",
+    "bytes": 82848,
+    "sha256": "5971ef9c769f5a5693191df3dac42942cce1f27b37070b27baa728543ceb3fed"
   },
   "figures/use-mix-in-the-three-deep.png": {
     "canvas_id": "70dd91108dfd58fa27a3d949843a5150",
@@ -65,33 +65,33 @@
     "sha256": "d669721f52c80496f405ebb80798f65152afdb9bc0dfdef9bdfab38fea624ba4"
   },
   "national.json": {
-    "canvas_id": "2ebd33cf94c38482dcd39757b6e14461",
-    "bytes": 2883502,
-    "sha256": "b1ae43674eca4e25f29dca2553189ca1c51fb7752694792ca6a54230efac4359"
+    "canvas_id": "76723b967f6a8258e6c176b61401cad2",
+    "bytes": 2883374,
+    "sha256": "182c1168fad592647b64e9e9f5b987dabad3842084d1bc70b22e7ad752e5691a"
   },
   "profiles.json": {
-    "canvas_id": "e9e65342f626905f12746ee12a197704",
-    "bytes": 258063,
-    "sha256": "3b39590b52a71052b1afcb0688a02636932f4fb2b20184b421d7881cdf1be8e6"
+    "canvas_id": "78ce58b0b9f459073549f6b9f6f40c39",
+    "bytes": 290191,
+    "sha256": "15797f3078c31bc04e6c798d7b39655dcf969edea4a480b15ce93ed458939581"
   },
   "site.json": {
-    "canvas_id": "d6a969ee1db43e36decc24e33a14684e",
-    "bytes": 106174,
-    "sha256": "10f646d8afdf156f2bd7a75258f4f1becd9a9fa4dda11289ec2bc0bc296b9322"
+    "canvas_id": "51df8947b0142a6ee209eef01227aadc",
+    "bytes": 107452,
+    "sha256": "b3693ffb990fc95067ea4805edb7a2c9bcc575cdfccbd84981f1631ac1cd79fc"
   },
   "subdistrict_muhoza.json": {
-    "canvas_id": "80f456fa30a99fcc6a0e508b329aa570",
-    "bytes": 2141647,
-    "sha256": "a1fd69e4129ced6124880e4ed39cbb87a2b4948878841f3cbf5243acdfd23094"
+    "canvas_id": "5922913ce6152fb0c835b51959a2f5e2",
+    "bytes": 2145149,
+    "sha256": "eef55594885e15f95fa656181a1aff6bab0b5d837b482cb11c6d0c5cb908de3a"
   },
   "subdistrict_nasho.json": {
-    "canvas_id": "c637d73b060bf3199f980f866a4d41c9",
-    "bytes": 1458944,
-    "sha256": "ec41edc9864001e0a82ab62b548f09a6d85a65a27879730a8fb8271dc1e856ed"
+    "canvas_id": "65fc9edf7e72285bce4d2d7d3bbf71a7",
+    "bytes": 1463670,
+    "sha256": "219e636cba3d0c93ebf6a731fc21b092e4eddb7f8dc8c1909a387afb7d106431"
   },
   "subdistrict_nyamirambo.json": {
-    "canvas_id": "468a9992f4659c299fb821a208c699ce",
-    "bytes": 3542770,
-    "sha256": "1bbd2fcfeb0c7f6b5bcdf2f15139d46958c291c9edd63471dd44f5e6994285f3"
+    "canvas_id": "2e639ee6fe7a56d75bbdcd3013885aec",
+    "bytes": 3557478,
+    "sha256": "1ba1bb789df0446138832bda5180353853959c8ae471322f4af0855e4cfa4a23"
   }
 }
