@@ -14,6 +14,33 @@ recommended over nginx here.
 The site asks for its data at `/data/v1/…` on the same server. To host the data elsewhere, build with
 `VITE_DATA_BASE=https://data.example.org/v1 npm run build` (and allow that origin with a CORS header there).
 
+## On a home machine with Tailscale Funnel (no domain, no router changes)
+
+This is how the dashboard runs on C3PO. Caddy serves the site on `localhost:2004` only (2004: Jean de Dieu
+Nkundabera's bronze at the Athens Paralympics, Rwanda's first Paralympic medal), and
+[Tailscale Funnel](https://tailscale.com/kb/1223/funnel) publishes that port on the public internet at
+`https://c3po.tailce5583.ts.net`, with Tailscale's certificate. Ports 80 and 443 stay free for other services,
+and nothing else on the machine is exposed. The config is [`infra/Caddyfile`](../infra/Caddyfile).
+
+Once, in the Tailscale admin console: DNS → enable **MagicDNS** and **HTTPS Certificates**; Access controls → allow
+Funnel for this machine (`tailscale funnel` prints the link if it's missing). Then:
+
+```bash
+sudo mkdir -p /srv/peek-load/site /srv/peek-load/data/v1 && sudo chown -R $USER /srv/peek-load
+cd app && npm ci && npm run build
+rsync -a --delete dist/ /srv/peek-load/site/
+rsync -a --delete ../data/dashboard/app_v1/ /srv/peek-load/data/v1/
+sudo cp ../infra/Caddyfile /etc/caddy/Caddyfile && sudo systemctl restart caddy
+curl -sI http://localhost:2004/ | head -1      # HTTP/1.1 200 OK
+sudo tailscale funnel --bg 2004                # public: https://c3po.tailce5583.ts.net
+tailscale funnel status
+```
+
+Funnel makes the site **public**: anyone with the address can open it. `sudo tailscale funnel --bg 2004 off`
+takes it offline again. To update, rebuild and rerun the two `rsync` lines; Caddy and Funnel keep running.
+
+## On a server with a domain
+
 ## 1. Before you start
 
 - A server with a public IP, ports 80 and 443 open.
