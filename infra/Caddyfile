@@ -1,6 +1,6 @@
-# Rooftops → Load Curves dashboard on a home machine, published with Tailscale Funnel.
-# Caddy listens on localhost:2004 only (2004: Jean de Dieu Nkundabera's Paralympic bronze, Rwanda's first
-# Paralympic medal); `tailscale funnel` gives it a public HTTPS address. See docs/hosting.md.
+# Rooftops → Load Curves dashboard: the Caddy config used by infra/dashboard/compose.yaml.
+# Caddy listens on 127.0.0.1:2004 only (2004: Jean de Dieu Nkundabera's Paralympic bronze, Rwanda's first
+# Paralympic medal); the peek-load-rwa Tailscale machine funnels HTTPS to it. See docs/hosting.md.
 {
 	admin localhost:2019
 }

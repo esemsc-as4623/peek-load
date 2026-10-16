@@ -5,8 +5,9 @@ API server and no database: whatever serves it only has to send files. Three way
 public:
 
 1. [**Local**](#1-local-on-your-own-computer): on your own computer, only you can see it.
-2. [**Self-hosted**](#2-self-hosted-home-machine-with-tailscale-funnel): on a home machine, published with
-   Tailscale Funnel; public, no domain or router changes needed. This is how it runs on C3PO.
+2. [**Self-hosted**](#2-self-hosted-home-machine-with-tailscale-funnel): on a home machine, as its own
+   Tailscale machine published with Funnel at `https://peek-load-rwa.tailce5583.ts.net`; public, no domain or
+   router changes needed. This is how it runs on C3PO.
 3. [**Server with a domain**](#3-server-with-a-domain): on a server with ports 80 and 443 open.
 
 All three need **Node 18+** on the machine that builds the site, and the data folder
@@ -35,11 +36,16 @@ Both serve the data from `data/dashboard/app_v1/` at `/data/v1/`, so nothing nee
 
 ## 2. Self-hosted: home machine with Tailscale Funnel
 
-Caddy serves the site on `localhost:2004` only (2004: Jean de Dieu Nkundabera's bronze at the Athens
-Paralympics, Rwanda's first Paralympic medal), and [Tailscale Funnel](https://tailscale.com/kb/1223/funnel)
-publishes that port on the public internet at `https://c3po.tailce5583.ts.net`, with Tailscale's certificate.
-Ports 80 and 443 stay free for other services, and nothing else on the machine is exposed. The config is
-[`infra/Caddyfile`](../infra/Caddyfile).
+The dashboard runs as its own Tailscale machine, **`peek-load-rwa`**, published with
+[Tailscale Funnel](https://tailscale.com/kb/1223/funnel) at **`https://peek-load-rwa.tailce5583.ts.net`**,
+with Tailscale's certificate. Two Docker containers do it ([`infra/dashboard/compose.yaml`](../infra/dashboard/compose.yaml)):
+
+- `ts` joins the tailnet as `peek-load-rwa` and funnels HTTPS to the web server;
+- `web` is Caddy with [`infra/Caddyfile`](../infra/Caddyfile), on port 2004 (Jean de Dieu Nkundabera's
+  bronze at the Athens Paralympics, Rwanda's first Paralympic medal), inside the `ts` container's network.
+
+So the host machine keeps its own name, opens no ports, and none of its other services are exposed. The files
+are served from:
 
 ```
 /srv/peek-load/
@@ -49,39 +55,46 @@ Ports 80 and 443 stay free for other services, and nothing else on the machine i
 
 ### Once
 
-- Install Caddy (Ubuntu or Debian):
+- In the Tailscale admin console:
+  - DNS → enable **MagicDNS** and **HTTPS Certificates**;
+  - Access controls → allow Funnel (the default policy grants the `funnel` attribute to `autogroup:member`);
+  - Settings → Keys → **Generate auth key** (not reusable, not ephemeral).
+- Put the key in a local `.env` (git-ignored):
   ```bash
-  sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-  sudo apt update && sudo apt install -y caddy
+  cp infra/dashboard/.env.example infra/dashboard/.env   # then paste the key after TS_AUTHKEY=
   ```
-- In the Tailscale admin console: DNS → enable **MagicDNS** and **HTTPS Certificates**; Access controls →
-  allow Funnel for this machine (`tailscale funnel` prints the link if it's missing).
+- `sudo mkdir -p /srv/peek-load/site /srv/peek-load/data/v1 && sudo chown -R $USER /srv/peek-load`
 
 ### Deploy
 
 From the repo root:
 
 ```bash
-sudo mkdir -p /srv/peek-load/site /srv/peek-load/data/v1 && sudo chown -R $USER /srv/peek-load
-cd app && npm ci && npm run build
-rsync -a --delete dist/ /srv/peek-load/site/
-rsync -a --delete ../data/dashboard/app_v1/ /srv/peek-load/data/v1/
-sudo cp ../infra/Caddyfile /etc/caddy/Caddyfile && sudo systemctl restart caddy
-curl -sI http://localhost:2004/ | head -1      # HTTP/1.1 200 OK
-sudo tailscale funnel --bg 2004                # public: https://c3po.tailce5583.ts.net
-tailscale funnel status
+cd app && npm ci && npm test && npm run build && cd ..
+rsync -a --delete app/dist/ /srv/peek-load/site/
+rsync -a --delete data/dashboard/app_v1/ /srv/peek-load/data/v1/
+docker compose -f infra/dashboard/compose.yaml up -d
+docker compose -f infra/dashboard/compose.yaml logs -f ts     # wait for the machine to come up; Ctrl+C
 ```
 
-Funnel makes the site **public**: anyone with the address can open it. To share it only with devices on
-your tailnet, use `sudo tailscale serve --bg 2004` instead of `funnel` (same address, tailnet only).
-`sudo tailscale funnel --bg 2004 off` (or `serve … off`) takes it offline again.
+Open `https://peek-load-rwa.tailce5583.ts.net` (the first visit can take a minute while the certificate is
+issued). The site is **public**: anyone with the address can open it.
 
-To update, rebuild and rerun the two `rsync` lines; Caddy and Funnel keep running.
+- **Update:** rebuild and rerun the two `rsync` lines; the containers serve the new files at once.
+- **Take it offline:** `docker compose -f infra/dashboard/compose.yaml down` (`up -d` brings it back; the
+  machine keeps its name, so the key is not needed again).
+- **Tailnet only, not public:** set `"AllowFunnel"` to `{}` in `infra/dashboard/serve.json` and run `up -d`.
+- **Logs:** `docker compose -f infra/dashboard/compose.yaml logs ts web`. If the name comes up as
+  `peek-load-rwa-1`, an older machine with that name exists: delete it in the admin console and restart.
 
-If Caddy won't start, `sudo journalctl -u caddy -n 50` says why; "listening on :80" means the default
-Caddyfile is still in place and another service owns port 80, so copy `infra/Caddyfile` over it.
+### Moving from the earlier setup (Caddy on the host, Funnel from C3PO)
+
+Once `https://peek-load-rwa.tailce5583.ts.net` works, switch the old address off:
+
+```bash
+sudo tailscale funnel --bg 2004 off      # c3po.tailce5583.ts.net stops serving the dashboard
+sudo systemctl disable --now caddy       # the host Caddy is no longer needed
+```
 
 ## 3. Server with a domain
 
@@ -90,8 +103,14 @@ Caddyfile is still in place and another service owns port 80, so copy `infra/Cad
 - A server with a public IP, ports 80 and 443 open (`sudo ufw allow 80,443/tcp` if it runs a firewall).
 - A domain (or sub-domain) whose DNS **A record** points at the server, e.g. `peekload.example.org`.
   Caddy needs this to get the certificate.
-- Caddy installed as in section 2, and the folders created:
-  `sudo mkdir -p /srv/peek-load/site /srv/peek-load/data/v1 && sudo chown -R $USER /srv/peek-load`.
+- Caddy installed (Ubuntu or Debian):
+  ```bash
+  sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+  sudo apt update && sudo apt install -y caddy
+  sudo mkdir -p /srv/peek-load/site /srv/peek-load/data/v1 && sudo chown -R $USER /srv/peek-load
+  ```
 
 ### Configure Caddy
 
