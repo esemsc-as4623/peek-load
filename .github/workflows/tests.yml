@@ -1,0 +1,54 @@
+# Tests on every push to main and every pull request.
+# The pipeline's data (data/, git-ignored) and secrets (.env) are not available here, so tests that need local data
+# skip themselves; everything else runs against the committed fixtures and sample bundle.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python (ruff + pytest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.81.0
+          locked: true   # install exactly what pixi.lock records
+          cache: true
+      - name: Lint
+        run: pixi run lint
+      - name: Test
+        run: pixi run test
+
+  site:
+    name: Site (renderer tests + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build

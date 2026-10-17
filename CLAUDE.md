@@ -63,6 +63,8 @@ building dataset plus an evidence-backed RAMP appliance-archetype library (OSEAS
 
 ## Quality gates
 - `pixi run test` and `pixi run qa` must pass before merging. QA reports land in `reports/qa/`.
+  GitHub Actions (`.github/workflows/tests.yml`) runs `lint`, `test` and the site's `npm test` / `npm run build` on
+  every push to main and every pull request; tests that need `data/` skip themselves there.
 - Any new transform gets at least one test that would fail if it were wrong (independent recomputation,
   planted case, or reconciliation of row counts).
 

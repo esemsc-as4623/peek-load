@@ -1,7 +1,6 @@
 # Peek Load: Rooftops → Load Curves for Rwanda
 
-![CI Pipeline](https://github.com/esemsc-as4623/peek-load/actions/workflows/ci.yml/badge.svg)
-![Tests](https://img.shields.io/badge/tests-passing-success)
+[![Tests](https://github.com/esemsc-as4623/peek-load/actions/workflows/tests.yml/badge.svg)](https://github.com/esemsc-as4623/peek-load/actions/workflows/tests.yml)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 
