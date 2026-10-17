@@ -51,3 +51,10 @@ Code: GNU GPLv3.
 Derived building data inherits **ODbL-1.0** (OSM / Microsoft / Google Open Buildings).
 The
 Meta wealth index is CC-BY-NC-4.0. Restricted survey microdata (DHS, World Bank, NISR) is never redistributed; only aggregates are published. Per-source licences: [`docs/data_sources.md`](docs/data_sources.md).
+
+## Demo
+![Load Profile Page](https://github.com/esemsc-as4623/peek-load/blob/f9b997b2cd59c6f449b36b2104768ab5e4e33bcf/imgs/load-profile-page.png)
+![Overview Page](https://github.com/esemsc-as4623/peek-load/blob/f9b997b2cd59c6f449b36b2104768ab5e4e33bcf/imgs/overview-page.png)
+![Deep Dive Page](https://github.com/esemsc-as4623/peek-load/blob/f9b997b2cd59c6f449b36b2104768ab5e4e33bcf/imgs/deep-dive-page.png)
+![Productive Use Page](https://github.com/esemsc-as4623/peek-load/blob/f9b997b2cd59c6f449b36b2104768ab5e4e33bcf/imgs/productive-use-page.png)
+![Workflow Page](https://github.com/esemsc-as4623/peek-load/blob/f9b997b2cd59c6f449b36b2104768ab5e4e33bcf/imgs/workflow-page.png)
