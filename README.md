@@ -1,5 +1,10 @@
 # Peek Load: Rooftops → Load Curves for Rwanda
 
+![CI Pipeline](https://github.com/esemsc-as4623/peek-load/actions/workflows/ci.yml/badge.svg)
+![Tests](https://img.shields.io/badge/tests-passing-success)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+
 **Open building footprints → building-level energy-demand data for Rwanda.**
 Challenge brief: [`docs/challenge.md`](docs/challenge.md). Built for the [OSEAS26 building-footprint energy-demand challenge](https://github.com/EnAccess/oseas26-building-footprint-energy-demand).
 
